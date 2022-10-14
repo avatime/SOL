@@ -15,14 +15,15 @@
 
 ### 팀원 포지션
  
-| 이름                                         | 역할      |
-|:------------------------------------------:|:-------:|
-| \[민경욱\](https://lab.ssafy.com/rrkcl7733)   | 팀장, 백엔드 |
-| \[김찬영\](https://lab.ssafy.com/d.kcyhdplus) | 하둡, 백엔드 |
-| \[이지나\](https://lab.ssafy.com/dlwlsk0428)  | 서버, 백엔드 |
-| \[이주영\](https://lab.ssafy.com/dlendjs93)   | 프론트엔드   |
-| \[정건우\](https://lab.ssafy.com/abcxj123)    | 프론트엔드   |
-| \[채윤선\](https://lab.ssafy.com/yoonsun0809) | 프론트엔드   |
+| 이름 | 역할 |
+|:--:|:--:|
+|    |    |
+|    |    |
+|    |    |
+|    |    |
+|    |    |
+|    |    |
+
 ### 프로젝트 기획 문서
 - [기능정의서](https://docs.google.com/spreadsheets/d/1xXYq4wNG7kb_y70B92i6umD5gDFhokUl2QnadeOVLLU/edit#gid=0)
 - [피그마](https://www.figma.com/file/9IPUDf6GXS6tOqKS6gcwNZ/Untitled?node-id=0%3A1) 
