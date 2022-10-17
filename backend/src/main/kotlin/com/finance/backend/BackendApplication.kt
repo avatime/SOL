@@ -1,4 +1,4 @@
-package com.finace.backend
+package com.finance.backend
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
