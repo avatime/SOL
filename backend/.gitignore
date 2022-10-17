@@ -37,9 +37,9 @@ out/
 .vscode/
 
 ### generated ###
-**/generated/com/gamul/db/entity/
-/ssafy-web.log**
+**/generated/com/finance/db/entity/
 **/gamul-web.log
+**/finance-web.log
 **.gz
 
 ### properties ###
