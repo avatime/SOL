@@ -18,9 +18,11 @@ class JwtUtils(
     val SIGNATURE_ALG: SignatureAlgorithm = SignatureAlgorithm.HS256
 
     // 토큰생성
-    fun createToken(username: String): String {
+    fun createToken(userId: String, username: String, role: String): String {
         val claims: Claims = Jwts.claims();
+        claims["userId"] = userId
         claims["username"] = username
+        claims["role"] = role
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -36,10 +38,22 @@ class JwtUtils(
         return exp.after(Date())
     }
 
+    // 토큰에서 userid 파싱
+    fun parseUserId(token: String): String {
+        val claims: Claims = getAllClaims(token)
+        return claims["userId"] as String
+    }
+
     // 토큰에서 username 파싱
     fun parseUsername(token: String): String {
         val claims: Claims = getAllClaims(token)
         return claims["username"] as String
+    }
+
+    // 토큰에서 role 파싱
+    fun parseUserRole(token: String): String {
+        val claims: Claims = getAllClaims(token)
+        return claims["role"] as String
     }
 
     // username으로 Authentcation객체 생성
