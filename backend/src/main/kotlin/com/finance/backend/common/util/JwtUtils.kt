@@ -72,9 +72,9 @@ class JwtUtils(
     }
 
     // 토큰에서 userid 파싱
-    fun parseUserId(token: String): UUID {
+    fun parseUserId(token: String): String {
         val claims: Claims = getAllClaims(token)
-        return claims["userId"] as UUID
+        return claims["userId"] as String
     }
 
     // 토큰에서 username 파싱
