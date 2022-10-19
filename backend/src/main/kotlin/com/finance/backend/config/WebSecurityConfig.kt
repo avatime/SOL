@@ -23,7 +23,7 @@ class WebSecurityConfig(
 
         http.authorizeRequests()
                 .antMatchers("/api/v1/auth/signup", "/api/v1/auth/login").permitAll()
-                .anyRequest().authenticated()
+//                .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

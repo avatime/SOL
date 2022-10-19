@@ -8,6 +8,7 @@ import com.finance.backend.user.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -27,7 +28,7 @@ class AuthController (private val userService: UserService) {
     }
 
     @PostMapping("/login")
-    fun login(@RequestBody loginDto : LoginDTO) : ResponseEntity<Any?> {
+    fun login(@RequestBody loginDto : LoginDto) : ResponseEntity<Any?> {
         try {
             return ResponseEntity.status(200).body(userService.login(loginDto))
         } catch (e : TokenExpiredException) {
@@ -36,6 +37,16 @@ class AuthController (private val userService: UserService) {
             return ResponseEntity.status(404).body(e.message)
         } catch (e : InvalidPasswordException) {
             return ResponseEntity.status(401).body("Invalid Password")
+        } catch (e : Exception) {
+            return ResponseEntity.status(500).body("Internal Server Error")
+        }
+    }
+
+    @PostMapping("/logout")
+    fun logout(@RequestHeader token: String) : ResponseEntity<Any?> {
+        try {
+            userService.logout(token)
+            return ResponseEntity.status(200).body("Success")
         } catch (e : Exception) {
             return ResponseEntity.status(500).body("Internal Server Error")
         }

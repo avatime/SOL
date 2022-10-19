@@ -65,11 +65,6 @@ class JwtUtils(
                 .signWith(SIGNATURE_ALG, JWT_SECRET)
                 .compact()
     }
-    fun refreshValidation(token: String) : Boolean {
-        val claims: Claims = getAllClaims(token)
-        val exp: Date = claims.expiration
-        return exp.after(Date())
-    }
 
     // 토큰에서 userid 파싱
     fun parseUserId(token: String): String {

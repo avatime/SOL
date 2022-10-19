@@ -1,14 +1,11 @@
 package com.finance.backend.user
 
+import com.finance.backend.auth.*
 import com.finance.backend.auth.Exceptions.DuplicatedPhoneNumberException
 import com.finance.backend.auth.Exceptions.DuplicatedUserException
 import com.finance.backend.auth.Exceptions.InvalidPasswordException
 import com.finance.backend.user.Exceptions.InvalidUserException
 import com.finance.backend.auth.Exceptions.TokenExpiredException
-import com.finance.backend.auth.LoginDTO
-import com.finance.backend.auth.LoginDao
-import com.finance.backend.auth.Token
-import com.finance.backend.auth.SignupDto
 import com.finance.backend.common.util.JwtUtils
 import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -43,15 +40,24 @@ class UserServiceImpl (
         }
     }
 
-    override fun login(loginDto: LoginDTO) : LoginDao? {
-        if(try {jwtUtils.refreshValidation(loginDto.refreshToken)} catch (e: Exception) {throw TokenExpiredException()}){
-            var userId : UUID = UUID.fromString(jwtUtils.parseUserId(loginDto.refreshToken))
-            var user : User = userRepository.findById(userId).orElseGet(null)
-            if(user == null) throw InvalidUserException()
+    override fun login(loginDto: LoginDto) : LoginDao? {
+        if(try {jwtUtils.validation(loginDto.refreshToken)} catch (e: Exception) {throw TokenExpiredException()}){
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(loginDto.refreshToken))
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             if(passwordEncoder.matches(loginDto.password, user.password)) {
                 user.accessToken(jwtUtils.refresh(loginDto.refreshToken))
                 return userRepository.save(user).toLoginEntity()
             } else throw InvalidPasswordException()
         } else throw Exception()
+    }
+
+    override fun logout(token: String): Boolean {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val user : User = userRepository.findById(userId).orElseGet(null)
+            user.accessToken("")
+            userRepository.save(user)
+        }
+        return false
     }
 }
