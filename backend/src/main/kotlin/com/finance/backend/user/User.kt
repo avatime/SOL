@@ -2,6 +2,7 @@ package com.finance.backend.user
 
 import com.fasterxml.jackson.annotation.JsonIgnore
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.finance.backend.auth.LoginDao
 import com.finance.backend.auth.SignupDto
 import com.finance.backend.util.Timestamped
 import org.hibernate.annotations.GenericGenerator
@@ -11,7 +12,9 @@ import javax.persistence.*
 @Entity(name = "user")
 class User(
         name : String,
-        password: String
+        password: String,
+        phone : String,
+        birth : Date
 ) : Timestamped() {
 
     @Id
@@ -28,6 +31,14 @@ class User(
 
     @Column(nullable = false)
     var name: String = name
+        protected set
+
+    @Column(nullable = false)
+    var phone: String = phone
+        protected set
+
+    @Column(nullable = false)
+    var birth: Date = birth
         protected set
 
     @JsonIgnore
@@ -49,4 +60,5 @@ class User(
         this.refreshToken = refreshToken
     }
 
+    fun toLoginEntity() : LoginDao = LoginDao(this.name, this.id, this.accessToken, this.refreshToken)
 }
