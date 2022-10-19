@@ -1,6 +1,5 @@
 package com.finance.backend.auth
 
-import com.finance.backend.user.UserDto
 import com.finance.backend.user.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,5 +12,8 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController (private val userService: UserService) {
 
     @PostMapping("/signup")
-    fun signup(@RequestBody userDto: UserDto) = ResponseEntity.status(201).body(userService.saveUser(userDto))
+    fun signup(@RequestBody userDto: SignupDto) = ResponseEntity.status(201).body(userService.saveUser(userDto))
+
+    @PostMapping("/login")
+    fun login(@RequestBody userDto: SignupDto) = ResponseEntity.status(200).body("")
 }
