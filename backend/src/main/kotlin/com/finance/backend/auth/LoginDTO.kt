@@ -1,12 +1,13 @@
 package com.finance.backend.auth
 
+import com.fasterxml.jackson.annotation.JsonProperty
+
 class LoginDTO(
-        username : String,
         password : String,
-        accessToken: String,
         refreshToken: String
 ) {
-    var username : String = username
     var password : String = password
-    var token : Token = Token(accessToken, refreshToken)
+
+    @JsonProperty("refresh_token")
+    var refreshToken : String = refreshToken
 }
