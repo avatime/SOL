@@ -9,7 +9,8 @@ data class SignupDto(
         var password: String,
         var type: String,
         var phone : String,
-        var birth : String
+        var birth : String,
+        var sex : Int
 ) {
-    fun toEntity(): User = User(this.username, this.password, this.phone, SimpleDateFormat("yyyy.MM.dd").parse(this.birth))
+    fun toEntity(): User = User(this.username, this.password, this.phone, SimpleDateFormat("yyyy.MM.dd").parse(this.birth), this.sex)
 }

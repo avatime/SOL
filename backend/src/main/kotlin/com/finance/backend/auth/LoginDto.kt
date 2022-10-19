@@ -2,7 +2,7 @@ package com.finance.backend.auth
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class LoginDTO(
+class LoginDto(
         password : String,
         refreshToken: String
 ) {

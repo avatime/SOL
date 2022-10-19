@@ -14,7 +14,8 @@ class User(
         name : String,
         password: String,
         phone : String,
-        birth : Date
+        birth : Date,
+        sex : Int
 ) : Timestamped() {
 
     @Id
@@ -41,6 +42,15 @@ class User(
     var birth: Date = birth
         protected set
 
+    @Column(nullable = false)
+    var sex: Boolean = (sex % 2 == 0)
+
+    @Column(nullable = false)
+    var pfId: Int = Random().nextInt(9) + 1
+
+    @Column
+    var account: String = ""
+
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(nullable = false)
@@ -58,6 +68,14 @@ class User(
 
     fun refreshToken(refreshToken: String) {
         this.refreshToken = refreshToken
+    }
+
+    fun pfId(pfId: Int) {
+        this.pfId = pfId
+    }
+
+    fun account(account: String) {
+        this.account = account
     }
 
     fun toLoginEntity() : LoginDao = LoginDao(this.name, this.id, this.accessToken, this.refreshToken)
