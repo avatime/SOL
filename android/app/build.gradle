@@ -69,5 +69,5 @@ dependencies {
     implementation "androidx.navigation:navigation-compose:$nav_version"
 
     implementation "com.airbnb.android:lottie-compose:5.2.0"
-
+    implementation "androidx.datastore:datastore-preferences:1.0.0"
 }
