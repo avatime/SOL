@@ -1,4 +1,4 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material3.Text

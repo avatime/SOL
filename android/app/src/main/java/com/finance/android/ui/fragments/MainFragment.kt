@@ -1,4 +1,4 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
@@ -11,7 +11,7 @@ import com.finance.android.ui.components.BottomNavBar
 import com.finance.android.utils.Const
 
 @Composable
-fun MainScreen() {
+fun MainFragment() {
     val navController = rememberNavController()
     Scaffold(
         bottomBar = {
