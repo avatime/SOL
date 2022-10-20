@@ -19,12 +19,11 @@ class WebSecurityConfig(
 ) : WebSecurityConfigurerAdapter() {
 
     override fun configure(http: HttpSecurity) {
-
         http.csrf().disable()
 
         http.authorizeRequests()
-                .antMatchers("/api/members/signup", "/api/members/signin").permitAll()
-                .anyRequest().authenticated()
+                .antMatchers("/api/v1/auth/signup", "/api/v1/auth/login").permitAll()
+//                .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

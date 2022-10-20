@@ -38,7 +38,6 @@ out/
 
 ### generated ###
 **/generated/com/finance/db/entity/
-**/gamul-web.log
 **/finance-web.log
 **.gz
 
