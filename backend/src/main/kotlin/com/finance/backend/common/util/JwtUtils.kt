@@ -3,16 +3,20 @@ package com.finance.backend.common.util
 import com.finance.backend.auth.Token
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
+
 import io.jsonwebtoken.SignatureAlgorithm
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
+import org.springframework.security.config.Elements.JWT
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
 import java.util.*
+import javax.annotation.PostConstruct
 
 @Component
 class JwtUtils(
-//        private val userDetailsService: UserDetailsServiceImpl
+        private val userDetailsService: UserDetailsServiceImpl
         ) {
 
     @Value("\${jwt.expiration}")
@@ -27,6 +31,13 @@ class JwtUtils(
     @Value("\${jwt.refreshsecret}")
     lateinit var JWT_REFRESH_SECRET: String
     val SIGNATURE_ALG: SignatureAlgorithm = SignatureAlgorithm.HS256
+
+    // 객체 초기화, secretKey를 Base64로 인코딩한다.
+    @PostConstruct
+    protected fun init() {
+        JWT_SECRET = Base64.getEncoder().encodeToString(JWT_SECRET.toByteArray())
+        JWT_REFRESH_SECRET = Base64.getEncoder().encodeToString(JWT_REFRESH_SECRET.toByteArray())
+    }
 
     // 토큰생성
     fun createToken(userId: UUID, username: String, role: String): Token {
@@ -85,11 +96,10 @@ class JwtUtils(
     }
 
     // username으로 Authentcation객체 생성
-    fun getAuthentication(username: String): Authentication {
-//        val userDetails: UserDetails = userDetailsService.loadUserByUsername(username)
+    fun getAuthentication(userId: String): Authentication {
+        val userDetails: UserDetails = userDetailsService.loadUserByUsername(userId)
 
-        return UsernamePasswordAuthenticationToken(null, null, null)
-//        return UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+        return UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
     }
 
 
@@ -100,4 +110,5 @@ class JwtUtils(
                 .parseClaimsJws(token)
                 .body
     }
+
 }
