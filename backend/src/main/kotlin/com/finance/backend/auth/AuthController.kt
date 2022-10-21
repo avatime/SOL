@@ -6,6 +6,7 @@ import com.finance.backend.user.Exceptions.InvalidUserException
 import com.finance.backend.auth.Exceptions.TokenExpiredException
 import com.finance.backend.user.UserService
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -43,7 +44,7 @@ class AuthController (private val userService: UserService) {
     }
 
     @PostMapping("/logout")
-    fun logout(@RequestHeader accessToken: String) : ResponseEntity<Any?> {
+    fun logout(@RequestHeader("access_token") accessToken: String) : ResponseEntity<Any?> {
         return try {
             userService.logout(accessToken)
             ResponseEntity.status(200).body("Success")
@@ -55,7 +56,7 @@ class AuthController (private val userService: UserService) {
     }
 
     @PostMapping("/refresh")
-    fun refresh(@RequestHeader refreshToken: String) : ResponseEntity<Any?> {
+    fun refresh(@RequestHeader("refresh_token") refreshToken: String) : ResponseEntity<Any?> {
         return try{
             ResponseEntity.status(200).body(userService.refresh(refreshToken))
         } catch (e : TokenExpiredException) {

@@ -7,6 +7,8 @@ import com.finance.backend.auth.Exceptions.InvalidPasswordException
 import com.finance.backend.user.Exceptions.InvalidUserException
 import com.finance.backend.auth.Exceptions.TokenExpiredException
 import com.finance.backend.common.util.JwtUtils
+import com.finance.backend.profile.Profile
+import com.finance.backend.profile.ProfileRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -17,6 +19,7 @@ import java.util.*
 @RequiredArgsConstructor
 class UserServiceImpl (
         private val userRepository: UserRepository,
+        private val profileRepository: ProfileRepository,
         private val passwordEncoder: BCryptPasswordEncoder,
 //        private val authenticationManager: AuthenticationManager,
         private val jwtUtils: JwtUtils
@@ -68,6 +71,26 @@ class UserServiceImpl (
             user.accessToken(jwtUtils.refresh(token))
             userRepository.save(user)
             return user.accessToken
+        }
+        throw Exception()
+    }
+
+    override fun getUserInfo(token: String): UserDao {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val user : User = userRepository.findById(userId).orElseGet(null)
+            val profile : Profile = profileRepository.findByPfId(user.pfId).get()
+            return UserDao(user.name, profile.pfName, profile.pfImg, user.point)
+        }
+        throw Exception()
+    }
+
+    override fun changeProfile(token: String, id: Long) {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val user : User = userRepository.findById(userId).orElseGet(null)
+            user.pfId(id)
+            userRepository.save(user)
         }
         throw Exception()
     }

@@ -10,4 +10,6 @@ interface UserService {
     fun login(loginDto: LoginDto) : LoginDao?
     fun logout(token: String) : Boolean
     fun refresh(token: String) : String
+    fun getUserInfo(token: String) : UserDao
+    fun changeProfile(token: String, id : Long)
 }
