@@ -1,4 +1,4 @@
-package com.finance.backend.auth
+package com.finance.backend.common.util
 
 import com.finance.backend.user.User
 import org.springframework.security.core.GrantedAuthority

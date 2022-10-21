@@ -43,9 +43,9 @@ class AuthController (private val userService: UserService) {
     }
 
     @PostMapping("/logout")
-    fun logout(@RequestHeader token: String) : ResponseEntity<Any?> {
+    fun logout(@RequestHeader accessToken: String) : ResponseEntity<Any?> {
         try {
-            userService.logout(token)
+            userService.logout(accessToken)
             return ResponseEntity.status(200).body("Success")
         } catch (e : Exception) {
             return ResponseEntity.status(500).body("Internal Server Error")

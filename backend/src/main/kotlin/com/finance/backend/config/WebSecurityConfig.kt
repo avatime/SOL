@@ -23,8 +23,9 @@ class WebSecurityConfig(
 
         http.authorizeRequests()
                 .antMatchers("/api/v1/auth/signup", "/api/v1/auth/login").permitAll()
-//                .anyRequest().authenticated()
+                .anyRequest().authenticated()
                 .and()
+                .httpBasic().disable().csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter::class.java)
