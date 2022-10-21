@@ -9,4 +9,5 @@ interface UserService {
     fun saveUser(signupDto: SignupDto) : LoginDao
     fun login(loginDto: LoginDto) : LoginDao?
     fun logout(token: String) : Boolean
+    fun refresh(token: String) : String
 }
