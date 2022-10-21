@@ -60,4 +60,15 @@ class UserServiceImpl (
         }
         return false
     }
+
+    override fun refresh(token: String) : String {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val user : User = userRepository.findById(userId).orElseGet(null)
+            user.accessToken(jwtUtils.refresh(token))
+            userRepository.save(user)
+            return user.accessToken
+        }
+        throw Exception()
+    }
 }
