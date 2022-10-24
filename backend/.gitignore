@@ -39,6 +39,7 @@ out/
 ### generated ###
 **/generated/com/finance/db/entity/
 **/finance-web.log
+backend/finance-web.log
 finance-web.log
 **.gz
 
