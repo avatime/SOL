@@ -26,4 +26,11 @@ class AccountController(val accountService: AccountService) {
                 .ok()
                 .body(accountService.registerAccount(acNo))
     }
+
+    @PutMapping("/remit")
+    fun registerRemitAccount(@RequestBody acNo: String): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(accountService.registerRemitAccount(acNo))
+    }
 }

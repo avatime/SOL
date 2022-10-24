@@ -31,10 +31,18 @@ class AccountServiceImpl(
 
     override fun registerAccount(acNo: String) {
         val account = accountRepository.findById(acNo).get()
-        val register = account.acReg
         account.apply {
             acReg = !acReg!!
         }
         accountRepository.save(account)
+    }
+
+    override fun registerRemitAccount(acNo: String) {
+        val account = accountRepository.findById(acNo).get()
+        account.apply {
+            acRmReg = !acRmReg!!
+        }
+        accountRepository.save(account)
+
     }
 }

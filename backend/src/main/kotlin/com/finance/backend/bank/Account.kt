@@ -59,5 +59,4 @@ data class Account (
 
         @JsonProperty("ac_rm_req")
         var acRmReg : Boolean? = false
-                protected set
 }
