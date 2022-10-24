@@ -12,11 +12,11 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "account")
-class Account (
+data class Account (
         @ManyToOne
         val user: User,
 
-        date : Date,
+        val date : Date,
 
         ){
         @Id
@@ -46,9 +46,8 @@ class Account (
         var acStatus : Int = 0
                 protected set
 
-        @JsonProperty("ac_req")
+        @JsonProperty("ac_reg")
         var acReg : Boolean? = false
-                protected set
 
         @JsonProperty("ac_new_dt")
         var acNewDt : Date = date
