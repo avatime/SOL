@@ -96,11 +96,11 @@ class JwtUtils(
     }
 
     // username으로 Authentcation객체 생성
-    fun getAuthentication(userId: String): Authentication {
-        val userDetails: UserDetails = userDetailsService.loadUserByUsername(userId)
-
-        return UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
-    }
+//    fun getAuthentication(userId: String): Authentication {
+//        val userDetails: UserDetails = userDetailsService.loadUserByUsername(userId)
+//
+//        return UsernamePasswordAuthenticationToken(userDetails, null, userDetails.authorities)
+//    }
 
 
     // 모든 Claims 조회

@@ -50,6 +50,8 @@ class AuthController (private val userService: UserService) {
             ResponseEntity.status(200).body("Success")
         } catch (e : TokenExpiredException) {
             ResponseEntity.status(403).body("Token Expired")
+        } catch (e : InvalidUserException) {
+            ResponseEntity.status(409).body("Cannot Found User")
         } catch (e : Exception) {
             ResponseEntity.status(500).body("Internal Server Error")
         }
@@ -61,6 +63,8 @@ class AuthController (private val userService: UserService) {
             ResponseEntity.status(200).body(userService.refresh(refreshToken))
         } catch (e : TokenExpiredException) {
             ResponseEntity.status(403).body("Token Expired")
+        } catch (e : InvalidUserException) {
+            ResponseEntity.status(409).body("Cannot Found User")
         } catch (e : Exception) {
             ResponseEntity.status(500).body("Internal Server Error")
         }

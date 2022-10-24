@@ -25,9 +25,10 @@ class JwtFilter(private val jwtUtils: JwtUtils) : OncePerRequestFilter() {
             // 토큰에서 userId 파싱
             val userId = jwtUtils.parseUserId(token)
             // userId로 AuthenticationToken 생성
-            val authentication: Authentication = jwtUtils.getAuthentication(userId)
+//            val authentication: Authentication = jwtUtils.getAuthentication(userId)
             // 생성된 AuthenticationToken을 SecurityContext가 관리하도록 설정
-            SecurityContextHolder.getContext().authentication = authentication
+//            SecurityContextHolder.getContext().authentication = authentication
+            println("사용자 권한 부여")
         }
 
         filterChain.doFilter(request, response)

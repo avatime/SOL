@@ -1,6 +1,7 @@
 package com.finance.backend.user
 
 import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.user.Exceptions.InvalidUserException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -14,6 +15,8 @@ class UserController (private val userService: UserService) {
             ResponseEntity.status(200).body(userService.getUserInfo(accessToken))
         } catch (e : TokenExpiredException) {
             ResponseEntity.status(403).body("Token Expired")
+        } catch (e : InvalidUserException) {
+            ResponseEntity.status(409).body("Cannot Found User")
         } catch (e : Exception) {
             ResponseEntity.status(500).body("Internal Server Error")
         }
@@ -25,6 +28,8 @@ class UserController (private val userService: UserService) {
             ResponseEntity.status(200).body(userService.changeProfile(accessToken, profile_no))
         } catch (e : TokenExpiredException) {
             ResponseEntity.status(403).body("Token Expired")
+        } catch (e : InvalidUserException) {
+            ResponseEntity.status(409).body("Cannot Found User")
         } catch (e : Exception) {
             ResponseEntity.status(500).body("Internal Server Error")
         }

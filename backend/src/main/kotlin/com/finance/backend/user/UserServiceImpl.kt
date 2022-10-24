@@ -57,7 +57,7 @@ class UserServiceImpl (
     override fun logout(token: String): Boolean {
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val user : User = userRepository.findById(userId).orElseGet(null)
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.accessToken("")
             userRepository.save(user)
         }
@@ -67,7 +67,7 @@ class UserServiceImpl (
     override fun refresh(token: String) : String {
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val user : User = userRepository.findById(userId).orElseGet(null)
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.accessToken(jwtUtils.refresh(token))
             userRepository.save(user)
             return user.accessToken
@@ -78,7 +78,7 @@ class UserServiceImpl (
     override fun getUserInfo(token: String): UserDao {
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val user : User = userRepository.findById(userId).orElseGet(null)
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val profile : Profile = profileRepository.findByPfId(user.pfId).get()
             return UserDao(user.name, profile.pfName, profile.pfImg, user.point)
         }
@@ -88,7 +88,7 @@ class UserServiceImpl (
     override fun changeProfile(token: String, id: Long) {
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val user : User = userRepository.findById(userId).orElseGet(null)
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.pfId(id)
             userRepository.save(user)
         }

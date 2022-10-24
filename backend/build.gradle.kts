@@ -52,6 +52,10 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+	// tomcat exclude
+//	implementation ('org.springframework.boot:spring-boot-starter-web') {
+//		exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+//	}
 }
 
 noArg {
