@@ -4,6 +4,8 @@ import com.finance.backend.auth.Exceptions.DuplicatedUserException
 import com.finance.backend.auth.Exceptions.InvalidPasswordException
 import com.finance.backend.user.Exceptions.InvalidUserException
 import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.auth.request.LoginDto
+import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.user.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

@@ -6,9 +6,13 @@ import com.finance.backend.auth.Exceptions.DuplicatedUserException
 import com.finance.backend.auth.Exceptions.InvalidPasswordException
 import com.finance.backend.user.Exceptions.InvalidUserException
 import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.auth.request.LoginDto
+import com.finance.backend.auth.request.SignupDto
+import com.finance.backend.auth.response.LoginDao
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.profile.Profile
 import com.finance.backend.profile.ProfileRepository
+import com.finance.backend.user.response.UserDao
 import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -92,6 +96,5 @@ class UserServiceImpl (
             user.pfId(id)
             userRepository.save(user)
         }
-        throw Exception()
     }
 }

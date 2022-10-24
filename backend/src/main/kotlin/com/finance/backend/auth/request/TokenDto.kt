@@ -1,4 +1,4 @@
-package com.finance.backend.auth
+package com.finance.backend.auth.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
 

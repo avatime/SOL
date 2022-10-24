@@ -1,4 +1,4 @@
-package com.finance.backend.user
+package com.finance.backend.user.response
 
 class UserDao(
         username : String,

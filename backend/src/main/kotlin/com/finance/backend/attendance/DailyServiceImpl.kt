@@ -9,6 +9,7 @@ import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.temporal.ChronoUnit
 import java.util.*
 
@@ -33,7 +34,7 @@ class DailyServiceImpl(
             val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val startDate = LocalDate.of(year, month, 1)
             val endDate = startDate.plusMonths(1).minusDays(1)
-            val dayList: List<Attendance> = attendanceRepository.findAllByUserAndAttDateBetween(user, startDate, endDate).get()
+            val dayList: List<Attendance> = attendanceRepository.findAllByUserAndAttDateBetween(user, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX)).get()
             return List(startDate.until(endDate, ChronoUnit.DAYS).toInt()) { i -> AttendanceDao(startDate.plusDays(i.toLong()), isAttend(dayList, startDate.plusDays(i.toLong()))) }
         } else throw Exception()
     }
@@ -46,4 +47,6 @@ class DailyServiceImpl(
         }
         return false
     }
+
+    
 }

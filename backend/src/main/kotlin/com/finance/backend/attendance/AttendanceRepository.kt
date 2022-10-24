@@ -8,5 +8,5 @@ import java.time.LocalDateTime
 import java.util.*
 
 interface AttendanceRepository : JpaRepository<Attendance, Long> {
-    fun findAllByUserAndAttDateBetween(user: User, startDateTime : LocalDate, endDateTime : LocalDate) : Optional<List<Attendance>>
+    fun findAllByUserAndAttDateBetween(user: User, startDateTime : LocalDateTime, endDateTime : LocalDateTime) : Optional<List<Attendance>>
 }
