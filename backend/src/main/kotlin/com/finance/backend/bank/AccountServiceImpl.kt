@@ -2,6 +2,8 @@ package com.finance.backend.bank;
 
 import com.finance.backend.auth.Exceptions.TokenExpiredException
 import com.finance.backend.bank.response.BankAccountRes
+import com.finance.backend.bank.response.BankDetailRes
+import com.finance.backend.bank.response.BankTradeRes
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
@@ -14,6 +16,7 @@ import java.util.UUID
 class AccountServiceImpl(
         val userRepository: UserRepository,
         val accountRepository: AccountRepository,
+        val tradeHistoryRepository: TradeHistoryRepository,
         val jwtUtils: JwtUtils
 ) : AccountService {
 
@@ -44,5 +47,17 @@ class AccountServiceImpl(
         }
         accountRepository.save(account)
 
+    }
+
+    override fun getAccountDetail(acNo: String): BankDetailRes {
+        var accountDetailList = ArrayList<BankTradeRes>()
+        val account = accountRepository.findById(acNo)
+        val bankAccountRes = BankAccountRes(account.get().acNo, account.get().balance, account.get().acName)
+        val tradeHistroyList = tradeHistoryRepository.findAllByAccountId(account.get().acNo)
+        for (trade in tradeHistroyList){
+            accountDetailList.add(BankTradeRes(trade.tdDt,trade.tdVal, trade.tdCn, trade.tdType))
+        }
+        val bankDetailRes = BankDetailRes(bankAccountRes, accountDetailList)
+        return bankDetailRes
     }
 }
