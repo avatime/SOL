@@ -6,7 +6,13 @@ import com.finance.backend.auth.Exceptions.DuplicatedUserException
 import com.finance.backend.auth.Exceptions.InvalidPasswordException
 import com.finance.backend.user.Exceptions.InvalidUserException
 import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.auth.request.LoginDto
+import com.finance.backend.auth.request.SignupDto
+import com.finance.backend.auth.response.LoginDao
 import com.finance.backend.common.util.JwtUtils
+import com.finance.backend.profile.Profile
+import com.finance.backend.profile.ProfileRepository
+import com.finance.backend.user.response.UserDao
 import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -17,6 +23,7 @@ import java.util.*
 @RequiredArgsConstructor
 class UserServiceImpl (
         private val userRepository: UserRepository,
+        private val profileRepository: ProfileRepository,
         private val passwordEncoder: BCryptPasswordEncoder,
 //        private val authenticationManager: AuthenticationManager,
         private val jwtUtils: JwtUtils
@@ -54,7 +61,7 @@ class UserServiceImpl (
     override fun logout(token: String): Boolean {
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val user : User = userRepository.findById(userId).orElseGet(null)
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.accessToken("")
             userRepository.save(user)
         }
@@ -64,11 +71,30 @@ class UserServiceImpl (
     override fun refresh(token: String) : String {
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val user : User = userRepository.findById(userId).orElseGet(null)
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.accessToken(jwtUtils.refresh(token))
             userRepository.save(user)
             return user.accessToken
         }
         throw Exception()
+    }
+
+    override fun getUserInfo(token: String): UserDao {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
+            val profile : Profile = profileRepository.findByPfId(user.pfId).get()
+            return UserDao(user.name, profile.pfName, profile.pfImg, user.point)
+        }
+        throw Exception()
+    }
+
+    override fun changeProfile(token: String, id: Long) {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
+            user.pfId(id)
+            userRepository.save(user)
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.finance.backend.auth
+package com.finance.backend.auth.response
 
 import com.finance.backend.user.User
 import java.util.*

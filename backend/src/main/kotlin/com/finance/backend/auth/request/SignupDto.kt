@@ -1,4 +1,4 @@
-package com.finance.backend.auth
+package com.finance.backend.auth.request
 
 import com.finance.backend.user.User
 import java.text.SimpleDateFormat
