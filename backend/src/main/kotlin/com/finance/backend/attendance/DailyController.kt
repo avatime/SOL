@@ -23,7 +23,7 @@ class DailyController(private val dailyService: DailyService) {
         }
     }
 
-    @GetMapping("/{month}")
+    @GetMapping("/{year}/{month}")
     fun getAttendance(@RequestHeader("access_token") accessToken : String,@PathVariable year: Int, @PathVariable month: Int) : ResponseEntity<Any?> {
         return try{
             ResponseEntity.status(200).body(dailyService.getAttendance(accessToken, year, month))
@@ -32,6 +32,7 @@ class DailyController(private val dailyService: DailyService) {
         } catch (e : InvalidUserException) {
             ResponseEntity.status(409).body("Cannot Found User")
         } catch (e : Exception) {
+            println(e)
             ResponseEntity.status(500).body("Internal Server Error")
         }
     }
