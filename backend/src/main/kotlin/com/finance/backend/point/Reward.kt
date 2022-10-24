@@ -1,12 +1,13 @@
 package com.finance.backend.point
 
-import com.finance.backend.point.response.PointDao
+import com.finance.backend.point.response.RewardDao
 import com.finance.backend.user.User
 import org.springframework.data.annotation.CreatedDate
 import java.time.LocalDateTime
 import javax.persistence.*
 
-class Point(
+@Entity(name = "Reward")
+class Reward(
         user : User,
         point : Int,
         name : String = "포인트 적립"
@@ -30,5 +31,5 @@ class Point(
     @Column
     var name : String = name
 
-    fun toEntity() : PointDao = PointDao(this.date, this.point, this.name)
+    fun toEntity() : RewardDao = RewardDao(this.date, this.point, this.name)
 }
