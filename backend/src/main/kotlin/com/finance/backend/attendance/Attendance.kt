@@ -24,4 +24,7 @@ class Attendance (
     @ManyToOne
     @JoinColumn(name = "user_id")
     var user : User = user
+
+    fun walk(walk: Int) {this.walk = walk}
+    fun addWalk() {this.walk++}
 }
