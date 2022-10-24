@@ -1,15 +1,17 @@
 package com.finance.backend.point
 
 import com.finance.backend.auth.Exceptions.TokenExpiredException
-import com.finance.backend.point.request.PointDto
+import com.finance.backend.point.request.RewardDto
 import com.finance.backend.user.Exceptions.InvalidUserException
+import com.finance.backend.user.User
+import com.finance.backend.user.UserRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.util.*
 
 @RestController
 @RequestMapping("/api/v1/point")
-class PointController(private val pointService: PointService) {
-
+class RewardController(private val pointService: RewardService, private val userRepository: UserRepository) {
     @GetMapping("/{filter}")
     fun getPoints(@RequestHeader("access_token") accessToken : String, @PathVariable filter: String) : ResponseEntity<Any?> {
         return try{
@@ -24,12 +26,13 @@ class PointController(private val pointService: PointService) {
         } catch (e : InvalidUserException) {
             ResponseEntity.status(409).body("Cannot Found User")
         } catch (e : Exception) {
+            println(e)
             ResponseEntity.status(500).body("Internal Server Error")
         }
     }
 
     @PostMapping("")
-    fun pointToCash(@RequestHeader("access_token") accessToken : String, @RequestBody pointDto: PointDto) : ResponseEntity<Any> {
+    fun pointToCash(@RequestHeader("access_token") accessToken : String, @RequestBody rewardDto: RewardDto) : ResponseEntity<Any> {
         return try{
             ResponseEntity.status(200).body("")
         } catch (e : TokenExpiredException) {
