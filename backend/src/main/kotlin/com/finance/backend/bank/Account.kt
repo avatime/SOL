@@ -12,7 +12,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "account")
-data class Account (
+class Account (
         @ManyToOne
         val user: User,
 

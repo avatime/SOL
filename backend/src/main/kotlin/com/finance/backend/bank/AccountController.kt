@@ -3,6 +3,7 @@ package com.finance.backend.bank;
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -32,5 +33,12 @@ class AccountController(val accountService: AccountService) {
         return ResponseEntity
                 .ok()
                 .body(accountService.registerRemitAccount(acNo))
+    }
+
+    @GetMapping("/all/{ac_no}")
+    fun getAccountDetail(@PathVariable acNo : String): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(accountService.getAccountDetail(acNo))
     }
 }
