@@ -46,7 +46,10 @@ class User(
     var sex: Boolean = (sex % 2 == 0)
 
     @Column(nullable = false)
-    var pfId: Int = Random().nextInt(9) + 1
+    var pfId: Long = (Random().nextInt(9) + 1).toLong()
+
+    @Column
+    var point : Long = 0
 
     @Column
     var account: String = ""
@@ -70,8 +73,12 @@ class User(
         this.refreshToken = refreshToken
     }
 
-    fun pfId(pfId: Int) {
+    fun pfId(pfId: Long) {
         this.pfId = pfId
+    }
+
+    fun addPoint(point : Int) {
+        this.point += point
     }
 
     fun account(account: String) {
