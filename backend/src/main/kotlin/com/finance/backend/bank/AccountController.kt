@@ -55,4 +55,11 @@ class AccountController(val accountService: AccountService) {
                 .ok()
                 .body(accountService.getAccountDetailType(acNo, type))
     }
+
+    @GetMapping("/recent")
+    fun getRecentTrade(@RequestHeader("acces_token") accessToken : String): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(accountService.getRecentTrade(accessToken))
+    }
 }
