@@ -1,8 +1,7 @@
-package com.finance.backend.attendance
+package com.finance.backend.daily
 
-import com.finance.backend.attendance.response.AttendanceDao
-import com.finance.backend.attendance.response.WalkDao
-import javax.accessibility.AccessibleSelection
+import com.finance.backend.daily.response.AttendanceDao
+import com.finance.backend.daily.response.WalkDao
 
 interface DailyService {
     fun check(accessToken : String)

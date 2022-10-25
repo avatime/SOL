@@ -1,4 +1,4 @@
-package com.finance.backend.attendance
+package com.finance.backend.daily.entity
 
 import com.finance.backend.user.User
 import org.springframework.data.annotation.CreatedDate
@@ -18,13 +18,7 @@ class Attendance (
     @CreatedDate
     var attDate: LocalDateTime = LocalDateTime.now()
 
-    @Column
-    var walk : Int = 0
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     var user : User = user
-
-    fun walk(walk: Int) {this.walk = walk}
-    fun addWalk() {this.walk++}
 }

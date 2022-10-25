@@ -1,4 +1,4 @@
-package com.finance.backend.user.Exceptions
+package com.finance.backend.Exceptions
 
 class InvalidUserException : Exception() {
     override val message: String?

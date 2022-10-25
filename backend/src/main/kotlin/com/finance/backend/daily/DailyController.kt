@@ -1,10 +1,8 @@
-package com.finance.backend.attendance
+package com.finance.backend.daily
 
-import com.finance.backend.attendance.request.WalkDto
-import com.finance.backend.attendance.response.AttendanceDao
-import com.finance.backend.attendance.response.WalkDao
-import com.finance.backend.auth.Exceptions.TokenExpiredException
-import com.finance.backend.user.Exceptions.InvalidUserException
+import com.finance.backend.daily.request.WalkDto
+import com.finance.backend.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.InvalidUserException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

@@ -1,4 +1,4 @@
-package com.finance.backend.attendance.response
+package com.finance.backend.daily.response
 
 import java.time.LocalDate
 
