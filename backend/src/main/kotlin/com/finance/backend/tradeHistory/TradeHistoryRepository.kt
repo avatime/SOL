@@ -5,4 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface TradeHistoryRepository: JpaRepository<TradeHistory, Long> {
     fun findAllByAccountAcNo(acNo: String): List<TradeHistory>
+
+    fun findAllByAccountAcNoAndTypeOrderByTdDtDesc(acNo: String, type: Int): List<TradeHistory>
 }

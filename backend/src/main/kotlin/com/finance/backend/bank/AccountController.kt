@@ -35,10 +35,24 @@ class AccountController(val accountService: AccountService) {
                 .body(accountService.registerRemitAccount(acNo))
     }
 
+    @PutMapping("/bookmark")
+    fun registerBookmarkAccount(@RequestHeader("acces_token") accessToken : String, @RequestBody acNo: String): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(accountService.registerBookmarkAccount(acNo,accessToken))
+    }
+
     @GetMapping("/all/{ac_no}")
     fun getAccountDetail(@PathVariable acNo : String): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()
                 .body(accountService.getAccountDetail(acNo))
+    }
+
+    @GetMapping("/{ac_no}/{type}")
+    fun getAccountDetailType(@PathVariable acNo: String, @PathVariable type: Int): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(accountService.getAccountDetailType(acNo, type))
     }
 }
