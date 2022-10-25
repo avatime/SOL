@@ -135,4 +135,10 @@ class AccountServiceImpl(
 
         return accountDetailList
     }
+
+    override fun getUserName(acNo: String, cpCode: Long): String {
+        val account = accountRepository.findByAcNoAnAndAcCpCode(acNo, cpCode)?: let{return ""}
+        val userName = userRepository.findById(account.user.id).get().name
+        return userName
+    }
 }

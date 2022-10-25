@@ -62,4 +62,11 @@ class AccountController(val accountService: AccountService) {
                 .ok()
                 .body(accountService.getRecentTrade(accessToken))
     }
+
+    @GetMapping("/check/{ac_no}/{cp_code}")
+    fun getCheckAccount(@PathVariable acNo: String, @PathVariable cpCode: Long): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(accountService.getUserName(acNo, cpCode))
+    }
 }
