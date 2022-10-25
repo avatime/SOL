@@ -1,6 +1,7 @@
-package com.finance.backend.bank
+package com.finance.backend.tradeHistory
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.finance.backend.bank.Account
 import java.util.Date
 import javax.persistence.*
 
