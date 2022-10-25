@@ -1,4 +1,4 @@
-package com.finance.android.ui.fragments
+package com.finance.android.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

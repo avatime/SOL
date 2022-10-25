@@ -8,6 +8,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.finance.android.ui.components.BottomNavBar
+import com.finance.android.ui.screens.HomeScreen
+import com.finance.android.ui.screens.MoreScreen
+import com.finance.android.ui.screens.ProductScreen
+import com.finance.android.ui.screens.StockScreen
 import com.finance.android.utils.Const
 
 @Composable
