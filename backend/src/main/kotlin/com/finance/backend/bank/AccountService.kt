@@ -10,6 +10,6 @@ interface AccountService {
     fun registerAccount(acNo: String)
     fun registerRemitAccount(acNo: String)
     fun getAccountDetail(acNo: String): BankDetailRes
-
+    fun registerBookmarkAccount(acNo: String, token: String)
 
 }
