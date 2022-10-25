@@ -1,5 +1,6 @@
 package com.finance.android
 
+import android.app.Application
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -9,6 +10,7 @@ import com.finance.android.ui.fragments.MainFragment
 import com.finance.android.ui.fragments.SplashFragment
 import com.finance.android.ui.theme.FinanceTheme
 import com.finance.android.utils.Const
+import dagger.hilt.android.HiltAndroidApp
 
 @Composable
 fun FinanceApp() {
@@ -30,3 +32,6 @@ fun FinanceApp() {
         }
     }
 }
+
+@HiltAndroidApp
+class FinanceApplication: Application()
