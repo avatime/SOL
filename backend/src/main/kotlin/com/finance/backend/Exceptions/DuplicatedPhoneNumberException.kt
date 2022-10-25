@@ -1,4 +1,4 @@
-package com.finance.backend.auth.Exceptions
+package com.finance.backend.Exceptions
 
 class DuplicatedPhoneNumberException : Exception() {
     override val message: String?

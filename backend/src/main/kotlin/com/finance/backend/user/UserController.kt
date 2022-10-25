@@ -1,6 +1,6 @@
 package com.finance.backend.user
 
-import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.user.Exceptions.InvalidUserException
 import com.finance.backend.user.request.ChangeProfileDto
 import org.springframework.http.ResponseEntity

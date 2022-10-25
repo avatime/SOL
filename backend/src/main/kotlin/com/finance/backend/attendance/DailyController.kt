@@ -3,7 +3,7 @@ package com.finance.backend.attendance
 import com.finance.backend.attendance.request.WalkDto
 import com.finance.backend.attendance.response.AttendanceDao
 import com.finance.backend.attendance.response.WalkDao
-import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.user.Exceptions.InvalidUserException
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

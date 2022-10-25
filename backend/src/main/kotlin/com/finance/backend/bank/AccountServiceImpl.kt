@@ -1,6 +1,6 @@
 package com.finance.backend.bank;
 
-import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.bank.response.BankAccountRes
 import com.finance.backend.bank.response.BankDetailRes
 import com.finance.backend.bank.response.BankTradeRes
@@ -53,7 +53,7 @@ class AccountServiceImpl(
         var accountDetailList = ArrayList<BankTradeRes>()
         val account = accountRepository.findById(acNo)
         val bankAccountRes = BankAccountRes(account.get().acNo, account.get().balance, account.get().acName)
-        val tradeHistroyList = tradeHistoryRepository.findAllByAccountId(account.get().acNo)
+        val tradeHistroyList = tradeHistoryRepository.findAllByAccountAcNo(account.get().acNo)
         for (trade in tradeHistroyList){
             accountDetailList.add(BankTradeRes(trade.tdDt,trade.tdVal, trade.tdCn, trade.tdType))
         }
