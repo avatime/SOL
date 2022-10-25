@@ -2,7 +2,7 @@ package com.finance.backend.attendance
 
 import com.finance.backend.attendance.response.AttendanceDao
 import com.finance.backend.attendance.response.WalkDao
-import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.user.Exceptions.InvalidUserException
 import com.finance.backend.user.User
@@ -24,7 +24,8 @@ class DailyServiceImpl(
 ) : DailyService {
     private val goal : Int = 5000
     override fun check(accessToken: String) {
-        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}){
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()
+                }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             attendanceRepository.save(Attendance(user))
@@ -32,7 +33,8 @@ class DailyServiceImpl(
     }
 
     override fun getAttendance(accessToken: String, year: Int, month : Int) : List<AttendanceDao> {
-        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}) {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
             val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val startDate = LocalDate.of(year, month, 1)
@@ -46,7 +48,8 @@ class DailyServiceImpl(
      * walk를 한번에 더하는 방식
      */
     override fun walk(accessToken: String, walkNum : Int) {
-        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}){
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()
+                }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val attend : Attendance = attendanceRepository.findByUserAndAttDateBetween(user, now().atStartOfDay(), now().atTime(LocalTime.MAX)).get()
@@ -69,7 +72,8 @@ class DailyServiceImpl(
 //    }
 
     override fun getWalk(accessToken: String, year: Int, month: Int)  : List<WalkDao> {
-        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}) {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
             val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val startDate = LocalDate.of(year, month, 1)

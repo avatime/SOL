@@ -52,7 +52,7 @@ class User(
     var point : Long = 0
 
     @Column
-    var account: String = ""
+    var account: String? = null
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

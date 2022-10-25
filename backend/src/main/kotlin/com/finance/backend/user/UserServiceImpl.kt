@@ -1,11 +1,11 @@
 package com.finance.backend.user
 
 import com.finance.backend.auth.*
-import com.finance.backend.auth.Exceptions.DuplicatedPhoneNumberException
-import com.finance.backend.auth.Exceptions.DuplicatedUserException
-import com.finance.backend.auth.Exceptions.InvalidPasswordException
+import com.finance.backend.Exceptions.DuplicatedPhoneNumberException
+import com.finance.backend.Exceptions.DuplicatedUserException
+import com.finance.backend.Exceptions.InvalidPasswordException
 import com.finance.backend.user.Exceptions.InvalidUserException
-import com.finance.backend.auth.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.auth.request.LoginDto
 import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.auth.response.LoginDao
@@ -48,7 +48,8 @@ class UserServiceImpl (
     }
 
     override fun login(loginDto: LoginDto) : LoginDao? {
-        if(try {jwtUtils.validation(loginDto.refreshToken)} catch (e: Exception) {throw TokenExpiredException()}){
+        if(try {jwtUtils.validation(loginDto.refreshToken)} catch (e: Exception) {throw TokenExpiredException()
+                }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(loginDto.refreshToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             if(passwordEncoder.matches(loginDto.password, user.password)) {
@@ -59,7 +60,8 @@ class UserServiceImpl (
     }
 
     override fun logout(token: String): Boolean {
-        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.accessToken("")
@@ -69,7 +71,8 @@ class UserServiceImpl (
     }
 
     override fun refresh(token: String) : String {
-        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.accessToken(jwtUtils.refresh(token))
@@ -80,7 +83,8 @@ class UserServiceImpl (
     }
 
     override fun getUserInfo(token: String): UserDao {
-        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val profile : Profile = profileRepository.findByPfId(user.pfId).get()
@@ -90,7 +94,8 @@ class UserServiceImpl (
     }
 
     override fun changeProfile(token: String, id: Long) {
-        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.pfId(id)
