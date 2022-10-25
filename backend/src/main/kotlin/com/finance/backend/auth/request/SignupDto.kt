@@ -12,5 +12,5 @@ data class SignupDto(
         var birth : String,
         var sex : Int
 ) {
-    fun toEntity(): User = User(this.username, this.password, this.phone, SimpleDateFormat("yyyy.MM.dd").parse(this.birth), this.sex)
+    fun toEntity(): User = User(this.username, this.password, this.phone, SimpleDateFormat("yyyy.MM.dd").parse(this.birth), this.sex, "회원")
 }

@@ -2,7 +2,7 @@ package com.finance.backend.auth
 
 import com.finance.backend.Exceptions.DuplicatedUserException
 import com.finance.backend.Exceptions.InvalidPasswordException
-import com.finance.backend.user.Exceptions.InvalidUserException
+import com.finance.backend.Exceptions.InvalidUserException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.auth.request.LoginDto
 import com.finance.backend.auth.request.SignupDto
