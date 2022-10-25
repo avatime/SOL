@@ -1,4 +1,4 @@
-package com.finance.android.ui.fragments
+package com.finance.android.ui.components
 
 
 import androidx.compose.foundation.layout.*
