@@ -1,8 +1,6 @@
 package com.finance.backend.bookmark
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.finance.backend.bookmark.request.BookmarkDto
-import com.finance.backend.bookmark.response.BookmarkDao
 import com.finance.backend.user.User
 import javax.persistence.*
 
@@ -18,6 +16,7 @@ class Bookmark(
     @Column(updatable = false, nullable = false, columnDefinition = "INT UNSIGNED")
     var id: Long = 0
         protected set
+
     @JsonProperty("ac_no")
     var acNo: String = acNo
 
@@ -27,7 +26,4 @@ class Bookmark(
     @ManyToOne
     var user: User = user
 
-    fun toCreateBookmarkDao(): BookmarkDao{
-        return BookmarkDao(this.id, acNo, bkStatus, user)
-    }
 }
