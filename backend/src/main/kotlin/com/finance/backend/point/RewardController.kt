@@ -3,7 +3,7 @@ package com.finance.backend.point
 import com.finance.backend.Exceptions.AccountNotSubToUserException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.point.request.RewardDto
-import com.finance.backend.user.Exceptions.InvalidUserException
+import com.finance.backend.Exceptions.InvalidUserException
 import com.finance.backend.user.UserRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*

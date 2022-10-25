@@ -15,7 +15,8 @@ class User(
         password: String,
         phone : String,
         birth : Date,
-        sex : Int
+        sex : Int,
+        type : String
 ) : Timestamped() {
 
     @Id
@@ -34,15 +35,15 @@ class User(
     var name: String = name
         protected set
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique=true)
     var phone: String = phone
         protected set
 
-    @Column(nullable = false)
+    @Column
     var birth: Date = birth
         protected set
 
-    @Column(nullable = false)
+    @Column
     var sex: Boolean = (sex % 2 == 0)
 
     @Column(nullable = false)
@@ -54,9 +55,12 @@ class User(
     @Column
     var account: String? = null
 
+    @Column
+    var type: String = type
+
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    @Column(nullable = false)
+    @Column
     var password: String = password
         protected set
 
@@ -83,6 +87,13 @@ class User(
 
     fun account(account: String) {
         this.account = account
+    }
+
+    fun toMember(password: String, birth : Date, sex : Int) {
+        this.password = password
+        this.birth = birth
+        this.sex = (sex % 2 == 0)
+        this.type = "회원"
     }
 
     fun toLoginEntity() : LoginDao = LoginDao(this.name, this.id, this.accessToken, this.refreshToken)

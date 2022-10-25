@@ -2,12 +2,11 @@ package com.finance.backend.point
 
 import com.finance.backend.Exceptions.AccountNotSubToUserException
 import com.finance.backend.Exceptions.TokenExpiredException
-import com.finance.backend.bank.Account
 import com.finance.backend.bank.AccountRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.point.request.RewardDto
 import com.finance.backend.point.response.RewardDao
-import com.finance.backend.user.Exceptions.InvalidUserException
+import com.finance.backend.Exceptions.InvalidUserException
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
@@ -28,7 +27,7 @@ class RewardServiceImpl(
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
-            val pointList : List<Reward> = rewardRepository.findAllByUser(user).orElseGet(null)
+            val pointList : List<Reward> = rewardRepository.findAllByUser(user) ?: emptyList<Reward>()
             return List(pointList.size) {i -> pointList[i].toEntity() }
         } else throw Exception()
     }
@@ -38,7 +37,7 @@ class RewardServiceImpl(
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
-            val pointList : List<Reward> = rewardRepository.findAllByUserAndPointGreaterThan(user, 0).orElseGet(null)
+            val pointList : List<Reward> = rewardRepository.findAllByUserAndPointGreaterThan(user, 0)?: emptyList<Reward>()
             return List(pointList.size) {i -> pointList[i].toEntity()}
         } else throw Exception()
     }
@@ -48,7 +47,7 @@ class RewardServiceImpl(
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
-            val pointList : List<Reward> = rewardRepository.findAllByUserAndPointLessThan(user, 0).orElseGet(null)
+            val pointList : List<Reward> = rewardRepository.findAllByUserAndPointLessThan(user, 0)?: emptyList<Reward>()
             return List(pointList.size) {i -> pointList[i].toEntity()}
         } else throw Exception()
     }
