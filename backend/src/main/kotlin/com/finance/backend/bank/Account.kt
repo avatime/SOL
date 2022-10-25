@@ -35,11 +35,11 @@ class Account (
                 protected set
 
         @JsonProperty("ac_pd_code")
-        var acPdCode : Int = 0
+        var acPdCode : Long = 0
                 protected set
 
         @JsonProperty("ac_cp_code")
-        var acCpCode : Int = 0
+        var acCpCode : Long = 0
                 protected set
 
         @JsonProperty("ac_status")
