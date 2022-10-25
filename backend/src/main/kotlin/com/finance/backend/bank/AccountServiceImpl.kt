@@ -56,18 +56,6 @@ class AccountServiceImpl(
 
     }
 
-    override fun getAccountDetail(acNo: String): BankDetailRes {
-        var accountDetailList = ArrayList<BankTradeRes>()
-        val account = accountRepository.findById(acNo)
-        val bankAccountRes = BankAccountRes(account.get().acNo, account.get().balance, account.get().acName)
-        val tradeHistroyList = tradeHistoryRepository.findAllByAccountAcNo(account.get().acNo)
-        for (trade in tradeHistroyList){
-            accountDetailList.add(BankTradeRes(trade.tdDt,trade.tdVal, trade.tdCn, trade.tdType))
-        }
-        val bankDetailRes = BankDetailRes(bankAccountRes, accountDetailList)
-        return bankDetailRes
-    }
-
     override fun registerBookmarkAccount(acNo: String, token: String) {
         val user: User
 
@@ -85,5 +73,26 @@ class AccountServiceImpl(
                 bookmarkRepository.save(bookmark)
             }
         }
+    }
+
+    override fun getAccountDetail(acNo: String): BankDetailRes {
+        var accountDetailList = ArrayList<BankTradeRes>()
+        val account = accountRepository.findById(acNo)
+        val bankAccountRes = BankAccountRes(account.get().acNo, account.get().balance, account.get().acName)
+        val tradeHistroyList = tradeHistoryRepository.findAllByAccountAcNo(account.get().acNo)
+        for (trade in tradeHistroyList){
+            accountDetailList.add(BankTradeRes(trade.tdDt,trade.tdVal, trade.tdCn, trade.tdType))
+        }
+        val bankDetailRes = BankDetailRes(bankAccountRes, accountDetailList)
+        return bankDetailRes
+    }
+
+    override fun getAccountDetailType(acNo: String, type: Int): List<BankTradeRes> {
+        var tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTypeOrderByTdDtDesc(acNo, type)
+        var accountDetailList = ArrayList<BankTradeRes>()
+        for (trade in tradeHistoryList){
+            accountDetailList.add(BankTradeRes(trade.tdDt, trade.tdVal, trade.tdCn, trade.tdType))
+        }
+        return accountDetailList
     }
 }
