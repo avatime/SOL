@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 class AccountController(val accountService: AccountService) {
 
     @GetMapping("/asset")
-    fun getAccountAll(@RequestHeader("acces_token") accessToken : String): ResponseEntity<Any>{
+    fun getAccountAll(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()
                 .body(accountService.getAccountAll(accessToken))
@@ -36,7 +36,7 @@ class AccountController(val accountService: AccountService) {
     }
 
     @PutMapping("/bookmark")
-    fun registerBookmarkAccount(@RequestHeader("acces_token") accessToken : String, @RequestBody acNo: String): ResponseEntity<Any>{
+    fun registerBookmarkAccount(@RequestHeader("access_token") accessToken : String, @RequestBody acNo: String): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()
                 .body(accountService.registerBookmarkAccount(acNo,accessToken))
@@ -57,7 +57,7 @@ class AccountController(val accountService: AccountService) {
     }
 
     @GetMapping("/recent")
-    fun getRecentTrade(@RequestHeader("acces_token") accessToken : String): ResponseEntity<Any>{
+    fun getRecentTrade(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()
                 .body(accountService.getRecentTrade(accessToken))
