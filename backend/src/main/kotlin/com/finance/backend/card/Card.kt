@@ -19,7 +19,7 @@ class Card (
         cdPwd: String,
         cdMtMonth: String,
         cdMtYear: String,
-        cdPdCode: Int,
+        cdPdCode: Long,
         cdStatus: Int,
         cdReg: Boolean,
         user: User,
