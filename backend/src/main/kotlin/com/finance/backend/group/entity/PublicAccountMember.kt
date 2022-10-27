@@ -1,8 +1,11 @@
 package com.finance.backend.group.entity
 
+import com.finance.backend.group.response.FriendRes
+import com.finance.backend.profile.Profile
 import com.finance.backend.user.User
 import javax.persistence.*
 
+@Entity(name = "publicAccountMember")
 class PublicAccountMember(
         publicAccount: PublicAccount,
         user : User,
@@ -24,4 +27,6 @@ class PublicAccountMember(
 
     @Column
     var type : String = type
+
+    fun toEntity(profile: Profile) : FriendRes = FriendRes(this.user.name, if(this.type == "회원") "" else this.type, profile.pfImg, profile.pfName)
 }
