@@ -1,11 +1,7 @@
 package com.finance.backend.user
 
+import com.finance.backend.Exceptions.*
 import com.finance.backend.auth.*
-import com.finance.backend.Exceptions.DuplicatedPhoneNumberException
-import com.finance.backend.Exceptions.DuplicatedUserException
-import com.finance.backend.Exceptions.InvalidPasswordException
-import com.finance.backend.Exceptions.InvalidUserException
-import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.auth.request.LoginDto
 import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.auth.response.LoginDao
@@ -88,8 +84,8 @@ class UserServiceImpl (
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
-            val profile : Profile = profileRepository.findByPfId(user.pfId).get()
+            val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
+            val profile : Profile = profileRepository.findByPfId(user.pfId) ?: throw NoProfileException()
             return UserDao(user.name, profile.pfName, profile.pfImg, user.point)
         }
         throw Exception()
