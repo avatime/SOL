@@ -19,5 +19,6 @@ interface TradeHistoryRepository: JpaRepository<TradeHistory, Long> {
     @Query("SELECT th.tdTgAc, max(th.tdDt) from TradeHistory th group by :acNo order by :acNo")
     fun getAllByAcNo(@Param(value = "account") acNo: String): List<Pair<String, Date>>
 
+    fun findAllDistinctByAccountAcNoOrderByTdDtDesc(acNo: String): List<TradeHistory>
     fun findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo: String, type: Int): List<TradeHistory>
 }
