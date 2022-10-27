@@ -10,6 +10,7 @@ import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
+import com.finance.backend.corporation.response.BankInfoRes
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
@@ -140,5 +141,15 @@ class AccountServiceImpl(
         val account = accountRepository.findByAcNoAndAcCpCode(acNo, cpCode)?: let{return ""}
         val userName = userRepository.findById(account.user.id).get().name
         return userName
+    }
+
+    override fun getBankInfo(): List<BankInfoRes> {
+        var bankInfoList = ArrayList<BankInfoRes>()
+        val corporationList = corporationRepository.findTop16()
+        for(corporation in corporationList){
+            val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo)
+            bankInfoList.add(bankInfo)
+        }
+        return bankInfoList
     }
 }
