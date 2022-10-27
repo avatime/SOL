@@ -10,6 +10,7 @@ import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
+import com.finance.backend.corporation.response.BankInfoRes
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
@@ -92,7 +93,7 @@ class AccountServiceImpl(
     }
 
     override fun getAccountDetailType(acNo: String, type: Int): List<BankTradeRes> {
-        var tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTypeOrderByTdDtDesc(acNo, type)
+        var tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo, type)
         var accountDetailList = ArrayList<BankTradeRes>()
         for (trade in tradeHistoryList){
             accountDetailList.add(BankTradeRes(trade.tdDt, trade.tdVal, trade.tdCn, trade.tdType))
@@ -137,8 +138,18 @@ class AccountServiceImpl(
     }
 
     override fun getUserName(acNo: String, cpCode: Long): String {
-        val account = accountRepository.findByAcNoAnAndAcCpCode(acNo, cpCode)?: let{return ""}
+        val account = accountRepository.findByAcNoAndAcCpCode(acNo, cpCode)?: let{return ""}
         val userName = userRepository.findById(account.user.id).get().name
         return userName
+    }
+
+    override fun getBankInfo(): List<BankInfoRes> {
+        var bankInfoList = ArrayList<BankInfoRes>()
+        val corporationList = corporationRepository.findTop16()
+        for(corporation in corporationList){
+            val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo)
+            bankInfoList.add(bankInfo)
+        }
+        return bankInfoList
     }
 }
