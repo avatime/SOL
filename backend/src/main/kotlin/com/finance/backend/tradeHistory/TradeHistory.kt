@@ -2,16 +2,15 @@ package com.finance.backend.tradeHistory
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.finance.backend.bank.Account
+import java.time.LocalDateTime
 import java.util.Date
 import javax.persistence.*
 
 @Entity
 @Table(name = "trade_history")
 class TradeHistory(
-    id : Long,
     value : Int,
-    date : Date,
-    content : String,
+    date : LocalDateTime,
     type : Int,
     target : String,
     targetAccount : String,
@@ -22,16 +21,18 @@ class TradeHistory(
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long = id
+    @Column(updatable = false, nullable = false, columnDefinition = "INT UNSIGNED")
+    var id: Long = 0
+        protected set
 
     @JsonProperty("td_val")
     var tdVal: Int = value
 
     @JsonProperty("td_dt")
-    var tdDt: Date = date
+    var tdDt: LocalDateTime = date
 
     @JsonProperty("td_cn")
-    var tdCn: String = content
+    var tdCn: String = ""
 
     @JsonProperty("td_type")
     var tdType: Int = type

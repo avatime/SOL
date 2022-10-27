@@ -92,7 +92,7 @@ class AccountServiceImpl(
     }
 
     override fun getAccountDetailType(acNo: String, type: Int): List<BankTradeRes> {
-        var tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTypeOrderByTdDtDesc(acNo, type)
+        var tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo, type)
         var accountDetailList = ArrayList<BankTradeRes>()
         for (trade in tradeHistoryList){
             accountDetailList.add(BankTradeRes(trade.tdDt, trade.tdVal, trade.tdCn, trade.tdType))
@@ -137,7 +137,7 @@ class AccountServiceImpl(
     }
 
     override fun getUserName(acNo: String, cpCode: Long): String {
-        val account = accountRepository.findByAcNoAnAndAcCpCode(acNo, cpCode)?: let{return ""}
+        val account = accountRepository.findByAcNoAndAcCpCode(acNo, cpCode)?: let{return ""}
         val userName = userRepository.findById(account.user.id).get().name
         return userName
     }
