@@ -69,16 +69,20 @@ class RemitServiceImpl(
     override fun postRemit(remitInfoReq: RemitInfoReq) {
         val value = remitInfoReq.value
         val date = LocalDateTime.now()
-        val tdType = 2
-        val target = remitInfoReq.acTag
+        val remitTarget = remitInfoReq.acTag
         val targetAccount = remitInfoReq.acReceive
         val receive = remitInfoReq.receive
         val send = remitInfoReq.send
-        val account = accountRepository.findById(remitInfoReq.acSend).get()
+        val remitAccount = accountRepository.findById(remitInfoReq.acSend).get()
 
-        val tradeHistory = TradeHistory(value, date, tdType, target, targetAccount, receive, send, account)
+        // 출금 거래 내역
+        val tradeRemitHistory = TradeHistory(value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+        tradeHistoryRepository.save(tradeRemitHistory)
 
-        tradeHistoryRepository.save(tradeHistory)
+        // 입금 거래 내역
+        val depositAccount = accountRepository.findById(remitInfoReq.acReceive).get()
+        val depositRemitHistory = TradeHistory(value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
+        tradeHistoryRepository.save(depositRemitHistory)
     }
 
     override fun putBookmark(acNo: String, token: String) {
