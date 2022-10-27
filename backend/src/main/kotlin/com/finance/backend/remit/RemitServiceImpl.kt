@@ -11,6 +11,8 @@ import com.finance.backend.corporation.CorporationRepository
 import com.finance.backend.remit.request.RemitInfoReq
 import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
+import com.finance.backend.user.User
+import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 import java.util.*
@@ -23,6 +25,7 @@ class RemitServiceImpl(
         val accountRepository: AccountRepository,
         val corporationRepository: CorporationRepository,
         val tradeHistoryRepository: TradeHistoryRepository,
+        val userRepository: UserRepository
 ) : RemitService {
 
     override fun getRecommendationAccount(token: String): List<RecentTradeRes> {
@@ -78,8 +81,23 @@ class RemitServiceImpl(
         tradeHistoryRepository.save(tradeHistory)
     }
 
-    override fun putBookmark(acNo: String) {
+    override fun putBookmark(acNo: String, token: String) {
+        val user: User
 
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            user = userRepository.findById(userId).get()
+            if (bookmarkRepository.existsByUserIdAndAcNo(userId, acNo)){
+                var bookmark = bookmarkRepository.findByUserIdAndAcNo(userId, acNo)
+                bookmark.apply {
+                    bkStatus = !bkStatus!!
+                }
+                bookmarkRepository.save(bookmark)
+            }else{
+                var bookmark = Bookmark(acNo, user, true)
+                bookmarkRepository.save(bookmark)
+            }
+        }
 
     }
 }

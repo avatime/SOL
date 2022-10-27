@@ -1,16 +1,17 @@
 package com.finance.backend.bank.response
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDateTime
 import java.util.Date
 
 class BankTradeRes(
-        tdDt : Date,
+        tdDt : LocalDateTime,
         tdValue : Int,
         tdCn : String,
         tdType : Int
 ) {
     @JsonProperty("td_dt")
-    val tdDt : Date = tdDt
+    val tdDt : LocalDateTime = tdDt
 
     @JsonProperty("td_value")
     val tdValue : Int = tdValue
