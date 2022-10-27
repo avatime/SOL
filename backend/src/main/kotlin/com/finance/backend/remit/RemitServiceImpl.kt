@@ -8,8 +8,11 @@ import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
+import com.finance.backend.remit.request.RemitInfoReq
+import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -57,6 +60,26 @@ class RemitServiceImpl(
         }
 
         return accountDetailList
+
+    }
+
+    override fun postRemit(remitInfoReq: RemitInfoReq) {
+        val value = remitInfoReq.value
+        val date = LocalDateTime.now()
+        val tdType = 2
+        val target = remitInfoReq.acTag
+        val targetAccount = remitInfoReq.acReceive
+        val receive = remitInfoReq.receive
+        val send = remitInfoReq.send
+        val account = accountRepository.findById(remitInfoReq.acSend).get()
+
+        val tradeHistory = TradeHistory(value, date, tdType, target, targetAccount, receive, send, account)
+
+        tradeHistoryRepository.save(tradeHistory)
+    }
+
+    override fun putBookmark(acNo: String) {
+
 
     }
 }
