@@ -21,4 +21,5 @@ interface TradeHistoryRepository: JpaRepository<TradeHistory, Long> {
 
     fun findAllDistinctByAccountAcNoOrderByTdDtDesc(acNo: String): List<TradeHistory>
     fun findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo: String, type: Int): List<TradeHistory>
+    fun findAllByTdTgAc(tdTgAc : String) : List<TradeHistory>?
 }
