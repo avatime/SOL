@@ -145,7 +145,7 @@ class AccountServiceImpl(
 
     override fun getBankInfo(): List<BankInfoRes> {
         var bankInfoList = ArrayList<BankInfoRes>()
-        val corporationList = corporationRepository.findTop16ByOrderById()
+        val corporationList = corporationRepository.findTop16ByOrderByCpCode()
         for(corporation in corporationList){
             val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo)
             bankInfoList.add(bankInfo)
