@@ -25,13 +25,13 @@ class UserServiceImpl (
         private val jwtUtils: JwtUtils
         ) : UserService {
     override fun saveUser(signupDto: SignupDto) : LoginDao {
-        if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy.MM.dd").parse(signupDto.birth))) throw DuplicatedUserException()
+        if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) throw DuplicatedUserException()
         else {
             signupDto.password = passwordEncoder.encode(signupDto.password)
             var user : User? = userRepository.findByPhone(signupDto.phone)
             if(user == null) user = signupDto.toEntity()
             else if(user.type != "비회원") throw DuplicatedPhoneNumberException()
-            else user.toMember(signupDto.password, SimpleDateFormat("yyyy.MM.dd").parse(signupDto.birth), signupDto.sex)
+            else user.toMember(signupDto.password, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth), signupDto.sex)
             // 토큰 발급
             user = userRepository.save(user)
             try {

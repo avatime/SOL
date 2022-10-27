@@ -9,4 +9,5 @@ interface AccountRepository : JpaRepository<Account, String> {
     fun existsByAcNoAndUser(acNo : String, user : User) : Boolean
     fun findByAcNoAndAcCpCode(acNo: String, acCpCode: Long): Account?
     fun findByUserIdAndAcType(userId: UUID, acType: Int): List<Account>?
+    fun findByAcNoAndUser(acNo: String, user : User) : Account?
 }

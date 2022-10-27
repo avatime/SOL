@@ -59,4 +59,8 @@ class Account (
 
         @JsonProperty("ac_rm_req")
         var acRmReg : Boolean? = false
+
+        fun withdraw(money : Int) {
+                this.balance -= money
+        }
 }

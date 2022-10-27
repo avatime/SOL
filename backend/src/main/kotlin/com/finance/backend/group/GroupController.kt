@@ -3,6 +3,7 @@ package com.finance.backend.group
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.Exceptions.InvalidUserException
 import com.finance.backend.group.request.PublicAccountReq
+import com.finance.backend.group.request.RegistDueReq
 import com.finance.backend.group.request.RegistPublicAccountReq
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -68,6 +69,19 @@ class GroupController (private val groupService : GroupService) {
         } catch (e : AuthenticationException) {
             ResponseEntity.status(403).body("Cannot Delete Public Group")
         }  catch (e : Exception) {
+            ResponseEntity.status(500).body("Internal Server Error")
+        }
+    }
+
+    @PostMapping("/dues/regist")
+    fun registDue(@RequestHeader("access_token") accessToken : String, @RequestBody registDueReq: RegistDueReq) : ResponseEntity<Any?>{
+        return try{
+            ResponseEntity.status(200).body(groupService.createDue(accessToken, registDueReq))
+        } catch (e : TokenExpiredException) {
+            ResponseEntity.status(403).body("Token Expired")
+        } catch (e : InvalidUserException) {
+            ResponseEntity.status(409).body("Cannot Found User")
+        } catch (e : Exception) {
             ResponseEntity.status(500).body("Internal Server Error")
         }
     }
