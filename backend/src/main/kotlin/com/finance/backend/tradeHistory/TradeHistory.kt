@@ -50,5 +50,6 @@ class TradeHistory(
     var tdSed: String = send
 
     @ManyToOne
+    @JoinColumn(name = "ac_no")
     val account: Account = account
 }

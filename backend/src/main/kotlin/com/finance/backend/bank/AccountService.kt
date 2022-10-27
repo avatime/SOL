@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 interface AccountService {
     fun getAccountAll(token: String): List<BankAccountRes>
-    fun registerAccount(acNo: String)
+    fun registerAccount(acNoList: List<String>)
     fun registerRemitAccount(acNo: String)
     fun registerBookmarkAccount(acNo: String, token: String)
     fun getAccountDetail(acNo: String): BankDetailRes
