@@ -1,5 +1,6 @@
 package com.finance.backend.bank;
 
+import com.finance.backend.corporation.response.BankInfoRes
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping;
@@ -68,5 +69,12 @@ class AccountController(val accountService: AccountService) {
         return ResponseEntity
                 .ok()
                 .body(accountService.getUserName(acNo, cpCode))
+    }
+
+    @GetMapping("/info")
+    fun getBankInfo(): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(accountService.getBankInfo())
     }
 }

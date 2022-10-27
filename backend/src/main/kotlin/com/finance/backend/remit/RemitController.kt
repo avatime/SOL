@@ -21,7 +21,7 @@ class RemitController(val remitService: RemitService) {
                 .body(remitService.getRecommendationAccount(accessToken))
     }
 
-    @PostMapping
+    @PostMapping("/account")
     fun postRemit(@RequestBody remitInfoReq: RemitInfoReq): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()

@@ -7,4 +7,5 @@ interface RemitService {
     fun getRecommendationAccount(token: String): List<RecentTradeRes>
     fun postRemit(remitInfoReq: RemitInfoReq)
     fun putBookmark(acNo: String, token: String)
+
 }
