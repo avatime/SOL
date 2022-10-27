@@ -19,12 +19,12 @@ import java.util.UUID
 
 @Service("AccountService")
 class AccountServiceImpl(
-        val userRepository: UserRepository,
-        val accountRepository: AccountRepository,
-        val tradeHistoryRepository: TradeHistoryRepository,
-        val bookmarkRepository: BookmarkRepository,
-        val corporationRepository: CorporationRepository,
-        val jwtUtils: JwtUtils
+        private val userRepository: UserRepository,
+        private val accountRepository: AccountRepository,
+        private val tradeHistoryRepository: TradeHistoryRepository,
+        private val bookmarkRepository: BookmarkRepository,
+        private val corporationRepository: CorporationRepository,
+        private val jwtUtils: JwtUtils
 ) : AccountService {
 
     override fun getAccountAll(token: String): List<BankAccountRes> {
@@ -39,12 +39,14 @@ class AccountServiceImpl(
         return bankAccountList
     }
 
-    override fun registerAccount(acNo: String) {
-        val account = accountRepository.findById(acNo).get()
-        account.apply {
-            acReg = !acReg!!
+    override fun registerAccount(acNoList: List<String>) {
+        for(acNo in acNoList){
+            val account = accountRepository.findById(acNo).get()
+            account.apply {
+                acReg = !acReg!!
+            }
+            accountRepository.save(account)
         }
-        accountRepository.save(account)
     }
 
     override fun registerRemitAccount(acNo: String) {

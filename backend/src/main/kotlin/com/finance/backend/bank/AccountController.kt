@@ -23,10 +23,10 @@ class AccountController(val accountService: AccountService) {
     }
 
     @PutMapping("/asset")
-    fun registerAccount(@RequestBody acNo: String): ResponseEntity<Any>{
+    fun registerAccount(@RequestBody acNoList: List<String>): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()
-                .body(accountService.registerAccount(acNo))
+                .body(accountService.registerAccount(acNoList))
     }
 
     @PutMapping("/remit")
