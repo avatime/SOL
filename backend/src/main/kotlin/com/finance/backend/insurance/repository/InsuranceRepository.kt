@@ -5,7 +5,7 @@ import com.finance.backend.user.User
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface InsuranceRepository : JpaRepository<Insurance, Long> {
-    fun findByIdAndUser(id : Long, user : User) : Insurance?
-    fun findAllByUser(user : User) : List<Insurance>
-    fun findAllByUserAndIsReg(user: User, isReg : Boolean) : List<Insurance>
+    fun findByIdAndUserAndType(id : Long, user : User, type : Int) : Insurance?
+    fun findAllByUserAndType(user : User, type : Int) : List<Insurance>
+    fun findAllByUserAndIsRegAndType(user: User, isReg : Boolean, type : Int) : List<Insurance>
 }
