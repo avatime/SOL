@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.util.StringJoiner
 
 @RestController
 @RequestMapping("/api/v1/card")
@@ -49,5 +50,12 @@ class CardController(
         return ResponseEntity
                 .ok()
                 .body(cardService.getCardBenefit(accessToken))
+    }
+
+    @GetMapping("/{cd_no")
+    fun getCardBenefitDetail(cdNo: String): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(cardService.getCardBenefitDetail(cdNo))
     }
 }

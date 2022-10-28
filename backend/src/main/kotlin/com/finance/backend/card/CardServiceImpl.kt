@@ -6,6 +6,7 @@ import com.finance.backend.card.response.CardBillDetailRes
 import com.finance.backend.card.response.CardBillRes
 import com.finance.backend.card.response.CardInfoRes
 import com.finance.backend.cardBenefit.CardBenefitRepository
+import com.finance.backend.cardBenefit.response.CardBenefitDetailRes
 import com.finance.backend.cardBenefit.response.CardBenefitRes
 import com.finance.backend.cardBenefitImg.CardBenefitImgRepository
 import com.finance.backend.cardPaymentHistory.CardPaymentHistoryRepository
@@ -96,5 +97,15 @@ class CardServiceImpl(
             }
         }
         return cardBenefitList
+    }
+
+    override fun getCardBenefitDetail(cdNo: String): CardBenefitDetailRes {
+        val cardProduct = cardProductRepository.findByCdNo(cdNo)
+        val cardBenefit = cardBenefitRepository.findByCdPdCode(cardProduct.cdPdCode)
+        val cardBenefitImg = cardBenefitImgRepository.findById(cardBenefit.cdBfImg.id).get()
+
+        val cardBenefitRes = CardBenefitDetailRes(cardBenefit.cdBfName, cardBenefit.cdBfSum, cardBenefitImg.cdBfImg, cardBenefit.cdBfDetail)
+
+        return cardBenefitRes
     }
 }
