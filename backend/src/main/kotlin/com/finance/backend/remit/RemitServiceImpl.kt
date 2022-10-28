@@ -1,6 +1,7 @@
 package com.finance.backend.remit
 
 import com.finance.backend.Exceptions.TokenExpiredException
+import com.finance.backend.accountProduct.AccountProductRepository
 import com.finance.backend.bank.Account
 import com.finance.backend.bank.AccountRepository
 import com.finance.backend.bank.response.RecentTradeRes
@@ -9,11 +10,14 @@ import com.finance.backend.bookmark.BookmarkRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
 import com.finance.backend.remit.request.RemitInfoReq
+import com.finance.backend.remit.request.RemitPhoneReq
 import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service
+import java.sql.Timestamp
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 import kotlin.collections.ArrayList
@@ -25,7 +29,8 @@ class RemitServiceImpl(
         val accountRepository: AccountRepository,
         val corporationRepository: CorporationRepository,
         val tradeHistoryRepository: TradeHistoryRepository,
-        val userRepository: UserRepository
+        val userRepository: UserRepository,
+        val accountProductRepository: AccountProductRepository
 ) : RemitService {
 
     override fun getRecommendationAccount(token: String): List<RecentTradeRes> {
@@ -61,9 +66,7 @@ class RemitServiceImpl(
                 }
             }
         }
-
         return accountDetailList
-
     }
 
     override fun postRemit(remitInfoReq: RemitInfoReq) {
@@ -83,6 +86,63 @@ class RemitServiceImpl(
         val depositAccount = accountRepository.findById(remitInfoReq.acReceive).get()
         val depositRemitHistory = TradeHistory(value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
+    }
+
+    override fun postRemitPhone(remitPhoneReq: RemitPhoneReq) {
+        val phone = remitPhoneReq.phone
+        val value = remitPhoneReq.value
+        val date = LocalDateTime.now()
+
+        if (userRepository.existsByPhone(phone)){
+
+            val remitTarget = remitPhoneReq.acTag
+            val targetAccount = remitPhoneReq.acReceive
+            val receive = remitPhoneReq.receive
+            val send = remitPhoneReq.send
+            val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
+
+            // 출금 거래 내역
+            val tradeRemitHistory = TradeHistory(value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+            tradeHistoryRepository.save(tradeRemitHistory)
+
+            // 입금 거래 내역
+            val depositAccount = accountRepository.findById(remitPhoneReq.acReceive).get()
+            val depositRemitHistory = TradeHistory(value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
+            tradeHistoryRepository.save(depositRemitHistory)
+
+        }else{
+            // 비회원 user와 account 만들기
+            val acNo = remitPhoneReq.acReceive
+            val balance = 100000000
+            val user = User("", "", phone, Timestamp.valueOf(LocalDateTime.now()), 2, "비회원")
+            userRepository.save(user)
+
+            val acType = 1
+            val acName = remitPhoneReq.acTag
+            val corporation = corporationRepository.findByCpName(acName)!!
+            val acCpCode = corporation.cpCode
+            val accountProduct = accountProductRepository.findByCpCode(acCpCode)
+            val acPdCode = accountProduct.acPdCode
+            val acStatus = 10
+            val acDate = LocalDateTime.now()
+
+            val account = Account(acNo, balance, user, acType, acName, acPdCode, acCpCode, acStatus, acDate)
+            accountRepository.save(account)
+
+            val receive = remitPhoneReq.receive
+            val send = remitPhoneReq.send
+            val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
+
+            // 출금 거래 내역
+            val tradeRemitHistory = TradeHistory(value, date, 2, acName, acNo, receive, send, remitAccount)
+            tradeHistoryRepository.save(tradeRemitHistory)
+
+            // 입금 거래 내역
+            val depositAccount = accountRepository.findById(remitPhoneReq.acReceive).get()
+            val depositRemitHistory = TradeHistory(value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
+            tradeHistoryRepository.save(depositRemitHistory)
+        }
+
     }
 
     override fun putBookmark(acNo: String, token: String) {

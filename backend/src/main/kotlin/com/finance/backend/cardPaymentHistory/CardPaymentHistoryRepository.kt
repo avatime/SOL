@@ -8,9 +8,9 @@ import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
 
 interface CardPaymentHistoryRepository: JpaRepository<CardPaymentHistory, Long> {
-    fun findAllByCdNoAndCdPyDtBetween(cdNo: String, startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<CardPaymentHistory>?
+    fun findAllByCardCdNoAndCdPyDtBetween(cdNo: String, startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<CardPaymentHistory>?
 
 
-    @Query("SELECT SUM(cph.cdVal) FROM CardPaymentHistory cph WHERE cph.cd_py_dt BETWEEN :startDateTime AND :endDateTime", nativeQuery = true)
+    @Query("SELECT SUM(cph.cd_val) FROM CardPaymentHistory cph WHERE cph.cd_py_dt BETWEEN :startDateTime AND :endDateTime", nativeQuery = true)
     fun getByCdVal(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Int
 }
