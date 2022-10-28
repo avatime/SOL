@@ -126,11 +126,11 @@ class AccountServiceImpl(
                 val tradeHistoryList = tradeHistoryRepository.getRecentTrade(account.acNo)
                 for (trade in tradeHistoryList){
                     if(!checkList.contains(trade.tdTgAc)){
-                        val account = accountRepository.findById(trade.tdTgAc).get()
+                        val account = accountRepository.findById(trade.tdTgAc!!).get()
                         val acName = account.acName
                         val cpLogo = corporationRepository.findById(account.acCpCode).get().cpLogo
                         accountDetailList.add(RecentTradeRes(acName, account.acNo, false, cpLogo))
-                        checkList.add(trade.tdTgAc)
+                        checkList.add(trade.tdTgAc!!)
                     }
                 }
             }

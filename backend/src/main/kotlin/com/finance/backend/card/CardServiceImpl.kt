@@ -3,6 +3,7 @@ package com.finance.backend.card
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.card.response.CardBillDetailRes
+import com.finance.backend.card.response.CardBillRes
 import com.finance.backend.card.response.CardInfoRes
 import com.finance.backend.cardPaymentHistory.CardPaymentHistoryRepository
 import com.finance.backend.cardProduct.CardProductRepository
@@ -10,6 +11,7 @@ import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
+import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.*
 import kotlin.collections.ArrayList
@@ -57,5 +59,18 @@ class CardServiceImpl(
             cardBillDetailList.add(cardBillDetailRes)
         }
         return cardBillDetailList
+    }
+
+    override fun getCardMonthAll(cdNo: String, year:Int, month: Int): CardBillRes {
+
+        val cardProduct = cardProductRepository.findByCdNo(cdNo)
+        val startDate = LocalDateTime.of(year, month, 1, 0, 0, 0)
+        val endDate = startDate.plusMonths(1)
+        val tdDt = LocalDate.of(year, month, 10)
+        val tdVal = cardPaymentHistoryRepository.getByCdVal(startDate, endDate)
+
+        val cardBillRes = CardBillRes(cdNo,cardProduct.cdName, cardProduct.cdImg, tdVal, tdDt)
+
+        return cardBillRes
     }
 }
