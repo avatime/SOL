@@ -15,10 +15,9 @@ interface TradeHistoryRepository: JpaRepository<TradeHistory, Long> {
     @Query("SELECT * FROM TradeHistory th WHERE th.ac_no == :acNo And th.td_dt BETWEEN DATE_ADD(NOW(), INTERVAL -3 MONTH ) AND NOW()", nativeQuery = true)
     fun getRecentTrade(@Param(value = "account") acNo: String): List<TradeHistory>
 
-    @Modifying
+
     @Query("SELECT th.tdTgAc, max(th.tdDt) from TradeHistory th group by :acNo order by :acNo")
     fun getAllByAcNo(@Param(value = "account") acNo: String): List<Pair<String, Date>>
 
-    fun findAllDistinctByAccountAcNoOrderByTdDtDesc(acNo: String): List<TradeHistory>
     fun findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo: String, type: Int): List<TradeHistory>
 }

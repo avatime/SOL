@@ -36,4 +36,11 @@ class CardController(
                 .ok()
                 .body(cardService.getCardMonthInfo(cdNo, year, month))
     }
+
+    @GetMapping("/bill/{cd_no}/{year}/{month}")
+    fun getCardMonthAll(@PathVariable cdNo: String, @PathVariable year: Int, @PathVariable month:Int): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(cardService.getCardMonthAll(cdNo, year, month))
+    }
 }
