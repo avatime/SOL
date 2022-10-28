@@ -9,5 +9,8 @@ data class DuesDetailsRes(
         @JsonProperty("dues_val")
         val duesVal : Int,
 
-        val check : List<IsPaidRes>
+        val check : List<IsPaidRes>,
+
+        @JsonProperty("can_delete")
+        val canDelete : Boolean
 )

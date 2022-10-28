@@ -20,50 +20,22 @@ class AuthController (private val userService: UserService) {
 
     @PostMapping("/signup")
     fun signup(@RequestBody userDto: SignupDto) : ResponseEntity<Any?>{
-        return try{
-            ResponseEntity.status(201).body(userService.saveUser(userDto))
-        } catch (e : DuplicatedUserException) {
-            ResponseEntity.status(409).body(e.message)
-        } catch (e : Exception) {
-            ResponseEntity.status(500).body("Internal Server Error")
-        }
+        return ResponseEntity.status(201).body(userService.saveUser(userDto))
     }
 
     @PostMapping("/login")
     fun login(@RequestBody loginDto : LoginDto) : ResponseEntity<Any?> {
-        return try {
-            ResponseEntity.status(200).body(userService.login(loginDto))
-        } catch (e : TokenExpiredException) {
-            ResponseEntity.status(403).body("Token Expired")
-        }catch (e : InvalidUserException) {
-            ResponseEntity.status(404).body(e.message)
-        } catch (e : InvalidPasswordException) {
-            ResponseEntity.status(401).body("Invalid Password")
-        } catch (e : Exception) {
-            ResponseEntity.status(500).body("Internal Server Error")
-        }
+        return ResponseEntity.status(200).body(userService.login(loginDto))
     }
 
     @PostMapping("/logout")
     fun logout(@RequestHeader accessToken: String) : ResponseEntity<Any?> {
-        return try {
-            userService.logout(accessToken)
-            ResponseEntity.status(200).body("Success")
-        } catch (e : TokenExpiredException) {
-            ResponseEntity.status(403).body("Token Expired")
-        } catch (e : Exception) {
-            ResponseEntity.status(500).body("Internal Server Error")
-        }
+        userService.logout(accessToken)
+        return ResponseEntity.status(200).body("Success")
     }
 
     @PostMapping("/refresh")
     fun refresh(@RequestHeader refreshToken: String) : ResponseEntity<Any?> {
-        return try{
-            ResponseEntity.status(200).body(userService.refresh(refreshToken))
-        } catch (e : TokenExpiredException) {
-            ResponseEntity.status(403).body("Token Expired")
-        } catch (e : Exception) {
-            ResponseEntity.status(500).body("Internal Server Error")
-        }
+        return ResponseEntity.status(200).body(userService.refresh(refreshToken))
     }
 }
