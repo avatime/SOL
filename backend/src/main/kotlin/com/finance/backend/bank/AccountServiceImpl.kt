@@ -33,7 +33,8 @@ class AccountServiceImpl(
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val accountList = accountRepository.findByUserId(userId)
             for (ac in accountList){
-                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName))
+                val corporation = corporationRepository.findById(ac.acCpCode).get()
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo))
             }
         }
         return bankAccountList
@@ -84,9 +85,10 @@ class AccountServiceImpl(
 
     override fun getAccountDetail(acNo: String): BankDetailRes {
         var accountDetailList = ArrayList<BankTradeRes>()
-        val account = accountRepository.findById(acNo)
-        val bankAccountRes = BankAccountRes(account.get().acNo, account.get().balance, account.get().acName)
-        val tradeHistroyList = tradeHistoryRepository.findAllByAccountAcNo(account.get().acNo)
+        val account = accountRepository.findById(acNo).get()
+        val corporation = corporationRepository.findById(account.acCpCode).get()
+        val bankAccountRes = BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo)
+        val tradeHistroyList = tradeHistoryRepository.findAllByAccountAcNo(account.acNo)
         for (trade in tradeHistroyList){
             accountDetailList.add(BankTradeRes(trade.tdDt,trade.tdVal, trade.tdCn, trade.tdType))
         }

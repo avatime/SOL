@@ -6,6 +6,8 @@ class BankAccountRes(
         acNo : String,
         balance : Int,
         acName : String,
+        cpName: String,
+        cpLogo: String
 
 ) {
 
@@ -16,4 +18,10 @@ class BankAccountRes(
 
         @JsonProperty("ac_name")
         val acName: String = acName
+
+        @JsonProperty("cp_name")
+        val cpName: String = cpName
+
+        @JsonProperty("cp_logo")
+        val cpLogo: String = cpLogo
 }
