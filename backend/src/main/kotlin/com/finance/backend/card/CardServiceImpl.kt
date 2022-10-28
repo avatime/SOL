@@ -2,19 +2,23 @@ package com.finance.backend.card
 
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.bookmark.Bookmark
+import com.finance.backend.card.response.CardBillDetailRes
 import com.finance.backend.card.response.CardInfoRes
+import com.finance.backend.cardPaymentHistory.CardPaymentHistoryRepository
 import com.finance.backend.cardProduct.CardProductRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.LocalTime
 import java.util.*
 import kotlin.collections.ArrayList
 
 @Service
 class CardServiceImpl(
         private val cardRepository: CardRepository,
-        private val userRepository: UserRepository,
         private val cardProductRepository: CardProductRepository,
+        private val cardPaymentHistoryRepository: CardPaymentHistoryRepository,
         private val jwtUtils: JwtUtils,
 
 ) : CardService {
@@ -41,5 +45,17 @@ class CardServiceImpl(
             }
         }
         return cardInfoList
+    }
+
+    override fun getCardMonthInfo(cdNo: String, year: Int, month: Int): List<CardBillDetailRes> {
+        val cardBillDetailList = ArrayList<CardBillDetailRes>()
+        val startDate = LocalDate.of(year, month, 1)
+        val endDate = startDate.plusMonths(1).minusDays(1)
+        val cardProductHistoryList = cardPaymentHistoryRepository.findAllByCdNoAndCdPyDtBetween(cdNo, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
+        for(cardProductHistory in cardProductHistoryList){
+            val cardBillDetailRes = CardBillDetailRes(cardProductHistory.cdPyDt, cardProductHistory.cdPyName, cardProductHistory.cdVal, cardProductHistory.cdTp)
+            cardBillDetailList.add(cardBillDetailRes)
+        }
+        return cardBillDetailList
     }
 }

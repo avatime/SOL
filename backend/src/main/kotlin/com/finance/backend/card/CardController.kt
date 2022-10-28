@@ -3,6 +3,7 @@ package com.finance.backend.card
 import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -27,5 +28,12 @@ class CardController(
         return ResponseEntity
                 .ok()
                 .body(cardService.getAssetCard(accessToken))
+    }
+
+    @GetMapping("/bill/detail/{cd_no}/{year}/{month}")
+    fun getCardMonthInfo(@PathVariable cdNo: String, @PathVariable year: Int, @PathVariable month:Int): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(cardService.getCardMonthInfo(cdNo, year, month))
     }
 }
