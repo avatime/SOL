@@ -3,6 +3,7 @@ package com.finance.backend.user
 import com.finance.backend.Exceptions.*
 import com.finance.backend.auth.*
 import com.finance.backend.auth.request.LoginDto
+import com.finance.backend.auth.request.ReLoginDto
 import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.auth.response.LoginDao
 import com.finance.backend.common.util.JwtUtils
@@ -45,6 +46,15 @@ class UserServiceImpl (
         }
     }
 
+    override fun checkUser(signupDto: SignupDto) {
+        if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) throw DuplicatedUserException()
+        else {
+            var user : User? = userRepository.findByPhone(signupDto.phone)
+            if(user == null) user = signupDto.toEntity()
+            else if(user.type != "비회원") throw DuplicatedPhoneNumberException()
+        }
+    }
+
     override fun login(loginDto: LoginDto) : LoginDao? {
         if(try {jwtUtils.validation(loginDto.refreshToken)} catch (e: Exception) {throw TokenExpiredException()
                 }){
@@ -55,6 +65,16 @@ class UserServiceImpl (
                 return userRepository.save(user).toLoginEntity()
             } else throw InvalidPasswordException()
         } else throw Exception()
+    }
+
+    override fun reLogin(reLoginDto: ReLoginDto): LoginDao? {
+        val user : User = userRepository.findByPhone(reLoginDto.phone)?:throw InvalidUserException()
+        if(passwordEncoder.matches(reLoginDto.password, user.password)) {
+            val token : Token = jwtUtils.createToken(user.id, user.name, user.type)
+            user.accessToken(token.accessToken)
+            user.refreshToken(token.refreshToken)
+            return userRepository.save(user).toLoginEntity()
+        } else throw InvalidPasswordException()
     }
 
     override fun logout(token: String): Boolean {

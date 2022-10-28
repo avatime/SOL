@@ -70,7 +70,6 @@ class CardServiceImpl(
     }
 
     override fun getCardMonthAll(cdNo: String, year:Int, month: Int): CardBillRes {
-
         val cpCode = cardRepository.findById(cdNo).get().cdPdCode
         val cardProduct = cardProductRepository.findById(cpCode).get()
         val startDate = LocalDateTime.of(year, month, 1, 0, 0, 0)
