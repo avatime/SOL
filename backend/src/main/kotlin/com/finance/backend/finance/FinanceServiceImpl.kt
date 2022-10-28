@@ -41,4 +41,12 @@ class FinanceServiceImpl(
         }
         return bankAccountList
     }
+
+    override fun putFinanceAsset(acNo: String) {
+        val account = accountRepository.findById(acNo).get()
+        account.apply {
+            acReg = !acReg!!
+        }
+        accountRepository.save(account)
+    }
 }

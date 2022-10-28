@@ -6,4 +6,5 @@ import com.finance.backend.corporation.response.BankInfoRes
 interface FinanceService {
     fun getFinanceInfo(): List<BankInfoRes>
     fun getFinanceAsset(token: String): List<BankAccountRes>
+    fun putFinanceAsset(acNo: String)
 }
