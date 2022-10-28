@@ -40,6 +40,8 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 	implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
 	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2")
+	/* kafka */
+	implementation("org.springframework.kafka:spring-kafka")
 	compileOnly("org.projectlombok:lombok")
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("mysql:mysql-connector-java")
