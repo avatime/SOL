@@ -38,7 +38,7 @@ class UserServiceImpl (
                 val token : Token = jwtUtils.createToken(user.id, user.name, signupDto.type)
                 user.accessToken(token.accessToken)
                 user.refreshToken(token.refreshToken)
-                return userRepository.save(user).toLoginEntity()
+                return userRepository.saveAndFlush(user).toLoginEntity()
             } catch (e : Exception) {
                 throw Exception()
             }
@@ -99,5 +99,9 @@ class UserServiceImpl (
             user.pfId(id)
             userRepository.save(user)
         }
+    }
+
+    override fun check(phone: String): Boolean {
+        return !userRepository.existsByPhoneAndType(phone, "회원")
     }
 }
