@@ -16,6 +16,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.finance.android.R
@@ -27,8 +28,9 @@ fun TextInput(
     onValueChange: (String) -> Unit,
     focus: Boolean = true,
     modifier: Modifier,
-    label: String = "",
-    keyboardType: KeyboardType = KeyboardType.Text
+    label: String? = null,
+    keyboardType: KeyboardType = KeyboardType.Text,
+    visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
     val focusRequester = remember { FocusRequester() }
     var key by remember { mutableStateOf(0) }
@@ -42,7 +44,7 @@ fun TextInput(
             textColor = Color.Black,
             focusedLabelColor = Color.Black
         ),
-        label = { Text(text = label) },
+        label = { if (label?.isNotEmpty() == true) Text(text = label) },
         trailingIcon = {
             if (focus) {
                 Icon(
@@ -57,7 +59,8 @@ fun TextInput(
             }
         },
         singleLine = true,
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType)
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
+        visualTransformation = visualTransformation
     )
 
     LaunchedEffect(key, focus) {
