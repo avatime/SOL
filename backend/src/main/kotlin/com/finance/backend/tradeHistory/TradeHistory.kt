@@ -2,6 +2,7 @@ package com.finance.backend.tradeHistory
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.finance.backend.bank.Account
+import com.finance.backend.group.response.PublicTradeRes
 import java.time.LocalDateTime
 import java.util.Date
 import javax.persistence.*
@@ -13,7 +14,7 @@ class TradeHistory(
     date : LocalDateTime,
     type : Int,
     target : String,
-    targetAccount : String,
+    targetAccount : String?,
     receive : String,
     send : String,
     account : Account
@@ -41,7 +42,7 @@ class TradeHistory(
     var tdTg: String = target
 
     @JsonProperty("td_tg_ac")
-    var tdTgAc: String = targetAccount
+    var tdTgAc: String? = targetAccount
 
     @JsonProperty("td_rec")
     var tdRec: String = receive
@@ -52,4 +53,6 @@ class TradeHistory(
     @ManyToOne
     @JoinColumn(name = "ac_no")
     val account: Account = account
+
+    fun toEntity() : PublicTradeRes = PublicTradeRes(this.tdDt, this.tdVal, this.tdTg, this.tdSed, if(this.tdType == 1) "출금" else "입금")
 }

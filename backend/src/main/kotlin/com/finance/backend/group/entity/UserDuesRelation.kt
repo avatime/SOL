@@ -2,8 +2,10 @@ package com.finance.backend.group.entity
 
 import com.finance.backend.group.response.FriendRes
 import com.finance.backend.group.response.IsPaidRes
+import com.finance.backend.profile.Profile
 import com.finance.backend.user.User
 import java.time.LocalDateTime
+import java.util.*
 import javax.persistence.*
 
 @Entity(name = "user_dues_relation")
@@ -25,7 +27,7 @@ class UserDuesRelation(
 
     @ManyToOne
     @JoinColumn(name = "dues_id")
-    var duesId : Dues = dues
+    var dues : Dues = dues
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -35,4 +37,6 @@ class UserDuesRelation(
         this.dueDate = LocalDateTime.now()
         this.status = true
     }
+
+    fun toEntity(profile : Profile) : IsPaidRes = IsPaidRes(FriendRes(this.user.name, this.user.type, profile.pfImg, profile.pfName), this.status)
 }
