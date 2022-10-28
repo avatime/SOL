@@ -8,8 +8,13 @@
     <string name="msg_input_name">이름을 입력해주세요</string>
     <string name="msg_input_birthday">생년월일을 입력해주세요</string>
     <string name="msg_input_phone_num">휴대폰번호를 입력해주세요</string>
+    <string name="msg_test_phone_num">휴대폰으로 전송된\n인증번호 6자리를\n입력해주세요</string>
+    <string name="msg_receive_test_phone_code">인증번호는 %1$s입니다</string>
 
     <string name="btn_confirm">확인</string>
+    <string name="btn_re_receive_test_phone_code">인증번호 다시 받기</string>
 
     <string name="label_input_name">이름</string>
+    <string name="label_input_birthday">생년월일</string>
+    <string name="label_input_phone_num">휴대폰번호</string>
 </resources>

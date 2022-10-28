@@ -1,72 +1,52 @@
 package com.finance.android.ui.fragments
 
-import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Text
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.*
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.finance.android.R
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.TextButton
-import com.finance.android.ui.components.TextInput
-import com.finance.android.utils.ext.withBottomButton
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.finance.android.ui.screens.login.InputUserInfoScreen
+import com.finance.android.ui.screens.login.TestPhoneScreen
+import com.finance.android.viewmodels.LoginViewModel
 
 @Composable
-fun LoginFragment() {
+fun LoginFragment(
+    loginViewModel: LoginViewModel = hiltViewModel()
+) {
+    var step by remember { mutableStateOf(LoginStep.TestPhone) }
+    val onNextStep = { step = LoginStep.values()[step.id + 1] }
 
-
-    InputUserInfoScreen()
-}
-
-private enum class InputUserInfoStep {
-    NAME,
-    BIRTHDAY,
-    PHONE_NUM;
-
-    @StringRes
-    fun getTitleStringRes(): Int {
-        return when (this) {
-            NAME -> R.string.msg_input_name
-            BIRTHDAY -> R.string.msg_input_birthday
-            PHONE_NUM -> R.string.msg_input_phone_num
-        }
+    AnimatedVisibility(
+        visible = step == LoginStep.InputUserInfo,
+        enter = slideInVertically(
+            initialOffsetY = { it / 2 }
+        ),
+        exit = slideOutVertically()
+    ) {
+        InputUserInfoScreen(
+            loginViewModel = loginViewModel,
+            onNextStep = onNextStep
+        )
+    }
+    AnimatedVisibility(
+        visible = step == LoginStep.TestPhone,
+        enter = slideInVertically(
+            initialOffsetY = { it / 2 }
+        ),
+        exit = slideOutVertically()
+    ) {
+        TestPhoneScreen(
+            loginViewModel= loginViewModel,
+            onNextStep = onNextStep
+        )
     }
 }
 
-@Preview
-@Composable
-fun InputUserInfoScreen() {
-    var focusStep by remember { mutableStateOf(InputUserInfoStep.NAME) }
-    var step by remember { mutableStateOf(InputUserInfoStep.NAME) }
-
-    var name by remember { mutableStateOf("") }
-
-    Column(modifier = Modifier.fillMaxSize()) {
-        Spacer(modifier = Modifier.size(0.dp, 70.dp))
-        Text(
-            text = stringResource(id = focusStep.getTitleStringRes()),
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_medium))
-        )
-        TextInput(
-            value = name,
-            onValueChange = { name = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_medium)),
-            label = stringResource(id = R.string.label_input_name)
-        )
-        Spacer(modifier = Modifier.weight(1.0f))
-        TextButton(
-            onClick = { /*TODO*/ },
-            text = stringResource(id = R.string.btn_confirm),
-            buttonType = ButtonType.ROUNDED,
-            modifier = Modifier.withBottomButton()
-        )
-    }
+private enum class LoginStep(
+    val id: Int
+) {
+    InputUserInfo(0),
+    TestPhone(1),
+    TestAccount(2),
+    InputPassword(3)
 }

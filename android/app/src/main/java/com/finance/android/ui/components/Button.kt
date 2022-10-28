@@ -50,7 +50,8 @@ fun TextButton(
     text: String,
     buttonColor: ButtonColor = ButtonColor.PRIMARY,
     modifier: Modifier,
-    buttonType: ButtonType
+    buttonType: ButtonType,
+    enabled: Boolean = true
 ) {
     Button(
         onClick = onClick,
@@ -60,6 +61,7 @@ fun TextButton(
             contentColor = buttonColor.getTextColor()
         ),
         shape = buttonType.getShape() ?: ButtonDefaults.shape,
+        enabled = enabled
     ) {
         Text(text = text)
     }
@@ -110,4 +112,3 @@ fun CircularWhiteTextButton() {
         buttonColor = ButtonColor.WHITE
     )
 }
-
