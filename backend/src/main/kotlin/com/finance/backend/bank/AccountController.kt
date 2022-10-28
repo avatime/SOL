@@ -77,4 +77,11 @@ class AccountController(val accountService: AccountService) {
                 .ok()
                 .body(accountService.getBankInfo())
     }
+
+    @GetMapping("/register")
+    fun getAccountRegistered(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(accountService.getAccountRegistered(accessToken))
+    }
 }

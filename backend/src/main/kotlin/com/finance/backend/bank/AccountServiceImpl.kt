@@ -8,12 +8,15 @@ import com.finance.backend.bookmark.BookmarkRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
 import com.finance.backend.corporation.response.BankInfoRes
+import com.finance.backend.insurance.entity.Insurance
+import com.finance.backend.insurance.repository.InsuranceRepository
+import com.finance.backend.insurance.repository.IsProductRepository
+import com.finance.backend.insurance.response.MyInsuranceInfoDetailRes
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service;
 import java.util.UUID
-
 @Service("AccountService")
 class AccountServiceImpl(
         private val userRepository: UserRepository,
@@ -21,6 +24,8 @@ class AccountServiceImpl(
         private val tradeHistoryRepository: TradeHistoryRepository,
         private val bookmarkRepository: BookmarkRepository,
         private val corporationRepository: CorporationRepository,
+        private val insuranceRepository: InsuranceRepository,
+        private val isProductRepository: IsProductRepository,
         private val jwtUtils: JwtUtils
 ) : AccountService {
 
@@ -155,8 +160,10 @@ class AccountServiceImpl(
     }
 
     override fun getAccountRegistered(token: String): AccountRegisteredRes {
+
         val accountList = ArrayList<BankAccountRes>()
         val financeList = ArrayList<BankAccountRes>()
+        val insuranceList = ArrayList<MyInsuranceInfoDetailRes>()
 
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
@@ -171,6 +178,17 @@ class AccountServiceImpl(
                 val corporation = corporationRepository.findById(finance.acCpCode).get()
                 financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo))
             }
+            val insuranceInfoList = insuranceRepository.findAllByUserIdAndIsReg(userId, true)
+            for (insurance in insuranceInfoList){
+                val user = userRepository.findById(insurance.user.id).get()
+                val insuranceProduct = isProductRepository.findById(insurance.isPdCode).get()
+                insuranceList.add(MyInsuranceInfoDetailRes(insurance.id, insuranceProduct.isPdName, insurance.fee, user.name, insurance.isName))
+            }
+
         }
+
+        return AccountRegisteredRes(accountList, insuranceList , financeList)
     }
+
 }
+
