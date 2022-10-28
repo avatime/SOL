@@ -2,10 +2,7 @@ package com.finance.backend.bank;
 
 
 import com.finance.backend.Exceptions.TokenExpiredException
-import com.finance.backend.bank.response.BankAccountRes
-import com.finance.backend.bank.response.BankDetailRes
-import com.finance.backend.bank.response.BankTradeRes
-import com.finance.backend.bank.response.RecentTradeRes
+import com.finance.backend.bank.response.*
 import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
 import com.finance.backend.common.util.JwtUtils
@@ -155,5 +152,25 @@ class AccountServiceImpl(
             bankInfoList.add(bankInfo)
         }
         return bankInfoList
+    }
+
+    override fun getAccountRegistered(token: String): AccountRegisteredRes {
+        val accountList = ArrayList<BankAccountRes>()
+        val financeList = ArrayList<BankAccountRes>()
+
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}){
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val accountInfoList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 1, true).orEmpty()
+            for (account in accountInfoList){
+                val corporation = corporationRepository.findById(account.acCpCode).get()
+                accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo))
+            }
+
+            val financeInfoList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 2, true).orEmpty()
+            for (finance in financeInfoList){
+                val corporation = corporationRepository.findById(finance.acCpCode).get()
+                financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo))
+            }
+        }
     }
 }
