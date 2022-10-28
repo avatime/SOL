@@ -43,4 +43,11 @@ class CardController(
                 .ok()
                 .body(cardService.getCardMonthAll(cdNo, year, month))
     }
+
+    @GetMapping
+    fun getCardBenefit(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(cardService.getCardBenefit(accessToken))
+    }
 }

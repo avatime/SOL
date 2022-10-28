@@ -1,13 +1,15 @@
 package com.finance.backend.cardBenefit
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.finance.backend.cardBenefitImg.CardBenefitImg
 import com.finance.backend.cardProduct.CardProduct
 import javax.persistence.*
 
 @Entity
 @Table(name = "card_benefit")
 class CardBenefit(
-        cardProduct: CardProduct
+        cardProduct: CardProduct,
+        cardBenefitImg: CardBenefitImg
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,4 +29,8 @@ class CardBenefit(
     @ManyToOne
     @JoinColumn(name ="cd_pd_code")
     val cardProduct = cardProduct
+
+    @OneToOne
+    @JsonProperty("cd_bf_img")
+    val cdBfImg: CardBenefitImg = cardBenefitImg
 }

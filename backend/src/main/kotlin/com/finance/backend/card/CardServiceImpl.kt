@@ -5,9 +5,13 @@ import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.card.response.CardBillDetailRes
 import com.finance.backend.card.response.CardBillRes
 import com.finance.backend.card.response.CardInfoRes
+import com.finance.backend.cardBenefit.CardBenefitRepository
+import com.finance.backend.cardBenefit.response.CardBenefitRes
+import com.finance.backend.cardBenefitImg.CardBenefitImgRepository
 import com.finance.backend.cardPaymentHistory.CardPaymentHistoryRepository
 import com.finance.backend.cardProduct.CardProductRepository
 import com.finance.backend.common.util.JwtUtils
+import com.finance.backend.corporation.CorporationRepository
 import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
@@ -21,6 +25,9 @@ class CardServiceImpl(
         private val cardRepository: CardRepository,
         private val cardProductRepository: CardProductRepository,
         private val cardPaymentHistoryRepository: CardPaymentHistoryRepository,
+        private val cardBenefitRepository: CardBenefitRepository,
+        private val cardBenefitImgRepository: CardBenefitImgRepository,
+        private val corporationRepository: CorporationRepository,
         private val jwtUtils: JwtUtils,
 
 ) : CardService {
@@ -72,5 +79,22 @@ class CardServiceImpl(
         val cardBillRes = CardBillRes(cdNo,cardProduct.cdName, cardProduct.cdImg, tdVal, tdDt)
 
         return cardBillRes
+    }
+
+    override fun getCardBenefit(token: String): List<CardBenefitRes> {
+        val cardBenefitList = ArrayList<CardBenefitRes>()
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val cardList = cardRepository.findAllByUserId(userId)
+            for (card in cardList){
+                val cardProduct = cardProductRepository.findById(card.cdPdCode).get()
+                val cardBenefit = cardBenefitRepository.findByCdPdCode(card.cdPdCode)
+                val cardBenefitImg = cardBenefitImgRepository.findById(cardBenefit.cdBfImg.id).get()
+                val corporation = corporationRepository.findById(cardProduct.cdPdCode).get()
+                val cardBenefitRes = CardBenefitRes(corporation.cpName, cardBenefit.cdBfName, cardBenefit.cdBfSum, cardBenefitImg.cdBfImg)
+                cardBenefitList.add(cardBenefitRes)
+            }
+        }
+        return cardBenefitList
     }
 }
