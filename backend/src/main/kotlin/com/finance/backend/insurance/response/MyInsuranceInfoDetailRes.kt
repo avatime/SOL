@@ -2,7 +2,7 @@ package com.finance.backend.insurance.response
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-data class InsuranceInfoRes(
+data class MyInsuranceInfoDetailRes(
         @JsonProperty("is_id")
         val isId : Long,
 
