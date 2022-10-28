@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Divider
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -21,36 +22,39 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.RoundedTextButton
 import com.finance.android.ui.components.TextButton
+import com.finance.android.utils.Const
 
-@Preview
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
+
     Column (modifier = Modifier
         .verticalScroll(rememberScrollState())
         .background(color = Color(R.color.light_gray))) {
         CardContainer(modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_medium))
-            .background(color = Color.White, shape = RoundedCornerShape(10))
-            .height(350.dp)
+            .background(color = Color.White, shape = RoundedCornerShape(10)),
+            navController = navController
         )
         CardContainer2(modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_medium))
-            .background(color = Color.White, shape = RoundedCornerShape(10))
-            .height(350.dp)
+            .background(color = Color.White, shape = RoundedCornerShape(10)),
+            navController = navController
         )
     }
 }
 
 @Composable
-fun CardContainer(modifier: Modifier) {
+fun CardContainer(modifier: Modifier, navController: NavController) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
         ) {
@@ -62,7 +66,10 @@ fun CardContainer(modifier: Modifier) {
             )
             Text(text = "4", color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.weight(1.0f))
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.size(30.dp)) {
+            IconButton(onClick = {
+                navController.navigate(Const.ASSET_SCREEN)
+            },
+                modifier = Modifier.size(30.dp)) {
                 Image(painter = painterResource(R.drawable.arrow_forward_ios),
                     contentDescription = null,
                     modifier = Modifier
@@ -75,16 +82,14 @@ fun CardContainer(modifier: Modifier) {
         AccountListItem()
         AccountListItem()
         AccountListItem()
-        Image(painter = painterResource(R.drawable.line),
-            contentDescription = null,
-            modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-        )
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+        Divider()
         InsuranceListItem()
     }
 }
 
 @Composable
-fun CardContainer2 (modifier: Modifier) {
+fun CardContainer2 (modifier: Modifier, navController: NavController) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
     ) {
@@ -130,7 +135,7 @@ fun CardContainer2 (modifier: Modifier) {
                 )
                 Spacer(modifier = Modifier.weight(1.0f))
                 TextButton(onClick = { /*TODO*/ },
-                    text = "불러오기",
+                    text = "출석체크",
                     modifier = Modifier
                         .height(40.dp)
                         .width(120.dp)
@@ -167,7 +172,8 @@ fun AccountListItem() {
             text = "송금",
             modifier = Modifier
                 .height(30.dp)
-                .width(70.dp),
+                .width(50.dp)
+                .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp),
             buttonType = ButtonType.ROUNDED,
             fontSize = 10.sp
         )
