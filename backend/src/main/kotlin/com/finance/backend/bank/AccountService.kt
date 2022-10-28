@@ -1,9 +1,6 @@
 package com.finance.backend.bank;
 
-import com.finance.backend.bank.response.BankAccountRes
-import com.finance.backend.bank.response.BankDetailRes
-import com.finance.backend.bank.response.BankTradeRes
-import com.finance.backend.bank.response.RecentTradeRes
+import com.finance.backend.bank.response.*
 import com.finance.backend.corporation.response.BankInfoRes
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,4 +15,5 @@ interface AccountService {
     fun getRecentTrade(token: String): List<RecentTradeRes>
     fun getUserName(acNo: String, cpCode: Long): String
     fun getBankInfo():List<BankInfoRes>
+    fun getAccountRegistered(token: String): AccountRegisteredRes
 }
