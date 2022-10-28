@@ -9,4 +9,5 @@ interface UserRepository : JpaRepository<User, UUID> {
     fun findByPhone(phone : String) : User?
     fun existsByNameAndPhoneAndBirth(name : String, phone : String, birth : Date) : Boolean
     fun existsByPhoneAndType(phone : String, type : String) : Boolean
+    fun existsByPhone(phone: String) : Boolean
 }

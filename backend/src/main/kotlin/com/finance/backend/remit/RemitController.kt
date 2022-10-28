@@ -1,6 +1,7 @@
 package com.finance.backend.remit
 
 import com.finance.backend.remit.request.RemitInfoReq
+import com.finance.backend.remit.request.RemitPhoneReq
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -26,6 +27,13 @@ class RemitController(val remitService: RemitService) {
         return ResponseEntity
                 .ok()
                 .body(remitService.postRemit(remitInfoReq))
+    }
+
+    @PostMapping("/phone")
+    fun postRemitPhone(@RequestBody remitPhoneReq: RemitPhoneReq): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(remitService.postRemitPhone(remitPhoneReq))
     }
 
     @PutMapping("/bookmark")

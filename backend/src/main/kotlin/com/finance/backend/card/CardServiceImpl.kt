@@ -61,7 +61,7 @@ class CardServiceImpl(
         val cardBillDetailList = ArrayList<CardBillDetailRes>()
         val startDate = LocalDate.of(year, month, 1)
         val endDate = startDate.plusMonths(1).minusDays(1)
-        val cardProductHistoryList = cardPaymentHistoryRepository.findAllByCdNoAndCdPyDtBetween(cdNo, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
+        val cardProductHistoryList = cardPaymentHistoryRepository.findAllByCardCdNoAndCdPyDtBetween(cdNo, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
         for(cardProductHistory in cardProductHistoryList){
             val cardBillDetailRes = CardBillDetailRes(cardProductHistory.cdPyDt, cardProductHistory.cdPyName, cardProductHistory.cdVal, cardProductHistory.cdTp)
             cardBillDetailList.add(cardBillDetailRes)
@@ -71,7 +71,8 @@ class CardServiceImpl(
 
     override fun getCardMonthAll(cdNo: String, year:Int, month: Int): CardBillRes {
 
-        val cardProduct = cardProductRepository.findByCdNo(cdNo)
+        val cpCode = cardRepository.findById(cdNo).get().cdPdCode
+        val cardProduct = cardProductRepository.findById(cpCode).get()
         val startDate = LocalDateTime.of(year, month, 1, 0, 0, 0)
         val endDate = startDate.plusMonths(1)
         val tdDt = LocalDate.of(year, month, 10)
@@ -89,7 +90,7 @@ class CardServiceImpl(
             val cardList = cardRepository.findAllByUserId(userId)
             for (card in cardList){
                 val cardProduct = cardProductRepository.findById(card.cdPdCode).get()
-                val cardBenefit = cardBenefitRepository.findByCdPdCode(card.cdPdCode)
+                val cardBenefit = cardBenefitRepository.findByCardProductCdPdCode(card.cdPdCode)
                 val cardBenefitImg = cardBenefitImgRepository.findById(cardBenefit.cdBfImg.id).get()
                 val corporation = corporationRepository.findById(cardProduct.cdPdCode).get()
                 val cardBenefitRes = CardBenefitRes(corporation.cpName, cardBenefit.cdBfName, cardBenefit.cdBfSum, cardBenefitImg.cdBfImg)
@@ -100,8 +101,9 @@ class CardServiceImpl(
     }
 
     override fun getCardBenefitDetail(cdNo: String): CardBenefitDetailRes {
-        val cardProduct = cardProductRepository.findByCdNo(cdNo)
-        val cardBenefit = cardBenefitRepository.findByCdPdCode(cardProduct.cdPdCode)
+        val cpCode = cardRepository.findById(cdNo).get().cdPdCode
+        val cardProduct = cardProductRepository.findById(cpCode).get()
+        val cardBenefit = cardBenefitRepository.findByCardProductCdPdCode(cardProduct.cdPdCode)
         val cardBenefitImg = cardBenefitImgRepository.findById(cardBenefit.cdBfImg.id).get()
 
         val cardBenefitRes = CardBenefitDetailRes(cardBenefit.cdBfName, cardBenefit.cdBfSum, cardBenefitImg.cdBfImg, cardBenefit.cdBfDetail)
