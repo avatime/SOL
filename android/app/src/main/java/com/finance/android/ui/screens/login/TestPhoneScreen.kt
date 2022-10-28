@@ -19,6 +19,7 @@ import com.finance.android.ui.components.ButtonColor
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.CodeTextInput
 import com.finance.android.ui.components.TextButton
+import com.finance.android.ui.fragments.LoginStep
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.LoginViewModel
 
@@ -74,17 +75,21 @@ fun TestPhoneScreen(
             )
         }
         Spacer(modifier = Modifier.weight(1.0f))
+        loginViewModel.showRightCode()
+            ?.let {
+                Snackbar(
+                    modifier = Modifier.fillMaxWidth()
+                        .padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
+                ) {
+                    Text(text = stringResource(id = R.string.msg_receive_test_phone_code, it))
+                }
+            }
         TextButton(
             onClick = onNextStep,
             text = stringResource(id = R.string.btn_confirm),
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton(),
-            enabled = loginViewModel.isRightCode()
+            enabled = loginViewModel.isPossibleGoNext(LoginStep.TestPhone)
         )
-
-        loginViewModel.showRightCode()
-            ?.let {
-                Snackbar { Text(text = stringResource(id = R.string.msg_receive_test_phone_code, it)) }
-            }
     }
 }

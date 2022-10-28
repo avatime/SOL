@@ -5,7 +5,9 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.finance.android.ui.screens.login.InputPasswordScreen
 import com.finance.android.ui.screens.login.InputUserInfoScreen
+import com.finance.android.ui.screens.login.LoginDoneScreen
 import com.finance.android.ui.screens.login.TestPhoneScreen
 import com.finance.android.viewmodels.LoginViewModel
 
@@ -13,9 +15,8 @@ import com.finance.android.viewmodels.LoginViewModel
 fun LoginFragment(
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
-    var step by remember { mutableStateOf(LoginStep.TestPhone) }
+    var step by remember { mutableStateOf(LoginStep.InputUserInfo) }
     val onNextStep = { step = LoginStep.values()[step.id + 1] }
-
     AnimatedVisibility(
         visible = step == LoginStep.InputUserInfo,
         enter = slideInVertically(
@@ -36,17 +37,38 @@ fun LoginFragment(
         exit = slideOutVertically()
     ) {
         TestPhoneScreen(
-            loginViewModel= loginViewModel,
+            loginViewModel = loginViewModel,
             onNextStep = onNextStep
         )
     }
+    AnimatedVisibility(
+        visible = step == LoginStep.InputPassword,
+        enter = slideInVertically(
+            initialOffsetY = { it / 2 }
+        ),
+        exit = slideOutVertically()
+    ) {
+        InputPasswordScreen(
+            loginViewModel = loginViewModel,
+            onNextStep = onNextStep
+        )
+    }
+    AnimatedVisibility(
+        visible = step == LoginStep.Done,
+        enter = slideInVertically(
+            initialOffsetY = { it / 2 }
+        ),
+        exit = slideOutVertically()
+    ) {
+        LoginDoneScreen()
+    }
 }
 
-private enum class LoginStep(
+enum class LoginStep(
     val id: Int
 ) {
     InputUserInfo(0),
     TestPhone(1),
-    TestAccount(2),
-    InputPassword(3)
+    InputPassword(2),
+    Done(3)
 }
