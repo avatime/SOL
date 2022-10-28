@@ -44,6 +44,11 @@ class ExceptionController {
         return ResponseEntity.status(408).body("Unexpected Server Error")
     }
 
+    @ExceptionHandler(NoSuchElementException::class)
+    fun handleNoSuchElementException(e : Exception) : ResponseEntity<String> {
+        return ResponseEntity.status(404).body("Cannot Found")
+    }
+
     @ExceptionHandler(TokenExpiredException::class)
     fun handleTokenExpired(e : Exception) : ResponseEntity<String> {
         return ResponseEntity.status(403).body("Token Expired")

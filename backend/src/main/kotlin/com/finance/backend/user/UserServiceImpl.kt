@@ -46,8 +46,13 @@ class UserServiceImpl (
         }
     }
 
-    override fun checkUser(signupDto: SignupDto): LoginDao {
-        TODO("Not yet implemented")
+    override fun checkUser(signupDto: SignupDto) {
+        if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) throw DuplicatedUserException()
+        else {
+            var user : User? = userRepository.findByPhone(signupDto.phone)
+            if(user == null) user = signupDto.toEntity()
+            else if(user.type != "비회원") throw DuplicatedPhoneNumberException()
+        }
     }
 
     override fun login(loginDto: LoginDto) : LoginDao? {
