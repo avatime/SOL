@@ -16,4 +16,11 @@ class FinanceController(
                 .body(financeService.getFinanceAsset(accessToken))
     }
 
+    @PutMapping("/asset")
+    fun putFinanceAsset(@RequestBody acNo: String): ResponseEntity<Any>{
+        return ResponseEntity
+                .ok()
+                .body(financeService.putFinanceAsset(acNo))
+    }
+
 }
