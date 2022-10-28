@@ -24,4 +24,6 @@ data class DuesRes(
 
         @JsonProperty("total_user")
         val totalUser : Int,
+
+        val creator : String
 )

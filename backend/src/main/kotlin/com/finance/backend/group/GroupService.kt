@@ -15,4 +15,5 @@ interface GroupService {
     fun getDueDetails(accessToken: String, dueId : Long) : DuesDetailsRes?
     fun payDue(accessToken: String, duesPayReq: DuesPayReq)
     fun createDue(accessToken: String, registDueReq: RegistDueReq)
+    fun disableExistDue(accessToken: String, dueId: Long)
 }

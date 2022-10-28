@@ -102,8 +102,8 @@ class GroupServiceImpl (
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             if(!publicAccountMemberRepository.existsByUserAndPublicAccountId(user, publicAccountId)) throw AuthenticationException()
-            val dueList : List<Dues> = duesRepository.findAllByPublicAccountId(publicAccountId)?:throw Exception()
-            return List(dueList.size) {i -> dueList[i].toEntity(userDuesRelationRepository.findByUserAndDues(user, dueList[i])?.status?: throw Exception(), userDuesRelationRepository.countByDuesAndStatus(dueList[i], true), userDuesRelationRepository.countByDues(dueList[i]))}
+            val dueList : List<Dues> = duesRepository.findAllByPublicAccountIdAndStatus(publicAccountId, 10)?:throw Exception()
+            return List(dueList.size) {i -> dueList[i].toEntity(userDuesRelationRepository.findByUserAndDues(user, dueList[i])?.status?: throw Exception(), userDuesRelationRepository.countByDuesAndStatus(dueList[i], true), userDuesRelationRepository.countByDues(dueList[i]), userRepository.findById(dueList[i].creator).orElse(null)?.name?:throw NullPointerException())}
         } else throw Exception()
     }
 
@@ -112,8 +112,9 @@ class GroupServiceImpl (
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             val due : Dues = userDuesRelationRepository.findByUserAndId(user, dueId)?.dues ?: throw AuthenticationException()
+            if(due.status == 99) throw DuesNotExistsException()
             val memberList : List<UserDuesRelation> = userDuesRelationRepository.findAllByDues(due)?:throw Exception()
-            return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) {i -> memberList[i].toEntity(profileRepository.getReferenceById(user.pfId))})
+            return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) {i -> memberList[i].toEntity(profileRepository.getReferenceById(user.pfId))}, due.creator == userId || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
         } else throw Exception()
     }
 
@@ -123,6 +124,7 @@ class GroupServiceImpl (
             val user: User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             val account : Account = accountRepository.findByAcNoAndUser(duesPayReq.acNo, user) ?: throw AccountNotSubToUserException()
             val userDuesRelation : UserDuesRelation = userDuesRelationRepository.findByUserAndDuesId(user, duesPayReq.duesId) ?: throw AuthenticationException()
+            if(userDuesRelation.dues.status == 99) throw DuesNotExistsException()
             if(duesPayReq.duesVal != userDuesRelation.dues.duesVal) throw WrongAmountException()
             if(account.balance < duesPayReq.duesVal) throw InsufficientBalanceException()
             userDuesRelation.paid()
@@ -143,13 +145,28 @@ class GroupServiceImpl (
             val publicAccount : PublicAccount = publicAccountRepository.findById(registDueReq.paId).orElse(null) ?: throw AuthenticationException()
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             val date : LocalDateTime? = LocalDateTime.parse(registDueReq.duesDue, formatter);
-            val dues : Dues = duesRepository.save(Dues(publicAccount, registDueReq.name, registDueReq.duesVal, if(date == null) 1 else 0, date))
+            val dues : Dues = duesRepository.save(Dues(publicAccount, registDueReq.name, registDueReq.duesVal, if(date == null) 1 else 0, date, userId))
 
-            TODO("정기적으로 생성하는 코드 만들어야함")
             for(member in registDueReq.memberList) {
                 userDuesRelationRepository.save(UserDuesRelation(dues, user))
             }
         }
+    }
+
+    override fun disableExistDue(accessToken: String, dueId: Long) {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
+            val due : Dues = duesRepository.findByIdAndStatus(dueId, 10) ?: throw DuesNotExistsException()
+            val userDuesRelation : UserDuesRelation = userDuesRelationRepository.findByUserAndDues(user, due) ?: throw AuthenticationException()
+            if(due.creator != userId && !publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자")) throw AuthenticationException()
+            due.disable()
+            duesRepository.save(due)
+        } else throw Exception()
+    }
+
+    fun registPaymentMonthly() {
+        TODO("정기적으로 생성하는 코드 만들어야함")
     }
 
     fun registMembers(list : List<MemberInfoReq>, publicAccount : PublicAccount){

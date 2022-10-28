@@ -12,7 +12,8 @@ class Dues(
         duesName: String,
         duesVal: Int,
         category: Int = 1,
-        duesDue: LocalDateTime?
+        duesDue: LocalDateTime?,
+        creator : UUID
 ) : Timestamped() {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,16 +23,28 @@ class Dues(
 
     @Column
     var duesName : String = duesName
+        protected set
     @Column
     var duesVal : Int = duesVal
+        protected set
     @Column
     var duesDue : LocalDateTime? = duesDue
+        protected set
     @Column
     var category : Int = category
+        protected set
+    @Column
+    var status : Int = 10
+        protected set
+
+    @Column
+    var creator : UUID = creator
+        protected set
 
     @ManyToOne
     @JoinColumn(name = "pa_id")
     var publicAccount : PublicAccount = publicAccount
 
-    fun toEntity(paid: Boolean, num:Int, total: Int) : DuesRes = DuesRes(paid, this.duesName, this.createdAt, this.duesDue, this.duesVal, num, total)
+    fun disable() {this.status = 99}
+    fun toEntity(paid: Boolean, num:Int, total: Int, user : String) : DuesRes = DuesRes(paid, this.duesName, this.createdAt, this.duesDue, this.duesVal, num, total, user)
 }
