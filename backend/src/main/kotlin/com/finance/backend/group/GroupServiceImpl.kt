@@ -22,11 +22,9 @@ import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
-import com.sun.org.apache.xpath.internal.functions.WrongNumberArgsException
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
