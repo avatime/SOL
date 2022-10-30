@@ -180,7 +180,7 @@ class AccountServiceImpl(
                 financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo))
             }
 
-            val insuranceInfoList = insuranceRepository.findAllByUserIdAndIsRegAndType(userId, true, 10)
+            val insuranceInfoList = insuranceRepository.findAllByUserIdAndIsRegAndIsStatus(userId, true, 10)
             insuranceList = List(insuranceInfoList.size) {i -> insuranceInfoList[i].toEntity(isProductRepository.findById(insuranceInfoList[i].isPdCode).orElse(null)?.isPdName ?: throw NoSuchElementException())}
         }
 
