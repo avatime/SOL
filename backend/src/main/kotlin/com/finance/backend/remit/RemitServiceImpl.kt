@@ -184,7 +184,7 @@ class RemitServiceImpl(
             if (bookmarkRepository.existsByUserIdAndAcNo(userId, acNo)){
                 var bookmark = bookmarkRepository.findByUserIdAndAcNo(userId, acNo)
                 bookmark.apply {
-                    bkStatus = !bkStatus!!
+                    bkStatus = !bkStatus
                 }
                 bookmarkRepository.save(bookmark)
             }else{
