@@ -3,8 +3,6 @@ package com.finance.backend.card
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.finance.backend.bank.Account
 import com.finance.backend.user.User
-import java.time.LocalDateTime
-import javax.jws.soap.SOAPBinding.Use
 import javax.persistence.Entity
 import javax.persistence.Id
 import javax.persistence.JoinColumn
