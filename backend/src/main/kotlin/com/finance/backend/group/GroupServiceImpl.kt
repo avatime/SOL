@@ -67,9 +67,8 @@ class GroupServiceImpl (
     override fun disableExistGroup(accessToken: String, publicAccountId: Long) {
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
-            val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             val publicAccount: PublicAccount = publicAccountRepository.findById(publicAccountId).orElse(throw NullPointerException())
-            if(!publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, publicAccount, "관리자")) throw AuthenticationException()
+            if(!publicAccountMemberRepository.existsByUserAndPublicAccountAndType(userRepository.findById(userId).orElse(null) ?: throw InvalidUserException(), publicAccount, "관리자")) throw AuthenticationException()
             publicAccount.terminate()
             publicAccountRepository.save(publicAccount)
         }

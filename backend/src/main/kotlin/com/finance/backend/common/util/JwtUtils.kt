@@ -5,12 +5,15 @@ import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 
 import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.config.Elements.JWT
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Component
+import java.nio.charset.StandardCharsets
+import java.security.Key
 import java.util.*
 import javax.annotation.PostConstruct
 
@@ -32,11 +35,14 @@ class JwtUtils(
     lateinit var JWT_REFRESH_SECRET: String
     val SIGNATURE_ALG: SignatureAlgorithm = SignatureAlgorithm.HS256
 
+    lateinit var key : Key
+    lateinit var refreshKey: Key
+
     // 객체 초기화, secretKey를 Base64로 인코딩한다.
     @PostConstruct
     protected fun init() {
-        JWT_SECRET = Base64.getEncoder().encodeToString(JWT_SECRET.toByteArray())
-        JWT_REFRESH_SECRET = Base64.getEncoder().encodeToString(JWT_REFRESH_SECRET.toByteArray())
+        key = Keys.hmacShaKeyFor(JWT_SECRET.toByteArray(StandardCharsets.UTF_8))
+        refreshKey = Keys.hmacShaKeyFor(JWT_REFRESH_SECRET.toByteArray(StandardCharsets.UTF_8))
     }
 
     // 토큰생성
@@ -49,12 +55,12 @@ class JwtUtils(
         val accessToken : String = Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(Date(System.currentTimeMillis()+ ACCESS_EXP_TIME))
-                .signWith(SIGNATURE_ALG, JWT_SECRET)
+                .signWith(key, SIGNATURE_ALG)
                 .compact()
         val refreshToken : String = Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(Date(System.currentTimeMillis()+ REFRESH_EXP_TIME))
-                .signWith(SIGNATURE_ALG, JWT_REFRESH_SECRET)
+                .signWith(refreshKey, SIGNATURE_ALG)
                 .compact()
 
         return Token(accessToken, refreshToken)
@@ -64,6 +70,7 @@ class JwtUtils(
     fun validation(token: String) : Boolean {
         val claims: Claims = getAllClaims(token)
         val exp: Date = claims.expiration
+        println(exp.after(Date()))
         return exp.after(Date())
     }
 
@@ -73,7 +80,7 @@ class JwtUtils(
         return Jwts.builder()
                 .setClaims(claims)
                 .setExpiration(Date(System.currentTimeMillis()+ ACCESS_EXP_TIME))
-                .signWith(SIGNATURE_ALG, JWT_SECRET)
+                .signWith(key, SIGNATURE_ALG)
                 .compact()
     }
 
@@ -105,8 +112,8 @@ class JwtUtils(
 
     // 모든 Claims 조회
     private fun getAllClaims(token: String): Claims {
-        return Jwts.parser()
-                .setSigningKey(JWT_SECRET)
+        return Jwts.parserBuilder()
+                .setSigningKey(key).build()
                 .parseClaimsJws(token)
                 .body
     }

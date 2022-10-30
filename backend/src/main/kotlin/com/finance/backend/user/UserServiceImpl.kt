@@ -56,8 +56,7 @@ class UserServiceImpl (
     }
 
     override fun login(loginDto: LoginDto) : LoginDao? {
-        if(try {jwtUtils.validation(loginDto.refreshToken)} catch (e: Exception) {throw TokenExpiredException()
-                }){
+        if(try {jwtUtils.validation(loginDto.refreshToken)} catch (e: Exception) { throw TokenExpiredException() }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(loginDto.refreshToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             if(passwordEncoder.matches(loginDto.password, user.password)) {
