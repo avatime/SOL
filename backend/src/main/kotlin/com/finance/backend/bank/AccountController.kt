@@ -1,5 +1,6 @@
 package com.finance.backend.bank;
 
+import com.finance.backend.bank.request.AccountInfoReq
 import com.finance.backend.corporation.response.BankInfoRes
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -26,10 +27,8 @@ class AccountController(val accountService: AccountService) {
     }
 
     @PutMapping("/remit")
-    fun registerRemitAccount(@RequestBody acNo: String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.registerRemitAccount(acNo))
+    fun registerRemitAccount(@RequestBody accountInfoReq: AccountInfoReq): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(accountService.registerRemitAccount(accountInfoReq.acNo))
     }
 
     @PutMapping("/bookmark")
