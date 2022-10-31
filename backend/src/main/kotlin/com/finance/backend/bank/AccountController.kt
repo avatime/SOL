@@ -36,18 +36,14 @@ class AccountController(val accountService: AccountService) {
         return ResponseEntity.status(200).body(accountService.registerBookmarkAccount(accountInfoReq.acNo, accessToken))
     }
 
-    @GetMapping("/all/{ac_no}")
+    @GetMapping("/all/{acNo}")
     fun getAccountDetail(@PathVariable acNo : String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getAccountDetail(acNo))
+        return ResponseEntity.status(200).body(accountService.getAccountDetail(acNo))
     }
 
-    @GetMapping("/{ac_no}/{type}")
+    @GetMapping("/{acNo}/{type}")
     fun getAccountDetailType(@PathVariable acNo: String, @PathVariable type: Int): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getAccountDetailType(acNo, type))
+        return ResponseEntity.status(200).body(accountService.getAccountDetailType(acNo, type))
     }
 
     @GetMapping("/recent")
@@ -57,7 +53,7 @@ class AccountController(val accountService: AccountService) {
                 .body(accountService.getRecentTrade(accessToken))
     }
 
-    @GetMapping("/check/{ac_no}/{cp_code}")
+    @GetMapping("/check/{acNo}/{cpCode}")
     fun getCheckAccount(@PathVariable acNo: String, @PathVariable cpCode: Long): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()
