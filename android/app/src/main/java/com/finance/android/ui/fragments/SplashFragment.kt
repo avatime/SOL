@@ -18,7 +18,7 @@ fun SplashFragment(navController: NavController) {
 
     LaunchedEffect(Unit) {
         accessToken.collect {
-            if (!it.isEmpty()) {
+            if (it.isEmpty()) {
                 navController.navigate(Const.Routes.LOGIN) {
                     popUpTo(Const.Routes.SPLASH) {
                         inclusive = true
