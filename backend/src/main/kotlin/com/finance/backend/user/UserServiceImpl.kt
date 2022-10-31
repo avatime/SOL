@@ -51,8 +51,7 @@ class UserServiceImpl (
         if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) throw DuplicatedUserException()
         else {
             var user : User? = userRepository.findByPhone(signupDto.phone)
-            if(user?.type != "회원") throw DuplicatedUserException()
-            else if(user?.type != "비회원") throw DuplicatedPhoneNumberException()
+            if(user?.type == "회원") throw DuplicatedPhoneNumberException()
         }
     }
 
