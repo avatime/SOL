@@ -59,17 +59,13 @@ class AccountServiceImpl(
     }
 
     override fun registerRemitAccount(acNo: String) {
-        val account = accountRepository.findById(acNo).get()
+
+        val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
+        println(account.acNo)
         account.apply {
             acRmReg = !acRmReg!!
         }
         accountRepository.save(account)
-
-//        val user = userRepository.findById(account.acNo)
-//        user.apply {
-//            account = account.acNo
-//        }
-
     }
 
     override fun registerBookmarkAccount(acNo: String, token: String) {
