@@ -13,7 +13,7 @@ class Settings(BaseSettings):
 
 
 settings = Settings()
-URL = f"mysql+mysqlconnector://{settings.USERNAME}:{settings.PASSWORD}!@k7a403.p.ssafy.io:3306/tmp"
+URL = f"mysql+mysqlconnector://{settings.USERNAME.lower()}:{settings.PASSWORD}@k7a403.p.ssafy.io:3306/tmp"
 engine = create_engine(URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
