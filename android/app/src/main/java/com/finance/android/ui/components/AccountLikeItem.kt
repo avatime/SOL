@@ -18,10 +18,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.finance.android.R
 import com.finance.android.ui.theme.Disabled
 
+@Preview
 @Composable
 fun AccountLikeItem() {
 
@@ -29,54 +31,50 @@ fun AccountLikeItem() {
     var isSelected = remember { mutableStateOf(false) }
 
 
-    Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
 
-        Row(modifier = Modifier.fillMaxHeight()) {
-            Image(
-                painter = image,
-                contentDescription = "cp logo",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .width(80.dp)
-                    .clip(CircleShape)
+        Image(
+            painter = image,
+            contentDescription = "cp logo",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .width(80.dp)
+                .clip(CircleShape)
 
+        )
+        Spacer(modifier = Modifier.weight(0.2f))
+
+
+        Column {
+            Text(
+                text = "신한은행정기적금"
             )
-            Spacer(modifier = Modifier.padding(10.dp))
-
-
-            Column(
-               modifier = Modifier.fillMaxHeight(), verticalArrangement = Arrangement.Center
-            ) {
+            Spacer(modifier = Modifier.padding(5.dp))
+            Row {
                 Text(
-                    text = "신한은행정기적금"
+                    text = "신한은행"
                 )
-                Row {
-                    Text(
-                        text = "신한은행"
-                    )
-                    Text(
-                        text = "1119183992"
-                    )
-
-                }
-
-            }
-            Spacer(modifier = Modifier.padding(10.dp))
-
-            IconButton(onClick = { isSelected.value = !isSelected.value }) {
-                Icon(
-                    Icons.Filled.Star,
-                    contentDescription = "like",
-                    tint = if (isSelected.value) Color(0xffeeca66) else Disabled
+                Text(
+                    text = "1119183992"
                 )
 
             }
-
 
         }
+        Spacer(modifier = Modifier.weight(0.8f))
 
+        IconButton(onClick = { isSelected.value = !isSelected.value }) {
+            Icon(
+                Icons.Filled.Star,
+                contentDescription = "like",
+                modifier = Modifier.size(40.dp),
+                tint = if (isSelected.value) Color(0xffeeca66) else Disabled
+            )
+
+        }
     }
-
-
 }
 

@@ -3,9 +3,11 @@ package com.finance.android.ui.components
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.airbnb.lottie.compose.*
 import com.finance.android.ui.screens.AccountScreen
@@ -17,7 +19,7 @@ import com.google.accompanist.pager.*
 
 val PAGES = listOf("추천", "계좌", "연락처")
 
-@OptIn(ExperimentalPagerApi::class)
+@Preview
 @Composable
 fun HeaderRemitTabBar() {
 
@@ -31,6 +33,14 @@ fun HeaderRemitTabBar() {
         TabRow(selectedTabIndex = selectedIndex,
             backgroundColor = Color.White,
             modifier = Modifier,
+            indicator = {
+                TabRowDefaults.Indicator(
+                    modifier = Modifier
+                        .tabIndicatorOffset(it[selectedIndex]),
+                    color = Color.Transparent,
+                    height = TabRowDefaults.IndicatorHeight * 1.5F
+                )
+            }
 
 
         ) {

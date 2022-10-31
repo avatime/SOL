@@ -1,11 +1,13 @@
 package com.finance.android.ui.screens
 
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 
-@Preview
-@Composable
-fun HomeScreen() {
-  InputMoneyScreen()
+
+fun RemitOKScreen(moneyValue : String) {
+
+
+
 
 }
