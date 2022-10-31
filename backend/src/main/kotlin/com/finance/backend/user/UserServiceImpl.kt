@@ -4,6 +4,7 @@ import com.finance.backend.Exceptions.*
 import com.finance.backend.auth.*
 import com.finance.backend.auth.request.LoginDto
 import com.finance.backend.auth.request.ReLoginDto
+import com.finance.backend.auth.request.SignupCheckDto
 import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.auth.response.LoginDao
 import com.finance.backend.common.util.JwtUtils
@@ -46,12 +47,12 @@ class UserServiceImpl (
         }
     }
 
-    override fun checkUser(signupDto: SignupDto) {
+    override fun checkUser(signupDto: SignupCheckDto) {
         if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) throw DuplicatedUserException()
         else {
             var user : User? = userRepository.findByPhone(signupDto.phone)
-            if(user == null) user = signupDto.toEntity()
-            else if(user.type != "비회원") throw DuplicatedPhoneNumberException()
+            if(user?.type != "회원") throw DuplicatedUserException()
+            else if(user?.type != "비회원") throw DuplicatedPhoneNumberException()
         }
     }
 

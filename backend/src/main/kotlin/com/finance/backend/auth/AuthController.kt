@@ -1,11 +1,8 @@
 package com.finance.backend.auth
 
-import com.finance.backend.Exceptions.DuplicatedUserException
-import com.finance.backend.Exceptions.InvalidPasswordException
-import com.finance.backend.Exceptions.InvalidUserException
-import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.auth.request.LoginDto
 import com.finance.backend.auth.request.ReLoginDto
+import com.finance.backend.auth.request.SignupCheckDto
 import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.user.UserService
 import org.springframework.http.ResponseEntity
@@ -25,7 +22,7 @@ class AuthController (private val userService: UserService) {
     }
 
     @PostMapping("/signup/check")
-    fun signupCheck(@RequestBody userDto: SignupDto) : ResponseEntity<Any?>{
+    fun signupCheck(@RequestBody userDto: SignupCheckDto) : ResponseEntity<Any?>{
         return ResponseEntity.status(200).body(userService.checkUser(userDto))
     }
 
