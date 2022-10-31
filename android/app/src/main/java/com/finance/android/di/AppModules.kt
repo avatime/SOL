@@ -4,6 +4,7 @@ import com.finance.android.domain.DummyRepositoryImpl
 import com.finance.android.domain.RetrofitClient
 import com.finance.android.domain.repository.SampleRepository
 import com.finance.android.domain.repository.UserRepository
+import com.finance.android.domain.repository.UserRepositoryImpl
 import com.finance.android.domain.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -18,7 +19,9 @@ class AppModules {
     fun provideSampleRepository(): SampleRepository = DummyRepositoryImpl()
 
     @Provides
-    fun provideUserRepository(): UserRepository = DummyRepositoryImpl()
+    fun provideUserRepository(
+        userService: UserService
+    ): UserRepository = UserRepositoryImpl(userService)
 
     @Provides
     fun provideRetrofit(): Retrofit = RetrofitClient().instance

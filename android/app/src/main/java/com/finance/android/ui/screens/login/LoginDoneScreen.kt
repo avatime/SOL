@@ -18,7 +18,9 @@ import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.ext.withBottomButton
 
 @Composable
-fun LoginDoneScreen() {
+fun LoginDoneScreen(
+    onNextStep: () -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -31,7 +33,7 @@ fun LoginDoneScreen() {
         )
         Spacer(modifier = Modifier.weight(1.0f))
         TextButton(
-            onClick = { },
+            onClick = onNextStep,
             text = stringResource(id = R.string.btn_confirm),
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton()

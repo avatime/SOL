@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finance.android.datastore.UserStore
+import com.finance.android.domain.RetrofitClient
 import com.finance.android.domain.dto.request.CheckUserRequestDto
 import com.finance.android.domain.dto.request.LoginRequestDto
 import com.finance.android.domain.dto.request.ReLoginRequestDto
@@ -182,6 +183,7 @@ class LoginViewModel @Inject constructor(
         context: Context,
         loginResponseDto: LoginResponseDto
     ) {
+        RetrofitClient().login(loginResponseDto.accessToken)
         UserStore(context).setValue(UserStore.KEY_PASSWORD, password.value)
             .setValue(UserStore.KEY_REFRESH_TOKEN, loginResponseDto.refreshToken)
             .setValue(UserStore.KEY_USER_ID, loginResponseDto.userId)

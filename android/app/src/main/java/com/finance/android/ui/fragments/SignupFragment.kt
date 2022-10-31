@@ -83,6 +83,14 @@ fun SignupFragment(
         ),
         exit = slideOutVertically()
     ) {
-        LoginDoneScreen()
+        LoginDoneScreen(
+            onNextStep = {
+                navController.navigate(Const.Routes.MAIN) {
+                    popUpTo(Const.Routes.LOGIN) {
+                        inclusive = true
+                    }
+                }
+            }
+        )
     }
 }
