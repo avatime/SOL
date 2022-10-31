@@ -48,7 +48,7 @@ class LoginViewModel @Inject constructor(
                 InputUserInfoStep.BIRTHDAY -> validateBirthday(birthday.value)
                 InputUserInfoStep.PHONE_NUM -> validatePhoneNum(phoneNumber.value)
             }
-            SignupStep.TestPhone     -> code.value.isNotEmpty() && rightCode.value is Response.Success<String> && (rightCode.value as Response.Success<String>).data.equals(code.value)
+            SignupStep.TestPhone -> code.value.isNotEmpty() && rightCode.value is Response.Success<String> && (rightCode.value as Response.Success<String>).data.equals(code.value)
             SignupStep.InputPassword -> {
                 if (passwordRepeat.value == null) {
                     password.value.length == 6
@@ -56,7 +56,7 @@ class LoginViewModel @Inject constructor(
                     password.value == passwordRepeat.value
                 }
             }
-            SignupStep.Done          -> true
+            SignupStep.Done -> true
         }
     }
 
@@ -82,20 +82,10 @@ class LoginViewModel @Inject constructor(
         onMoveLoginScreen: () -> Unit
     ) {
         viewModelScope.launch {
-            val birth = birthday.value.let {
-                val result = "${it.substring(0..1)}-${it.substring(2..3)}-${it.substring(4..5)}"
-                return@let if (it.substring(0..1)
-                    .toInt() < 10
-                ) {
-                    "20$result"
-                } else {
-                    "19$result"
-                }
-            }
             val checkUserRequestDto = CheckUserRequestDto(
                 userName = name.value,
                 phoneNumber = phoneNumber.value,
-                birthday = birth
+                birthday = formatBirthday()
             )
             userRepository.checkUser(checkUserRequestDto)
                 .collect {
@@ -104,7 +94,7 @@ class LoginViewModel @Inject constructor(
                             400 -> onUsedPhoneNumber()
                             409 -> onMoveLoginScreen()
                         }
-                    } else {
+                    } else if (it is Response.Success) {
                         onMoveSignupScreen()
                     }
                 }
@@ -144,7 +134,7 @@ class LoginViewModel @Inject constructor(
                 userName = name.value,
                 phoneNumber = phoneNumber.value,
                 password = password.value,
-                birthday = birthday.value,
+                birthday = formatBirthday(),
                 sex = (Random.nextInt(0, 10) % 2) + 1
             )
             userRepository.signup(signupRequestDto)
@@ -159,19 +149,24 @@ class LoginViewModel @Inject constructor(
 
     fun login(
         context: Context,
-        onMoveLoginDoneScreen: () -> Unit
+        onMoveLoginDoneScreen: () -> Unit,
+        onErrorPassword: () -> Unit
     ) {
         viewModelScope.launch {
             UserStore(context).getValue(UserStore.KEY_REFRESH_TOKEN)
-                .collect {
+                .collect { token ->
                     val loginRequestDto = LoginRequestDto(
-                        refreshToken = it,
+                        refreshToken = token,
                         password = password.value
                     )
                     userRepository.login(loginRequestDto)
-                        .collect { res ->
-                            if (res is Response.Success) {
-                                saveUserInfo(context, res.data)
+                        .collect {
+                            if (it is Response.Failure && it.e is HttpException) {
+                                when (it.e.code()) {
+                                    401 -> onErrorPassword()
+                                }
+                            } else if (it is Response.Success) {
+                                saveUserInfo(context, it.data)
                                 onMoveLoginDoneScreen()
                             }
                         }
@@ -189,5 +184,18 @@ class LoginViewModel @Inject constructor(
             .setValue(UserStore.KEY_USER_ID, loginResponseDto.userId)
             .setValue(UserStore.KEY_USER_NAME, loginResponseDto.userName)
             .setValue(UserStore.KEY_ACCESS_TOKEN, loginResponseDto.accessToken)
+    }
+
+    private fun formatBirthday(): String {
+        return birthday.value.let {
+            val result = "${it.substring(0..1)}-${it.substring(2..3)}-${it.substring(4..5)}"
+            return@let if (it.substring(0..1)
+                .toInt() < 10
+            ) {
+                "20$result"
+            } else {
+                "19$result"
+            }
+        }
     }
 }

@@ -61,7 +61,8 @@ fun LoginFragment(
                         inclusive = true
                     }
                 }
-            }
+            },
+            isLoginFragment = true
         )
     }
 }

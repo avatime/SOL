@@ -8,7 +8,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
+import com.finance.android.R
 import com.finance.android.ui.theme.MainColor
 import com.finance.android.ui.theme.White
 import com.finance.android.utils.ext.withBottomButton
@@ -51,7 +55,8 @@ fun TextButton(
     buttonColor: ButtonColor = ButtonColor.PRIMARY,
     modifier: Modifier,
     buttonType: ButtonType,
-    enabled: Boolean = true
+    enabled: Boolean = true,
+    fontSize: TextUnit = dimensionResource(id = R.dimen.font_size_btn_bottom_text).value.sp
 ) {
     Button(
         onClick = onClick,
@@ -63,7 +68,10 @@ fun TextButton(
         shape = buttonType.getShape() ?: ButtonDefaults.shape,
         enabled = enabled
     ) {
-        Text(text = text)
+        Text(
+            text = text,
+            fontSize = fontSize
+        )
     }
 }
 

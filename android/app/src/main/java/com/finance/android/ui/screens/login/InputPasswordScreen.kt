@@ -13,7 +13,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.CodeTextInput
@@ -32,6 +34,7 @@ fun InputPasswordScreen(
     inputPasswordType: InputPasswordType,
     loginViewModel: LoginViewModel,
     onNextStep: () -> Unit,
+    isLoginFragment: Boolean
 ) {
     var isRepeat by remember { mutableStateOf(false) }
     val errorPassword = remember { mutableStateOf(false) }
@@ -52,11 +55,19 @@ fun InputPasswordScreen(
                     isRepeat = true
                     loginViewModel.passwordRepeat.value = ""
                 } else {
-                    loginViewModel.reLogin(
-                        context = context,
-                        onErrorPassword = { errorPassword.value = true },
-                        onMoveLoginDoneScreen = onNextStep
-                    )
+                    if (isLoginFragment) {
+                        loginViewModel.login(
+                            context = context,
+                            onErrorPassword = { errorPassword.value = true },
+                            onMoveLoginDoneScreen = onNextStep
+                        )
+                    } else {
+                        loginViewModel.reLogin(
+                            context = context,
+                            onErrorPassword = { errorPassword.value = true },
+                            onMoveLoginDoneScreen = onNextStep
+                        )
+                    }
                 }
             }
         )
@@ -98,7 +109,9 @@ private fun FirstScreen(
             text = stringResource(id = R.string.msg_set_password),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
+            fontSize = dimensionResource(id = R.dimen.font_size_title_desc).value.sp,
+            lineHeight = dimensionResource(id = R.dimen.font_size_title_desc).value.sp
         )
         Spacer(modifier = Modifier.size(0.dp, 20.dp))
         Column(
@@ -120,7 +133,10 @@ private fun FirstScreen(
                         text = stringResource(id = R.string.err_error_password),
                         color = MaterialTheme.colorScheme.error
                     )
-                }
+                },
+                textStyle = TextStyle(
+                    fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp
+                )
             )
         }
         Spacer(modifier = Modifier.weight(1.0f))
@@ -149,7 +165,9 @@ private fun SecondScreen(
             text = stringResource(id = R.string.msg_set_password_repeat),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
+            fontSize = dimensionResource(id = R.dimen.font_size_title_desc).value.sp,
+            lineHeight = dimensionResource(id = R.dimen.font_size_title_desc).value.sp
         )
         Spacer(modifier = Modifier.size(0.dp, 20.dp))
         Column(
@@ -163,7 +181,10 @@ private fun SecondScreen(
                         loginViewModel.passwordRepeat.value = it
                     }
                 },
-                isPassword = true
+                isPassword = true,
+                textStyle = TextStyle(
+                    fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp
+                )
             )
         }
         Spacer(modifier = Modifier.weight(1.0f))

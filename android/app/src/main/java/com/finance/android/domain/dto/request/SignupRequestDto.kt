@@ -10,5 +10,6 @@ data class SignupRequestDto(
     val password: String,
     @SerializedName("birth")
     val birthday: String,
-    val sex: Int
+    val sex: Int,
+    val type: String = "회원"
 )
