@@ -20,17 +20,21 @@ import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.components.TextInput
-import com.finance.android.ui.fragments.LoginStep
+import com.finance.android.ui.fragments.SignupStep
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.LoginViewModel
 
 @Composable
 fun InputUserInfoScreen(
     loginViewModel: LoginViewModel,
-    onNextStep: () -> Unit
+    onNextStep: () -> Unit,
+    setInputPasswordType: (inputPasswordType: InputPasswordType) -> Unit
 ) {
     var focus by remember { mutableStateOf(InputUserInfoStep.NAME) }
     var step by remember { mutableStateOf(InputUserInfoStep.NAME) }
+    var usedPhoneNumber by remember { mutableStateOf(false) }
+    var invalidPhoneNumber by remember { mutableStateOf(false) }
+    var invalidBirthday by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -50,6 +54,18 @@ fun InputUserInfoScreen(
                 onValueChange = {
                     if (it.length <= 11) {
                         loginViewModel.phoneNumber.value = it
+                    }
+                },
+                isError = usedPhoneNumber || invalidPhoneNumber,
+                errorMessage = {
+                    if (usedPhoneNumber || invalidPhoneNumber) {
+                        Text(
+                            text = stringResource(
+                                id = if (invalidPhoneNumber) {
+                                    R.string.err_invalid_phone_number
+                                } else R.string.err_used_phone_number
+                            )
+                        )
                     }
                 },
                 focus = step.id == InputUserInfoStep.PHONE_NUM.id && step == focus,
@@ -107,7 +123,13 @@ fun InputUserInfoScreen(
                     .fillMaxWidth()
                     .padding(0.dp),
                 label = stringResource(id = R.string.label_input_birthday),
-                keyboardType = KeyboardType.Number
+                keyboardType = KeyboardType.Number,
+                isError = invalidBirthday,
+                errorMessage = {
+                    if (invalidBirthday) {
+                        Text(text = stringResource(id = R.string.err_invalid_birthday))
+                    }
+                }
             )
         }
         AnimatedVisibility(visible = InputUserInfoStep.NAME.id <= step.id) {
@@ -131,10 +153,33 @@ fun InputUserInfoScreen(
         Spacer(modifier = Modifier.weight(1.0f))
         TextButton(
             onClick = {
+                if (!loginViewModel.isPossibleGoNext(SignupStep.InputUserInfo, step)) {
+                    if (step == InputUserInfoStep.PHONE_NUM) {
+                        invalidPhoneNumber = true
+                    } else if (step == InputUserInfoStep.BIRTHDAY) {
+                        invalidBirthday = true
+                    }
+                    return@TextButton
+                }
+
+                invalidPhoneNumber = false
+                invalidBirthday = false
                 if (focus.id < step.id) {
                     focus = InputUserInfoStep.values()[focus.id + 1]
                 } else if (step == InputUserInfoStep.PHONE_NUM) {
-                    onNextStep()
+                    loginViewModel.checkUser(
+                        onMoveSignupScreen = {
+                            setInputPasswordType(InputPasswordType.SIGNUP)
+                            onNextStep()
+                        },
+                        onUsedPhoneNumber = {
+                            usedPhoneNumber = true
+                        },
+                        onMoveLoginScreen = {
+                            setInputPasswordType(InputPasswordType.LOGIN)
+                            onNextStep()
+                        }
+                    )
                 } else {
                     step = InputUserInfoStep.values()[step.id + 1]
                     focus = InputUserInfoStep.values()[focus.id + 1]
@@ -143,7 +188,12 @@ fun InputUserInfoScreen(
             text = stringResource(id = R.string.btn_confirm),
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton(),
-            enabled = loginViewModel.isPossibleGoNext(LoginStep.InputUserInfo, step)
+            enabled =
+            if (step == InputUserInfoStep.BIRTHDAY || step == InputUserInfoStep.PHONE_NUM) {
+                true
+            } else {
+                loginViewModel.isPossibleGoNext(SignupStep.InputUserInfo, step)
+            }
         )
     }
 }

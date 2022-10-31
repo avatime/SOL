@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -17,16 +18,24 @@ import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.CodeTextInput
 import com.finance.android.ui.components.TextButton
-import com.finance.android.ui.fragments.LoginStep
+import com.finance.android.ui.fragments.SignupStep
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.LoginViewModel
 
+enum class InputPasswordType {
+    LOGIN,
+    SIGNUP
+}
+
 @Composable
 fun InputPasswordScreen(
+    inputPasswordType: InputPasswordType,
     loginViewModel: LoginViewModel,
-    onNextStep: () -> Unit
+    onNextStep: () -> Unit,
 ) {
     var isRepeat by remember { mutableStateOf(false) }
+    val errorPassword = remember { mutableStateOf(false) }
+    val context = LocalContext.current
 
     AnimatedVisibility(
         visible = !isRepeat,
@@ -37,30 +46,47 @@ fun InputPasswordScreen(
     ) {
         FirstScreen(
             loginViewModel = loginViewModel,
+            errorPassword = errorPassword,
             onNextStep = {
-                isRepeat = true
-                loginViewModel.passwordRepeat.value = ""
+                if (inputPasswordType == InputPasswordType.SIGNUP) {
+                    isRepeat = true
+                    loginViewModel.passwordRepeat.value = ""
+                } else {
+                    loginViewModel.reLogin(
+                        context = context,
+                        onErrorPassword = { errorPassword.value = true },
+                        onMoveLoginDoneScreen = onNextStep
+                    )
+                }
             }
         )
     }
-    AnimatedVisibility(
-        visible = isRepeat,
-        enter = slideInVertically(
-            initialOffsetY = { it / 2 }
-        ),
-        exit = slideOutVertically()
-    ) {
-        SecondScreen(
-            loginViewModel = loginViewModel,
-            onNextStep = onNextStep
-        )
+    if (inputPasswordType == InputPasswordType.SIGNUP) {
+        AnimatedVisibility(
+            visible = isRepeat,
+            enter = slideInVertically(
+                initialOffsetY = { it / 2 }
+            ),
+            exit = slideOutVertically()
+        ) {
+            SecondScreen(
+                loginViewModel = loginViewModel,
+                onNextStep = {
+                    loginViewModel.signup(
+                        context = context,
+                        onMoveLoginDoneScreen = onNextStep
+                    )
+                }
+            )
+        }
     }
 }
 
 @Composable
 private fun FirstScreen(
     loginViewModel: LoginViewModel,
-    onNextStep: () -> Unit
+    onNextStep: () -> Unit,
+    errorPassword: MutableState<Boolean>
 ) {
     Column(
         modifier = Modifier
@@ -82,9 +108,18 @@ private fun FirstScreen(
             CodeTextInput(
                 value = loginViewModel.password.value,
                 onValueChange = {
-                    if (it.length <= 6) {
+                    if (it.length <= 6 && it != loginViewModel.password.value) {
                         loginViewModel.password.value = it
+                        errorPassword.value = false
                     }
+                },
+                isPassword = true,
+                isError = errorPassword.value,
+                errorMessage = {
+                    Text(
+                        text = stringResource(id = R.string.err_error_password),
+                        color = MaterialTheme.colorScheme.error
+                    )
                 }
             )
         }
@@ -94,7 +129,7 @@ private fun FirstScreen(
             text = stringResource(id = R.string.btn_confirm),
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton(),
-            enabled = loginViewModel.isPossibleGoNext(LoginStep.InputPassword)
+            enabled = loginViewModel.isPossibleGoNext(SignupStep.InputPassword)
         )
     }
 }
@@ -127,7 +162,8 @@ private fun SecondScreen(
                     if (it.length <= 6) {
                         loginViewModel.passwordRepeat.value = it
                     }
-                }
+                },
+                isPassword = true
             )
         }
         Spacer(modifier = Modifier.weight(1.0f))
@@ -136,7 +172,7 @@ private fun SecondScreen(
             text = stringResource(id = R.string.btn_confirm),
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton(),
-            enabled = loginViewModel.isPossibleGoNext(LoginStep.InputPassword)
+            enabled = loginViewModel.isPossibleGoNext(SignupStep.InputPassword)
         )
     }
 }

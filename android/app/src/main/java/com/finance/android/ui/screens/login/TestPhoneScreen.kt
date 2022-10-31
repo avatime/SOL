@@ -5,7 +5,6 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Snackbar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,11 +14,8 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.finance.android.R
-import com.finance.android.ui.components.ButtonColor
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.CodeTextInput
-import com.finance.android.ui.components.TextButton
-import com.finance.android.ui.fragments.LoginStep
+import com.finance.android.ui.components.*
+import com.finance.android.ui.fragments.SignupStep
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.LoginViewModel
 
@@ -77,11 +73,11 @@ fun TestPhoneScreen(
         Spacer(modifier = Modifier.weight(1.0f))
         loginViewModel.showRightCode()
             ?.let {
-                Snackbar(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
-                ) {
-                    Text(text = stringResource(id = R.string.msg_receive_test_phone_code, it))
+                TransientSnackbar {
+                    Text(
+                        text = stringResource(id = R.string.msg_receive_test_phone_code, it),
+                        color = MaterialTheme.colorScheme.surface
+                    )
                 }
             }
         TextButton(
@@ -89,7 +85,7 @@ fun TestPhoneScreen(
             text = stringResource(id = R.string.btn_confirm),
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton(),
-            enabled = loginViewModel.isPossibleGoNext(LoginStep.TestPhone)
+            enabled = loginViewModel.isPossibleGoNext(SignupStep.TestPhone)
         )
     }
 }
