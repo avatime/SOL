@@ -32,10 +32,8 @@ class AccountController(val accountService: AccountService) {
     }
 
     @PutMapping("/bookmark")
-    fun registerBookmarkAccount(@RequestHeader("access_token") accessToken : String, @RequestBody acNo: String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.registerBookmarkAccount(acNo,accessToken))
+    fun registerBookmarkAccount(@RequestHeader("access_token") accessToken : String, @RequestBody accountInfoReq: AccountInfoReq): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(accountService.registerBookmarkAccount(accountInfoReq.acNo, accessToken))
     }
 
     @GetMapping("/all/{ac_no}")
