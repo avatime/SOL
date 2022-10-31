@@ -2,6 +2,7 @@ package com.finance.backend.bank;
 
 
 import com.finance.backend.Exceptions.InvalidUserException
+import com.finance.backend.Exceptions.NoAccountException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.bank.response.*
 import com.finance.backend.bookmark.Bookmark
@@ -49,7 +50,7 @@ class AccountServiceImpl(
 
     override fun registerAccount(acNoList: List<String>) {
         for(acNo in acNoList){
-            val account = accountRepository.findById(acNo).get()
+            val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
             account.apply {
                 acReg = !acReg!!
             }

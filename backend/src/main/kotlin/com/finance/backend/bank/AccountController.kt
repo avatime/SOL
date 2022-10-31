@@ -22,9 +22,7 @@ class AccountController(val accountService: AccountService) {
 
     @PutMapping("/asset")
     fun registerAccount(@RequestBody acNoList: List<String>): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.registerAccount(acNoList))
+        return ResponseEntity.status(200).body(accountService.registerAccount(acNoList))
     }
 
     @PutMapping("/remit")
