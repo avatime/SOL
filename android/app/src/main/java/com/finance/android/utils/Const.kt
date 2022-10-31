@@ -15,5 +15,6 @@ object Const {
         const val LOGIN = "route_login"
         const val MAIN = "route_main"
         const val REMIT = "route_remit"
+        const val REMITOK = "route_remitOK"
     }
 }

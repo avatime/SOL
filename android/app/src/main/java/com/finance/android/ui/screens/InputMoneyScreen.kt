@@ -18,6 +18,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.rememberNavController
 import com.finance.android.ui.components.ButtonType
 
 import com.finance.android.utils.ext.withBottomButton
@@ -46,23 +47,23 @@ fun InputMoneyScreen() {
 
     //보내는 계좌 은행
     var acName by remember {
-        mutableStateOf("")
+        mutableStateOf("국민은행")
     }
 
     //받는 계좌 은행
     var acTag by remember {
-        mutableStateOf("")
+        mutableStateOf("국민은행")
     }
 
     //보내는 계좌 번호
     var acSend by remember {
-        mutableStateOf("")
+        mutableStateOf("015402040675")
 
     }
 
     //받는 계좌 번호
     var acReceive by remember {
-        mutableStateOf("")
+        mutableStateOf("010-4901-6695")
     }
 
     //나에게 표시
@@ -78,6 +79,8 @@ fun InputMoneyScreen() {
     var isNext by remember {
         mutableStateOf(false)
     }
+
+    val navController = rememberNavController()
 
 
 
@@ -219,8 +222,11 @@ fun InputMoneyScreen() {
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     com.finance.android.ui.components.TextButton(
-                        onClick = { },
-                        text = "다음",
+                        onClick = {navController.navigate("") {
+                            popUpTo("hom")
+                        }
+                        },
+                        text = "보내기",
                         modifier = Modifier.withBottomButton(),
                         buttonType = ButtonType.ROUNDED,
 
