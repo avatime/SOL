@@ -1,5 +1,6 @@
 package com.finance.backend.insurance.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import javax.persistence.*
 
 @Entity(name = "Is_detail")

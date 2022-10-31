@@ -6,12 +6,14 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
+import java.util.UUID
 
 @Service
 class UserDetailsServiceImpl(private val userRepository: UserRepository) : UserDetailsService {
 
     override fun loadUserByUsername(userId: String): UserDetails {
-        val user: User = userRepository.findById(userId) ?: throw UsernameNotFoundException("존재하지 않는 회원입니다.")
+
+        val user: User = userRepository.findById(UUID.fromString(userId)).get() ?: throw UsernameNotFoundException("존재하지 않는 회원입니다.")
 
         return UserDetailsImpl(user)
     }
