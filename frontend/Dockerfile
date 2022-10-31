@@ -1,10 +1,7 @@
 FROM node:16.15.0 as build-stage
-WORKDIR /var/jenkins_home/workspace/deployFrontend/frontend
+WORKDIR /var/jenkins_home/workspace/frontend/front
 COPY package*.json ./
 RUN npm i -y
 COPY . .
 RUN npm run build
-FROM nginx:stable-alpine as production-stage
-
-EXPOSE 80
-CMD ["nginx", "-g","daemon off;"]
+CMD [ "npm", "run", "dev"]
