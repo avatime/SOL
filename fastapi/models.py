@@ -6,7 +6,7 @@ Base = declarative_base()
 
 class Item(Base):
     __tablename__ = 'item'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, index=True, autoincrement=True)
     username = Column(String(20))
 
     def __repr__(self):
@@ -14,6 +14,3 @@ class Item(Base):
             self.id,
             self.username
         )
-
-    class Config:
-        orm_mode = True
