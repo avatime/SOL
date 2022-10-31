@@ -82,4 +82,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "com.google.accompanist:accompanist-pager:0.20.1"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.20.1"
+
+
+    implementation "com.squareup.retrofit2:retrofit:$squareup_retrofit2_version"
+    implementation "com.squareup.retrofit2:converter-gson:$squareup_retrofit2_version"
+    implementation "com.squareup.okhttp3:okhttp:$squareup_okhttp3_version"
+    implementation "com.squareup.okhttp3:logging-interceptor:$squareup_okhttp3_version"
 }

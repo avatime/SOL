@@ -8,26 +8,39 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 
 class UserStore(private val context: Context) {
     companion object {
         private val Context.dataStore: DataStore<Preferences> by preferencesDataStore("User")
-        val KEY_USER = stringPreferencesKey("user")
+        val KEY_ACCESS_TOKEN = stringPreferencesKey("access_token")
+        val KEY_REFRESH_TOKEN = stringPreferencesKey("refresh_token")
+        val KEY_USER_ID = stringPreferencesKey("user_id")
+        val KEY_USER_NAME = stringPreferencesKey("user_name")
+        val KEY_PASSWORD = stringPreferencesKey("password")
     }
 
-    val getAccessToken: Flow<String> = context.dataStore.data.map {
-        it[KEY_USER] ?: ""
-    }
-
-    suspend fun setAccessToken(accessToken: String) {
-        context.dataStore.edit {
-            it[KEY_USER] = accessToken
+    fun getValue(key: Preferences.Key<String>): Flow<String> {
+        return context.dataStore.data.map {
+            it[key] ?: ""
         }
+            .take(1)
     }
 
-    suspend fun clearAccessToken() {
+    suspend fun setValue(
+        key: Preferences.Key<String>,
+        value: String
+    ): UserStore {
         context.dataStore.edit {
-            it.remove(KEY_USER)
+            it[key] = value
         }
+        return this
+    }
+
+    suspend fun clearValue(key: Preferences.Key<String>): UserStore {
+        context.dataStore.edit {
+            it.remove(key)
+        }
+        return this
     }
 }
