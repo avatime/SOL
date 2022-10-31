@@ -8,6 +8,7 @@ import java.util.Date
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.Id
+import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
 import javax.persistence.OneToOne
 import javax.persistence.Table
@@ -24,7 +25,6 @@ class Account (
         acCpCode: Long,
         acStatus: Int,
         date: LocalDateTime
-
 ){
         @Id
         @Column
@@ -60,6 +60,7 @@ class Account (
         var acRmReg : Boolean? = false
 
         @ManyToOne
+        @JoinColumn(name="user_id")
         val user: User = user
 
         fun withdraw(money : Int) {

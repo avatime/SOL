@@ -22,7 +22,8 @@ class WebSecurityConfig(
     @Throws(Exception::class)
     fun filterChain(http: HttpSecurity): SecurityFilterChain? {
         http.authorizeRequests()
-                .antMatchers("/api/v1/auth/signup", "/api/v1/auth/login").permitAll()
+//                .antMatchers("/api/v1/auth/signup", "/api/v1/auth/login").permitAll()
+                .antMatchers("/api/v1").permitAll()
 //                .anyRequest().authenticated()
                 .and()
                 .httpBasic().disable().csrf().disable()

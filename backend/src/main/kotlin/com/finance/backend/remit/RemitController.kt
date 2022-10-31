@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/vi/remit")
+@RequestMapping("/api/v1/remit")
 class RemitController(val remitService: RemitService) {
     @GetMapping("/recommendation")
     fun getRecommendationAccount(@RequestHeader("access_token") accessToken: String): ResponseEntity<Any>{

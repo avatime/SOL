@@ -30,7 +30,7 @@ class CardBenefit(
     @JoinColumn(name ="cd_pd_code")
     val cardProduct = cardProduct
 
-    @OneToOne
+    @ManyToOne
     @JsonProperty("cd_bf_img")
     val cdBfImg: CardBenefitImg = cardBenefitImg
 }
