@@ -27,7 +27,6 @@ class JwtFilter(private val jwtUtils: JwtUtils) : OncePerRequestFilter() {
             // 생성된 AuthenticationToken을 SecurityContext가 관리하도록 설정
             SecurityContextHolder.getContext().authentication = authentication
         }
-
         filterChain.doFilter(request, response)
     }
 }

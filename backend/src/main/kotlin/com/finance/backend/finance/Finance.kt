@@ -6,7 +6,7 @@ import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
 import javax.persistence.Id
 
-class finance(
+class Finance(
         id: Long,
         fnName: String,
         fnCode: Int,
