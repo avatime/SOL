@@ -17,9 +17,7 @@ class AccountController(val accountService: AccountService) {
 
     @GetMapping("/asset")
     fun getAccountAll(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getAccountAll(accessToken))
+        return ResponseEntity.status(200).body(accountService.getAccountAll(accessToken))
     }
 
     @PutMapping("/asset")
