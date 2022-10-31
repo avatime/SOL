@@ -8,7 +8,6 @@ import androidx.navigation.compose.rememberNavController
 import com.finance.android.ui.fragments.LoginFragment
 import com.finance.android.ui.fragments.MainFragment
 import com.finance.android.ui.fragments.RemitFragment
-import com.finance.android.ui.fragments.SplashFragment
 import com.finance.android.ui.fragments.SignupFragment
 import com.finance.android.ui.theme.FinanceTheme
 import com.finance.android.utils.Const
@@ -29,7 +28,7 @@ fun FinanceApp() {
                 SignupFragment(navController = navController)
             }
             composable(Const.Routes.MAIN) {
-               MainFragment()
+                MainFragment()
             }
             composable(Const.Routes.REMIT) {
                 RemitFragment()
