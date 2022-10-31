@@ -33,7 +33,8 @@ class AccountServiceImpl(
 
     override fun getAccountAll(token: String): List<BankAccountRes> {
         var bankAccountList = ArrayList<BankAccountRes>()
-        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
+        if(try {jwtUtils.validation(token)
+        } catch (e: Exception) {throw TokenExpiredException() }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val accountList = accountRepository.findByUserId(userId)
             for (ac in accountList){
