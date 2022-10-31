@@ -73,4 +73,8 @@ class ExceptionController {
     fun handleAll(e : Exception) : ResponseEntity<String> {
         return ResponseEntity.status(500).body("Internal Server Error")
     }
+    @ExceptionHandler(NoAccountException::class)
+    fun handleNoAccount(e : Exception) : ResponseEntity<String> {
+        return ResponseEntity.status(404).body("Cannot Found")
+    }
 }
