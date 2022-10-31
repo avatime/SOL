@@ -1,5 +1,6 @@
 package com.finance.backend.bank;
 
+import com.finance.backend.bank.request.AccountInfoReq
 import com.finance.backend.corporation.response.BankInfoRes
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -17,44 +18,32 @@ class AccountController(val accountService: AccountService) {
 
     @GetMapping("/asset")
     fun getAccountAll(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getAccountAll(accessToken))
+        return ResponseEntity.status(200).body(accountService.getAccountAll(accessToken))
     }
 
     @PutMapping("/asset")
     fun registerAccount(@RequestBody acNoList: List<String>): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.registerAccount(acNoList))
+        return ResponseEntity.status(200).body(accountService.registerAccount(acNoList))
     }
 
     @PutMapping("/remit")
-    fun registerRemitAccount(@RequestBody acNo: String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.registerRemitAccount(acNo))
+    fun registerRemitAccount(@RequestBody accountInfoReq: AccountInfoReq): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(accountService.registerRemitAccount(accountInfoReq.acNo))
     }
 
     @PutMapping("/bookmark")
-    fun registerBookmarkAccount(@RequestHeader("access_token") accessToken : String, @RequestBody acNo: String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.registerBookmarkAccount(acNo,accessToken))
+    fun registerBookmarkAccount(@RequestHeader("access_token") accessToken : String, @RequestBody accountInfoReq: AccountInfoReq): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(accountService.registerBookmarkAccount(accountInfoReq.acNo, accessToken))
     }
 
-    @GetMapping("/all/{ac_no}")
+    @GetMapping("/all/{acNo}")
     fun getAccountDetail(@PathVariable acNo : String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getAccountDetail(acNo))
+        return ResponseEntity.status(200).body(accountService.getAccountDetail(acNo))
     }
 
-    @GetMapping("/{ac_no}/{type}")
+    @GetMapping("/{acNo}/{type}")
     fun getAccountDetailType(@PathVariable acNo: String, @PathVariable type: Int): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getAccountDetailType(acNo, type))
+        return ResponseEntity.status(200).body(accountService.getAccountDetailType(acNo, type))
     }
 
     @GetMapping("/recent")
@@ -64,7 +53,7 @@ class AccountController(val accountService: AccountService) {
                 .body(accountService.getRecentTrade(accessToken))
     }
 
-    @GetMapping("/check/{ac_no}/{cp_code}")
+    @GetMapping("/check/{acNo}/{cpCode}")
     fun getCheckAccount(@PathVariable acNo: String, @PathVariable cpCode: Long): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()

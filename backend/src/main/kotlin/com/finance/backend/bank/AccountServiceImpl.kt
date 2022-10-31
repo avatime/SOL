@@ -1,6 +1,8 @@
 package com.finance.backend.bank;
 
 
+import com.finance.backend.Exceptions.InvalidUserException
+import com.finance.backend.Exceptions.NoAccountException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.bank.response.*
 import com.finance.backend.bookmark.Bookmark
@@ -33,10 +35,11 @@ class AccountServiceImpl(
 
     override fun getAccountAll(token: String): List<BankAccountRes> {
         var bankAccountList = ArrayList<BankAccountRes>()
-        if(try {jwtUtils.validation(token)
-        } catch (e: Exception) {throw TokenExpiredException() }) {
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val accountList = accountRepository.findByUserId(userId)
+            val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
+            val accountList = accountRepository.findByUserId(user.id).orEmpty()
             for (ac in accountList){
                 val corporation = corporationRepository.findById(ac.acCpCode).get()
                 bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo))
@@ -47,7 +50,7 @@ class AccountServiceImpl(
 
     override fun registerAccount(acNoList: List<String>) {
         for(acNo in acNoList){
-            val account = accountRepository.findById(acNo).get()
+            val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
             account.apply {
                 acReg = !acReg!!
             }
@@ -56,27 +59,22 @@ class AccountServiceImpl(
     }
 
     override fun registerRemitAccount(acNo: String) {
-        val account = accountRepository.findById(acNo).get()
+
+        val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
+        println(account.acNo)
         account.apply {
             acRmReg = !acRmReg!!
         }
         accountRepository.save(account)
-
-//        val user = userRepository.findById(account.acNo)
-//        user.apply {
-//            account = account.acNo
-//        }
-
     }
 
     override fun registerBookmarkAccount(acNo: String, token: String) {
         val user: User
-
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            user = userRepository.findById(userId).get()
+            user = userRepository.findById(userId).orElse(null)
             if (bookmarkRepository.existsByUserIdAndAcNo(userId, acNo)){
-                var bookmark = bookmarkRepository.findByUserIdAndAcNo(userId, acNo)
+                val bookmark = bookmarkRepository.findByUserIdAndAcNo(userId, acNo)
                 bookmark.apply {
                     bkStatus = !bkStatus
                 }
