@@ -38,10 +38,10 @@ class Create(
     @PostMapping("/trade")
     fun postTrade(@RequestBody tradeReq: TradeReq): ResponseEntity<Any>{
         val accountSend = accountRepository.findById(tradeReq.acNo).get()
-        val tradeSend = TradeHistory(tradeReq.tdVal, LocalDateTime.now(), 2, tradeReq.tdTg, tradeReq.tdTgAc, tradeReq.tdRec, tradeReq.tdSed, accountSend)
+        val tradeSend = TradeHistory(tradeReq.tdCn ,tradeReq.tdVal, LocalDateTime.now(), 2, tradeReq.tdTg, tradeReq.tdTgAc, tradeReq.tdRec, tradeReq.tdSed, accountSend)
 
         val accountReceived = accountRepository.findById(tradeReq.tdTgAc).get()
-        val tradeReceived = TradeHistory(tradeReq.tdVal, LocalDateTime.now(), 1, accountSend.acName, tradeReq.acNo, tradeReq.tdSed, tradeReq.tdRec, accountReceived)
+        val tradeReceived = TradeHistory(tradeReq.tdCn, tradeReq.tdVal, LocalDateTime.now(), 1, accountSend.acName, tradeReq.acNo, tradeReq.tdSed, tradeReq.tdRec, accountReceived)
 
         tradeHistoryRepository.save(tradeSend)
         tradeHistoryRepository.save(tradeReceived)

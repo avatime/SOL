@@ -10,6 +10,7 @@ import javax.persistence.*
 @Entity
 @Table(name = "trade_history")
 class TradeHistory(
+    tdCn : String,
     value : Int,
     date : LocalDateTime,
     type : Int,
@@ -33,7 +34,7 @@ class TradeHistory(
     var tdDt: LocalDateTime = date
 
     @JsonProperty("td_cn")
-    var tdCn: String = ""
+    var tdCn: String = tdCn
 
     @JsonProperty("td_type")
     var tdType: Int = type
