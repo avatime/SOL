@@ -68,12 +68,13 @@ fun SignupFragment(
             onNextStep = if (inputPasswordType == InputPasswordType.SIGNUP) onNextStep else {
                 {
                     navController.navigate(Const.Routes.MAIN) {
-                        popUpTo(Const.Routes.LOGIN) {
+                        popUpTo(Const.Routes.SIGNUP) {
                             inclusive = true
                         }
                     }
                 }
-            }
+            },
+            isLoginFragment = false
         )
     }
     AnimatedVisibility(
@@ -86,7 +87,7 @@ fun SignupFragment(
         LoginDoneScreen(
             onNextStep = {
                 navController.navigate(Const.Routes.MAIN) {
-                    popUpTo(Const.Routes.LOGIN) {
+                    popUpTo(Const.Routes.SIGNUP) {
                         inclusive = true
                     }
                 }

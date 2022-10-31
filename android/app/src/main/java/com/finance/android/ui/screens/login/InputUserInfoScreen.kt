@@ -1,5 +1,7 @@
 package com.finance.android.ui.screens.login
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -12,18 +14,22 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.OffsetMapping
 import androidx.compose.ui.text.input.TransformedText
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.components.TextInput
 import com.finance.android.ui.fragments.SignupStep
+import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.LoginViewModel
 
+@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun InputUserInfoScreen(
     loginViewModel: LoginViewModel,
@@ -46,7 +52,8 @@ fun InputUserInfoScreen(
             text = stringResource(id = focus.getTitleStringRes()),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
+            fontSize = dimensionResource(id = R.dimen.font_size_title_desc).value.sp,
         )
         AnimatedVisibility(visible = InputUserInfoStep.PHONE_NUM.id <= step.id) {
             TextInput(
@@ -76,6 +83,17 @@ fun InputUserInfoScreen(
                     .padding(0.dp),
                 label = stringResource(id = R.string.label_input_phone_num),
                 keyboardType = KeyboardType.Phone,
+
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.label_input_phone_num),
+                        fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp,
+                        color = Disabled
+                    )
+                },
+                textStyle = TextStyle(
+                    fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp,
+                ),
                 visualTransformation = {
                     val trimmed = if (it.text.length >= 11) it.text.substring(0..10) else it.text
                     var out = ""
@@ -129,7 +147,17 @@ fun InputUserInfoScreen(
                     if (invalidBirthday) {
                         Text(text = stringResource(id = R.string.err_invalid_birthday))
                     }
-                }
+                },
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.label_input_birthday),
+                        fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp,
+                        color = Disabled
+                    )
+                },
+                textStyle = TextStyle(
+                    fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp,
+                )
             )
         }
         AnimatedVisibility(visible = InputUserInfoStep.NAME.id <= step.id) {
@@ -147,7 +175,17 @@ fun InputUserInfoScreen(
                     .fillMaxWidth()
                     .padding(0.dp),
                 label = stringResource(id = R.string.label_input_name),
-                keyboardType = KeyboardType.Text
+                keyboardType = KeyboardType.Text,
+                placeholder = {
+                    Text(
+                        text = stringResource(id = R.string.label_input_name),
+                        fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp,
+                        color = Disabled
+                    )
+                },
+                textStyle = TextStyle(
+                    fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp,
+                )
             )
         }
         Spacer(modifier = Modifier.weight(1.0f))
@@ -177,6 +215,7 @@ fun InputUserInfoScreen(
                         },
                         onMoveLoginScreen = {
                             setInputPasswordType(InputPasswordType.LOGIN)
+                            onNextStep()
                             onNextStep()
                         }
                     )

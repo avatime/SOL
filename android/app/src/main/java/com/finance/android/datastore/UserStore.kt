@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.take
 
 class UserStore(private val context: Context) {
     companion object {
@@ -23,6 +24,7 @@ class UserStore(private val context: Context) {
         return context.dataStore.data.map {
             it[key] ?: ""
         }
+            .take(1)
     }
 
     suspend fun setValue(

@@ -12,7 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import com.finance.android.ui.components.*
 import com.finance.android.ui.fragments.SignupStep
@@ -42,7 +44,9 @@ fun TestPhoneScreen(
             text = stringResource(id = R.string.msg_test_phone_num),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .padding(dimensionResource(id = R.dimen.padding_medium)),
+            fontSize = dimensionResource(id = R.dimen.font_size_title_desc).value.sp,
+            lineHeight = dimensionResource(id = R.dimen.font_size_title_desc).value.sp
         )
         Spacer(modifier = Modifier.size(0.dp, 20.dp))
         Column(
@@ -58,7 +62,8 @@ fun TestPhoneScreen(
                     shape = RoundedCornerShape(20.dp)
                 ),
                 buttonType = ButtonType.CIRCULAR,
-                buttonColor = ButtonColor.WHITE
+                buttonColor = ButtonColor.WHITE,
+                fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp
             )
             Spacer(modifier = Modifier.size(0.dp, 20.dp))
             CodeTextInput(
@@ -67,7 +72,10 @@ fun TestPhoneScreen(
                     if (it.length <= 6) {
                         loginViewModel.code.value = it
                     }
-                }
+                },
+                textStyle = TextStyle(
+                    fontSize = dimensionResource(id = R.dimen.font_size_input).value.sp
+                )
             )
         }
         Spacer(modifier = Modifier.weight(1.0f))
