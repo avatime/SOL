@@ -30,7 +30,9 @@ fun TextInput(
     modifier: Modifier,
     label: String? = null,
     keyboardType: KeyboardType = KeyboardType.Text,
-    visualTransformation: VisualTransformation = VisualTransformation.None
+    visualTransformation: VisualTransformation = VisualTransformation.None,
+    isError: Boolean = false,
+    errorMessage: (@Composable () -> Unit)? = null
 ) {
     val focusRequester = remember { FocusRequester() }
     var key by remember { mutableStateOf(0) }
@@ -60,7 +62,9 @@ fun TextInput(
         },
         singleLine = true,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
-        visualTransformation = visualTransformation
+        visualTransformation = visualTransformation,
+        isError = isError,
+        supportingText = errorMessage
     )
 
     LaunchedEffect(key, focus) {
@@ -79,7 +83,10 @@ fun CodeTextInput(
     value: String,
     onValueChange: (String) -> Unit,
     length: Int = 6,
-    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+    keyboardOptions: KeyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+    isPassword: Boolean = false,
+    isError: Boolean = false,
+    errorMessage: (@Composable () -> Unit)? = null
 ) {
     val focusRequester = remember { FocusRequester() }
     var isFocused by remember { mutableStateOf(false) }
@@ -95,24 +102,39 @@ fun CodeTextInput(
         onValueChange = onValueChange,
         keyboardOptions = keyboardOptions,
         decorationBox = {
-            Row {
-                repeat(length) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .size(width = 40.dp, height = 45.dp)
-                            .border(
-                                width = 1.dp,
-                                color = Color.DarkGray,
-                                shape = RoundedCornerShape(10.dp)
+            Column {
+                Row {
+                    repeat(length) {
+                        Box(
+                            contentAlignment = Alignment.Center,
+                            modifier = Modifier
+                                .size(width = 40.dp, height = 45.dp)
+                                .border(
+                                    width = 1.dp,
+                                    color = if (isError) MaterialTheme.colorScheme.error else Color.DarkGray,
+                                    shape = RoundedCornerShape(10.dp)
+                                )
+                        ) {
+                            Text(
+                                text = if (it < value.length) {
+                                    if (!isPassword) {
+                                        value[it].toString()
+                                    } else {
+                                        "●"
+                                    }
+                                } else {
+                                    " "
+                                },
+                                textAlign = TextAlign.Center,
+                                color = if (isError) MaterialTheme.colorScheme.error else Color.Unspecified
                             )
-                    ) {
-                        Text(
-                            text = if (it < value.length) value[it].toString() else " ",
-                            textAlign = TextAlign.Center
-                        )
+                        }
+                        Spacer(modifier = Modifier.width(8.dp))
                     }
-                    Spacer(modifier = Modifier.width(8.dp))
+                }
+                if (isError) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    errorMessage?.invoke()
                 }
             }
         }

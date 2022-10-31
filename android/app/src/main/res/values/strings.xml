@@ -20,4 +20,9 @@
     <string name="label_input_name">이름</string>
     <string name="label_input_birthday">생년월일</string>
     <string name="label_input_phone_num">휴대폰번호</string>
+
+    <string name="err_used_phone_number">이미 사용 중인 휴대폰번호입니다</string>
+    <string name="err_invalid_phone_number">올바른 휴대폰번호를 입력해주세요</string>
+    <string name="err_invalid_birthday">올바른 생년월일을 입력해주세요</string>
+    <string name="err_error_password">비밀번호가 틀렸습니다</string>
 </resources>

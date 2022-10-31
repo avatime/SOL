@@ -9,6 +9,7 @@ import com.finance.android.ui.fragments.LoginFragment
 import com.finance.android.ui.fragments.MainFragment
 import com.finance.android.ui.fragments.RemitFragment
 import com.finance.android.ui.fragments.SplashFragment
+import com.finance.android.ui.fragments.SignupFragment
 import com.finance.android.ui.theme.FinanceTheme
 import com.finance.android.utils.Const
 import dagger.hilt.android.HiltAndroidApp
@@ -19,13 +20,13 @@ fun FinanceApp() {
         val navController = rememberNavController()
         NavHost(
             navController = navController,
-            startDestination = Const.Routes.SPLASH
+            startDestination = Const.Routes.LOGIN
         ) {
-            composable(Const.Routes.SPLASH) {
-                SplashFragment(navController = navController)
-            }
             composable(Const.Routes.LOGIN) {
-                LoginFragment()
+                LoginFragment(navController = navController)
+            }
+            composable(Const.Routes.SIGNUP) {
+                SignupFragment(navController = navController)
             }
             composable(Const.Routes.MAIN) {
                MainFragment()

@@ -1,5 +1,10 @@
 package com.finance.android.domain
 
+import com.finance.android.domain.dto.request.CheckUserRequestDto
+import com.finance.android.domain.dto.request.LoginRequestDto
+import com.finance.android.domain.dto.request.ReLoginRequestDto
+import com.finance.android.domain.dto.request.SignupRequestDto
+import com.finance.android.domain.dto.response.LoginResponseDto
 import com.finance.android.domain.repository.SampleRepository
 import com.finance.android.domain.repository.UserRepository
 import com.finance.android.utils.Response
@@ -31,4 +36,72 @@ class DummyRepositoryImpl @Inject constructor() :
         }
         emit(Response.Success(code))
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun checkUser(checkUserRequestDto: CheckUserRequestDto): Flow<Response<Unit>> = flow {
+//        emit(
+//            Response.Failure(
+//                HttpException(
+//                    retrofit2.Response.error<Unit>(
+//                        409,
+//                        "{\"key\":[\"somestuff\"]}"
+//                            .toResponseBody("application/json".toMediaTypeOrNull())
+//                    )
+//                )
+//            )
+//        )
+//        emit(
+//            Response.Failure(
+//                HttpException(
+//                    retrofit2.Response.error<Unit>(
+//                        400,
+//                        "{\"key\":[\"somestuff\"]}"
+//                            .toResponseBody("application/json".toMediaTypeOrNull())
+//                    )
+//                )
+//            )
+//        )
+        emit(
+            Response.Success(Unit)
+        )
+    }
+
+    override suspend fun login(loginRequestDto: LoginRequestDto): Flow<Response<LoginResponseDto>> = flow {
+        //        emit(
+//            Response.Failure(
+//                HttpException(
+//                    retrofit2.Response.error<Unit>(
+//                        401,
+//                        "{\"key\":[\"somestuff\"]}"
+//                            .toResponseBody("application/json".toMediaTypeOrNull())
+//                    )
+//                )
+//            )
+//        )
+        emit(
+            Response.Success(LoginResponseDto("1", "1", "1", "1"))
+        )
+    }
+
+    override suspend fun reLogin(reLoginRequestDto: ReLoginRequestDto): Flow<Response<LoginResponseDto>> = flow {
+//        emit(
+//            Response.Failure(
+//                HttpException(
+//                    retrofit2.Response.error<Unit>(
+//                        401,
+//                        "{\"key\":[\"somestuff\"]}"
+//                            .toResponseBody("application/json".toMediaTypeOrNull())
+//                    )
+//                )
+//            )
+//        )
+        emit(
+            Response.Success(LoginResponseDto("1", "1", "1", "1"))
+        )
+    }
+
+    override suspend fun signup(signupRequestDto: SignupRequestDto): Flow<Response<LoginResponseDto>> = flow {
+        emit(
+            Response.Success(LoginResponseDto("1", "1", "1", "1"))
+        )
+    }
 }
