@@ -44,15 +44,39 @@ class UserRepositoryImpl @Inject constructor(
         }
     }.flowOn(Dispatchers.IO)
 
-    override suspend fun login(loginRequestDto: LoginRequestDto): Flow<Response<LoginResponseDto>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun login(loginRequestDto: LoginRequestDto): Flow<Response<LoginResponseDto>> = flow {
+        emit(Response.Loading)
+        try {
+            val response = userService.login(loginRequestDto)
+            emit(Response.Success(response))
+        } catch (e: HttpException) {
+            emit(Response.Failure(e))
+        } catch (e: Exception) {
+            Log.e("SOLSOL", e.stackTraceToString())
+        }
+    }.flowOn(Dispatchers.IO)
 
-    override suspend fun reLogin(reLoginRequestDto: ReLoginRequestDto): Flow<Response<LoginResponseDto>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun reLogin(reLoginRequestDto: ReLoginRequestDto): Flow<Response<LoginResponseDto>> = flow {
+        emit(Response.Loading)
+        try {
+            val response = userService.reLogin(reLoginRequestDto)
+            emit(Response.Success(response))
+        } catch (e: HttpException) {
+            emit(Response.Failure(e))
+        } catch (e: Exception) {
+            Log.e("SOLSOL", e.stackTraceToString())
+        }
+    }.flowOn(Dispatchers.IO)
 
-    override suspend fun signup(signupRequestDto: SignupRequestDto): Flow<Response<LoginResponseDto>> {
-        TODO("Not yet implemented")
-    }
+    override suspend fun signup(signupRequestDto: SignupRequestDto): Flow<Response<LoginResponseDto>> = flow {
+        emit(Response.Loading)
+        try {
+            val response = userService.signup(signupRequestDto)
+            emit(Response.Success(response))
+        } catch (e: HttpException) {
+            emit(Response.Failure(e))
+        } catch (e: Exception) {
+            Log.e("SOLSOL", e.stackTraceToString())
+        }
+    }.flowOn(Dispatchers.IO)
 }
