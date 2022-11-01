@@ -1,8 +1,7 @@
 package com.finance.android.viewmodels
 
-import android.content.Context
+import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finance.android.datastore.UserStore
 import com.finance.android.domain.RetrofitClient
@@ -11,6 +10,7 @@ import com.finance.android.domain.dto.request.LoginRequestDto
 import com.finance.android.domain.dto.request.ReLoginRequestDto
 import com.finance.android.domain.dto.request.SignupRequestDto
 import com.finance.android.domain.dto.response.LoginResponseDto
+import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.UserRepository
 import com.finance.android.ui.fragments.SignupStep
 import com.finance.android.ui.screens.login.InputUserInfoStep
@@ -18,6 +18,7 @@ import com.finance.android.utils.Response
 import com.finance.android.utils.validateBirthday
 import com.finance.android.utils.validatePhoneNum
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -25,8 +26,10 @@ import kotlin.random.Random
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
+    application: Application,
+    baseRepository: BaseRepository,
     private val userRepository: UserRepository
-) : ViewModel() {
+) : BaseViewModel(application, baseRepository) {
 
     val name = mutableStateOf("")
     val birthday = mutableStateOf("")
@@ -37,6 +40,17 @@ class LoginViewModel @Inject constructor(
 
     val password = mutableStateOf("")
     val passwordRepeat = mutableStateOf<String?>(null)
+
+    val useBio = mutableStateOf(false)
+
+    init {
+        viewModelScope.launch {
+            UserStore(getApplication()).getValue(UserStore.KEY_USE_BIO)
+                .collect {
+                    useBio.value = it == "1"
+                }
+        }
+    }
 
     fun isPossibleGoNext(
         signupStep: SignupStep,
@@ -87,7 +101,7 @@ class LoginViewModel @Inject constructor(
                 phoneNumber = phoneNumber.value,
                 birthday = formatBirthday()
             )
-            userRepository.checkUser(checkUserRequestDto)
+            this@LoginViewModel.run { userRepository.checkUser(checkUserRequestDto) }
                 .collect {
                     if (it is Response.Failure && it.e is HttpException) {
                         when (it.e.code()) {
@@ -102,7 +116,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun reLogin(
-        context: Context,
         onMoveLoginDoneScreen: () -> Unit,
         onErrorPassword: () -> Unit
     ) {
@@ -111,14 +124,14 @@ class LoginViewModel @Inject constructor(
                 phoneNumber = phoneNumber.value,
                 password = password.value
             )
-            userRepository.reLogin(reLoginRequestDto)
+            this@LoginViewModel.run { userRepository.reLogin(reLoginRequestDto) }
                 .collect {
                     if (it is Response.Failure && it.e is HttpException) {
                         when (it.e.code()) {
                             401 -> onErrorPassword()
                         }
                     } else if (it is Response.Success) {
-                        saveUserInfo(context, it.data)
+                        saveUserInfo(it.data)
                         onMoveLoginDoneScreen()
                     }
                 }
@@ -126,7 +139,6 @@ class LoginViewModel @Inject constructor(
     }
 
     fun signup(
-        context: Context,
         onMoveLoginDoneScreen: () -> Unit
     ) {
         viewModelScope.launch {
@@ -137,10 +149,10 @@ class LoginViewModel @Inject constructor(
                 birthday = formatBirthday(),
                 sex = (Random.nextInt(0, 10) % 2) + 1
             )
-            userRepository.signup(signupRequestDto)
+            this@LoginViewModel.run { userRepository.signup(signupRequestDto) }
                 .collect {
                     if (it is Response.Success) {
-                        saveUserInfo(context, it.data)
+                        saveUserInfo(it.data)
                         onMoveLoginDoneScreen()
                     }
                 }
@@ -148,26 +160,49 @@ class LoginViewModel @Inject constructor(
     }
 
     fun login(
-        context: Context,
-        onMoveLoginDoneScreen: () -> Unit,
+        onSuccess: () -> Unit,
         onErrorPassword: () -> Unit
     ) {
         viewModelScope.launch {
-            UserStore(context).getValue(UserStore.KEY_REFRESH_TOKEN)
+            UserStore(getApplication()).getValue(UserStore.KEY_REFRESH_TOKEN)
                 .collect { token ->
                     val loginRequestDto = LoginRequestDto(
                         refreshToken = token,
                         password = password.value
                     )
-                    userRepository.login(loginRequestDto)
+                    this@LoginViewModel.run { userRepository.login(loginRequestDto) }
                         .collect {
                             if (it is Response.Failure && it.e is HttpException) {
                                 when (it.e.code()) {
                                     401 -> onErrorPassword()
                                 }
                             } else if (it is Response.Success) {
-                                saveUserInfo(context, it.data)
-                                onMoveLoginDoneScreen()
+                                saveUserInfo(it.data)
+                                onSuccess()
+                            }
+                        }
+                }
+        }
+    }
+
+    fun autoLogin(
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            UserStore(getApplication()).getValue(UserStore.KEY_REFRESH_TOKEN)
+                .combine(UserStore(getApplication()).getValue(UserStore.KEY_PASSWORD)) { token, pass ->
+                    arrayOf(token, pass)
+                }
+                .collect {
+                    val loginRequestDto = LoginRequestDto(
+                        refreshToken = it[0],
+                        password = it[1]
+                    )
+                    this@LoginViewModel.run { userRepository.login(loginRequestDto) }
+                        .collect { res ->
+                            if (res is Response.Success) {
+                                saveUserInfo(res.data)
+                                onSuccess()
                             }
                         }
                 }
@@ -175,17 +210,20 @@ class LoginViewModel @Inject constructor(
     }
 
     private suspend fun saveUserInfo(
-        context: Context,
         loginResponseDto: LoginResponseDto
     ) {
         with(loginResponseDto) {
             RetrofitClient.login(accessToken, refreshToken)
-            UserStore(context).setValue(UserStore.KEY_PASSWORD, password.value)
+            UserStore(getApplication()).setValue(UserStore.KEY_PASSWORD, password.value)
                 .setValue(UserStore.KEY_REFRESH_TOKEN, refreshToken)
                 .setValue(UserStore.KEY_USER_ID, userId)
                 .setValue(UserStore.KEY_USER_NAME, userName)
                 .setValue(UserStore.KEY_ACCESS_TOKEN, accessToken)
         }
+        UserStore(getApplication()).setValue(
+            UserStore.KEY_USE_BIO,
+            if (useBio.value) "1" else "0"
+        )
     }
 
     private fun formatBirthday(): String {

@@ -89,4 +89,6 @@ dependencies {
     implementation "com.squareup.okhttp3:okhttp:$squareup_okhttp3_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$squareup_okhttp3_version"
     implementation "io.coil-kt:coil-compose:2.2.2"
+
+    implementation("androidx.biometric:biometric:1.1.0")
 }
