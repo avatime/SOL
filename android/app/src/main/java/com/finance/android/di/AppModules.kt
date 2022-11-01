@@ -27,7 +27,7 @@ class AppModules {
     @Provides
     fun provideRemitRepository (
         remitService: RemitService
-    ) : RemitRepository = RemitRepositoryImpl(remitService)
+    ) : RemitRepository = DummyRepositoryImpl()
 
     @Provides
     fun provideBankRepository (

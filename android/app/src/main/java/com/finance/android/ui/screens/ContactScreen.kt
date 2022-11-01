@@ -16,11 +16,7 @@ import com.finance.android.ui.components.TextButton
 @Composable
 @Preview
 fun ContactScreen() {
-
-
-
     Column(
-
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = Modifier.fillMaxSize(),
         //verticalArrangement = Arrangement.Center
@@ -46,10 +42,7 @@ fun ContactScreen() {
             onClick = { /*TODO*/ },
             text ="불러오기",
             buttonType = ButtonType.ROUNDED,
-            modifier = Modifier.width(100.dp)
         )
-
-
     }
 }
 
