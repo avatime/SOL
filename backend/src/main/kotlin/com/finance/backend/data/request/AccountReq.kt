@@ -11,7 +11,7 @@ import javax.persistence.ManyToOne
 
 class AccountReq(
         acNo: String,
-        balance: Int,
+        balance: Long,
         user: String,
         acType: Int,
         acName: String,
@@ -22,7 +22,7 @@ class AccountReq(
     @JsonProperty("ac_no")
     val acNo = acNo
 
-    val balance : Int = balance
+    val balance : Long = balance
 
     @JsonProperty("ac_type")
     val acType : Int = acType

@@ -11,7 +11,7 @@ import javax.persistence.*
 @Table(name = "trade_history")
 class TradeHistory(
     tdCn : String,
-    value : Int,
+    value : Long,
     date : LocalDateTime,
     type : Int,
     target : String,
@@ -28,7 +28,7 @@ class TradeHistory(
         protected set
 
     @JsonProperty("td_val")
-    var tdVal: Int = value
+    var tdVal: Long = value
 
     @JsonProperty("td_dt")
     var tdDt: LocalDateTime = date

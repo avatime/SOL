@@ -25,7 +25,7 @@ class PublicAccount(
     var paStatus : Int = 10
         protected set
 
-    fun addPaVal(value : Int) {this.paVal += value}
+    fun addPaVal(value : Long) {this.paVal += value}
     fun terminate() {this.paStatus = 99}
     fun toEntity() : PublicAccountRes = PublicAccountRes(this.id, this.paName, this.paVal)
 

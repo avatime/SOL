@@ -7,7 +7,7 @@ data class PublicTradeRes(
         @JsonProperty("td_dt")
         val tdDt : LocalDateTime,
         @JsonProperty("td_val")
-        val tdVal : Int,
+        val tdVal : Long,
         @JsonProperty("dues_name")
         val duesName : String,
         @JsonProperty("user_name")

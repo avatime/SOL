@@ -83,7 +83,7 @@ class RemitServiceImpl(
         val remitAccount = accountRepository.findById(remitInfoReq.acSend).get()
 
         // 출금 거래 내역
-        val tradeRemitHistory = TradeHistory("",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+        val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
         val accountRemit = accountRepository.findById(remitInfoReq.acSend).get()
         if (accountRemit.balance >= value){
@@ -96,9 +96,10 @@ class RemitServiceImpl(
 
         // 입금 거래 내역
         val depositAccount = accountRepository.findById(remitInfoReq.acReceive).get()
-        val depositRemitHistory = TradeHistory("",value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
+        val depositRemitHistory = TradeHistory("입금",value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
         val accountDeposit = accountRepository.findById(remitInfoReq.acReceive).get()
+        accountDeposit.deposit(value)
         accountRepository.save(accountDeposit)
 
     }
@@ -132,12 +133,13 @@ class RemitServiceImpl(
             val depositRemitHistory = TradeHistory("",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
             tradeHistoryRepository.save(depositRemitHistory)
             val accountDeposit = accountRepository.findById(remitPhoneReq.acReceive).get()
+            accountDeposit.deposit(value)
             accountRepository.save(accountDeposit)
 
         }else{
             // 비회원 user와 account 만들기
             val acNo = remitPhoneReq.acReceive
-            val balance = 100000000
+            val balance: Long = 100000000
             val user = User("", "", phone, Timestamp.valueOf(LocalDateTime.now()), 2, "비회원")
             userRepository.save(user)
 
@@ -173,6 +175,7 @@ class RemitServiceImpl(
             val depositRemitHistory = TradeHistory("",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
             tradeHistoryRepository.save(depositRemitHistory)
             val accountDeposit = accountRepository.findById(remitPhoneReq.acReceive).get()
+            accountDeposit.deposit(value)
             accountRepository.save(accountDeposit)
         }
 
