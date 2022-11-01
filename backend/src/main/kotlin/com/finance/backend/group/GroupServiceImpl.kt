@@ -127,7 +127,7 @@ class GroupServiceImpl (
             userDuesRelation.paid()
             account.withdraw(duesPayReq.duesVal)
             accountRepository.save(account)
-            tradeHistoryRepository.save(TradeHistory(duesPayReq.duesVal, userDuesRelation.dueDate!!, 2, userDuesRelation.dues.duesName, "모임통장 " + userDuesRelation.dues.publicAccount.id, userDuesRelation.dues.publicAccount.paName,user.name, account))
+            tradeHistoryRepository.save(TradeHistory(userDuesRelation.dues.duesName ,duesPayReq.duesVal, userDuesRelation.dueDate!!, 2, userDuesRelation.dues.duesName, "모임통장 " + userDuesRelation.dues.publicAccount.id, userDuesRelation.dues.publicAccount.paName,user.name, account))
             userDuesRelation.dues.publicAccount.addPaVal(duesPayReq.duesVal)
             publicAccountRepository.save(userDuesRelation.dues.publicAccount)
 
