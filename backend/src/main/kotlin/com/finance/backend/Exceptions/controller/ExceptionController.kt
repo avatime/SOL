@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.naming.AuthenticationException
 
-@ControllerAdvice
+//@ControllerAdvice
 class ExceptionController {
 
     @ExceptionHandler(InsufficientBalanceException::class)

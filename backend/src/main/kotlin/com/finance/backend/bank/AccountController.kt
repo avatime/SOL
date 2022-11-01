@@ -48,9 +48,7 @@ class AccountController(val accountService: AccountService) {
 
     @GetMapping("/recent")
     fun getRecentTrade(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getRecentTrade(accessToken))
+        return ResponseEntity.status(200).body(accountService.getRecentTrade(accessToken))
     }
 
     @GetMapping("/check/{acNo}/{cpCode}")
