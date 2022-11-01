@@ -1,5 +1,6 @@
 package com.finance.backend.auth
 
+import com.finance.backend.Exceptions.DuplicatedPhoneNumberException
 import com.finance.backend.auth.request.LoginDto
 import com.finance.backend.auth.request.ReLoginDto
 import com.finance.backend.auth.request.SignupCheckDto
@@ -23,7 +24,12 @@ class AuthController (private val userService: UserService) {
 
     @PostMapping("/signup/check")
     fun signupCheck(@RequestBody userDto: SignupCheckDto) : ResponseEntity<Any?>{
-        return ResponseEntity.status(200).body(userService.checkUser(userDto))
+        return try {
+            ResponseEntity.status(200).body(userService.checkUser(userDto))
+        }
+        catch (e : DuplicatedPhoneNumberException) {
+            ResponseEntity.status(400).body(e.message)
+        }
     }
 
     @PostMapping("/login")
