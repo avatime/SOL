@@ -5,6 +5,7 @@ import com.finance.android.domain.dto.request.LoginRequestDto
 import com.finance.android.domain.dto.request.ReLoginRequestDto
 import com.finance.android.domain.dto.request.SignupRequestDto
 import com.finance.android.domain.dto.response.LoginResponseDto
+import com.finance.android.domain.service.BaseService
 import com.finance.android.domain.service.UserService
 import com.finance.android.utils.Response
 import kotlinx.coroutines.Dispatchers
@@ -18,8 +19,9 @@ import kotlin.random.Random
 
 @Singleton
 class UserRepositoryImpl @Inject constructor(
-    private val userService: UserService
-) : UserRepository {
+    private val userService: UserService,
+    baseService: BaseService
+): BaseRepositoryImpl(baseService), UserRepository {
     override suspend fun loadPhoneCode(): Flow<Response<String>> = flow {
         emit(Response.Loading)
         delay(2000)

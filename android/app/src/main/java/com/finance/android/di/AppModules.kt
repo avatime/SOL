@@ -6,6 +6,10 @@ import com.finance.android.domain.repository.*
 import com.finance.android.domain.service.BankService
 import com.finance.android.domain.service.BaseService
 import com.finance.android.domain.service.RemitService
+import com.finance.android.domain.repository.BaseRepositoryImpl
+import com.finance.android.domain.repository.SampleRepository
+import com.finance.android.domain.repository.UserRepository
+import com.finance.android.domain.repository.UserRepositoryImpl
 import com.finance.android.domain.service.UserService
 import dagger.Module
 import dagger.Provides
@@ -21,8 +25,9 @@ class AppModules {
 
     @Provides
     fun provideUserRepository(
-        userService: UserService
-    ): UserRepository = UserRepositoryImpl(userService)
+        userService: UserService,
+        baseService: BaseService
+    ): UserRepository = UserRepositoryImpl(userService, baseService)
 
     @Provides
     fun provideRemitRepository (

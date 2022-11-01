@@ -3,6 +3,7 @@ package com.finance.android.domain
 import com.finance.android.domain.dto.request.RemitInfoRequestDto
 import com.finance.android.domain.dto.request.RemitPhoneRequestDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
+import com.finance.android.domain.dto.response.ReissueTokenResponseDto
 import com.finance.android.domain.repository.RemitRepository
 import com.finance.android.domain.repository.SampleRepository
 import javax.inject.Inject
@@ -14,6 +15,10 @@ class DummyRepositoryImpl @Inject constructor() :
     RemitRepository {
     override fun getSampleData(): Array<Int> {
         return arrayOf(1, 2, 3)
+    }
+
+    override suspend fun reissueToken(): ReissueTokenResponseDto {
+        TODO("Not yet implemented")
     }
 
     override suspend fun getRecommendedAccount(): MutableList<RecentTradeResponseDto> {
