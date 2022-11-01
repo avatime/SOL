@@ -24,7 +24,7 @@ fun LoginFragment(
     var showInputPassword by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         // 유지 함수
-        delay(3000)
+        delay(4000)
         refreshToken.collect {
             if (it.isEmpty()) {
                 navController.navigate(Const.Routes.SIGNUP) {
