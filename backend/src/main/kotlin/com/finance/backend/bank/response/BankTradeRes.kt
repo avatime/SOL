@@ -6,7 +6,7 @@ import java.util.Date
 
 class BankTradeRes(
         tdDt : LocalDateTime,
-        tdValue : Int,
+        tdValue : Long,
         tdCn : String,
         tdType : Int
 ) {
@@ -14,7 +14,7 @@ class BankTradeRes(
     val tdDt : LocalDateTime = tdDt
 
     @JsonProperty("td_value")
-    val tdValue : Int = tdValue
+    val tdValue : Long = tdValue
 
     @JsonProperty("td_cn")
     val tdCd : String = tdCn

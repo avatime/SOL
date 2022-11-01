@@ -17,7 +17,7 @@ data class DuesRes(
         val dueDate : LocalDateTime?,
 
         @JsonProperty("dues_val")
-        val duesVal : Int,
+        val duesVal : Long,
 
         @JsonProperty("paid_user")
         val paidUser : Int,

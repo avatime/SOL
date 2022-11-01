@@ -15,7 +15,7 @@ class RemitInfoReq {
     @JsonProperty("ac_receive")
     val acReceive: String = ""
 
-    val value: Int = 0
+    val value: Long = 0
 
     val receive: String = ""
 

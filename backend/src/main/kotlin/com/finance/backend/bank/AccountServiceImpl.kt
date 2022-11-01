@@ -91,7 +91,7 @@ class AccountServiceImpl(
         val bankAccountRes = BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo)
         val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNo(account.acNo).orEmpty()
         for (trade in tradeHistoryList){
-            accountDetailList.add(BankTradeRes(trade.tdDt,trade.tdVal, trade.tdCn, trade.tdType))
+            accountDetailList.add(BankTradeRes(trade.tdDt, trade.tdVal, trade.tdCn, trade.tdType))
         }
         val bankDetailRes = BankDetailRes(bankAccountRes, accountDetailList)
         return bankDetailRes

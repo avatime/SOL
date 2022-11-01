@@ -10,7 +10,7 @@ import javax.persistence.*
 class Dues(
         publicAccount: PublicAccount,
         duesName: String,
-        duesVal: Int,
+        duesVal: Long,
         category: Int = 1,
         duesDue: LocalDateTime?,
         creator : UUID
@@ -25,7 +25,7 @@ class Dues(
     var duesName : String = duesName
         protected set
     @Column
-    var duesVal : Int = duesVal
+    var duesVal : Long = duesVal
         protected set
     @Column
     var duesDue : LocalDateTime? = duesDue

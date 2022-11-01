@@ -22,9 +22,7 @@ class RemitController(val remitService: RemitService) {
 
     @PostMapping("/account")
     fun postRemit(@RequestBody remitInfoReq: RemitInfoReq): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(remitService.postRemit(remitInfoReq))
+        return ResponseEntity.status(200).body(remitService.postRemit(remitInfoReq))
     }
 
     @PostMapping("/phone")

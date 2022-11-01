@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class TradeReq(
         @JsonProperty("td_val")
-        val tdVal: Int,
+        val tdVal: Long,
 
         @JsonProperty("td_cn")
         val tdCn: String,

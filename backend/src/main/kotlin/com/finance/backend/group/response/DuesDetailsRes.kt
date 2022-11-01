@@ -7,7 +7,7 @@ data class DuesDetailsRes(
         val duesName : String,
 
         @JsonProperty("dues_val")
-        val duesVal : Int,
+        val duesVal : Long,
 
         val check : List<IsPaidRes>,
 
