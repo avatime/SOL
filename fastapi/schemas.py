@@ -3,6 +3,10 @@ from typing import Optional
 from pydantic import BaseModel
 
 
+class userReq(BaseModel):
+    user_id: Optional[bytes]
+
+
 class Account(BaseModel):
     ac_no: Optional[str]
     balance: Optional[int]

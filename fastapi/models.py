@@ -57,8 +57,13 @@ class Card(Base):
     cd_pd_code = Column(BigInteger)
     cd_status = Column(Integer)
     cd_reg = Column(Boolean)
-    id = Column(String(30), ForeignKey('user.id'))
-    ac_no = Column(String(30))
+    user_id = Column(String(30), ForeignKey('user.id'))
+    account_ac_no = Column(String(30))
+
+    def __repr__(self):
+        return "<카드(cd_no='%s', cd_pwd='%s', cd_pd_code='%s', ac_no='%s')>" % (
+                   self.cd_no, self.cd_pwd, self.cd_pd_code, self.ac_no
+               )
 
 
 class CardPaymentHistory(Base):
