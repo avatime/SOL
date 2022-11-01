@@ -1,5 +1,6 @@
 package com.finance.backend.remit
 
+import com.finance.backend.Exceptions.InvalidUserException
 import com.finance.backend.Exceptions.RemitFailedException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.accountProduct.AccountProductRepository
@@ -46,7 +47,7 @@ class RemitServiceImpl(
             var checkList = ArrayList<String>()
             for (bookmarkAccount in bookmarkAccountList){
                 val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
-                val user : User = userRepository.findById(account.user.id).get()
+                val user : User = userRepository.findById(account.user.id).orElse(null)?: throw InvalidUserException()
                 val corporation = corporationRepository.findById(account.acCpCode).get()
                 accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo))
                 checkList.add(bookmarkAccount.acNo)
@@ -57,7 +58,7 @@ class RemitServiceImpl(
             for (account in accountList){
                 val end = LocalDateTime.now()
                 val start = end.minusMonths(3)
-                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetween(account, start, end).orEmpty()
+                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetweenOrderByTdDt(account, start, end).orEmpty()
                 for (trade in tradeHistoryList){
                     if(!checkList.contains(trade.tdTgAc)){
                         val account = accountRepository.findById(trade.tdTgAc!!).get()
