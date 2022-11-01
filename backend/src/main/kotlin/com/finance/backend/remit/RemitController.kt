@@ -17,9 +17,7 @@ import org.springframework.web.bind.annotation.RestController
 class RemitController(val remitService: RemitService) {
     @GetMapping("/recommendation")
     fun getRecommendationAccount(@RequestHeader("access_token") accessToken: String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(remitService.getRecommendationAccount(accessToken))
+        return ResponseEntity.status(200).body(remitService.getRecommendationAccount(accessToken))
     }
 
     @PostMapping("/account")
