@@ -23,7 +23,11 @@ class AuthController (private val userService: UserService) {
 
     @PostMapping("/signup/check")
     fun signupCheck(@RequestBody userDto: SignupCheckDto) : ResponseEntity<Any?>{
-        return ResponseEntity.status(200).body(userService.checkUser(userDto))
+        return try{
+            ResponseEntity.status(200).body(userService.checkUser(userDto))
+        } catch (e : Exception) {
+            ResponseEntity.status(100).body(e.message + e.stackTrace)
+        }
     }
 
     @PostMapping("/login")
