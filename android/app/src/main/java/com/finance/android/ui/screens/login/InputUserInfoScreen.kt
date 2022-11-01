@@ -1,7 +1,5 @@
 package com.finance.android.ui.screens.login
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.annotation.StringRes
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -29,7 +27,6 @@ import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.LoginViewModel
 
-@RequiresApi(Build.VERSION_CODES.Q)
 @Composable
 fun InputUserInfoScreen(
     loginViewModel: LoginViewModel,
