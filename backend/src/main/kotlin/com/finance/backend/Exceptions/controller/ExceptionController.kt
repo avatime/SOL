@@ -77,4 +77,14 @@ class ExceptionController {
     fun handleNoAccount(e : Exception) : ResponseEntity<String> {
         return ResponseEntity.status(404).body("Cannot Found")
     }
+
+    @ExceptionHandler(NoTradeHistoryException::class)
+    fun handleNoTradeHistory(e: Exception) : ResponseEntity<String>{
+        return ResponseEntity.status(404).body("Cannot Found")
+    }
+
+    @ExceptionHandler(NoCorporationException::class)
+    fun handleNoCorporation(e: Exception) : ResponseEntity<String>{
+        return ResponseEntity.status(404).body("Cannot Found")
+    }
 }

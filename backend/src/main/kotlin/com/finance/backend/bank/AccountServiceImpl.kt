@@ -1,9 +1,7 @@
 package com.finance.backend.bank;
 
 
-import com.finance.backend.Exceptions.InvalidUserException
-import com.finance.backend.Exceptions.NoAccountException
-import com.finance.backend.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.*
 import com.finance.backend.bank.response.*
 import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
@@ -62,7 +60,6 @@ class AccountServiceImpl(
     override fun registerRemitAccount(acNo: String) {
 
         val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
-        println(account.acNo)
         account.apply {
             acRmReg = !acRmReg!!
         }
@@ -89,11 +86,11 @@ class AccountServiceImpl(
 
     override fun getAccountDetail(acNo: String): BankDetailRes {
         var accountDetailList = ArrayList<BankTradeRes>()
-        val account = accountRepository.findById(acNo).get()
-        val corporation = corporationRepository.findById(account.acCpCode).get()
+        val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
+        val corporation = corporationRepository.findByCpCode(account.acCpCode)?: throw NoCorporationException()
         val bankAccountRes = BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo)
-        val tradeHistroyList = tradeHistoryRepository.findAllByAccountAcNo(account.acNo)
-        for (trade in tradeHistroyList){
+        val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNo(account.acNo).orEmpty()
+        for (trade in tradeHistoryList){
             accountDetailList.add(BankTradeRes(trade.tdDt,trade.tdVal, trade.tdCn, trade.tdType))
         }
         val bankDetailRes = BankDetailRes(bankAccountRes, accountDetailList)
@@ -101,7 +98,7 @@ class AccountServiceImpl(
     }
 
     override fun getAccountDetailType(acNo: String, type: Int): List<BankTradeRes> {
-        var tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo, type)
+        var tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo, type).orEmpty()
         var accountDetailList = ArrayList<BankTradeRes>()
         for (trade in tradeHistoryList){
             accountDetailList.add(BankTradeRes(trade.tdDt, trade.tdVal, trade.tdCn, trade.tdType))
@@ -116,7 +113,7 @@ class AccountServiceImpl(
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
 
             // 북마크 계좌 추가
-            val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId)
+            val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId).orEmpty()
             var checkList = ArrayList<String>()
             for (bookmarkAccount in bookmarkAccountList){
                 val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
@@ -131,7 +128,7 @@ class AccountServiceImpl(
             for (account in accountList){
                 val end = LocalDateTime.now()
                 val start = end.minusMonths(3)
-                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetween(account, start, end)
+                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetween(account, start, end).orEmpty()
                 for (trade in tradeHistoryList){
                     if(!checkList.contains(trade.tdTgAc)){
                         val account = accountRepository.findById(trade.tdTgAc!!).get()
@@ -155,7 +152,7 @@ class AccountServiceImpl(
 
     override fun getBankInfo(): List<BankInfoRes> {
         var bankInfoList = ArrayList<BankInfoRes>()
-        val corporationList = corporationRepository.findTop16ByOrderByCpCode()
+        val corporationList = corporationRepository.findTop16ByOrderByCpCode().orEmpty()
         for(corporation in corporationList){
             val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo)
             bankInfoList.add(bankInfo)
