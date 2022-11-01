@@ -58,8 +58,6 @@ class AccountController(val accountService: AccountService) {
 
     @GetMapping("/info")
     fun getBankInfo(): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getBankInfo())
+        return ResponseEntity.status(200).body(accountService.getBankInfo())
     }
 }
