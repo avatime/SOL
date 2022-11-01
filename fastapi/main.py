@@ -1,13 +1,14 @@
 from fastapi import FastAPI
 from starlette.responses import JSONResponse
-from typing import List
 from fastapi.params import Depends
 from starlette.responses import RedirectResponse
 import models, schemas
 from Connection import SessionLocal, engine
 from sqlalchemy.orm import Session
+import function
 
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.bind = engine
 
 app = FastAPI()
 
@@ -30,9 +31,10 @@ async def say_hello(name: str):
     return JSONResponse({"message": f"Hello {name}"})
 
 
-@app.post("/items/")
-async def create_users(item: schemas.Item, db: Session = Depends(get_db)):
-    item = models.Item(username=item.username)
-    db.add(item)
+@app.post("/user/register")
+async def test(user_id: bytes, db: Session = Depends(get_db)):
+    # a = db.query(models.User).filter(models.User.name == '민경욱').first()
+    function.create(user_id, db)
+    db.add_all([test])
     db.commit()
-    db.refresh(item)
+    db.refresh(test)
