@@ -1,6 +1,7 @@
 package com.finance.backend.remit
 
 import com.finance.backend.Exceptions.InvalidUserException
+import com.finance.backend.Exceptions.NoAccountException
 import com.finance.backend.Exceptions.RemitFailedException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.accountProduct.AccountProductRepository
@@ -41,33 +42,53 @@ class RemitServiceImpl(
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-
             // 북마크 계좌 추가
-            val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId)
+            val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId).orEmpty()
             var checkList = ArrayList<String>()
             for (bookmarkAccount in bookmarkAccountList){
+                // 북마크 추가한 계좌
                 val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
+                // 사용자의 계좌 정보
+                val accountList = accountRepository.findByUserId(userId).orEmpty()
+                var tdDt = LocalDateTime.MIN
+                for (accountInfo in accountList){
+                    val trade : TradeHistory
+                    if (accountInfo.acNo != bookmarkAccount.acNo){
+                        trade = tradeHistoryRepository.findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(accountInfo.acNo, bookmarkAccount.acNo, 2)
+                        if (trade.tdDt > tdDt){
+                            tdDt = trade.tdDt
+                        }
+                    }
+                }
                 val user : User = userRepository.findById(account.user.id).orElse(null)?: throw InvalidUserException()
                 val corporation = corporationRepository.findById(account.acCpCode).get()
-                accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo))
+                accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo, tdDt))
                 checkList.add(bookmarkAccount.acNo)
             }
 
             // 최근 거래 계좌 추가
             val accountList = accountRepository.findByUserId(userId)
             for (account in accountList){
+
                 val end = LocalDateTime.now()
                 val start = end.minusMonths(3)
-                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetweenOrderByTdDt(account, start, end).orEmpty()
+                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTdTypeAndTdDtBetween(account.acNo, 2, start, end).orEmpty()
                 for (trade in tradeHistoryList){
                     if(!checkList.contains(trade.tdTgAc)){
-                        val account = accountRepository.findById(trade.tdTgAc!!).get()
+//                        val account = accountRepository.findById(trade.tdTgAc!!).get()
                         val user : User = userRepository.findById(account.user.id).get()
                         val corporation = corporationRepository.findById(account.acCpCode).get()
-                        accountDetailList.add(RecentTradeRes(user.name, account.acNo, corporation.cpName, false, corporation.cpLogo))
-                        checkList.add(trade.tdTgAc!!)
+                        println("내 계좌: "+account.acNo)
+                        println("상대 계좌: " + trade.tdTgAc)
+                        if (account.acNo != trade.tdTgAc){
+                            println(trade.tdTgAc)
+                            val tradeInfo = tradeHistoryRepository.findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(account.acNo, trade.tdTgAc!!, 2)
+                            accountDetailList.add(RecentTradeRes(user.name, account.acNo, corporation.cpName, false, corporation.cpLogo, tradeInfo.tdDt))
+                            checkList.add(trade.tdTgAc!!)
+                        }
                     }
                 }
+                println(("------"))
             }
         }
         return accountDetailList
