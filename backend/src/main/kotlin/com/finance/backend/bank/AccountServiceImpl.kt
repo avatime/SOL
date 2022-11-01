@@ -116,15 +116,19 @@ class AccountServiceImpl(
             val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId).orEmpty()
             var checkList = ArrayList<String>()
             for (bookmarkAccount in bookmarkAccountList){
+                println(bookmarkAccount.acNo)
                 val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
                 val user : User = userRepository.findById(account.user.id).get()
+                println(user.name)
                 val corporation = corporationRepository.findById(account.acCpCode).get()
                 accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo))
                 checkList.add(bookmarkAccount.acNo)
             }
 
             // 최근 거래 계좌 추가
+            println("userId: "+ userId)
             val accountList = accountRepository.findByUserId(userId)
+            println(accountList)
             for (account in accountList){
                 val end = LocalDateTime.now()
                 val start = end.minusMonths(3)
@@ -167,7 +171,9 @@ class AccountServiceImpl(
 
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            println("userId: " + userId)
             val accountInfoList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 1, true).orEmpty()
+            println(accountInfoList)
             for (account in accountInfoList){
                 val corporation = corporationRepository.findById(account.acCpCode).get()
                 accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo))
