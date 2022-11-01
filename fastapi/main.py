@@ -32,9 +32,6 @@ async def say_hello(name: str):
 
 
 @app.post("/user/register")
-async def test(user_id: bytes, db: Session = Depends(get_db)):
-    # a = db.query(models.User).filter(models.User.name == '민경욱').first()
+async def test(user: schemas.userReq, db: Session = Depends(get_db)):
+    user_id = b'1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
     function.create(user_id, db)
-    db.add_all([test])
-    db.commit()
-    db.refresh(test)
