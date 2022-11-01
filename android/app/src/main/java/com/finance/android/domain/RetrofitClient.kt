@@ -6,18 +6,23 @@ import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
-class RetrofitClient @Inject constructor() {
-    lateinit var instance: Retrofit
+object RetrofitClient {
+    private var instance: Retrofit? = null
+    private var accessToken: String? = null
+    private var refreshToken: String? = null
 
-    init {
-        initInstance()
+    fun getInstance(): Retrofit {
+        if (instance == null) {
+            initInstance()
+        }
+        return instance!!
     }
 
-    private fun initInstance(accessToken: String? = null) {
+    private fun initInstance(
+        accessToken: String? = null,
+        refreshToken: String? = null
+    ) {
         val client = OkHttpClient
             .Builder()
             .addInterceptor(
@@ -31,6 +36,9 @@ class RetrofitClient @Inject constructor() {
                 if (accessToken != null) {
                     requestBuilder.header("access_token", accessToken)
                 }
+                if (refreshToken != null) {
+                    requestBuilder.header("refresh_token", refreshToken)
+                }
                 it.proceed(requestBuilder.build())
             }
             .build()
@@ -41,8 +49,18 @@ class RetrofitClient @Inject constructor() {
             .build()
     }
 
-    fun login(accessToken: String) {
-        initInstance(accessToken)
+    fun login(
+        accessToken: String,
+        refreshToken: String
+    ) {
+        this.accessToken = accessToken
+        this.refreshToken = refreshToken
+        initInstance(accessToken = accessToken, refreshToken = refreshToken)
+    }
+
+    fun resetAccessToken(accessToken: String) {
+        this.accessToken = accessToken
+        initInstance(accessToken = accessToken, refreshToken = this.refreshToken)
     }
 
     fun logout() {

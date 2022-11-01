@@ -4,6 +4,7 @@ import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.RemitRepository
+import com.finance.android.domain.dto.response.ReissueTokenResponseDto
 import com.finance.android.domain.repository.SampleRepository
 import com.finance.android.domain.repository.UserRepository
 import com.finance.android.utils.Response
@@ -25,6 +26,10 @@ class DummyRepositoryImpl @Inject constructor() :
         delay(2000)
         emit(Response.Success(arrayOf(1, 2, 3)))
     }.flowOn(Dispatchers.IO)
+
+    override suspend fun reissueToken(): ReissueTokenResponseDto {
+        TODO("Not yet implemented")
+    }
 
     override suspend fun loadPhoneCode(): Flow<Response<String>> = flow {
         emit(Response.Loading)
