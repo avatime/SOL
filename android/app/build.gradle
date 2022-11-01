@@ -88,4 +88,5 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-gson:$squareup_retrofit2_version"
     implementation "com.squareup.okhttp3:okhttp:$squareup_okhttp3_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$squareup_okhttp3_version"
+    implementation "io.coil-kt:coil-compose:2.2.2"
 }

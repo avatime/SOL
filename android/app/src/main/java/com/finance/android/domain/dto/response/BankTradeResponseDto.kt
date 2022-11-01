@@ -6,7 +6,7 @@ import java.util.*
 data class BankTradeResponseDto(
 
     @SerializedName("td_dt")
-    val tdDT : Date, //거래일자
+    val tdDt : String, //거래일자
     @SerializedName("td_value")
     val tdValue : Int, //거래액
     @SerializedName("td_cn")

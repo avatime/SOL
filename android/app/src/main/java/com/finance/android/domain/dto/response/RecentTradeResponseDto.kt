@@ -2,6 +2,7 @@ package com.finance.android.domain.dto.response
 
 import android.media.tv.TvContract.Channels.Logo
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class RecentTradeResponseDto (
     @SerializedName("ac_receive") //보낸 사람 이름
@@ -14,6 +15,8 @@ data class RecentTradeResponseDto (
     val bkStatus : Boolean,
     @SerializedName("cp_logo") //기업 여부
     val cpLogo: String,
+    @SerializedName("td_data") //거래 일자
+    val tdData : String,
 
 
 
