@@ -1,9 +1,8 @@
 package com.finance.android.ui.components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -11,6 +10,7 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import com.finance.android.ui.theme.MainColor
@@ -58,20 +58,39 @@ fun TextButton(
     enabled: Boolean = true,
     fontSize: TextUnit = dimensionResource(id = R.dimen.font_size_btn_bottom_text).value.sp
 ) {
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColor.getBackgroundColor(),
-            contentColor = buttonColor.getTextColor()
-        ),
-        shape = buttonType.getShape() ?: ButtonDefaults.shape,
-        enabled = enabled
-    ) {
-        Text(
-            text = text,
-            fontSize = fontSize
-        )
+    if (buttonColor == ButtonColor.PRIMARY) {
+        Button(
+            onClick = onClick,
+            modifier = modifier,
+            colors = ButtonDefaults.buttonColors(
+                containerColor = buttonColor.getBackgroundColor(),
+                contentColor = buttonColor.getTextColor()
+            ),
+            shape = buttonType.getShape() ?: ButtonDefaults.shape,
+            enabled = enabled
+        ) {
+            Text(
+                text = text,
+                fontSize = fontSize
+            )
+        }
+    } else {
+        OutlinedButton(
+            onClick = onClick,
+            modifier = modifier,
+            colors = ButtonDefaults.outlinedButtonColors(
+                containerColor = buttonColor.getBackgroundColor(),
+                contentColor = buttonColor.getTextColor()
+            ),
+            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+            shape = buttonType.getShape() ?: ButtonDefaults.shape,
+            enabled = enabled
+        ) {
+            Text(
+                text = text,
+                fontSize = fontSize
+            )
+        }
     }
 }
 
