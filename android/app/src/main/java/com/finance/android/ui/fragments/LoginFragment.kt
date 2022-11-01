@@ -13,6 +13,7 @@ import com.finance.android.ui.screens.login.InputPasswordType
 import com.finance.android.ui.screens.login.SplashScreen
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.LoginViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginFragment(
@@ -22,6 +23,8 @@ fun LoginFragment(
     val refreshToken = UserStore(LocalContext.current).getValue(UserStore.KEY_REFRESH_TOKEN)
     var showInputPassword by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
+        // 유지 함수
+        delay(3000)
         refreshToken.collect {
             if (it.isEmpty()) {
                 navController.navigate(Const.Routes.SIGNUP) {
