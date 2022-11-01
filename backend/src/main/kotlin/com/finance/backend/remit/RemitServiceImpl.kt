@@ -57,7 +57,7 @@ class RemitServiceImpl(
             for (account in accountList){
                 val end = LocalDateTime.now()
                 val start = end.minusMonths(3)
-                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetween(account, start, end)
+                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetween(account, start, end).orEmpty()
                 for (trade in tradeHistoryList){
                     if(!checkList.contains(trade.tdTgAc)){
                         val account = accountRepository.findById(trade.tdTgAc!!).get()
