@@ -52,8 +52,7 @@ class UserServiceImpl (
         if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) return "중복된 유저" // throw DuplicatedUserException()
         else {
             var user : User? = userRepository.findByPhone(signupDto.phone)
-            return user?.name + " " + user?.type
-//            if(user?.type == "회원") throw DuplicatedPhoneNumberException()
+            if(user?.type == "회원") throw DuplicatedPhoneNumberException()
         }
         return "true"
     }
