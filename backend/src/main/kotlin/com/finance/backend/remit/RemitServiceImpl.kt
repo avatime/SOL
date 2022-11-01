@@ -45,23 +45,25 @@ class RemitServiceImpl(
             val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId)
             var checkList = ArrayList<String>()
             for (bookmarkAccount in bookmarkAccountList){
-                var account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
-                var acName : String = account.acName
-                var cpLogo = corporationRepository.findById(account.acCpCode).get().cpLogo
-                accountDetailList.add(RecentTradeRes(acName, bookmarkAccount.acNo, bookmarkAccount.bkStatus, cpLogo))
+                val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
+                val user : User = userRepository.findById(account.user.id).get()
+                val corporation = corporationRepository.findById(account.acCpCode).get()
+                accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo))
                 checkList.add(bookmarkAccount.acNo)
             }
 
             // 최근 거래 계좌 추가
             val accountList = accountRepository.findByUserId(userId)
             for (account in accountList){
-                val tradeHistoryList = tradeHistoryRepository.getRecentTrade(account.acNo)
+                val end = LocalDateTime.now()
+                val start = end.minusMonths(3)
+                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetween(account, start, end)
                 for (trade in tradeHistoryList){
                     if(!checkList.contains(trade.tdTgAc)){
                         val account = accountRepository.findById(trade.tdTgAc!!).get()
-                        val acName = account.acName
-                        val cpLogo = corporationRepository.findById(account.acCpCode).get().cpLogo
-                        accountDetailList.add(RecentTradeRes(acName, account.acNo, false, cpLogo))
+                        val user : User = userRepository.findById(account.user.id).get()
+                        val corporation = corporationRepository.findById(account.acCpCode).get()
+                        accountDetailList.add(RecentTradeRes(user.name, account.acNo, corporation.cpName, false, corporation.cpLogo))
                         checkList.add(trade.tdTgAc!!)
                     }
                 }
