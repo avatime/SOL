@@ -116,11 +116,21 @@ class AccountServiceImpl(
             val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId).orEmpty()
             var checkList = ArrayList<String>()
             for (bookmarkAccount in bookmarkAccountList){
-                println(bookmarkAccount.acNo)
+                // 북마크 추가한 계좌
                 val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
+                // 사용자의 계좌 정보
+                val accountList = accountRepository.findByUserId(userId).orEmpty()
+                var tdDt = LocalDateTime.MIN
+                for (accountInfo in accountList){
+                    val trade = tradeHistoryRepository.findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(accountInfo.acNo, bookmarkAccount.acNo, 2)
+                    if (trade.tdDt > tdDt){
+                        tdDt = trade.tdDt
+                    }
+                }
+
                 val user : User = userRepository.findById(account.user.id).get()
                 val corporation = corporationRepository.findById(account.acCpCode).get()
-                accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo))
+                accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo, tdDt))
                 checkList.add(bookmarkAccount.acNo)
             }
 
@@ -129,13 +139,14 @@ class AccountServiceImpl(
             for (account in accountList){
                 val end = LocalDateTime.now()
                 val start = end.minusMonths(3)
-                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetween(account, start, end).orEmpty()
+                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTdTypeAndTdDtBetween(account.acNo, 2, start, end).orEmpty()
                 for (trade in tradeHistoryList){
                     if(!checkList.contains(trade.tdTgAc)){
                         val account = accountRepository.findById(trade.tdTgAc!!).get()
                         val user : User = userRepository.findById(account.user.id).get()
                         val corporation = corporationRepository.findById(account.acCpCode).get()
-                        accountDetailList.add(RecentTradeRes(user.name, account.acNo, corporation.cpName, false, corporation.cpLogo))
+                        val tradeInfo = tradeHistoryRepository.findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(account.acNo, trade.tdTgAc!!, 2)
+                        accountDetailList.add(RecentTradeRes(user.name, account.acNo, corporation.cpName, false, corporation.cpLogo, tradeInfo.tdDt))
                         checkList.add(trade.tdTgAc!!)
                     }
                 }

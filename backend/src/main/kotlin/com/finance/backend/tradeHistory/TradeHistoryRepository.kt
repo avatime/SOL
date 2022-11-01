@@ -12,9 +12,9 @@ import java.util.Date
 
 interface TradeHistoryRepository: JpaRepository<TradeHistory, Long> {
     fun findAllByAccountAcNo(acNo: String): List<TradeHistory>?
-    fun findAllByAccountAndTdDtBetween(account: Account, start : LocalDateTime, end : LocalDateTime): List<TradeHistory>?
-    fun findAllByAccountAndTdDtBetweenOrderByTdDt(account: Account, start : LocalDateTime, end : LocalDateTime): List<TradeHistory>?
+    fun findAllByAccountAcNoAndTdTypeAndTdDtBetween(acNo: String, tdType: Int, start : LocalDateTime, end : LocalDateTime): List<TradeHistory>?
     fun findAllDistinctByAccountAcNoOrderByTdDtDesc(acNo: String): List<TradeHistory>
     fun findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo: String, type: Int): List<TradeHistory>?
     fun findAllByTdTgAc(tdTgAc : String) : List<TradeHistory>?
+    fun findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(acNo: String, tdTgAc: String, tdType: Int) : TradeHistory
 }
