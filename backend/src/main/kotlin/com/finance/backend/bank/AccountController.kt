@@ -53,9 +53,7 @@ class AccountController(val accountService: AccountService) {
 
     @GetMapping("/check/{acNo}/{cpCode}")
     fun getCheckAccount(@PathVariable acNo: String, @PathVariable cpCode: Long): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(accountService.getUserName(acNo, cpCode))
+        return ResponseEntity.status(200).body(accountService.getUserName(acNo, cpCode))
     }
 
     @GetMapping("/info")
