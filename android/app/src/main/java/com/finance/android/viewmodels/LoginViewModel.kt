@@ -178,12 +178,14 @@ class LoginViewModel @Inject constructor(
         context: Context,
         loginResponseDto: LoginResponseDto
     ) {
-        RetrofitClient().login(loginResponseDto.accessToken)
-        UserStore(context).setValue(UserStore.KEY_PASSWORD, password.value)
-            .setValue(UserStore.KEY_REFRESH_TOKEN, loginResponseDto.refreshToken)
-            .setValue(UserStore.KEY_USER_ID, loginResponseDto.userId)
-            .setValue(UserStore.KEY_USER_NAME, loginResponseDto.userName)
-            .setValue(UserStore.KEY_ACCESS_TOKEN, loginResponseDto.accessToken)
+        with(loginResponseDto) {
+            RetrofitClient.login(accessToken, refreshToken)
+            UserStore(context).setValue(UserStore.KEY_PASSWORD, password.value)
+                .setValue(UserStore.KEY_REFRESH_TOKEN, refreshToken)
+                .setValue(UserStore.KEY_USER_ID, userId)
+                .setValue(UserStore.KEY_USER_NAME, userName)
+                .setValue(UserStore.KEY_ACCESS_TOKEN, accessToken)
+        }
     }
 
     private fun formatBirthday(): String {
