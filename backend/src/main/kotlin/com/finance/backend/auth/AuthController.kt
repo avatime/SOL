@@ -37,13 +37,13 @@ class AuthController (private val userService: UserService) {
     }
 
     @PostMapping("/logout")
-    fun logout(@RequestHeader accessToken: String) : ResponseEntity<Any?> {
+    fun logout(@RequestHeader("access_token") accessToken: String) : ResponseEntity<Any?> {
         userService.logout(accessToken)
         return ResponseEntity.status(200).body("Success")
     }
 
     @PostMapping("/refresh")
-    fun refresh(@RequestHeader refreshToken: String) : ResponseEntity<Any?> {
+    fun refresh(@RequestHeader("refresh_token") refreshToken: String) : ResponseEntity<Any?> {
         return ResponseEntity.status(200).body(userService.refresh(refreshToken))
     }
 }
