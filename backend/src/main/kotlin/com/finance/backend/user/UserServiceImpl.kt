@@ -47,12 +47,15 @@ class UserServiceImpl (
         }
     }
 
-    override fun checkUser(signupDto: SignupCheckDto) {
-        if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) throw DuplicatedUserException()
+    override fun checkUser(signupDto: SignupCheckDto) : Any? {
+        var re : String = ""
+        if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) return "중복된 유저" // throw DuplicatedUserException()
         else {
             var user : User? = userRepository.findByPhone(signupDto.phone)
-            if(user?.type == "회원") throw DuplicatedPhoneNumberException()
+            return user?.name + " " + user?.type
+//            if(user?.type == "회원") throw DuplicatedPhoneNumberException()
         }
+        return "true"
     }
 
     override fun login(loginDto: LoginDto) : LoginDao? {
