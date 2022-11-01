@@ -1,9 +1,7 @@
 package com.finance.android.ui.screens.login
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -56,11 +54,6 @@ fun TestPhoneScreen(
             TextButton(
                 onClick = { launch() },
                 text = stringResource(id = R.string.btn_re_receive_test_phone_code),
-                modifier = Modifier.border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(20.dp)
-                ),
                 buttonType = ButtonType.CIRCULAR,
                 buttonColor = ButtonColor.WHITE,
                 fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp

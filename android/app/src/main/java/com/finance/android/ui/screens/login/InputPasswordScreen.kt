@@ -7,9 +7,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -215,11 +213,6 @@ private fun SecondScreen(
                 TextButton(
                     onClick = { loginViewModel.useBio.value = !loginViewModel.useBio.value },
                     text = stringResource(id = R.string.btn_use_bio),
-                    modifier = Modifier.border(
-                        width = 1.dp,
-                        color = MaterialTheme.colorScheme.primary,
-                        shape = RoundedCornerShape(20.dp)
-                    ),
                     buttonType = ButtonType.CIRCULAR,
                     buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
                     fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp
