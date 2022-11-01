@@ -9,7 +9,7 @@ import com.finance.backend.user.response.UserDao
 
 interface UserService {
     fun saveUser(signupDto: SignupDto) : LoginDao
-    fun checkUser(signupDto: SignupCheckDto) : Any?
+    fun checkUser(signupDto: SignupCheckDto)
     fun login(loginDto: LoginDto) : LoginDao?
     fun reLogin(reLoginDto: ReLoginDto) : LoginDao?
     fun logout(token: String) : Boolean
