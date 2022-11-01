@@ -26,7 +26,7 @@ class AuthController (private val userService: UserService) {
         return try{
             ResponseEntity.status(200).body(userService.checkUser(userDto))
         } catch (e : Exception) {
-            ResponseEntity.status(100).body(e.message + e.stackTrace)
+            ResponseEntity.status(100).body(e.message)
         }
     }
 
