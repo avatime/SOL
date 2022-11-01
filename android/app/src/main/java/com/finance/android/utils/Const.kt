@@ -10,7 +10,7 @@ object Const {
     const val RECO_SCREEN = "reco"
     const val CONTACT_SCREEN = "contact"
     const val ACCOUNT_SCREEN = "account"
-    const val ASSET_SCREEN = "asset"
+    const val ASSET_FRAGMENT = "asset"
 
     object Routes {
         const val LOGIN = "route_login"

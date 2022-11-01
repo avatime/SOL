@@ -38,13 +38,13 @@ fun HomeScreen(navController: NavController) {
     Column (modifier = Modifier
         .verticalScroll(rememberScrollState())
         .background(color = Color(R.color.light_gray))) {
-        CardContainer(modifier = Modifier
+        HomeCardContainer(modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_medium))
             .background(color = Color.White, shape = RoundedCornerShape(10)),
             navController = navController
         )
-        CardContainer2(modifier = Modifier
+        HomeCardContainer2(modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_medium))
             .background(color = Color.White, shape = RoundedCornerShape(10)),
@@ -54,7 +54,7 @@ fun HomeScreen(navController: NavController) {
 }
 
 @Composable
-fun CardContainer(modifier: Modifier, navController: NavController) {
+fun HomeCardContainer(modifier: Modifier, navController: NavController) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
         ) {
@@ -67,7 +67,7 @@ fun CardContainer(modifier: Modifier, navController: NavController) {
             Text(text = "4", color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.weight(1.0f))
             IconButton(onClick = {
-                navController.navigate(Const.ASSET_SCREEN)
+                navController.navigate(Const.ASSET_FRAGMENT)
             },
                 modifier = Modifier.size(30.dp)) {
                 Image(painter = painterResource(R.drawable.arrow_forward_ios),
@@ -89,7 +89,7 @@ fun CardContainer(modifier: Modifier, navController: NavController) {
 }
 
 @Composable
-fun CardContainer2 (modifier: Modifier, navController: NavController) {
+fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
     ) {
