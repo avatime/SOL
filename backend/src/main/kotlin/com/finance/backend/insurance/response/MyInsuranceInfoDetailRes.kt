@@ -17,5 +17,5 @@ data class MyInsuranceInfoDetailRes(
 
         // 피보험자
         @JsonProperty("is_name")
-        val isName : String
+        val insName : String
 )
