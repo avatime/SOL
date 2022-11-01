@@ -42,8 +42,8 @@ fun MainFragment() {
             composable(Const.MORE_SCREEN) {
                 MoreScreen()
             }
-            composable(Const.ASSET_SCREEN) {
-                AssetScreen()
+            composable(Const.ASSET_FRAGMENT) {
+                AssetFragment(navController = navController)
             }
         }
     }
