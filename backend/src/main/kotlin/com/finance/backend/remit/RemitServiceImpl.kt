@@ -80,7 +80,7 @@ class RemitServiceImpl(
         val remitAccount = accountRepository.findById(remitInfoReq.acSend).get()
 
         // 출금 거래 내역
-        val tradeRemitHistory = TradeHistory(value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+        val tradeRemitHistory = TradeHistory("",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
         val accountRemit = accountRepository.findById(remitInfoReq.acSend).get()
         if (accountRemit.balance >= value){
@@ -93,7 +93,7 @@ class RemitServiceImpl(
 
         // 입금 거래 내역
         val depositAccount = accountRepository.findById(remitInfoReq.acReceive).get()
-        val depositRemitHistory = TradeHistory(value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
+        val depositRemitHistory = TradeHistory("",value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
         val accountDeposit = accountRepository.findById(remitInfoReq.acReceive).get()
         accountRepository.save(accountDeposit)
@@ -114,7 +114,7 @@ class RemitServiceImpl(
             val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
 
             // 출금 거래 내역
-            val tradeRemitHistory = TradeHistory(value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+            val tradeRemitHistory = TradeHistory("",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
             tradeHistoryRepository.save(tradeRemitHistory)
             val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
             if (accountRemit.balance >= value){
@@ -126,7 +126,7 @@ class RemitServiceImpl(
 
             // 입금 거래 내역
             val depositAccount = accountRepository.findById(remitPhoneReq.acReceive).get()
-            val depositRemitHistory = TradeHistory(value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
+            val depositRemitHistory = TradeHistory("",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
             tradeHistoryRepository.save(depositRemitHistory)
             val accountDeposit = accountRepository.findById(remitPhoneReq.acReceive).get()
             accountRepository.save(accountDeposit)
@@ -155,7 +155,7 @@ class RemitServiceImpl(
             val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
 
             // 출금 거래 내역
-            val tradeRemitHistory = TradeHistory(value, date, 2, acName, acNo, receive, send, remitAccount)
+            val tradeRemitHistory = TradeHistory("", value, date, 2, acName, acNo, receive, send, remitAccount)
             tradeHistoryRepository.save(tradeRemitHistory)
             val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
             if (accountRemit.balance >= value){
@@ -167,7 +167,7 @@ class RemitServiceImpl(
 
             // 입금 거래 내역
             val depositAccount = accountRepository.findById(remitPhoneReq.acReceive).get()
-            val depositRemitHistory = TradeHistory(value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
+            val depositRemitHistory = TradeHistory("",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
             tradeHistoryRepository.save(depositRemitHistory)
             val accountDeposit = accountRepository.findById(remitPhoneReq.acReceive).get()
             accountRepository.save(accountDeposit)
