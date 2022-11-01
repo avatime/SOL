@@ -50,10 +50,10 @@ enum class ButtonType {
 
 @Composable
 fun TextButton(
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
     text: String,
     buttonColor: ButtonColor = ButtonColor.PRIMARY,
-    modifier: Modifier,
     buttonType: ButtonType,
     enabled: Boolean = true,
     fontSize: TextUnit = dimensionResource(id = R.dimen.font_size_btn_bottom_text).value.sp
