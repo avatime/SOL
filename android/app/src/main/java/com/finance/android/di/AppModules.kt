@@ -16,18 +16,20 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModules {
     @Provides
+    @Singleton
     fun provideSampleRepository(): SampleRepository = DummyRepositoryImpl()
 
     @Provides
+    @Singleton
     fun provideUserRepository(
-        userService: UserService,
-        baseService: BaseService
-    ): UserRepository = UserRepositoryImpl(userService, baseService)
+        userService: UserService
+    ): UserRepository = UserRepositoryImpl(userService)
 
     @Provides
     fun provideRemitRepository (
