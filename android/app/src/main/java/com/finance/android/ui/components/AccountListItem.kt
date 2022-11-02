@@ -18,7 +18,7 @@ import com.finance.android.R
 fun AccountListItem() {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .padding(top = dimensionResource(R.dimen.padding_medium)),
+        .padding(top = dimensionResource(R.dimen.padding_small), bottom = dimensionResource(R.dimen.padding_small)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(

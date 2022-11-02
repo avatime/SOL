@@ -9,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -36,7 +37,7 @@ fun HeaderAssetTabBar(
         TabRow(
 
             selectedTabIndex = selectedIndex,
-            backgroundColor = Color.White,
+            backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
             modifier = Modifier
                 .padding(end = 0.dp),
             indicator = {
@@ -60,7 +61,7 @@ fun HeaderAssetTabBar(
 
                     selected = selected,
                     onClick = { selectedIndex = index },
-                    text = { Text(text = text, fontSize = 18.sp, ) },
+                    text = { Text(text = text, fontSize = 18.sp, fontWeight = FontWeight.Bold ) },
                     modifier = Modifier.width(20.dp),
                     selectedContentColor = Color.Black,
                     unselectedContentColor = Disabled,
@@ -74,13 +75,13 @@ fun HeaderAssetTabBar(
                 AssetBankScreen(navController)
             }
             1 -> {
-                AssetCardScreen()
+                AssetCardScreen(navController)
             }
             2 -> {
-                AssetLifeScreen()
+                AssetLifeScreen(navController)
             }
             3 -> {
-                AssetStockScreen()
+                AssetStockScreen(navController)
             }
         }
     }

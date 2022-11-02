@@ -3,6 +3,7 @@ package com.finance.android.ui.screens
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -18,17 +19,18 @@ fun AssetBankScreen(navController: NavController) {
     Column(modifier = Modifier
         .padding(top = dimensionResource(R.dimen.padding_medium)))
     {
-        AssetBankCardContainer(modifier = Modifier
+        AssetBankContainer(modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_medium))
-            .background(color = Color.White, shape = RoundedCornerShape(10)),
+            .background(color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(10)),
             navController = navController
         )
     }
 }
 
 @Composable
-fun AssetBankCardContainer(modifier: Modifier, navController: NavController) {
+fun AssetBankContainer(modifier: Modifier, navController: NavController) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium)))
     {

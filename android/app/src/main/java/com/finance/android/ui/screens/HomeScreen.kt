@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Divider
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,17 +36,17 @@ fun HomeScreen(navController: NavController) {
 
     Column (modifier = Modifier
         .verticalScroll(rememberScrollState())
-        .background(color = Color(R.color.light_gray))) {
+        .background(color = MaterialTheme.colorScheme.background)) {
         HomeCardContainer(modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_medium))
-            .background(color = Color.White, shape = RoundedCornerShape(10)),
+            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(10)),
             navController = navController
         )
         HomeCardContainer2(modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_medium))
-            .background(color = Color.White, shape = RoundedCornerShape(10)),
+            .background(color = MaterialTheme.colorScheme.surface, shape = RoundedCornerShape(10)),
             navController = navController
         )
     }
@@ -56,7 +57,11 @@ fun HomeCardContainer(modifier: Modifier, navController: NavController) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
         ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = dimensionResource(R.dimen.padding_small)),
+            verticalAlignment = Alignment.CenterVertically)
+        {
             Text(
                 text = "자산",
                 fontWeight = FontWeight.Bold,
@@ -69,7 +74,7 @@ fun HomeCardContainer(modifier: Modifier, navController: NavController) {
             },
                 modifier = Modifier.size(30.dp)) {
                 Image(painter = painterResource(R.drawable.arrow_forward_ios),
-                    contentDescription = null,
+                    contentDescription = "forwardArrow",
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp, bottom = 8.dp),
@@ -130,6 +135,7 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
                         .width(120.dp)
                         .padding(start = 20.dp),
                     buttonType = ButtonType.CIRCULAR,
+                    fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.weight(1.0f))
                 TextButton(onClick = { /*TODO*/ },
@@ -139,6 +145,7 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
                         .width(120.dp)
                         .padding(end = 20.dp),
                     buttonType = ButtonType.CIRCULAR,
+                    fontSize = 16.sp
                 )
             }
         }
