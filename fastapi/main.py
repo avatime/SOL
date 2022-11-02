@@ -35,3 +35,8 @@ async def say_hello(name: str):
 async def test(user: schemas.userReq, db: Session = Depends(get_db)):
     # user_id = b'1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
     function.create(user.user_id, db)
+
+
+@app.get("/data/v1/random")
+async def a():
+    return JSONResponse({"message": "dddddddddd"})
