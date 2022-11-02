@@ -59,22 +59,21 @@ class RemitServiceImpl(
             val bookmarkTradeHistoryList = tradeHistoryRepository.getBookMarkTradeHistoriesByUserId(userId).orEmpty()
             for (bookmark in bookmarkTradeHistoryList){
                 if (!myAccountList.contains(bookmark.tdTgAc)){
-                    val bookmarkAccount = accountRepository.findById(bookmark.tdTgAc!!).get()
-                    val bookmarkUser = userRepository.findById(bookmarkAccount.user.id).get()
-                    val bookmarkCorporation = corporationRepository.findById(bookmarkAccount.acCpCode).get()
+                    val bookmarkAccount = accountRepository.findById(bookmark.tdTgAc!!).orElse(null)
+                    val bookmarkUser = userRepository.findById(bookmarkAccount.user.id).orElse(null)
+                    val bookmarkCorporation = corporationRepository.findById(bookmarkAccount.acCpCode).orElse(null)
                     accountDetailList.add(RecentTradeRes(bookmarkUser.name, bookmark.tdTgAc!!, bookmarkCorporation.cpName, true, bookmarkCorporation.cpLogo, bookmark.tdDt))
                     checkBookmarkList.add(bookmark.tdTgAc!!)
                 }
             }
-
             // 최근 거래 계좌 추가
             val recentAccountList = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
 
             for (recentHistory in recentAccountList){
                 if (!myAccountList.contains(recentHistory.tdTgAc) && !checkBookmarkList.contains(recentHistory.tdTgAc)){
-                    val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).get()
-                    val recentUser = userRepository.findById(recentAccount.user.id).get()
-                    val recentCorporation = corporationRepository.findById(recentAccount.acCpCode).get()
+                    val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).orElse(null)
+                    val recentUser = userRepository.findById(recentAccount.user.id).orElse(null)
+                    val recentCorporation = corporationRepository.findById(recentAccount.acCpCode).orElse(null)
                     accountDetailList.add(RecentTradeRes(recentUser.name, recentAccount.acNo, recentCorporation.cpName, false, recentCorporation.cpLogo, recentHistory.tdDt))
                 }
             }
@@ -130,7 +129,7 @@ class RemitServiceImpl(
         val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
 
         // 출금 거래 내역
-        val tradeRemitHistory = TradeHistory("",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+        val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
         val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
         if (accountRemit.balance >= value){
@@ -142,7 +141,7 @@ class RemitServiceImpl(
 
         // 입금 거래 내역
         val depositAccount = accountRepository.findById(targetAccount).get()
-        val depositRemitHistory = TradeHistory("",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
+        val depositRemitHistory = TradeHistory("입금",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
         val accountDeposit = accountRepository.findById(targetAccount).get()
         accountDeposit.deposit(value)
