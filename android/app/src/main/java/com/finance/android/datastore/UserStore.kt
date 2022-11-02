@@ -18,6 +18,7 @@ class UserStore(private val context: Context) {
         val KEY_USER_ID = stringPreferencesKey("user_id")
         val KEY_USER_NAME = stringPreferencesKey("user_name")
         val KEY_PASSWORD = stringPreferencesKey("password")
+        val KEY_USE_BIO = stringPreferencesKey("use_bio")
     }
 
     fun getValue(key: Preferences.Key<String>): Flow<String> {
@@ -31,8 +32,10 @@ class UserStore(private val context: Context) {
         key: Preferences.Key<String>,
         value: String
     ): UserStore {
-        context.dataStore.edit {
-            it[key] = value
+        if (value.isNotEmpty()) {
+            context.dataStore.edit {
+                it[key] = value
+            }
         }
         return this
     }

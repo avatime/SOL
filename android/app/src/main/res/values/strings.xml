@@ -16,6 +16,7 @@
 
     <string name="btn_confirm">확인</string>
     <string name="btn_re_receive_test_phone_code">인증번호 다시 받기</string>
+    <string name="btn_use_bio">지문 로그인</string>
 
     <string name="label_input_name">이름</string>
     <string name="label_input_birthday">생년월일</string>

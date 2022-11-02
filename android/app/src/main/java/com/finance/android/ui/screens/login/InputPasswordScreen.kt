@@ -1,10 +1,15 @@
 package com.finance.android.ui.screens.login
 
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.biometric.BiometricPrompt
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -17,9 +22,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.CodeTextInput
-import com.finance.android.ui.components.TextButton
+import com.finance.android.datastore.UserStore
+import com.finance.android.ui.components.*
 import com.finance.android.ui.fragments.SignupStep
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.LoginViewModel
@@ -36,9 +40,10 @@ fun InputPasswordScreen(
     onNextStep: () -> Unit,
     isLoginFragment: Boolean
 ) {
+    val context = LocalContext.current
     var isRepeat by remember { mutableStateOf(false) }
     val errorPassword = remember { mutableStateOf(false) }
-    val context = LocalContext.current
+    var successBiometric by remember { mutableStateOf(false) }
 
     AnimatedVisibility(
         visible = !isRepeat,
@@ -57,13 +62,11 @@ fun InputPasswordScreen(
                 } else {
                     if (isLoginFragment) {
                         loginViewModel.login(
-                            context = context,
                             onErrorPassword = { errorPassword.value = true },
-                            onMoveLoginDoneScreen = onNextStep
+                            onSuccess = onNextStep
                         )
                     } else {
                         loginViewModel.reLogin(
-                            context = context,
                             onErrorPassword = { errorPassword.value = true },
                             onMoveLoginDoneScreen = onNextStep
                         )
@@ -84,12 +87,32 @@ fun InputPasswordScreen(
                 loginViewModel = loginViewModel,
                 onNextStep = {
                     loginViewModel.signup(
-                        context = context,
                         onMoveLoginDoneScreen = onNextStep
                     )
                 }
             )
         }
+    }
+
+    var useBio by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        UserStore(context).getValue(UserStore.KEY_USE_BIO).collect {
+            useBio = it == "1"
+        }
+    }
+
+    if (isLoginFragment && !successBiometric && useBio) {
+        successBiometric = true
+        BiometricDialog(
+            callback = object : BiometricPrompt.AuthenticationCallback() {
+                override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+                    super.onAuthenticationSucceeded(result)
+                    loginViewModel.autoLogin(
+                        onSuccess = onNextStep
+                    )
+                }
+            }
+        )
     }
 }
 
@@ -118,6 +141,18 @@ private fun FirstScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+            ) {
+                TextButton(
+                    onClick = { loginViewModel.useBio.value = !loginViewModel.useBio.value },
+                    text = stringResource(id = R.string.btn_use_bio),
+                    buttonType = ButtonType.CIRCULAR,
+                    buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
+                    fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp
+                )
+                Spacer(modifier = Modifier.size(0.dp, 20.dp))
+            }
             CodeTextInput(
                 value = loginViewModel.password.value,
                 onValueChange = {
@@ -174,6 +209,23 @@ private fun SecondScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
+                    LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+            ) {
+                TextButton(
+                    onClick = { loginViewModel.useBio.value = !loginViewModel.useBio.value },
+                    text = stringResource(id = R.string.btn_use_bio),
+                    modifier = Modifier.border(
+                        width = 1.dp,
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(20.dp)
+                    ),
+                    buttonType = ButtonType.CIRCULAR,
+                    buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
+                    fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp
+                )
+                Spacer(modifier = Modifier.size(0.dp, 20.dp))
+            }
             CodeTextInput(
                 value = loginViewModel.passwordRepeat.value ?: "",
                 onValueChange = {
