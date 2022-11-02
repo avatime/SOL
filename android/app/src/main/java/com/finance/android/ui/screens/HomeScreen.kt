@@ -27,9 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.RoundedTextButton
-import com.finance.android.ui.components.TextButton
+import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 
 @Composable
@@ -143,63 +141,6 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
                     buttonType = ButtonType.CIRCULAR,
                 )
             }
-        }
-    }
-}
-
-@Composable
-fun AccountListItem() {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = dimensionResource(R.dimen.padding_medium)),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data("https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png")
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier.size(40.dp)
-        )
-        Column (modifier = Modifier
-            .padding(start = 8.dp)) {
-            Text(text = "나라사랑행복계좌")
-            Text(text = "10,000원", fontWeight = FontWeight.Bold)
-        }
-        Spacer(modifier = Modifier.weight(1.0f))
-        TextButton(onClick = { /*TODO*/ },
-            text = "송금",
-            modifier = Modifier
-                .height(30.dp)
-                .width(50.dp)
-                .defaultMinSize(minWidth = 1.dp, minHeight = 1.dp),
-            buttonType = ButtonType.ROUNDED,
-            fontSize = 10.sp
-        )
-    }
-}
-
-@Composable
-fun InsuranceListItem() {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(top = dimensionResource(R.dimen.padding_medium)),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data("https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png")
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier.size(40.dp)
-        )
-        Column (modifier = Modifier
-            .padding(start = 8.dp)) {
-            Text(text = "신종단체상해보험", fontSize = 12.sp)
-            Text(text = "보험료: 10,000원", fontWeight = FontWeight.Bold)
-            Text(text = "계약자: 홍길동|피보험자: 홍길동", fontSize = 10.sp)
         }
     }
 }
