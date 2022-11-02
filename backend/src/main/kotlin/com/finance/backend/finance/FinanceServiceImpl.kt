@@ -18,17 +18,6 @@ class FinanceServiceImpl(
         val jwtUtils: JwtUtils
 ) : FinanceService {
 
-    override fun getFinanceInfo(): List<BankInfoRes> {
-        var bankInfoList = ArrayList<BankInfoRes>()
-        val corporationList = corporationRepository.findTop25ByOrderByCpCodeDesc()
-        for(corporation in corporationList){
-            val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo)
-            bankInfoList.add(bankInfo)
-        }
-        return bankInfoList
-
-    }
-
     override fun getFinanceAsset(token: String): List<BankAccountRes> {
         val bankAccountList = ArrayList<BankAccountRes>()
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {

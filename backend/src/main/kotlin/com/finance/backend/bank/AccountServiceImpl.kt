@@ -118,50 +118,51 @@ class AccountServiceImpl(
         return accountDetailList
     }
 
-    override fun getRecentTrade(token: String): List<RecentTradeRes> {
-        var accountDetailList = ArrayList<RecentTradeRes>()
+    override fun getRecentTrade(token: String): List<RecentMyTradeRes> {
+        var accountDetailList = ArrayList<RecentMyTradeRes>()
 
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
 
-            // 북마크 계좌 추가
-            val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId).orEmpty()
-            var checkList = ArrayList<String>()
-            for (bookmarkAccount in bookmarkAccountList){
-                // 북마크 추가한 계좌
-                val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
-                // 사용자의 계좌 정보
-                val accountList = accountRepository.findByUserId(userId).orEmpty()
-                var tdDt = LocalDateTime.MIN
-                for (accountInfo in accountList){
-                    val trade = tradeHistoryRepository.findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(accountInfo.acNo, bookmarkAccount.acNo, 2)
-                    if (trade.tdDt > tdDt){
-                        tdDt = trade.tdDt
-                    }
-                }
+            // 유저
+            val user = userRepository.findById(userId)
+            println(user.get().name)
 
-                val user : User = userRepository.findById(account.user.id).get()
-                val corporation = corporationRepository.findById(account.acCpCode).get()
-                accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo, tdDt))
-                checkList.add(bookmarkAccount.acNo)
+            // 내 계좌 가져오기
+            val accountList = accountRepository.findByUserId(userId)
+
+            // 내 계좌 문자열
+            val myAccountList = ArrayList<String>()
+            for (account in accountList){
+                myAccountList.add(account.acNo)
             }
 
-            // 최근 거래 계좌 추가
-            val accountList = accountRepository.findByUserId(userId)
-            for (account in accountList){
-                val end = LocalDateTime.now()
-                val start = end.minusMonths(3)
-                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTdTypeAndTdDtBetween(account.acNo, 2, start, end).orEmpty()
-                for (trade in tradeHistoryList){
-                    if(!checkList.contains(trade.tdTgAc)){
-                        val account = accountRepository.findById(trade.tdTgAc!!).get()
-                        val user : User = userRepository.findById(account.user.id).get()
-                        val corporation = corporationRepository.findById(account.acCpCode).get()
-                        val tradeInfo = tradeHistoryRepository.findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(account.acNo, trade.tdTgAc!!, 2)
-                        accountDetailList.add(RecentTradeRes(user.name, account.acNo, corporation.cpName, false, corporation.cpLogo, tradeInfo.tdDt))
-                        checkList.add(trade.tdTgAc!!)
-                    }
+            // 내가 북마크 한 계좌
+            val bookmarkList = bookmarkRepository.findByUserId(userId)
+
+            // 북마크 한 내 계좌
+            val myBookmarkList = ArrayList<String>()
+            val myNotBookmarkList = ArrayList<String>()
+            for (bookmark in bookmarkList){
+                if (myAccountList.contains(bookmark.acNo) && bookmark.bkStatus){
+                    myBookmarkList.add(bookmark.acNo)
+                } else if (myAccountList.contains(bookmark.acNo)){
+                    myNotBookmarkList.add(bookmark.acNo)
                 }
+            }
+
+            // 북마크 계좌 추가
+            for (myBook in myBookmarkList){
+                val account = accountRepository.findById(myBook).orElse(null)
+                val corporation = corporationRepository.findById(account.acCpCode).orElse(null)
+                accountDetailList.add((RecentMyTradeRes(account.acName, myBook, corporation.cpName, true, corporation.cpLogo)))
+            }
+
+            // 북마크 아닌 계좌 추가
+            for (myBook in myNotBookmarkList){
+                val account = accountRepository.findById(myBook).orElse(null)
+                val corporation = corporationRepository.findById(account.acCpCode).orElse(null)
+                accountDetailList.add((RecentMyTradeRes(account.acName, myBook, corporation.cpName, false, corporation.cpLogo)))
             }
         }
 
@@ -182,6 +183,17 @@ class AccountServiceImpl(
             bankInfoList.add(bankInfo)
         }
         return bankInfoList
+    }
+
+    override fun getFinanceInfo(): List<BankInfoRes> {
+        var bankInfoList = ArrayList<BankInfoRes>()
+        val corporationList = corporationRepository.findTop25ByOrderByCpCodeDesc()
+        for(corporation in corporationList){
+            val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo)
+            bankInfoList.add(bankInfo)
+        }
+        return bankInfoList
+
     }
 
     override fun getAccountRegistered(token: String): AccountRegisteredRes {

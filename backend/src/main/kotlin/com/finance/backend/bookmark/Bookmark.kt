@@ -18,7 +18,7 @@ class Bookmark(
         protected set
 
     @JsonProperty("ac_no")
-    var acNo: String = acNo
+    val acNo: String = acNo
 
     @JsonProperty("bk_status")
     var bkStatus: Boolean = bkStatus
