@@ -29,6 +29,7 @@ android {
         }
     }
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -93,5 +94,9 @@ dependencies {
     implementation "io.coil-kt:coil-gif:2.1.0"
 
     implementation("androidx.biometric:biometric:1.1.0")
+
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    implementation 'com.kizitonwose.calendar:compose:2.0.1'
+    
 }
