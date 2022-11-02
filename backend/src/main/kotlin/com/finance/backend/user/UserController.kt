@@ -19,7 +19,11 @@ class UserController (private val userService: UserService) {
 
     @PostMapping("/profile")
     fun changeProfile(@RequestHeader("access_token") accessToken : String, @RequestBody changeProfileDto : ChangeProfileDto) : ResponseEntity<Any?> {
-        return ResponseEntity.status(200).body(userService.changeProfile(accessToken, changeProfileDto.profile_no))
+        return try {
+            ResponseEntity.status(200).body(userService.changeProfile(accessToken, changeProfileDto.profile_no))
+        } catch (e : Exception) {
+            ResponseEntity.status(300).body(accessToken)
+        }
     }
 
     @PostMapping("/check")
