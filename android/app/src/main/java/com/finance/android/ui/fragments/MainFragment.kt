@@ -32,7 +32,7 @@ fun MainFragment(navController: NavController) {
                 HomeScreen(navController = navController)
             }
             composable(Const.PRODUCT_SCREEN) {
-                ProductScreen()
+                ProductScreen(navController = navController)
             }
             composable(Const.STOCK_SCREEN) {
                 StockScreen()

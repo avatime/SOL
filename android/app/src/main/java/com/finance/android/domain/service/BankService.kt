@@ -8,7 +8,7 @@ import retrofit2.http.PUT
 import retrofit2.http.Path
 
 interface BankService {
-    @GET("${Const.API_PATH}/bank/asset")
+    @GET("${Const.API_PATH}/bank/asset/all")
     suspend fun getAccountList(): MutableList<BankAccountResponseDto>
 
     @PUT("${Const.API_PATH}/bank/asset")

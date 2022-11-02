@@ -1,8 +1,8 @@
 package com.finance.android.ui.screens.addasset
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
@@ -24,6 +24,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
+import com.finance.android.ui.components.AccountListItem_Check
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
@@ -51,6 +52,8 @@ fun AddAssetSelectScreen(
             selectedAll = addAssetViewModel.selectedAll.value,
             onClickSelectAll = { addAssetViewModel.onClickSelectAll() },
             accountList = (addAssetViewModel.accountList.value as Response.Success).data,
+            accountCheckList = addAssetViewModel.accountCheckList,
+            onClickAccountItem = { addAssetViewModel.onClickAccountItem(it) }
         )
         else -> {
             Loading(
@@ -74,7 +77,8 @@ private fun Loading(
             BackHeaderBar(
                 text = stringResource(id = R.string.nav_add_asset),
                 modifier = modifier,
-                onClickBack = onClickBack
+                onClickBack = onClickBack,
+                backgroundColor = MaterialTheme.colorScheme.surface
             )
         }
     ) {
@@ -134,9 +138,11 @@ private fun Screen(
     modifier: Modifier = Modifier,
     onClickBack: () -> Unit = {},
     onClickNext: () -> Unit = {},
-    accountList: MutableList<BankAccountResponseDto> = mutableListOf(),
+    accountList: MutableList<BankAccountResponseDto> = accountListForPreview,
+    accountCheckList: Array<MutableState<Boolean>> = accountCheckListForPreview,
     selectedAll: Boolean = false,
-    onClickSelectAll: () -> Unit = {}
+    onClickSelectAll: () -> Unit = {},
+    onClickAccountItem: (index: Int) -> Unit = {}
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -144,7 +150,8 @@ private fun Screen(
             BackHeaderBar(
                 text = stringResource(id = R.string.nav_add_asset),
                 modifier = modifier,
-                onClickBack = onClickBack
+                onClickBack = onClickBack,
+                backgroundColor = MaterialTheme.colorScheme.surface
             )
         }
     ) {
@@ -214,12 +221,9 @@ private fun Screen(
                 Spacer(modifier = modifier.width(10.dp))
                 Row(
                     modifier = modifier
-                        .clickable(
-                            indication = null,
-                            interactionSource = remember { MutableInteractionSource() }
-                        ) {
-                            onClickSelectAll()
-                        },
+                        .clip(RoundedCornerShape(10.dp))
+                        .clickable { onClickSelectAll() }
+                        .padding(all = 10.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     val color = if (selectedAll) MaterialTheme.colorScheme.primary else Disabled
@@ -241,7 +245,11 @@ private fun Screen(
                     .weight(1.0f)
             ) {
                 when (selectedTabIndex) {
-                    0 -> Account()
+                    0 -> Account(
+                        accountList = accountList,
+                        accountCheckList = accountCheckList,
+                        onClickAccountItem = onClickAccountItem
+                    )
                     1 -> Card()
                     2 -> Stock()
                     else -> Insurance()
@@ -259,9 +267,29 @@ private fun Screen(
 
 @Preview
 @Composable
-private fun Account() {
-    Column {
-        Text(text = "Account")
+private fun Account(
+    accountList: MutableList<BankAccountResponseDto> = accountListForPreview,
+    accountCheckList: Array<MutableState<Boolean>> = accountCheckListForPreview,
+    onClickAccountItem: (index: Int) -> Unit = {},
+) {
+    LazyColumn() {
+        items(
+            count = accountList.size,
+            key = { it },
+            itemContent = {
+                val item = accountList[it]
+                val checked = accountCheckList[it].value
+                AccountListItem_Check(
+                    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                    accountNumber = item.acNo,
+                    balance = item.balance,
+                    accountName = item.acName,
+                    companyLogoPath = item.cpLogo,
+                    checked = checked,
+                    onClickItem = { onClickAccountItem(it) }
+                )
+            }
+        )
     }
 }
 
@@ -287,4 +315,18 @@ private fun Insurance() {
     Column {
         Text(text = "Insurance")
     }
+}
+
+private val accountListForPreview = MutableList(100) {
+    BankAccountResponseDto(
+        acName = "acName",
+        acNo = "acNo",
+        balance = 10000,
+        cpName = "cpName",
+        cpLogo = "cpLogo"
+    )
+}
+
+private val accountCheckListForPreview = Array(100) {
+    mutableStateOf(it % 2 == 0)
 }
