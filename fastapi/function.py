@@ -17,6 +17,8 @@ fi_name = ['한화투자', 'DB금융', 'KB증권', '다올투자증권', 'NH투�
            '하이투자', '현대차투자', '한국포스증권', '한국투자', '카카오페이증권']
 td_list = ['요기요', '배달의민족', '네이버페이', '티머니', 'GS25', '바나프레소', '삼성디지털프라자', '이마트',
            '롯데마트', '하이마트', 'Google Play', 'CGV', '교촌치킨']
+ac_pd_list = [0, [13], [22, 23, 24], [25, 26, 27], [28], [29, 30], [31, 32], [1, 35, 36, 37], [33],
+              [34], [2], [3, 4, 5], [6, 7], [14, 15, 16], [8, 9], [10, 11, 12], [17, 18, 19, 20, 21]]
 
 
 def create(user_id, db):
@@ -34,12 +36,14 @@ def create(user_id, db):
                 check = check + num + '-'
             check = check[:-1]
             if check not in ac_list:
+                ac_pd_code = random.choice(ac_pd_list[cor_num])
                 name = cor_name[cor_num]
-                if type == 2:
+                if type == 2:    # 증권계좌 생성
                     cor_num = random.randint(32, 56)
                     name = fi_name[cor_num - 32]
+                    ac_pd_code = 99
                 new_ac.append(models.Account(ac_no=check, balance=random.randint(5, 500)*10000, ac_type=type,
-                                             ac_name=name, ac_pd_code=1, ac_cp_code=cor_num,
+                                             ac_name=name, ac_pd_code=ac_pd_code, ac_cp_code=cor_num,
                                              ac_status=10, ac_reg=0, ac_new_dt="2022-09-26", ac_close_dt="2023-01-01",
                                              ac_rm_reg=0, user_id=user_id))
                 type += 1
