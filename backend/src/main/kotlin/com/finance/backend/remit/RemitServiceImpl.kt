@@ -66,9 +66,9 @@ class RemitServiceImpl(
                     checkBookmarkList.add(bookmark.tdTgAc!!)
                 }
             }
+
             // 최근 거래 계좌 추가
             val recentAccountList = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
-
             for (recentHistory in recentAccountList){
                 if (!myAccountList.contains(recentHistory.tdTgAc) && !checkBookmarkList.contains(recentHistory.tdTgAc)){
                     val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).orElse(null)
@@ -113,7 +113,6 @@ class RemitServiceImpl(
     }
 
     override fun postRemitPhone(remitPhoneReq: RemitPhoneReq) {
-        println("시작")
         val phone = remitPhoneReq.phone
         val value = remitPhoneReq.value
         val date = LocalDateTime.now()
