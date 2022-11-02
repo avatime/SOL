@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.finance.backend.auth.response.LoginDao
 import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.util.Timestamped
+import org.hibernate.annotations.ColumnDefault
 import org.hibernate.annotations.GenericGenerator
 import java.util.*
 import javax.persistence.*
