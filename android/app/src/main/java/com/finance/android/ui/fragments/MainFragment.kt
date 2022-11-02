@@ -31,7 +31,7 @@ fun MainFragment() {
             modifier = Modifier.padding(innerPaddingModifier)
         ) {
             composable(Const.HOME_SCREEN) {
-                HomeScreen()
+                HomeScreen(navController = navController)
             }
             composable(Const.PRODUCT_SCREEN) {
                 ProductScreen()
@@ -41,6 +41,9 @@ fun MainFragment() {
             }
             composable(Const.MORE_SCREEN) {
                 MoreScreen()
+            }
+            composable(Const.ASSET_FRAGMENT) {
+                AssetFragment(navController = navController)
             }
         }
     }
