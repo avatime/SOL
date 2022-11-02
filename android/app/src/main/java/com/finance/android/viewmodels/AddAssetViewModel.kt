@@ -1,6 +1,7 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.datastore.UserStore
@@ -23,7 +24,9 @@ class AddAssetViewModel @Inject constructor(
     private val stockRepository: StockRepository
 ) : BaseViewModel(application, baseRepository) {
     val selectedAll = mutableStateOf(false)
-    val accountList = mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
+    val accountList =
+        mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
+    var accountCheckList = arrayOf<MutableState<Boolean>>()
 
     fun createAssetAndLoad() {
         viewModelScope.launch {
@@ -46,7 +49,17 @@ class AddAssetViewModel @Inject constructor(
     }
 
     fun onClickSelectAll() {
+        accountCheckList.forEach { it.value = !selectedAll.value }
         selectedAll.value = !selectedAll.value
+    }
+
+    fun onClickAccountItem(index: Int) {
+        accountCheckList[index].value = !accountCheckList[index].value
+        calculateSelectAll()
+    }
+
+    private fun calculateSelectAll() {
+        selectedAll.value = accountCheckList.all { it.value }
     }
 
     private suspend fun createAsset(onSuccess: suspend () -> Unit) {
@@ -72,6 +85,9 @@ class AddAssetViewModel @Inject constructor(
         }
             .collect {
                 accountList.value = it
+                if (it is Response.Success) {
+                    accountCheckList = Array(it.data.size) { mutableStateOf(false) }
+                }
             }
     }
 }

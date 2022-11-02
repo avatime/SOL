@@ -72,29 +72,15 @@ class DummyRepositoryImpl @Inject constructor() :
     }
 
     override suspend fun getAccountList(): MutableList<BankAccountResponseDto> {
-        return mutableListOf(
+        return MutableList(3) {
             BankAccountResponseDto(
-                acName = "acName",
                 acNo = "acNo",
-                balance = 10000,
-                cpName = "cpName",
-                cpLogo = "cpLogo"
-            ),
-            BankAccountResponseDto(
+                balance = it,
                 acName = "acName",
-                acNo = "acNo",
-                balance = 10000,
-                cpName = "cpName",
-                cpLogo = "cpLogo"
-            ),
-            BankAccountResponseDto(
-                acName = "acName",
-                acNo = "acNo",
-                balance = 10000,
-                cpName = "cpName",
-                cpLogo = "cpLogo"
+                cpName = "신한은행",
+                cpLogo = "https://mblogthumb-phinf.pstatic.net/20160728_194/ppanppane_1469696183585pXt1k_PNG/KB%BC%D5%C7%D8%BA%B8%C7%E8_%283%29.png?type=w800",
             )
-        )
+        }
     }
 
     override suspend fun putRegisterAccount(acNo: String) {
