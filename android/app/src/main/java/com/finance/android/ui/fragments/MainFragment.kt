@@ -15,16 +15,17 @@ import com.finance.android.utils.Const
 
 @Composable
 fun MainFragment(navController: NavController) {
+    val innerNavController = rememberNavController()
     Scaffold(
         bottomBar = {
             BottomNavBar(
-                navController = navController,
+                navController = innerNavController,
                 modifier = Modifier
             )
         }
     ) { innerPaddingModifier ->
         NavHost(
-            navController = rememberNavController(),
+            navController = innerNavController,
             startDestination = Const.HOME_SCREEN,
             modifier = Modifier.padding(innerPaddingModifier)
         ) {
@@ -32,7 +33,7 @@ fun MainFragment(navController: NavController) {
                 HomeScreen(navController = navController)
             }
             composable(Const.PRODUCT_SCREEN) {
-                ProductScreen()
+                ProductScreen(navController = navController)
             }
             composable(Const.STOCK_SCREEN) {
                 StockScreen()

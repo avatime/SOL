@@ -29,7 +29,7 @@ class AppModules {
     @Provides
     fun provideBankRepository (
         bankService: BankService
-    ) : BankRepository = DummyRepositoryImpl()
+    ) : BankRepository = BankRepositoryImpl(bankService)
 
     @Provides
     fun provideCardRepository(

@@ -56,7 +56,8 @@ private fun DrawScreen(
             BackHeaderBar(
                 text = stringResource(id = R.string.nav_add_asset),
                 modifier = modifier,
-                onClickBack = onClickBack
+                onClickBack = onClickBack,
+                backgroundColor = MaterialTheme.colorScheme.surface
             )
         }
     ) {
