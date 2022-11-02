@@ -224,6 +224,12 @@ class LoginViewModel @Inject constructor(
             UserStore.KEY_USE_BIO,
             if (useBio.value) "1" else "0"
         )
+        if (phoneNumber.value.isNotEmpty()) {
+            UserStore(getApplication()).setValue(
+                UserStore.KEY_PHONE_NUMBER,
+                phoneNumber.value
+            )
+        }
     }
 
     private fun formatBirthday(): String {

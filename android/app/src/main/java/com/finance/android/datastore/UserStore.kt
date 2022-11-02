@@ -19,6 +19,7 @@ class UserStore(private val context: Context) {
         val KEY_USER_NAME = stringPreferencesKey("user_name")
         val KEY_PASSWORD = stringPreferencesKey("password")
         val KEY_USE_BIO = stringPreferencesKey("use_bio")
+        val KEY_PHONE_NUMBER = stringPreferencesKey("phone_number")
     }
 
     fun getValue(key: Preferences.Key<String>): Flow<String> {

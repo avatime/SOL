@@ -85,7 +85,15 @@ fun SignupFragment(
         exit = slideOutVertically()
     ) {
         LoginDoneScreen(
-            onNextStep = {
+            onClickAddAsset = {
+                navController.navigate(Const.Routes.MAIN) {
+                    popUpTo(Const.Routes.SIGNUP) {
+                        inclusive = true
+                    }
+                }
+                navController.navigate(Const.Routes.ADD_ASSET)
+            },
+            onClickLater = {
                 navController.navigate(Const.Routes.MAIN) {
                     popUpTo(Const.Routes.SIGNUP) {
                         inclusive = true

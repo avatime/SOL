@@ -14,18 +14,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.*
 import com.finance.android.R
+import com.finance.android.ui.components.ButtonColor
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.ext.withBottomButton
 
 @Composable
 fun LoginDoneScreen(
-    onNextStep: () -> Unit
+    onClickAddAsset: () -> Unit,
+    onClickLater: () -> Unit
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_done))
     val progress by animateLottieCompositionAsState(
@@ -70,10 +73,26 @@ fun LoginDoneScreen(
         )
         Spacer(modifier = Modifier.weight(1.0f))
         TextButton(
-            onClick = onNextStep,
-            text = stringResource(id = R.string.btn_confirm),
+            onClick = onClickAddAsset,
+            text = stringResource(id = R.string.btn_add_asset),
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton()
         )
+        TextButton(
+            onClick = onClickLater,
+            text = stringResource(id = R.string.btn_later),
+            buttonType = ButtonType.ROUNDED,
+            modifier = Modifier.withBottomButton(),
+            buttonColor = ButtonColor.WHITE
+        )
     }
+}
+
+@Preview
+@Composable
+fun Preview() {
+    LoginDoneScreen(
+        onClickAddAsset = { },
+        onClickLater = { }
+    )
 }

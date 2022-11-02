@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="add_asset_tab_array">
+        <item>@string/btn_tab_account</item>
+        <item>@string/btn_tab_card</item>
+        <item>@string/btn_tab_stock</item>
+        <item>@string/btn_tab_insurance</item>
+    </string-array>
+</resources>

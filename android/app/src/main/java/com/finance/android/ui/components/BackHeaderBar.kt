@@ -21,34 +21,32 @@ import androidx.compose.ui.text.style.TextAlign
 import com.finance.android.R
 
 @Composable
-fun BackHeaderBar(text: String, modifier: Modifier) {
-
+fun BackHeaderBar(
+    modifier: Modifier = Modifier,
+    text: String,
+    onClickBack: (() -> Unit)? = null
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(color = MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center
     ) {
-
         Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
-            IconButton(onClick = {
-            }) {
+            IconButton(
+                onClick = { onClickBack?.invoke() }
+            ) {
                 Icon(Icons.Default.ArrowBack, contentDescription = "back")
-
-
             }
         }
 
         Column(verticalArrangement = Arrangement.Center) {
             Text(text = text, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold)
         }
-
-
     }
-
 }
 
-//@Composable
-//fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {
+// @Composable
+// fun BackHandler(enabled: Boolean = true, onBack: () -> Unit) {
 //    val currentOnBack by rememberUpdatedState(onBack)
 //    val backCallback = remember {
 //        object : OnBackPressedCallback(enabled) {
@@ -71,5 +69,4 @@ fun BackHeaderBar(text: String, modifier: Modifier) {
 //            backCallback.remove()
 //        }
 //    }
-//}
-
+// }
