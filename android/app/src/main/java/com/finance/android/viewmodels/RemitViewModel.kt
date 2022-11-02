@@ -1,11 +1,10 @@
 package com.finance.android.viewmodels
 
-import android.util.Log
+import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
-import com.finance.android.domain.repository.BankRepository
+import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.RemitRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -14,22 +13,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RemitViewModel @Inject constructor(
+    application: Application,
+    baseRepository: BaseRepository,
     private val remitRepository: RemitRepository
-) : ViewModel() {
+) : BaseViewModel(application, baseRepository) {
 
     private val _recommendedAccountData = mutableStateOf<Response<MutableList<RecentTradeResponseDto>>>(Response.Loading)
     val recommendedAccountData = _recommendedAccountData
 
     fun getRecommendedAccountData() {
         viewModelScope.launch {
-            remitRepository.getRecommendedAccount().collect {
-                _recommendedAccountData.value = it
-                //
+            this@RemitViewModel.run {
+                remitRepository.getRecommendedAccount()
             }
+                .collect {
+                    _recommendedAccountData.value = it
+                    //
+                }
         }
     }
 
-    fun onClickBookmark(key: Any){
+    fun onClickBookmark(key: Any) {
         _recommendedAccountData.value
     }
 }
