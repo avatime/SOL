@@ -25,7 +25,7 @@ class CardController(
     }
 
     @GetMapping("/asset")
-    fun getCardInfo(@RequestHeader("access_token") accessToken : String, @RequestBody acNo: String): ResponseEntity<Any>{
+    fun getCardInfo(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
         return ResponseEntity
                 .ok()
                 .body(cardService.getAssetCard(accessToken))

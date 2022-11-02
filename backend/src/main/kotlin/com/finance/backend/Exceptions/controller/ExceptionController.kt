@@ -2,11 +2,12 @@ package com.finance.backend.Exceptions.controller
 
 import com.finance.backend.Exceptions.*
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.naming.AuthenticationException
 
-//@ControllerAdvice
+@ControllerAdvice
 class ExceptionController {
 
     @ExceptionHandler(InsufficientBalanceException::class)
@@ -92,4 +93,11 @@ class ExceptionController {
     fun handleRemitFailed(e: Exception) : ResponseEntity<String>{
         return ResponseEntity.status(500).body("Remit failed")
     }
+
+    @ExceptionHandler(MissingRequestHeaderException::class)
+    fun handleMissingRequestHeaderException(e: Exception) : ResponseEntity<String>{
+        return ResponseEntity.status(403).body("Token required")
+    }
+
+
 }
