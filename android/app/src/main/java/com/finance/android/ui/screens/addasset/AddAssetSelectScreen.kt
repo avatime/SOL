@@ -21,10 +21,12 @@ import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.ext.withBottomButton
+import com.finance.android.viewmodels.AddAssetViewModel
 
 @Composable
 fun AddAssetSelectScreen(
     modifier: Modifier = Modifier,
+    addAssetViewModel: AddAssetViewModel,
     onClickBack: () -> Unit,
     onClickNext: () -> Unit
 ) {
@@ -43,7 +45,7 @@ private fun Draw(
     onClickBack: () -> Unit = {},
     onClickNext: () -> Unit = {}
 ) {
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_coin))
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_searching_asset))
     val progress by animateLottieCompositionAsState(
         composition,
         iterations = LottieConstants.IterateForever
@@ -64,7 +66,12 @@ private fun Draw(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Spacer(modifier = modifier.height(70.dp))
+            Spacer(modifier = modifier.height(140.dp))
+            LottieAnimation(
+                composition,
+                progress = { progress },
+                modifier = Modifier.size(160.dp)
+            )
             Text(
                 text = stringResource(id = R.string.msg_desc_add_asset),
                 textAlign = TextAlign.Center,
@@ -83,4 +90,9 @@ private fun Draw(
             )
         }
     }
+}
+
+@Composable
+private fun Loading() {
+
 }
