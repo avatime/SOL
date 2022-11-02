@@ -14,6 +14,6 @@ data class RecentTradeResponseDto(
     val bkStatus: Boolean,
     @SerializedName("cp_logo") // 기업 여부
     val cpLogo: String,
-    @SerializedName("td_data") // 거래 일자
+    @SerializedName("td_dt") // 거래 일자
     val tdData: String
 )
