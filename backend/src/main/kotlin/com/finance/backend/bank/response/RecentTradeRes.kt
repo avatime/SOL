@@ -1,13 +1,15 @@
 package com.finance.backend.bank.response
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDateTime
 
 class RecentTradeRes(
         acReceive : String,
         acNo : String,
         cpName : String,
         bkStatus: Boolean,
-        cpLogo: String
+        cpLogo: String,
+        tdDt: LocalDateTime
 ) {
     @JsonProperty("ac_receive")
     val acReceive: String = acReceive
@@ -23,4 +25,7 @@ class RecentTradeRes(
 
     @JsonProperty("cp_logo")
     val cpLogo: String = cpLogo
+
+    @JsonProperty("td_dt")
+    val tdDt: LocalDateTime = tdDt
 }

@@ -17,7 +17,7 @@ import javax.persistence.Table
 @Table(name = "account")
 class Account (
         acNo: String,
-        balance: Int,
+        balance: Long,
         user: User,
         acType: Int,
         acName: String,
@@ -30,7 +30,7 @@ class Account (
         @Column
         val acNo : String = acNo
 
-        var balance : Int = balance
+        var balance : Long = balance
 
         @JsonProperty("ac_type")
         var acType : Int = acType
@@ -63,7 +63,19 @@ class Account (
         @JoinColumn(name="user_id")
         val user: User = user
 
-        fun withdraw(money : Int) {
+        fun withdraw(money : Long) {
                 this.balance -= money
+        }
+
+        fun deposit(money: Long){
+                this.balance += money
+        }
+
+        fun acreg(status: Boolean){
+                this.acReg = status
+        }
+
+        fun acrmreg(status: Boolean){
+                this.acRmReg = status
         }
 }

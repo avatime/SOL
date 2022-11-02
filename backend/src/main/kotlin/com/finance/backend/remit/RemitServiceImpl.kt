@@ -1,5 +1,7 @@
 package com.finance.backend.remit
 
+import com.finance.backend.Exceptions.InvalidUserException
+import com.finance.backend.Exceptions.NoAccountException
 import com.finance.backend.Exceptions.RemitFailedException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.accountProduct.AccountProductRepository
@@ -35,37 +37,45 @@ class RemitServiceImpl(
 ) : RemitService {
 
     override fun getRecommendationAccount(token: String): List<RecentTradeRes> {
-        var accountDetailList = ArrayList<RecentTradeRes>()
+        val accountDetailList = ArrayList<RecentTradeRes>()
 
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            println(userRepository.findById(userId).get().name)
+            // 사용자의 계좌 정보
+            val accountList = accountRepository.findByUserId(userId)
 
-            // 북마크 계좌 추가
-            val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId)
-            var checkList = ArrayList<String>()
-            for (bookmarkAccount in bookmarkAccountList){
-                val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
-                val user : User = userRepository.findById(account.user.id).get()
-                val corporation = corporationRepository.findById(account.acCpCode).get()
-                accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo))
-                checkList.add(bookmarkAccount.acNo)
+            // 나의 계좌는 반환하지 않도록 체크
+            val myAccountList = ArrayList<String>()
+            for (accountInfo in accountList){
+                myAccountList.add(accountInfo.acNo)
+            }
+
+            // 북마크 계좌 모음
+            val checkBookmarkList = ArrayList<String>()
+
+            // 내가 북마크 한 계좌 하나씩 뽑기
+            val bookmarkTradeHistoryList = tradeHistoryRepository.getBookMarkTradeHistoriesByUserId(userId).orEmpty()
+            for (bookmark in bookmarkTradeHistoryList){
+                if (!myAccountList.contains(bookmark.tdTgAc)){
+                    val bookmarkAccount = accountRepository.findById(bookmark.tdTgAc!!).get()
+                    val bookmarkUser = userRepository.findById(bookmarkAccount.user.id).get()
+                    val bookmarkCorporation = corporationRepository.findById(bookmarkAccount.acCpCode).get()
+                    accountDetailList.add(RecentTradeRes(bookmarkUser.name, bookmark.tdTgAc!!, bookmarkCorporation.cpName, true, bookmarkCorporation.cpLogo, bookmark.tdDt))
+                    checkBookmarkList.add(bookmark.tdTgAc!!)
+                }
             }
 
             // 최근 거래 계좌 추가
-            val accountList = accountRepository.findByUserId(userId)
-            for (account in accountList){
-                val end = LocalDateTime.now()
-                val start = end.minusMonths(3)
-                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAndTdDtBetween(account, start, end).orEmpty()
-                for (trade in tradeHistoryList){
-                    if(!checkList.contains(trade.tdTgAc)){
-                        val account = accountRepository.findById(trade.tdTgAc!!).get()
-                        val user : User = userRepository.findById(account.user.id).get()
-                        val corporation = corporationRepository.findById(account.acCpCode).get()
-                        accountDetailList.add(RecentTradeRes(user.name, account.acNo, corporation.cpName, false, corporation.cpLogo))
-                        checkList.add(trade.tdTgAc!!)
-                    }
+            val recentAccountList = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
+
+            for (recentHistory in recentAccountList){
+                if (!myAccountList.contains(recentHistory.tdTgAc) && !checkBookmarkList.contains(recentHistory.tdTgAc)){
+                    val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).get()
+                    val recentUser = userRepository.findById(recentAccount.user.id).get()
+                    val recentCorporation = corporationRepository.findById(recentAccount.acCpCode).get()
+                    accountDetailList.add(RecentTradeRes(recentUser.name, recentAccount.acNo, recentCorporation.cpName, false, recentCorporation.cpLogo, recentHistory.tdDt))
                 }
             }
         }
@@ -82,7 +92,7 @@ class RemitServiceImpl(
         val remitAccount = accountRepository.findById(remitInfoReq.acSend).get()
 
         // 출금 거래 내역
-        val tradeRemitHistory = TradeHistory("",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+        val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
         val accountRemit = accountRepository.findById(remitInfoReq.acSend).get()
         if (accountRemit.balance >= value){
@@ -95,85 +105,48 @@ class RemitServiceImpl(
 
         // 입금 거래 내역
         val depositAccount = accountRepository.findById(remitInfoReq.acReceive).get()
-        val depositRemitHistory = TradeHistory("",value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
+        val depositRemitHistory = TradeHistory("입금",value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
         val accountDeposit = accountRepository.findById(remitInfoReq.acReceive).get()
+        accountDeposit.deposit(value)
         accountRepository.save(accountDeposit)
 
     }
 
     override fun postRemitPhone(remitPhoneReq: RemitPhoneReq) {
+        println("시작")
         val phone = remitPhoneReq.phone
         val value = remitPhoneReq.value
         val date = LocalDateTime.now()
 
-        if (userRepository.existsByPhone(phone)){
+        val user = userRepository.findByPhone(phone)!!
+        val userAccount = accountRepository.findByAcNo(user.account!!)!!
+        val userCorporation = corporationRepository.findByCpCode(userAccount.acCpCode!!)!!
 
-            val remitTarget = remitPhoneReq.acTag
-            val targetAccount = remitPhoneReq.acReceive
-            val receive = remitPhoneReq.receive
-            val send = remitPhoneReq.send
-            val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
+        val remitTarget = userCorporation.cpName
+        val targetAccount = userAccount.acNo
+        val receive = remitPhoneReq.receive
+        val send = remitPhoneReq.send
+        val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
 
-            // 출금 거래 내역
-            val tradeRemitHistory = TradeHistory("",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
-            tradeHistoryRepository.save(tradeRemitHistory)
-            val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
-            if (accountRemit.balance >= value){
-                accountRemit.withdraw(value)
-                accountRepository.save(accountRemit)
-            }else{
-                throw RemitFailedException()
-            }
-
-            // 입금 거래 내역
-            val depositAccount = accountRepository.findById(remitPhoneReq.acReceive).get()
-            val depositRemitHistory = TradeHistory("",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
-            tradeHistoryRepository.save(depositRemitHistory)
-            val accountDeposit = accountRepository.findById(remitPhoneReq.acReceive).get()
-            accountRepository.save(accountDeposit)
-
+        // 출금 거래 내역
+        val tradeRemitHistory = TradeHistory("",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+        tradeHistoryRepository.save(tradeRemitHistory)
+        val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
+        if (accountRemit.balance >= value){
+            accountRemit.withdraw(value)
+            accountRepository.save(accountRemit)
         }else{
-            // 비회원 user와 account 만들기
-            val acNo = remitPhoneReq.acReceive
-            val balance = 100000000
-            val user = User("", "", phone, Timestamp.valueOf(LocalDateTime.now()), 2, "비회원")
-            userRepository.save(user)
-
-            val acType = 1
-            val acName = remitPhoneReq.acTag
-            val corporation = corporationRepository.findByCpName(acName)!!
-            val acCpCode = corporation.cpCode
-            val accountProduct = accountProductRepository.findByCpCode(acCpCode)
-            val acPdCode = accountProduct.acPdCode
-            val acStatus = 10
-            val acDate = LocalDateTime.now()
-
-            val account = Account(acNo, balance, user, acType, acName, acPdCode, acCpCode, acStatus, acDate)
-            accountRepository.save(account)
-
-            val receive = remitPhoneReq.receive
-            val send = remitPhoneReq.send
-            val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
-
-            // 출금 거래 내역
-            val tradeRemitHistory = TradeHistory("", value, date, 2, acName, acNo, receive, send, remitAccount)
-            tradeHistoryRepository.save(tradeRemitHistory)
-            val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
-            if (accountRemit.balance >= value){
-                accountRemit.withdraw(value)
-                accountRepository.save(accountRemit)
-            }else{
-                throw RemitFailedException()
-            }
-
-            // 입금 거래 내역
-            val depositAccount = accountRepository.findById(remitPhoneReq.acReceive).get()
-            val depositRemitHistory = TradeHistory("",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
-            tradeHistoryRepository.save(depositRemitHistory)
-            val accountDeposit = accountRepository.findById(remitPhoneReq.acReceive).get()
-            accountRepository.save(accountDeposit)
+            throw RemitFailedException()
         }
+
+        // 입금 거래 내역
+        val depositAccount = accountRepository.findById(targetAccount).get()
+        val depositRemitHistory = TradeHistory("",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
+        tradeHistoryRepository.save(depositRemitHistory)
+        val accountDeposit = accountRepository.findById(targetAccount).get()
+        accountDeposit.deposit(value)
+        accountRepository.save(accountDeposit)
 
     }
 

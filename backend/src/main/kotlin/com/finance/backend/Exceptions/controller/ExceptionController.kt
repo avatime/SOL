@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.naming.AuthenticationException
 
-@ControllerAdvice
+//@ControllerAdvice
 class ExceptionController {
 
     @ExceptionHandler(InsufficientBalanceException::class)
@@ -86,5 +86,10 @@ class ExceptionController {
     @ExceptionHandler(NoCorporationException::class)
     fun handleNoCorporation(e: Exception) : ResponseEntity<String>{
         return ResponseEntity.status(404).body("Cannot Found")
+    }
+
+    @ExceptionHandler(RemitFailedException::class)
+    fun handleRemitFailed(e: Exception) : ResponseEntity<String>{
+        return ResponseEntity.status(500).body("Remit failed")
     }
 }

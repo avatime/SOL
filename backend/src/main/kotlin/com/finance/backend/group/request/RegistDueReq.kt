@@ -7,7 +7,7 @@ data class RegistDueReq(
         @JsonProperty("pa_id")
         var paId : Long,
         @JsonProperty("dues_val")
-        var duesVal : Int,
+        var duesVal : Long,
         @JsonProperty("dues_due")
         var duesDue : String?,
         @JsonProperty("member_list")
