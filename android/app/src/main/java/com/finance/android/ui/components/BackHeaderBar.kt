@@ -15,21 +15,21 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import com.finance.android.R
 
 @Composable
 fun BackHeaderBar(
     modifier: Modifier = Modifier,
     text: String,
+    backgroundColor: Color = MaterialTheme.colorScheme.background,
     onClickBack: (() -> Unit)? = null
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = MaterialTheme.colorScheme.background), contentAlignment = Alignment.Center
+            .background(color = backgroundColor),
+        contentAlignment = Alignment.Center
     ) {
         Column(modifier = modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start) {
             IconButton(

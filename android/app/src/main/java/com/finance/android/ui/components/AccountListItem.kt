@@ -2,6 +2,7 @@ package com.finance.android.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
@@ -10,9 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -72,18 +73,20 @@ private fun Draw(
 
 @Composable
 fun AccountListItem_Check(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
     accountNumber: String,
     balance: Int,
     accountName: String,
     companyLogoPath: String,
     checked: Boolean,
-    onClickCheck: () -> Unit
+    onClickItem: () -> Unit
 ) {
     Draw(
-        modifier = modifier.clickable {
-            onClickCheck()
-        },
+        modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
+            .clickable { onClickItem() }
+            .padding(contentPadding),
         accountNumber = accountNumber,
         balance = balance,
         accountName = accountName,
@@ -91,7 +94,7 @@ fun AccountListItem_Check(
         trailing = {
             Icon(
                 Icons.Filled.CheckCircle,
-                contentDescription = stringResource(id = R.string.btn_all),
+                contentDescription = "checkd",
                 tint = if (checked) MaterialTheme.colorScheme.primary else Disabled
             )
         }
@@ -137,7 +140,7 @@ private fun PreviewAccountListItem_Check() {
         accountName = "accountName",
         companyLogoPath = "companyLogoPath",
         checked = true,
-        onClickCheck = {}
+        onClickItem = {}
     )
 }
 
