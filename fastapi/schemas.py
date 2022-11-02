@@ -3,7 +3,7 @@ from pydantic import BaseModel
 
 
 class userReq(BaseModel):
-    user_id: Optional[bytes]
+    phone: Optional[str]
 
 
 class Account(BaseModel):
