@@ -64,6 +64,9 @@ class AccountServiceImpl(
             acRmReg = !acRmReg!!
         }
         accountRepository.save(account)
+        val user = userRepository.findById(account.user.id).get()
+        user.account(acNo)
+        userRepository.save(user)
     }
 
     override fun registerBookmarkAccount(acNo: String, token: String) {

@@ -6,14 +6,8 @@ class RemitPhoneReq {
     @JsonProperty("ac_name")
     val acName: String = ""
 
-    @JsonProperty("ac_tag")
-    val acTag: String = ""
-
     @JsonProperty("ac_send")
     val acSend: String = ""
-
-    @JsonProperty("ac_receive")
-    val acReceive: String = ""
 
     val value: Long = 0
 
