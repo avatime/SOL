@@ -9,17 +9,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.finance.android.domain.dto.response.BankInfoResponseDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.ui.components.AccountLikeItem
 import com.finance.android.utils.Response
-import com.finance.android.viewmodels.BankViewModel
 import com.finance.android.viewmodels.RemitViewModel
 
 @Composable
 fun RecoScreen(
     remitViewModel: RemitViewModel,
-    bankViewModel: BankViewModel,
     modifier: Modifier = Modifier
 ) {
     fun launch() {

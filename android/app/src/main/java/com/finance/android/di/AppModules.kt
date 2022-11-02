@@ -12,17 +12,14 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModules {
     @Provides
-    @Singleton
     fun provideSampleRepository(): SampleRepository = DummyRepositoryImpl()
 
     @Provides
-    @Singleton
     fun provideUserRepository(
         userService: UserService
     ): UserRepository = UserRepositoryImpl(userService)
@@ -38,14 +35,12 @@ class AppModules {
     ) : BankRepository = BankRepositoryImpl(bankService)
 
     @Provides
-    @Singleton
     fun provideBaseRepository(baseService: BaseService): BaseRepository = BaseRepositoryImpl(baseService)
 
     @Provides
     fun provideRetrofit(): Retrofit = RetrofitClient.getInstance()
 
     @Provides
-    @Singleton
     fun provideUserService(
         retrofit: Retrofit
     ): UserService = retrofit.create(UserService::class.java)
@@ -61,7 +56,6 @@ class AppModules {
     ) : BankService = retrofit.create(BankService::class.java)
 
     @Provides
-    @Singleton
     fun provideBaseService(
         retrofit: Retrofit
     ): BaseService = retrofit.create(BaseService::class.java)

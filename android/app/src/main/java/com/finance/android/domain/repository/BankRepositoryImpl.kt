@@ -10,7 +10,9 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import retrofit2.HttpException
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class BankRepositoryImpl @Inject constructor(
     private val bankService: BankService
 ) :BankRepository {
