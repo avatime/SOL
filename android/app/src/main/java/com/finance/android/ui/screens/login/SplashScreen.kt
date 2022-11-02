@@ -16,6 +16,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
+import coil.request.repeatCount
 import coil.size.Size
 import com.bumptech.glide.Glide
 import com.finance.android.R
@@ -41,7 +42,7 @@ fun SplashScreen() {
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(context).data(data = R.drawable.finance_splash).apply(block = {
                     size(Size.ORIGINAL)
-                }).build(), imageLoader = imageLoader
+                }).repeatCount(0).build(), imageLoader = imageLoader
             ),
             contentDescription = null,
             modifier = Modifier.fillMaxSize(),
