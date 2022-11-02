@@ -1,4 +1,4 @@
-FROM python:3.9.5
+FROM python:3.7
 WORKDIR /var/jenkins_home/workspace/data/fastapi
 COPY requirements.txt ./
 
