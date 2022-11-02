@@ -2,6 +2,7 @@ from fastapi import FastAPI, Response, status
 from fastapi.params import Depends
 from sqlalchemy.orm import Session
 # from starlette.responses import RedirectResponse
+from apscheduler.schedulers.background import BackgroundScheduler
 import function
 import models
 import schemas
@@ -10,8 +11,10 @@ from finance import finance_create
 
 # models.Base.metadata.create_all(bind=engine)
 models.Base.metadata.bind = engine
-
 app = FastAPI()
+s = BackgroundScheduler()
+s.add_job(finance_create, 'cron', hour='9', minute='10')
+s.start()
 
 
 def get_db():
