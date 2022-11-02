@@ -2,7 +2,6 @@ package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -15,16 +14,17 @@ import com.finance.android.utils.Const
 
 @Composable
 fun MainFragment(navController: NavController) {
+    val innerNavController = rememberNavController()
     Scaffold(
         bottomBar = {
             BottomNavBar(
-                navController = navController,
+                navController = innerNavController,
                 modifier = Modifier
             )
         }
     ) { innerPaddingModifier ->
         NavHost(
-            navController = rememberNavController(),
+            navController = innerNavController,
             startDestination = Const.HOME_SCREEN,
             modifier = Modifier.padding(innerPaddingModifier)
         ) {
@@ -38,8 +38,7 @@ fun MainFragment(navController: NavController) {
                 StockScreen()
             }
             composable(Const.MORE_SCREEN) {
-//                MoreScreen(navController = navController)
-                CalendarScreen()
+                MoreScreen(navController = navController)
             }
             composable(Const.ASSET_FRAGMENT) {
                 AssetFragment(navController = navController)

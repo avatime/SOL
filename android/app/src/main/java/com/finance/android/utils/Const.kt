@@ -25,5 +25,6 @@ object Const {
         const val REMIT = "route_remit"
         const val REMITOK = "route_remitOK"
         const val ADD_ASSET = "route_add_asset"
+        const val ATTENDANCE = "route_attendance"
     }
 }

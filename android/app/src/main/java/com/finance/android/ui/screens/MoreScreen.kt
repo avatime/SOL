@@ -7,7 +7,9 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavController
+import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 
 
@@ -19,10 +21,12 @@ fun MoreScreen(navController: NavController) {
             .verticalScroll(rememberScrollState())
     ) {
         Button(
-            onClick = { },
+            onClick = {
+                navController.navigate(Const.Routes.ATTENDANCE)
+            },
             modifier = Modifier.withBottomButton()
         ) {
-            Text("여기는 MoreScreen 입니다람쥐")
+            Text("출석체크")
         }
     }
 }

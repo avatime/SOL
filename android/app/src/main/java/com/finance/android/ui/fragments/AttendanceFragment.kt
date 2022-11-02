@@ -11,17 +11,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.utils.ext.withBottomButton
@@ -30,7 +26,6 @@ import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
-import com.kizitonwose.calendar.core.firstDayOfWeekFromLocale
 import java.time.DayOfWeek
 import java.time.YearMonth
 import java.time.format.TextStyle
@@ -39,9 +34,16 @@ import java.util.*
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview(showBackground = false)
 @Composable
-fun CalendarScreen() {
+fun AttendanceFragment(
+    onClose: () -> Unit = {}
+) {
     Scaffold(
-        topBar = { BackHeaderBar(text = "출석체크", modifier = Modifier) }
+        topBar = {
+            BackHeaderBar(
+                text = "출석체크",
+                onClickBack = onClose
+            )
+        }
     ) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -61,7 +63,7 @@ fun CalendarScreen() {
             ShowCalendar()
 
             Button(
-                onClick = { },
+                onClick = {  },
                 modifier = Modifier.withBottomButton()
             ) {
                 Text("절대 누르지 마시오")
@@ -97,7 +99,11 @@ fun ShowCalendar() {
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = currentMonth.monthValue.toString() + "월", fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
+            Text(
+                text = currentMonth.monthValue.toString() + "월",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
             Text(text = "이번 달 출석한 횟수", fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
@@ -134,13 +140,12 @@ fun Day(day: CalendarDay) {
             .aspectRatio(1f), // This is important for square sizing!
         contentAlignment = Alignment.Center
     ) {
-        if(day.position == DayPosition.MonthDate && day.date.dayOfMonth % 2 == 0){
+        if (day.position == DayPosition.MonthDate && day.date.dayOfMonth % 2 == 0) {
             Image(
                 painter = painterResource(R.drawable.paw),
                 contentDescription = null, // 필수 param
             )
-        }
-        else{
+        } else {
             Text(
                 text = day.date.dayOfMonth.toString(),
                 color = if (day.position == DayPosition.MonthDate) Color.Black else Color.White
