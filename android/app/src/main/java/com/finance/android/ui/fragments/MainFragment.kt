@@ -2,6 +2,7 @@ package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -9,10 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.finance.android.ui.components.BottomNavBar
-import com.finance.android.ui.screens.HomeScreen
-import com.finance.android.ui.screens.MoreScreen
-import com.finance.android.ui.screens.ProductScreen
-import com.finance.android.ui.screens.StockScreen
+import com.finance.android.ui.screens.*
 import com.finance.android.utils.Const
 
 @Composable
@@ -40,7 +38,8 @@ fun MainFragment(navController: NavController) {
                 StockScreen()
             }
             composable(Const.MORE_SCREEN) {
-                MoreScreen()
+//                MoreScreen(navController = navController)
+                CalendarScreen()
             }
             composable(Const.ASSET_FRAGMENT) {
                 AssetFragment(navController = navController)
