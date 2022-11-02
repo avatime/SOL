@@ -6,6 +6,7 @@ import com.finance.android.domain.dto.request.ReLoginRequestDto
 import com.finance.android.domain.dto.request.SignupRequestDto
 import com.finance.android.domain.dto.response.LoginResponseDto
 import retrofit2.http.Body
+import retrofit2.http.Field
 import retrofit2.http.POST
 
 interface UserService {
@@ -21,4 +22,7 @@ interface UserService {
 
     @POST("auth/signup")
     suspend fun signup(@Body signupRequestDto: SignupRequestDto): LoginResponseDto
+
+    @POST("auth/register")
+    suspend fun createAsset(@Field("user_id") userId: String)
 }

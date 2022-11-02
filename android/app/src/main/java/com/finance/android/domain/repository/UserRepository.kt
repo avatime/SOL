@@ -15,4 +15,5 @@ interface UserRepository {
     suspend fun login(@Body loginRequestDto: LoginRequestDto): LoginResponseDto
     suspend fun reLogin(@Body reLoginRequestDto: ReLoginRequestDto): LoginResponseDto
     suspend fun signup(@Body signupRequestDto: SignupRequestDto): LoginResponseDto
+    suspend fun createAsset(userId: String)
 }
