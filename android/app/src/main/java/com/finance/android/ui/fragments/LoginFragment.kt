@@ -13,7 +13,6 @@ import com.finance.android.ui.screens.login.InputPasswordType
 import com.finance.android.ui.screens.login.SplashScreen
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.LoginViewModel
-import kotlinx.coroutines.delay
 
 @Composable
 fun LoginFragment(
@@ -21,10 +20,11 @@ fun LoginFragment(
     loginViewModel: LoginViewModel = hiltViewModel()
 ) {
     val refreshToken = UserStore(LocalContext.current).getValue(UserStore.KEY_REFRESH_TOKEN)
+    val password = UserStore(LocalContext.current).getValue(UserStore.KEY_PASSWORD)
     var showInputPassword by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
-        // 유지 함수
-        delay(3700)
+        // TODO 배포할 때, delay 풀기
+//        delay(3700)
         refreshToken.collect {
             if (it.isEmpty()) {
                 navController.navigate(Const.Routes.SIGNUP) {
@@ -34,6 +34,25 @@ fun LoginFragment(
                 }
                 return@collect
             }
+
+            // TODO 배포할 때, 삭제할 껏 (개발용 자동로그인)
+            password.collect { pass ->
+                if (pass.isEmpty()) {
+                    return@collect
+                }
+                loginViewModel.password.value = pass
+                loginViewModel.login(
+                    onSuccess = {
+                        navController.navigate(Const.Routes.MAIN) {
+                            popUpTo(Const.Routes.LOGIN) {
+                                inclusive = true
+                            }
+                        }
+                    },
+                    onErrorPassword = {}
+                )
+            }
+            // TODO 개발용 자동로그인 끝
 
             showInputPassword = true
         }
