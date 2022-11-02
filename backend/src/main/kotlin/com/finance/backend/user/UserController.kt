@@ -22,7 +22,7 @@ class UserController (private val userService: UserService) {
         return try {
             ResponseEntity.status(200).body(userService.changeProfile(accessToken, changeProfileDto.profile_no))
         } catch (e : Exception) {
-            ResponseEntity.status(300).body(accessToken)
+            ResponseEntity.status(300).body("accessToken")
         }
     }
 
