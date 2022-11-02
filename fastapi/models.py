@@ -32,6 +32,7 @@ class User(Base):
     __tablename__ = 'user'
     id = Column(LargeBinary, primary_key=True)
     name = Column(String(30))
+    phone = Column(String(255))
 
 
 class TradeHistory(Base):

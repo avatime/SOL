@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Response, status
 from starlette.responses import JSONResponse
 from fastapi.params import Depends
 # from starlette.responses import RedirectResponse
@@ -31,11 +31,13 @@ async def say_hello(name: str):
     return JSONResponse({"message": f"Hello {name}"})
 
 
-@app.post("/data/v1/user/register")
-async def test(user: schemas.userReq, db: Session = Depends(get_db)):
-    # user_id = b'1\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
-    function.create(user.user_id, db)
-
+@app.post("/data/v1/user/register", status_code=200)
+async def test(user: schemas.userReq, response: Response, db: Session = Depends(get_db)):
+    try:
+        user_id = db.query(models.User).filter(models.User.phone == user.phone).first().id
+        function.create(user_id, db)
+    except:
+        response.status_code = status.HTTP_409_CONFLICT
 
 @app.get("/data/v1/random")
 async def a():
