@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 interface AccountService {
+    fun getAccount(token: String): List<BankAccountRes>
     fun getAccountAll(token: String): List<BankAccountRes>
     fun registerAccount(acNoList: List<String>)
     fun registerRemitAccount(acNo: String)

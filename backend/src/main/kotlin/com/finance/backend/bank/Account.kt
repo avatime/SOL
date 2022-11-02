@@ -70,4 +70,12 @@ class Account (
         fun deposit(money: Long){
                 this.balance += money
         }
+
+        fun acreg(status: Boolean){
+                this.acReg = status
+        }
+
+        fun acrmreg(status: Boolean){
+                this.acRmReg = status
+        }
 }
