@@ -18,4 +18,21 @@ class DailyViewModel @Inject constructor(
     private val dailyRepository: DailyRepository,
 ) : BaseViewModel(application, baseRepository) {
 
+    fun createAttendanceAndLoad() {
+        viewModelScope.launch {
+            createAttendance {
+                println("이거 되나?")
+            }
+        }
+    }
+
+    private suspend fun createAttendance(onSuccess: suspend () -> Unit) {
+        this@DailyViewModel.run {
+            dailyRepository.test()
+        }.collect { res ->
+            if (res is Response.Success) {
+                onSuccess()
+            }
+        }
+    }
 }

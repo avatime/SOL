@@ -8,4 +8,5 @@ import retrofit2.http.Body
 
 interface DailyRepository {
     suspend fun attendance()
+    suspend fun test()
 }
