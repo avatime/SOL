@@ -75,7 +75,7 @@ fun HeaderAssetTabBar(
                 AssetBankScreen(navController)
             }
             1 -> {
-                AssetCardScreen()
+                AssetCardScreen(navController)
             }
             2 -> {
                 AssetLifeScreen(navController)
