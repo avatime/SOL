@@ -1,7 +1,9 @@
 package com.finance.android.utils
 
 object Const {
-    const val WEB_API = "https://k7a403.p.ssafy.io/api/v1/"
+    const val WEB_API = "https://k7a403.p.ssafy.io/"
+    const val API_PATH = "api/v1"
+    const val DATA_PATH = "data/v1"
 
     const val HOME_SCREEN = "home"
     const val PRODUCT_SCREEN = "product"

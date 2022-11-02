@@ -4,6 +4,7 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.datastore.UserStore
+import com.finance.android.domain.dto.request.CreateAssetRequestDto
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.repository.*
 import com.finance.android.utils.Response
@@ -32,20 +33,36 @@ class AddAssetViewModel @Inject constructor(
         }
     }
 
+    fun getLoadState(): Response<Unit> {
+        val arr = arrayOf(accountList)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
     fun onClickSelectAll() {
         selectedAll.value = !selectedAll.value
     }
 
     private suspend fun createAsset(onSuccess: suspend () -> Unit) {
-        UserStore(getApplication()).getValue(UserStore.KEY_USER_ID)
+        UserStore(getApplication()).getValue(UserStore.KEY_PHONE_NUMBER)
             .collect {
+                val createAssetRequestDto = CreateAssetRequestDto(
+                    phoneNumber = it
+                )
                 this@AddAssetViewModel.run {
-                    userRepository.createAsset(it)
-                }.collect {
-                    if (it is Response.Success) {
-                        onSuccess()
-                    }
+                    userRepository.createAsset(createAssetRequestDto)
                 }
+                    .collect { res ->
+                        if (res is Response.Success) {
+                            onSuccess()
+                        }
+                    }
             }
     }
 

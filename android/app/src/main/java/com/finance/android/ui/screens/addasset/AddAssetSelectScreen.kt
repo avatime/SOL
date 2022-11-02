@@ -43,20 +43,21 @@ fun AddAssetSelectScreen(
         addAssetViewModel.createAssetAndLoad()
     }
 
-    when (addAssetViewModel.isLoading.value) {
-        true -> Loading(
-            modifier = modifier,
-            onClickBack = onClickBack
-        )
-        false -> Screen(
+    when (addAssetViewModel.getLoadState()) {
+        is Response.Success -> Screen(
             modifier = modifier,
             onClickBack = onClickBack,
             onClickNext = onClickNext,
             selectedAll = addAssetViewModel.selectedAll.value,
             onClickSelectAll = { addAssetViewModel.onClickSelectAll() },
             accountList = (addAssetViewModel.accountList.value as Response.Success).data,
-
         )
+        else -> {
+            Loading(
+                modifier = modifier,
+                onClickBack = onClickBack
+            )
+        }
     }
 }
 

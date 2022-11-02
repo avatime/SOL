@@ -1,6 +1,7 @@
 package com.finance.android.domain
 
 import com.finance.android.utils.Const
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
@@ -19,28 +20,24 @@ object RetrofitClient {
         return instance!!
     }
 
-    private fun initInstance(
-        accessToken: String? = null,
-        refreshToken: String? = null
-    ) {
+    private fun initInstance() {
         val client = OkHttpClient
             .Builder()
+            .addInterceptor(
+                Interceptor {
+                    val original: Request = it.request()
+                    val request = original.newBuilder()
+                        .header("Content-Type", "application/json")
+                        .header("access_token", accessToken ?: "")
+                        .header("refresh_token", refreshToken ?: "")
+                        .build()
+                    it.proceed(request)
+                }
+            )
             .addInterceptor(
                 HttpLoggingInterceptor()
                     .setLevel(HttpLoggingInterceptor.Level.BODY)
             )
-            .addNetworkInterceptor {
-                val requestBuilder: Request.Builder = it.request()
-                    .newBuilder()
-                requestBuilder.header("Content-Type", "application/json")
-                if (accessToken != null) {
-                    requestBuilder.header("access_token", accessToken)
-                }
-                if (refreshToken != null) {
-                    requestBuilder.header("refresh_token", refreshToken)
-                }
-                it.proceed(requestBuilder.build())
-            }
             .build()
         instance = Retrofit.Builder()
             .baseUrl(Const.WEB_API)
@@ -55,12 +52,12 @@ object RetrofitClient {
     ) {
         this.accessToken = accessToken
         this.refreshToken = refreshToken
-        initInstance(accessToken = accessToken, refreshToken = refreshToken)
+        initInstance()
     }
 
     fun resetAccessToken(accessToken: String) {
         this.accessToken = accessToken
-        initInstance(accessToken = accessToken, refreshToken = this.refreshToken)
+        initInstance()
     }
 
     fun logout() {
