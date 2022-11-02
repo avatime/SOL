@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Response, status
 from fastapi.params import Depends
-# from starlette.responses import RedirectResponse
-import models, schemas
-from Connection import SessionLocal, engine
 from sqlalchemy.orm import Session
+# from starlette.responses import RedirectResponse
 import function
+import models
+import schemas
+from Connection import SessionLocal, engine
+from finance import finance_create
 
 # models.Base.metadata.create_all(bind=engine)
 models.Base.metadata.bind = engine
@@ -30,5 +32,6 @@ async def test(user: schemas.userReq, response: Response, db: Session = Depends(
     try:
         user_id = db.query(models.User).filter(models.User.phone == user.phone).first().id
         function.create(user_id, db)
+
     except:
         response.status_code = status.HTTP_409_CONFLICT
