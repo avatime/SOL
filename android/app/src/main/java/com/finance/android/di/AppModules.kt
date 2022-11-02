@@ -47,6 +47,11 @@ class AppModules {
     ): StockRepository = StockRepositoryImpl(stockService)
 
     @Provides
+    fun provideDailyRepository(
+        dailyService: DailyService
+    ): DailyRepository = DailyRepositoryImpl(dailyService)
+
+    @Provides
     fun provideBaseRepository(baseService: BaseService): BaseRepository = BaseRepositoryImpl(baseService)
 
     @Provides
@@ -86,4 +91,9 @@ class AppModules {
     fun provideStockService(
         retrofit: Retrofit
     ): StockService = retrofit.create(StockService::class.java)
+
+    @Provides
+    fun provideDailyService(
+        retrofit: Retrofit
+    ) : DailyService = retrofit.create(DailyService::class.java)
 }
