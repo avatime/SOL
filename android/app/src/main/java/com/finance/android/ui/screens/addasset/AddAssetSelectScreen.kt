@@ -24,10 +24,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.ui.components.AccountListItem_Check
-import com.finance.android.ui.components.BackHeaderBar
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.TextButton
+import com.finance.android.domain.dto.response.CardInfoResponseDto
+import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
@@ -53,7 +51,10 @@ fun AddAssetSelectScreen(
             onClickSelectAll = { addAssetViewModel.onClickSelectAll() },
             accountList = (addAssetViewModel.accountList.value as Response.Success).data,
             accountCheckList = addAssetViewModel.accountCheckList,
-            onClickAccountItem = { addAssetViewModel.onClickAccountItem(it) }
+            onClickAccountItem = { addAssetViewModel.onClickAccountItem(it) },
+            cardList = (addAssetViewModel.cardList.value as Response.Success).data,
+            cardCheckList = addAssetViewModel.cardCheckList,
+            onClickCardItem = { addAssetViewModel.onClickCardItem(it) }
         )
         else -> {
             Loading(
@@ -132,17 +133,19 @@ private fun Loading(
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview
 @Composable
 private fun Screen(
     modifier: Modifier = Modifier,
-    onClickBack: () -> Unit = {},
-    onClickNext: () -> Unit = {},
-    accountList: MutableList<BankAccountResponseDto> = accountListForPreview,
-    accountCheckList: Array<MutableState<Boolean>> = accountCheckListForPreview,
-    selectedAll: Boolean = false,
-    onClickSelectAll: () -> Unit = {},
-    onClickAccountItem: (index: Int) -> Unit = {}
+    onClickBack: () -> Unit,
+    onClickNext: () -> Unit,
+    selectedAll: Boolean,
+    onClickSelectAll: () -> Unit,
+    accountList: MutableList<BankAccountResponseDto>,
+    accountCheckList: Array<MutableState<Boolean>>,
+    onClickAccountItem: (index: Int) -> Unit,
+    cardList: MutableList<CardInfoResponseDto>,
+    cardCheckList: Array<MutableState<Boolean>>,
+    onClickCardItem: (index: Int) -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -166,7 +169,7 @@ private fun Screen(
             Text(
                 modifier = modifier
                     .padding(start = dimensionResource(id = R.dimen.padding_medium).value.dp),
-                text = stringResource(id = R.string.msg_find_asset, accountList.size),
+                text = stringResource(id = R.string.msg_find_asset, accountList.size, cardList.size),
                 style = TextStyle(
                     fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
                     lineHeight = dimensionResource(id = R.dimen.font_size_medium).value.sp
@@ -250,7 +253,11 @@ private fun Screen(
                         accountCheckList = accountCheckList,
                         onClickAccountItem = onClickAccountItem
                     )
-                    1 -> Card()
+                    1 -> Card(
+                        cardList = cardList,
+                        cardCheckList = cardCheckList,
+                        onClickCardItem = onClickCardItem
+                    )
                     2 -> Stock()
                     else -> Insurance()
                 }
@@ -265,12 +272,11 @@ private fun Screen(
     }
 }
 
-@Preview
 @Composable
 private fun Account(
-    accountList: MutableList<BankAccountResponseDto> = accountListForPreview,
-    accountCheckList: Array<MutableState<Boolean>> = accountCheckListForPreview,
-    onClickAccountItem: (index: Int) -> Unit = {},
+    accountList: MutableList<BankAccountResponseDto>,
+    accountCheckList: Array<MutableState<Boolean>>,
+    onClickAccountItem: (index: Int) -> Unit,
 ) {
     LazyColumn() {
         items(
@@ -293,15 +299,31 @@ private fun Account(
     }
 }
 
-@Preview
 @Composable
-private fun Card() {
-    Column {
-        Text(text = "Card")
+private fun Card(
+    cardList: MutableList<CardInfoResponseDto>,
+    cardCheckList: Array<MutableState<Boolean>>,
+    onClickCardItem: (index: Int) -> Unit,
+) {
+    LazyColumn() {
+        items(
+            count = cardList.size,
+            key = { it },
+            itemContent = {
+                val item = cardList[it]
+                val checked = cardCheckList[it].value
+                CardListItem_Check(
+                    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                    cardName = item.cardName,
+                    cardImgPath = item.cardImgPath,
+                    checked = checked,
+                    onClickItem = { onClickCardItem(it) }
+                )
+            }
+        )
     }
 }
 
-@Preview
 @Composable
 private fun Stock() {
     Column {
@@ -309,7 +331,6 @@ private fun Stock() {
     }
 }
 
-@Preview
 @Composable
 private fun Insurance() {
     Column {
@@ -317,16 +338,56 @@ private fun Insurance() {
     }
 }
 
-private val accountListForPreview = MutableList(100) {
-    BankAccountResponseDto(
-        acName = "acName",
-        acNo = "acNo",
-        balance = 10000,
-        cpName = "cpName",
-        cpLogo = "cpLogo"
+@Preview
+@Composable
+private fun PreviewScreen() {
+    Screen(
+        onClickBack = { /*TODO*/ },
+        onClickNext = { /*TODO*/ },
+        selectedAll = false,
+        onClickSelectAll = { /*TODO*/ },
+        accountList = mutableListOf(),
+        accountCheckList = arrayOf(),
+        onClickAccountItem = {},
+        cardList = mutableListOf(),
+        cardCheckList = arrayOf(),
+        onClickCardItem ={}
     )
 }
 
-private val accountCheckListForPreview = Array(100) {
-    mutableStateOf(it % 2 == 0)
+@Preview
+@Composable
+private fun PreviewAccount() {
+    Account(
+        accountList = MutableList(5) {
+            BankAccountResponseDto(
+                acName = "acName",
+                acNo = "acNo",
+                balance = 10000,
+                cpName = "cpName",
+                cpLogo = "cpLogo"
+            )
+        },
+        accountCheckList = Array(5) {
+            mutableStateOf(it % 2 == 0)
+        },
+        onClickAccountItem = {}
+    )
+}
+
+@Preview
+@Composable
+private fun PreviewCard() {
+    Card(
+        cardList = MutableList(5) {
+            CardInfoResponseDto(
+                cardName = "cardName",
+                cardImgPath = "path"
+            )
+        },
+        cardCheckList = Array(5) {
+            mutableStateOf(it % 2 == 0)
+        },
+        onClickCardItem = {}
+    )
 }
