@@ -2,7 +2,7 @@ package com.finance.android.ui.fragments
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -11,23 +11,13 @@ import com.finance.android.ui.screens.addasset.AddAssetRepresentScreen
 import com.finance.android.ui.screens.addasset.AddAssetResultScreen
 import com.finance.android.ui.screens.addasset.AddAssetSelectScreen
 import com.finance.android.utils.Const
+import com.finance.android.viewmodels.AddAssetViewModel
 
 @Composable
 fun AddAssetFragment(
     modifier: Modifier = Modifier,
+    addAssetViewModel: AddAssetViewModel = hiltViewModel(),
     onClose: () -> Unit
-) {
-    DrawFragment(
-        modifier = modifier,
-        onClose = onClose
-    )
-}
-
-@Preview
-@Composable
-fun DrawFragment(
-    modifier: Modifier = Modifier,
-    onClose: () -> Unit = {}
 ) {
     val navController = rememberNavController()
     NavHost(
@@ -47,6 +37,7 @@ fun DrawFragment(
         }
         composable(Const.ADD_ASSET_SELECT_SCREEN) {
             AddAssetSelectScreen(
+                addAssetViewModel = addAssetViewModel,
                 onClickBack = {
                     navController.popBackStack()
                 },
