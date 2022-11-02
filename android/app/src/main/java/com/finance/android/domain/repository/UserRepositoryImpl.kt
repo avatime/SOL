@@ -13,8 +13,10 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
+import javax.inject.Singleton
 import kotlin.random.Random
 
+@Singleton
 class UserRepositoryImpl @Inject constructor(
     private val userService: UserService
 ) : UserRepository {
@@ -42,5 +44,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun signup(signupRequestDto: SignupRequestDto): LoginResponseDto {
         return userService.signup(signupRequestDto)
+    }
+
+    override suspend fun createAsset(userId: String) {
+//        return userService.createAsset(userId)
     }
 }

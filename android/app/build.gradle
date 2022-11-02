@@ -93,4 +93,5 @@ dependencies {
     implementation "io.coil-kt:coil-gif:2.1.0"
 
     implementation("androidx.biometric:biometric:1.1.0")
+    implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 }

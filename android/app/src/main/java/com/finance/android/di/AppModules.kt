@@ -3,30 +3,20 @@ package com.finance.android.di
 import com.finance.android.domain.DummyRepositoryImpl
 import com.finance.android.domain.RetrofitClient
 import com.finance.android.domain.repository.*
-import com.finance.android.domain.service.BankService
-import com.finance.android.domain.service.BaseService
-import com.finance.android.domain.service.RemitService
-import com.finance.android.domain.repository.BaseRepositoryImpl
-import com.finance.android.domain.repository.SampleRepository
-import com.finance.android.domain.repository.UserRepository
-import com.finance.android.domain.repository.UserRepositoryImpl
-import com.finance.android.domain.service.UserService
+import com.finance.android.domain.service.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 class AppModules {
     @Provides
-    @Singleton
     fun provideSampleRepository(): SampleRepository = DummyRepositoryImpl()
 
     @Provides
-    @Singleton
     fun provideUserRepository(
         userService: UserService
     ): UserRepository = UserRepositoryImpl(userService)
@@ -40,6 +30,21 @@ class AppModules {
     fun provideBankRepository (
         bankService: BankService
     ) : BankRepository = BankRepositoryImpl(bankService)
+
+    @Provides
+    fun provideCardRepository(
+        cardService: CardService
+    ): CardRepository = CardRepositoryImpl(cardService)
+
+    @Provides
+    fun provideInsuranceRepository(
+        insuranceService: InsuranceService
+    ): InsuranceRepository = InsuranceRepositoryImpl(insuranceService)
+
+    @Provides
+    fun provideStockRepository(
+        stockService: StockService
+    ): StockRepository = StockRepositoryImpl(stockService)
 
     @Provides
     fun provideBaseRepository(baseService: BaseService): BaseRepository = BaseRepositoryImpl(baseService)
@@ -66,4 +71,19 @@ class AppModules {
     fun provideBaseService(
         retrofit: Retrofit
     ): BaseService = retrofit.create(BaseService::class.java)
+
+    @Provides
+    fun provideCardService(
+        retrofit: Retrofit
+    ): CardService = retrofit.create(CardService::class.java)
+
+    @Provides
+    fun provideInsuranceService(
+        retrofit: Retrofit
+    ): InsuranceService = retrofit.create(InsuranceService::class.java)
+
+    @Provides
+    fun provideStockService(
+        retrofit: Retrofit
+    ): StockService = retrofit.create(StockService::class.java)
 }
