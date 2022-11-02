@@ -37,58 +37,46 @@ class RemitServiceImpl(
 ) : RemitService {
 
     override fun getRecommendationAccount(token: String): List<RecentTradeRes> {
-        var accountDetailList = ArrayList<RecentTradeRes>()
+        val accountDetailList = ArrayList<RecentTradeRes>()
 
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            // 북마크 계좌 추가
-            val bookmarkAccountList : List<Bookmark> = bookmarkRepository.findByUserId(userId).orEmpty()
-            var checkList = ArrayList<String>()
-            for (bookmarkAccount in bookmarkAccountList){
-                // 북마크 추가한 계좌
-                val account : Account = accountRepository.findById(bookmarkAccount.acNo).get()
-                // 사용자의 계좌 정보
-                val accountList = accountRepository.findByUserId(userId).orEmpty()
-                var tdDt = LocalDateTime.MIN
-                for (accountInfo in accountList){
-                    val trade : TradeHistory
-                    if (accountInfo.acNo != bookmarkAccount.acNo){
-                        trade = tradeHistoryRepository.findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(accountInfo.acNo, bookmarkAccount.acNo, 2)
-                        if (trade.tdDt > tdDt){
-                            tdDt = trade.tdDt
-                        }
-                    }
+            println(userRepository.findById(userId).get().name)
+            // 사용자의 계좌 정보
+            val accountList = accountRepository.findByUserId(userId)
+
+            // 나의 계좌는 반환하지 않도록 체크
+            val myAccountList = ArrayList<String>()
+            for (accountInfo in accountList){
+                myAccountList.add(accountInfo.acNo)
+            }
+
+            // 북마크 계좌 모음
+            val checkBookmarkList = ArrayList<String>()
+
+            // 내가 북마크 한 계좌 하나씩 뽑기
+            val bookmarkTradeHistoryList = tradeHistoryRepository.getBookMarkTradeHistoriesByUserId(userId).orEmpty()
+            for (bookmark in bookmarkTradeHistoryList){
+                if (!myAccountList.contains(bookmark.tdTgAc)){
+                    val bookmarkAccount = accountRepository.findById(bookmark.tdTgAc!!).get()
+                    val bookmarkUser = userRepository.findById(bookmarkAccount.user.id).get()
+                    val bookmarkCorporation = corporationRepository.findById(bookmarkAccount.acCpCode).get()
+                    accountDetailList.add(RecentTradeRes(bookmarkUser.name, bookmark.tdTgAc!!, bookmarkCorporation.cpName, true, bookmarkCorporation.cpLogo, bookmark.tdDt))
+                    checkBookmarkList.add(bookmark.tdTgAc!!)
                 }
-                val user : User = userRepository.findById(account.user.id).orElse(null)?: throw InvalidUserException()
-                val corporation = corporationRepository.findById(account.acCpCode).get()
-                accountDetailList.add(RecentTradeRes(user.name, bookmarkAccount.acNo, corporation.cpName, bookmarkAccount.bkStatus, corporation.cpLogo, tdDt))
-                checkList.add(bookmarkAccount.acNo)
             }
 
             // 최근 거래 계좌 추가
-            val accountList = accountRepository.findByUserId(userId)
-            for (account in accountList){
+            val recentAccountList = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
 
-                val end = LocalDateTime.now()
-                val start = end.minusMonths(3)
-                val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoAndTdTypeAndTdDtBetween(account.acNo, 2, start, end).orEmpty()
-                for (trade in tradeHistoryList){
-                    if(!checkList.contains(trade.tdTgAc)){
-//                        val account = accountRepository.findById(trade.tdTgAc!!).get()
-                        val user : User = userRepository.findById(account.user.id).get()
-                        val corporation = corporationRepository.findById(account.acCpCode).get()
-                        println("내 계좌: "+account.acNo)
-                        println("상대 계좌: " + trade.tdTgAc)
-                        if (account.acNo != trade.tdTgAc){
-                            println(trade.tdTgAc)
-                            val tradeInfo = tradeHistoryRepository.findTopByAccountAcNoAndTdTgAcAndTdTypeOrderByTdDtDesc(account.acNo, trade.tdTgAc!!, 2)
-                            accountDetailList.add(RecentTradeRes(user.name, account.acNo, corporation.cpName, false, corporation.cpLogo, tradeInfo.tdDt))
-                            checkList.add(trade.tdTgAc!!)
-                        }
-                    }
+            for (recentHistory in recentAccountList){
+                if (!myAccountList.contains(recentHistory.tdTgAc) && !checkBookmarkList.contains(recentHistory.tdTgAc)){
+                    val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).get()
+                    val recentUser = userRepository.findById(recentAccount.user.id).get()
+                    val recentCorporation = corporationRepository.findById(recentAccount.acCpCode).get()
+                    accountDetailList.add(RecentTradeRes(recentUser.name, recentAccount.acNo, recentCorporation.cpName, false, recentCorporation.cpLogo, recentHistory.tdDt))
                 }
-                println(("------"))
             }
         }
         return accountDetailList
