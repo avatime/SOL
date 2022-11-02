@@ -19,7 +19,7 @@ import com.finance.android.ui.components.InsuranceListItem
 @Composable
 fun AssetLifeScreen(navController: NavController) {
     Column(modifier = Modifier
-        .padding(top = dimensionResource(R.dimen.padding_medium)))
+        .padding(top = dimensionResource(R.dimen.padding_small)))
     {
         AssetLifeContainer(modifier = Modifier
             .fillMaxWidth()

@@ -23,7 +23,7 @@ import com.finance.android.utils.Const
 fun InsuranceListItem() {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .padding(top = dimensionResource(R.dimen.padding_medium)),
+        .padding(top = dimensionResource(R.dimen.padding_medium), bottom = dimensionResource(R.dimen.padding_small)),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(

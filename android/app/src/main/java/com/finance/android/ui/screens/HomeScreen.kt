@@ -57,7 +57,11 @@ fun HomeCardContainer(modifier: Modifier, navController: NavController) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
         ) {
-        Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = dimensionResource(R.dimen.padding_small)),
+            verticalAlignment = Alignment.CenterVertically)
+        {
             Text(
                 text = "자산",
                 fontWeight = FontWeight.Bold,
