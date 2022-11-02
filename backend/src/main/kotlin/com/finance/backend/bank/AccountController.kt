@@ -65,6 +65,11 @@ class AccountController(val accountService: AccountService) {
         return ResponseEntity.status(200).body(accountService.getBankInfo())
     }
 
+    @GetMapping("/finance/info")
+    fun getFinanceInfo(): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(accountService.getFinanceInfo())
+    }
+
     @GetMapping("/register")
     fun getBankRegister(@RequestHeader("access_token") accessToken : String):ResponseEntity<Any>{
         val response = accountService.getAccountRegistered(accessToken)
