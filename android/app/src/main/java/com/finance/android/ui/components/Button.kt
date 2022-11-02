@@ -1,10 +1,6 @@
 package com.finance.android.ui.components
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -70,7 +66,6 @@ fun TextButton(
                 containerColor = buttonColor.getBackgroundColor(),
                 contentColor = buttonColor.getTextColor()
             ),
-            contentPadding = PaddingValues(0.dp),
             shape = buttonType.getShape() ?: ButtonDefaults.shape,
             enabled = enabled
         ) {
@@ -87,7 +82,6 @@ fun TextButton(
                 containerColor = buttonColor.getBackgroundColor(),
                 contentColor = buttonColor.getTextColor()
             ),
-            contentPadding = PaddingValues(0.dp),
             border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
             shape = buttonType.getShape() ?: ButtonDefaults.shape,
             enabled = enabled
