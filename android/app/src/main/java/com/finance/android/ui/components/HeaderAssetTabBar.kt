@@ -81,7 +81,7 @@ fun HeaderAssetTabBar(
                 AssetLifeScreen(navController)
             }
             3 -> {
-                AssetStockScreen()
+                AssetStockScreen(navController)
             }
         }
     }
