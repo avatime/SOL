@@ -1,9 +1,6 @@
 package com.finance.android.domain.repository
 
-import com.finance.android.domain.dto.request.CheckUserRequestDto
-import com.finance.android.domain.dto.request.LoginRequestDto
-import com.finance.android.domain.dto.request.ReLoginRequestDto
-import com.finance.android.domain.dto.request.SignupRequestDto
+import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
 import com.finance.android.domain.service.UserService
 import com.finance.android.utils.Response
@@ -46,7 +43,7 @@ class UserRepositoryImpl @Inject constructor(
         return userService.signup(signupRequestDto)
     }
 
-    override suspend fun createAsset(userId: String) {
-//        return userService.createAsset(userId)
+    override suspend fun createAsset(createAssetRequestDto: CreateAssetRequestDto) {
+        return userService.createAsset(createAssetRequestDto)
     }
 }

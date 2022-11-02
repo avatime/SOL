@@ -2,8 +2,8 @@ package com.finance.android.domain
 
 import com.finance.android.domain.dto.request.RemitInfoRequestDto
 import com.finance.android.domain.dto.request.RemitPhoneRequestDto
-import com.finance.android.domain.dto.response.RecentTradeResponseDto
-import com.finance.android.domain.dto.response.ReissueTokenResponseDto
+import com.finance.android.domain.dto.response.*
+import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.RemitRepository
 import com.finance.android.domain.repository.SampleRepository
 import javax.inject.Inject
@@ -12,7 +12,8 @@ import javax.inject.Singleton
 @Singleton
 class DummyRepositoryImpl @Inject constructor() :
     SampleRepository,
-    RemitRepository {
+    RemitRepository,
+    BankRepository {
     override fun getSampleData(): Array<Int> {
         return arrayOf(1, 2, 3)
     }
@@ -67,6 +68,74 @@ class DummyRepositoryImpl @Inject constructor() :
     }
 
     override suspend fun putRemitBookmark(acNo: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAccountList(): MutableList<BankAccountResponseDto> {
+        return mutableListOf(
+            BankAccountResponseDto(
+                acName = "acName",
+                acNo = "acNo",
+                balance = 10000,
+                cpName = "cpName",
+                cpLogo = "cpLogo"
+            ),
+            BankAccountResponseDto(
+                acName = "acName",
+                acNo = "acNo",
+                balance = 10000,
+                cpName = "cpName",
+                cpLogo = "cpLogo"
+            ),
+            BankAccountResponseDto(
+                acName = "acName",
+                acNo = "acNo",
+                balance = 10000,
+                cpName = "cpName",
+                cpLogo = "cpLogo"
+            )
+        )
+    }
+
+    override suspend fun putRegisterAccount(acNo: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun putRegisterMainAccount(acNo: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun putBookmarkAccount(acNo: String) {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAccountSendDetail(
+        acNo: String,
+        type: Int
+    ): MutableList<BankTradeResponseDto> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAccountDetail(acNo: String): MutableList<BankDetailResponseDto> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getRecentAccount(): MutableList<RecentTradeResponseDto> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun checkAccount(
+        acNo: String,
+        cdCode: Int
+    ): String {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAllBankAccount(): MutableList<BankInfoResponseDto> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getAllMainAccount(): AccountRegisteredResponseDto {
         TODO("Not yet implemented")
     }
 }
