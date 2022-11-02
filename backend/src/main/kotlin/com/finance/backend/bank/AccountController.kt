@@ -15,9 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/bank")
 class AccountController(val accountService: AccountService) {
+    @GetMapping("/asset/all")
+    fun getAccountAll(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(accountService.getAccount(accessToken))
+    }
 
     @GetMapping("/asset")
-    fun getAccountAll(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
+    fun getAccount(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
         return ResponseEntity.status(200).body(accountService.getAccountAll(accessToken))
     }
 

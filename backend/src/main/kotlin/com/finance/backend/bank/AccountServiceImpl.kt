@@ -32,13 +32,26 @@ class AccountServiceImpl(
         private val jwtUtils: JwtUtils
 ) : AccountService {
 
+    override fun getAccount(token: String): List<BankAccountRes> {
+        var bankAccountList = ArrayList<BankAccountRes>()
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val accountList = accountRepository.findByUserId(userId)
+            for (ac in accountList){
+                val corporation = corporationRepository.findById(ac.acCpCode).get()
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo))
+            }
+        }
+        return bankAccountList
+    }
+
     override fun getAccountAll(token: String): List<BankAccountRes> {
         var bankAccountList = ArrayList<BankAccountRes>()
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
-            val accountList = accountRepository.findByUserId(user.id).orEmpty()
+            val accountList = accountRepository.findByUserIdAndAcReg(userId, true).orEmpty()
             for (ac in accountList){
                 val corporation = corporationRepository.findById(ac.acCpCode).get()
                 bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo))
@@ -50,9 +63,7 @@ class AccountServiceImpl(
     override fun registerAccount(acNoList: List<String>) {
         for(acNo in acNoList){
             val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
-            account.apply {
-                acReg = !acReg!!
-            }
+            account.acreg(!account.acReg!!)
             accountRepository.save(account)
         }
     }
@@ -60,9 +71,7 @@ class AccountServiceImpl(
     override fun registerRemitAccount(acNo: String) {
 
         val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
-        account.apply {
-            acRmReg = !acRmReg!!
-        }
+        account.acrmreg(!account.acRmReg!!)
         accountRepository.save(account)
         val user = userRepository.findById(account.user.id).get()
         user.account(acNo)
