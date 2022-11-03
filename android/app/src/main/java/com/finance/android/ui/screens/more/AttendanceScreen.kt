@@ -15,21 +15,16 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.finance.android.R
 import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
-import com.finance.android.domain.service.DailyService
-import com.finance.android.utils.Response
-import com.finance.android.viewmodels.DailyViewModel
+import com.finance.android.viewmodels.AttendanceViewModel
 import com.kizitonwose.calendar.compose.HorizontalCalendar
 import com.kizitonwose.calendar.compose.rememberCalendarState
 import com.kizitonwose.calendar.core.CalendarDay
 import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.YearMonth
@@ -37,7 +32,10 @@ import java.time.format.TextStyle
 import java.util.*
 
 @Composable
-fun ShowCalendar(attendanceList: MutableList<DailyAttendanceResponseDto>, dailyViewModel: DailyViewModel = hiltViewModel()) {
+fun ShowCalendar(
+    attendanceList: MutableList<DailyAttendanceResponseDto>,
+    attendanceViewModel: AttendanceViewModel = hiltViewModel()
+) {
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(0) } // Adjust as needed
     val endMonth = remember { currentMonth.plusMonths(0) } // Adjust as needed
@@ -69,7 +67,7 @@ fun ShowCalendar(attendanceList: MutableList<DailyAttendanceResponseDto>, dailyV
                 fontWeight = FontWeight.ExtraBold
             )
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
-            Text(text = "이번 달 출석한 횟수", fontWeight = FontWeight.SemiBold)
+            Text(text = "이번 달 출석/user한 횟수", fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
             Text(text = attendanceNum.toString(), fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
