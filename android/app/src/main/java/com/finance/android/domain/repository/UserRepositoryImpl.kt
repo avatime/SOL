@@ -2,6 +2,7 @@ package com.finance.android.domain.repository
 
 import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
+import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.domain.service.UserService
 import com.finance.android.utils.Response
 import kotlinx.coroutines.Dispatchers
@@ -45,5 +46,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun createAsset(createAssetRequestDto: CreateAssetRequestDto) {
         return userService.createAsset(createAssetRequestDto)
+    }
+
+    override suspend fun getUserProfile(): UserProfileResponseDto {
+        return userService.getUserProfile()
     }
 }
