@@ -13,6 +13,6 @@ interface CardService {
     fun getMyCard(token: String): List<CardRes>
     fun getCardMonthInfo(cdNo: String, year:Int, month: Int): List<CardBillDetailRes>
     fun getCardMonthAll(cdNo: String, year:Int, month: Int): CardBillRes
-    fun getCardBenefit(token: String):List<CardBenefitRes>
-    fun getCardBenefitDetail(cdNo: String): CardBenefitDetailRes
+//    fun getCardBenefit(token: String):List<CardBenefitRes>
+    fun getCardBenefitDetail(cdNo: String): List<CardBenefitDetailRes>
 }

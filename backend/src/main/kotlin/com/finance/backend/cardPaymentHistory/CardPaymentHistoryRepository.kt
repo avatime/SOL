@@ -11,6 +11,6 @@ interface CardPaymentHistoryRepository: JpaRepository<CardPaymentHistory, Long> 
     fun findAllByCardCdNoAndCdPyDtBetween(cdNo: String, startDateTime: LocalDateTime, endDateTime: LocalDateTime): List<CardPaymentHistory>?
 
 
-    @Query("SELECT SUM(cph.cd_val) FROM CardPaymentHistory cph WHERE cph.cd_py_dt BETWEEN :startDateTime AND :endDateTime", nativeQuery = true)
-    fun getByCdVal(startDateTime: LocalDateTime, endDateTime: LocalDateTime): Int
+    @Query("SELECT SUM(cph.cd_val) FROM card_payment_history cph WHERE cph.cd_no = :cdNo AND cph.cd_py_dt BETWEEN :startDateTime AND :endDateTime", nativeQuery = true)
+    fun getByCdVal(cdNo: String, startDateTime: LocalDateTime, endDateTime: LocalDateTime): Int
 }
