@@ -1,6 +1,6 @@
 package com.finance.android.domain.repository
 
-import com.finance.android.domain.dto.request.RegisterStockAccountRequestDto
+import com.finance.android.domain.dto.request.StockAccountNumberDto
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.service.StockService
 import javax.inject.Inject
@@ -14,7 +14,7 @@ class StockRepositoryImpl @Inject constructor(
         return stockService.getStockAccountList()
     }
 
-    override suspend fun putRegisterStockAccount(dto: Array<RegisterStockAccountRequestDto>) {
-        return stockService.putRegisterStockAccount(dto)
+    override suspend fun putRegisterStockAccount(stockAccountNumberDtoArray: Array<StockAccountNumberDto>) {
+        return stockService.putRegisterStockAccount(stockAccountNumberDtoArray)
     }
 }

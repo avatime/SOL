@@ -34,7 +34,7 @@ private fun Draw(
     modifier: Modifier,
     cardName: String,
     cardImgPath: String,
-    trailing: (@Composable () -> Unit)? = null,
+    trailing: (@Composable () -> Unit)? = null
 ) {
     Row(
         modifier = modifier
@@ -63,7 +63,6 @@ private fun Draw(
             Spacer(modifier = modifier.weight(1.0f))
         }
         trailing?.invoke()
-
     }
 }
 
@@ -84,9 +83,23 @@ fun CardListItem_Arrow(
         trailing = {
             Icon(
                 painter = painterResource(R.drawable.arrow_forward_ios),
-                contentDescription = "forwardArrow",
+                contentDescription = "forwardArrow"
             )
         }
+    )
+}
+
+@Composable
+fun CardListItem_Normal(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    cardName: String,
+    cardImgPath: String
+) {
+    Draw(
+        modifier = modifier.padding(contentPadding),
+        cardName = cardName,
+        cardImgPath = cardImgPath
     )
 }
 

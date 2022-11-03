@@ -1,5 +1,6 @@
 package com.finance.android.domain.repository
 
+import com.finance.android.domain.dto.request.AccountNumberDto
 import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.service.BankService
 import javax.inject.Inject
@@ -17,16 +18,16 @@ class BankRepositoryImpl @Inject constructor(
         return bankService.getRegisteredAccount()
     }
 
-    override suspend fun putRegisterAccount(acNo: String) {
-        return bankService.putRegisterAccount(acNo)
+    override suspend fun putRegisterAccount(accountNumberDtoArray: Array<AccountNumberDto>) {
+        return bankService.putRegisterAccount(accountNumberDtoArray)
     }
 
-    override suspend fun putRegisterMainAccount(acNo: String) {
-        return bankService.putRegisterMainAccount(acNo)
+    override suspend fun putRegisterMainAccount(accountNumberDto: AccountNumberDto) {
+        return bankService.putRegisterMainAccount(accountNumberDto)
     }
 
-    override suspend fun putBookmarkAccount(acNo: String) {
-        return bankService.putBookmarkAccount(acNo)
+    override suspend fun putBookmarkAccount(accountNumberDto: AccountNumberDto) {
+        return bankService.putBookmarkAccount(accountNumberDto)
     }
 
     override suspend fun getAccountSendDetail(

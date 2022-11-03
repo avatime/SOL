@@ -1,5 +1,6 @@
 package com.finance.android.ui.components
 
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -79,6 +80,25 @@ private fun Draw(
 }
 
 @Composable
+fun AccountListItem_Normal(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    accountNumber: String,
+    balance: Int,
+    accountName: String,
+    companyLogoPath: String,
+) {
+    Draw(
+        modifier = modifier
+            .padding(contentPadding),
+        accountNumber = accountNumber,
+        balance = balance,
+        accountName = accountName,
+        companyLogoPath = companyLogoPath,
+    )
+}
+
+@Composable
 fun AccountListItem_Check(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues = PaddingValues(),
@@ -137,6 +157,34 @@ fun AccountListItem_Remit(
     )
 }
 
+@Composable
+fun AccountListItem_Select(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    accountNumber: String,
+    balance: Int,
+    accountName: String,
+    companyLogoPath: String,
+    selected: Boolean,
+    onClickItem: () -> Unit
+) {
+    Draw(
+        modifier = modifier
+            .clip(RoundedCornerShape(20.dp))
+            .border(
+                width = 1.dp,
+                color = if (selected) MaterialTheme.colorScheme.primary else Disabled,
+                shape = RoundedCornerShape(20.dp)
+            )
+            .clickable { onClickItem() }
+            .padding(contentPadding),
+        accountNumber = accountNumber,
+        balance = balance,
+        accountName = accountName,
+        companyLogoPath = companyLogoPath
+    )
+}
+
 @Preview
 @Composable
 private fun PreviewAccountListItem_Check() {
@@ -162,5 +210,18 @@ private fun PreviewAccountListItem_Remit(onClickRemit: () -> Unit = {}) {
         companyLogoPath = "https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png",
         onClickItem = {},
         onClickRemit = onClickRemit
+    )
+}
+
+@Preview
+@Composable
+private fun PreviewAccountListItem_Select() {
+    AccountListItem_Select(
+        accountNumber = "accountNumber",
+        balance = 10,
+        accountName = "accountName",
+        companyLogoPath = "123",
+        selected = true,
+        onClickItem = {}
     )
 }

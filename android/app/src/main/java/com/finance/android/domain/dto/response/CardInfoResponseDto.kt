@@ -9,6 +9,6 @@ data class CardInfoResponseDto(
     val cardName: String,
     @SerializedName("cd_reg") // 카드 앱에 등록 여부
     val cardReg: Boolean,
-    @SerializedName("cd_no") // 카드 번호
-    val CardNo: String
+    @SerializedName("cd_no")
+    val cardNumber: String
 )

@@ -48,7 +48,10 @@ fun AddAssetSelectScreen(
         is Response.Success -> Screen(
             modifier = modifier,
             onClickBack = onClickBack,
-            onClickNext = onClickNext,
+            onClickNext = {
+                addAssetViewModel.registerAsset()
+                onClickNext()
+            },
             selectedAll = addAssetViewModel.selectedAll.value,
             onClickSelectAll = { addAssetViewModel.onClickSelectAll() },
             accountList = (addAssetViewModel.accountList.value as Response.Success).data,
@@ -278,9 +281,26 @@ private fun Screen(
                     else -> Insurance()
                 }
             }
+            var showSnackbar by remember { mutableStateOf(false) }
+            if (showSnackbar) {
+                TransientSnackbar(
+                    onDismiss = { showSnackbar = false }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.msg_snack_select_rep_account),
+                        color = MaterialTheme.colorScheme.surface
+                    )
+                }
+            }
             TextButton(
-                onClick = onClickNext,
-                text = stringResource(id = R.string.btn_add_asset),
+                onClick = {
+                    if (accountCheckList.all { c -> !c.value }) {
+                        showSnackbar = true
+                        return@TextButton
+                    }
+                    onClickNext()
+                },
+                text = stringResource(id = R.string.btn_confirm),
                 buttonType = ButtonType.ROUNDED,
                 modifier = Modifier.withBottomButton()
             )
@@ -425,6 +445,7 @@ private fun PreviewCard() {
         modifier = Modifier.background(Color.White),
         cardList = MutableList(5) {
             CardInfoResponseDto(
+                cardNumber = "123",
                 cardName = "cardName",
                 cardImgPath = "path",
                 cardReg = true,
