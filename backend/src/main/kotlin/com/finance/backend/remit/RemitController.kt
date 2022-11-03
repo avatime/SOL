@@ -1,5 +1,6 @@
 package com.finance.backend.remit
 
+import com.finance.backend.kafka.KafkaProducer
 import com.finance.backend.remit.request.RemitInfoReq
 import com.finance.backend.remit.request.RemitPhoneReq
 import org.springframework.http.ResponseEntity
@@ -14,7 +15,8 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/remit")
-class RemitController(val remitService: RemitService) {
+class RemitController(val remitService: RemitService, val kafka: KafkaProducer) {
+
     @GetMapping("/recommendation")
     fun getRecommendationAccount(@RequestHeader("access_token") accessToken: String): ResponseEntity<Any>{
         return ResponseEntity.status(200).body(remitService.getRecommendationAccount(accessToken))
@@ -22,6 +24,7 @@ class RemitController(val remitService: RemitService) {
 
     @PostMapping("/account")
     fun postRemit(@RequestBody remitInfoReq: RemitInfoReq): ResponseEntity<Any>{
+        kafka.sendMessage(remitInfoReq)
         return ResponseEntity.status(200).body(remitService.postRemit(remitInfoReq))
     }
 
