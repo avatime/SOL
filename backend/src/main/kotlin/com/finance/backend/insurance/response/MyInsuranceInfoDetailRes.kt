@@ -17,5 +17,11 @@ data class MyInsuranceInfoDetailRes(
 
         // 피보험자
         @JsonProperty("is_name")
-        val insName : String
+        val insName : String,
+
+        @JsonProperty("is_reg")
+        val isReg : Boolean,
+
+        @JsonProperty("is_pd_id")
+        val isPdId : Long,
 )

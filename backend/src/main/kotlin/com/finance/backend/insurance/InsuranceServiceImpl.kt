@@ -8,6 +8,7 @@ import com.finance.backend.insurance.entity.IsProduct
 import com.finance.backend.insurance.repository.InsuranceRepository
 import com.finance.backend.insurance.repository.IsDetailRepository
 import com.finance.backend.insurance.repository.IsProductRepository
+import com.finance.backend.insurance.request.InsuranceReq
 import com.finance.backend.insurance.response.InsuranceProductInfoDetailRes
 import com.finance.backend.insurance.response.InsuranceProductInfoRes
 import com.finance.backend.insurance.response.MyInsuranceInfoDetailRes
@@ -47,6 +48,18 @@ class InsuranceServiceImpl (
         } else throw Exception()
     }
 
+    override fun getAllMyRegistInsurance(accessToken: String): MyInsuranceInfoRes {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}){
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
+            val insuranceList : List<Insurance> = insuranceRepository.findAllByUserIdAndIsRegAndIsStatus(user.id, true,10)
+            val list = List(insuranceList.size) {i -> insuranceList[i].toEntity(isProductRepository.findById(insuranceList[i].isPdCode).orElse(null)?.isPdName ?: throw NoSuchElementException())}
+            var fee = 0
+            for (insurance in insuranceList) fee += insurance.fee
+            return MyInsuranceInfoRes(fee, list)
+        } else throw Exception()
+    }
+
     override fun getAllMyInsurance(accessToken: String): MyInsuranceInfoRes {
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
@@ -69,13 +82,16 @@ class InsuranceServiceImpl (
         } else throw Exception()
     }
 
-    override fun registMainOrNot(accessToken: String, isId : Long) {
+    override fun registApplication(accessToken: String, registList : List<InsuranceReq>) {
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
-            val insurance : Insurance = insuranceRepository.findByIdAndUserAndIsStatus(isId, user, 10)?: throw NoSuchElementException()
-            insurance.registMainFlip()
-            insuranceRepository.save(insurance)
+            for(insId in registList){
+                val insurance: Insurance = insuranceRepository.findByIdAndUserAndIsStatus(insId.isId, user, 10)
+                        ?: throw NoSuchElementException()
+                insurance.registApp()
+                insuranceRepository.save(insurance)
+            }
         }
     }
 }
