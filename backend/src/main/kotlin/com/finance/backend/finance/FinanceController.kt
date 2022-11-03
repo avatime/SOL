@@ -9,18 +9,19 @@ class FinanceController(
         val financeService: FinanceService
 ) {
 
+    @GetMapping("/asset/all")
+    fun getFinanceAssetAll(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any> {
+        return ResponseEntity.status(200).body(financeService.getFinanceAssetAll(accessToken))
+    }
+
     @GetMapping("/asset")
     fun getFinanceAsset(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any> {
-        return ResponseEntity
-                .ok()
-                .body(financeService.getFinanceAsset(accessToken))
+        return ResponseEntity.status(200).body(financeService.getFinanceAsset(accessToken))
     }
 
     @PutMapping("/asset")
-    fun putFinanceAsset(@RequestBody acNo: String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(financeService.putFinanceAsset(acNo))
+    fun putFinanceAsset(@RequestBody acNoList: List<String>): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(financeService.putFinanceAsset(acNoList))
     }
 
 }

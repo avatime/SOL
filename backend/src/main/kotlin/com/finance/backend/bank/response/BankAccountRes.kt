@@ -7,7 +7,8 @@ class BankAccountRes(
         balance : Long,
         acName : String,
         cpName: String,
-        cpLogo: String
+        cpLogo: String,
+        acReg: Boolean
 
 ) {
 
@@ -24,4 +25,7 @@ class BankAccountRes(
 
         @JsonProperty("cp_logo")
         val cpLogo: String = cpLogo
+
+        @JsonProperty("ac_reg")
+        val acReg = acReg
 }

@@ -48,7 +48,7 @@ class Account (
         var acStatus : Int = acStatus
 
         @JsonProperty("ac_reg")
-        var acReg : Boolean? = false
+        var acReg : Boolean = false
 
         @JsonProperty("ac_new_dt")
         var acNewDt : LocalDateTime = date
