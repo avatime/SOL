@@ -170,10 +170,10 @@ class AccountServiceImpl(
         return accountDetailList
     }
 
-    override fun getUserName(acNo: String, cpCode: Long): String {
-        val account = accountRepository.findByAcNoAndAcCpCode(acNo, cpCode)?: let{return ""}
+    override fun getUserName(acNo: String, cpCode: Long): UserRes {
+        val account = accountRepository.findByAcNoAndAcCpCode(acNo, cpCode)?: let{return UserRes("")}
         val userName = userRepository.findById(account.user.id).get().name
-        return userName
+        return UserRes(userName)
     }
 
     override fun getBankInfo(): List<BankInfoRes> {

@@ -15,7 +15,7 @@ interface AccountService {
     fun getAccountDetail(acNo: String): BankDetailRes
     fun getAccountDetailType(acNo: String, type: Int): List<BankTradeRes>
     fun getRecentTrade(token: String): List<RecentMyTradeRes>
-    fun getUserName(acNo: String, cpCode: Long): String
+    fun getUserName(acNo: String, cpCode: Long): UserRes
     fun getBankInfo():List<BankInfoRes>
     fun getFinanceInfo(): List<BankInfoRes>
     fun getAccountRegistered(token: String): AccountRegisteredRes
