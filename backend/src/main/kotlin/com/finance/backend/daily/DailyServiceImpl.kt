@@ -9,6 +9,8 @@ import com.finance.backend.daily.entity.Attendance
 import com.finance.backend.daily.entity.Walk
 import com.finance.backend.daily.repository.AttendanceRepository
 import com.finance.backend.daily.repository.WalkRepository
+import com.finance.backend.point.RewardService
+import com.finance.backend.point.RewardServiceImpl
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
@@ -24,6 +26,7 @@ import java.util.*
 class DailyServiceImpl(
         private val userRepository: UserRepository,
         private val attendanceRepository: AttendanceRepository,
+        private val rewardService: RewardServiceImpl,
         private val walkRepository: WalkRepository,
         private val jwtUtils: JwtUtils
 ) : DailyService {
@@ -33,6 +36,7 @@ class DailyServiceImpl(
                 }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
+            rewardService.accumulatePoint(user, 50, "출석 체크")
             attendanceRepository.save(Attendance(user))
         } else throw Exception()
     }
