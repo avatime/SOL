@@ -28,12 +28,12 @@ def get_db():
 
 @app.post("/data/v1/user/register", status_code=200)
 async def test(user: schemas.userReq, response: Response, db: Session = Depends(get_db)):
-    try:
-        user_id = db.query(models.User).filter(models.User.phone == user.phone).first().id
-        function.create(user_id, db)
+    # try:
+    user_id = db.query(models.User).filter(models.User.phone == user.phone).first().id
+    function.create(user_id, db)
 
-    except:
-        response.status_code = status.HTTP_409_CONFLICT
+    # except:
+    #     response.status_code = status.HTTP_409_CONFLICT
 
 
 @app.get("/data/v1/finance", response_model=List[schemas.FinanceOut], response_model_include={"fn_name", "fn_logo", "fn_date", "close", "per"}, status_code=200)

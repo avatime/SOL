@@ -24,11 +24,10 @@ ac_pd_list = [0, [13], [22, 23, 24], [25, 26, 27], [28], [29, 30], [31, 32], [1,
 def create(user_id, db):
     # step.1 계좌 생성
     ac_list = pd.read_sql_query(select(models.Account.ac_no), engine)['ac_no'].tolist()
-    new_cor = random.sample(cor_list, 3)
     new_ac = []
     type = 1
-    for i in new_cor:
-        cor_num, role = i
+    for _ in range(20):
+        cor_num, role = cor_list[random.randint(0, 13)]
         while 1:
             check = ''
             for x in role:
@@ -36,8 +35,9 @@ def create(user_id, db):
                 check = check + num + '-'
             check = check[:-1]
             if check not in ac_list:
+                ac_list.append(check)
                 ac_pd_code = random.choice(ac_pd_list[cor_num])
-                name = cor_name[cor_num]
+                name = db.query(models.AccountProduct).filter(models.AccountProduct.ac_pd_code == ac_pd_code).first().ac_pd_name
                 if type == 2:    # 증권계좌 생성
                     cor_num = random.randint(32, 56)
                     name = fi_name[cor_num - 32]
@@ -46,20 +46,19 @@ def create(user_id, db):
                                              ac_name=name, ac_pd_code=ac_pd_code, ac_cp_code=cor_num,
                                              ac_status=10, ac_reg=0, ac_new_dt="2022-09-26", ac_close_dt="2023-01-01",
                                              ac_rm_reg=0, user_id=user_id))
-                type += 1
+                type = 2 if type == 1 else 1
                 break
     db.add_all(new_ac)
     db.commit()
-    db.refresh(new_ac[0])
-    db.refresh(new_ac[1])
-    db.refresh(new_ac[2])
+    for i in new_ac:
+        db.refresh(i)
 
     # step.2 카드 생성
     new_card = []
+    card_list = pd.read_sql_query(select(models.Card.cd_no), engine)['cd_no'].tolist()
     # code 1~99 신용 / 100~199 체크
-    for i in range(1, 3):
-        code = random.randint(1, 99) if i == 1 else random.randint(100, 199)
-        card_list = pd.read_sql_query(select(models.Card.cd_no), engine)['cd_no'].tolist()
+    for i in range(10):
+        code = random.randint(1, 99) if i < 5 else random.randint(100, 199)
         while 1:
             check = ''
             for _ in range(4):
@@ -67,6 +66,7 @@ def create(user_id, db):
                 check = check + num + '-'
             check = check[:-1]
             if check not in card_list:
+                card_list.append(check)
                 break
         new_card.append(models.Card(cd_no=check, cd_pwd='0000', cd_mt_month='12', cd_mt_year='22',
                                     cd_pd_code=code, cd_status=10, cd_reg=0,
@@ -74,12 +74,12 @@ def create(user_id, db):
 
     db.add_all(new_card)
     db.commit()
-    db.refresh(new_card[0])
-    db.refresh(new_card[1])
+    for i in new_card:
+        db.refresh(i)
 
     # step.3 카드 결제 내역 생성
     card_his = []
-    for i in range(2):    # 신용, 체크
+    for i in range(10):    # 신용, 체크
         for day in ['2022-11-14', '2022-11-15', '2022-11-16', '2022-11-17', '2022-11-18']:
             name = random.choice(td_list)
             money = random.randint(5, 100) * 1000
@@ -95,10 +95,10 @@ def create(user_id, db):
     name = db.query(models.User).filter(models.User.id == user_id).first().name
     trade = []
     # i = 5 부터는 체크카드 내역
-    for i in range(10):
-        td_val = random.randint(1, 100) * 1000 if i < 5 else card_his[i].cd_val
-        td_dt = "2022-11-18" if i < 5 else card_his[i].cd_py_dt
-        td_cn = random.choice(team) if i < 5 else card_his[i].cd_py_name
+    for i in range(30):
+        td_val = random.randint(1, 100) * 1000 if i < 5 else card_his[i + 20].cd_val
+        td_dt = "2022-11-18" if i < 5 else card_his[i + 20].cd_py_dt
+        td_cn = random.choice(team) if i < 5 else card_his[i + 20].cd_py_name
         td_type = random.randint(1, 2) if i < 5 else 2
         ac_no = new_ac[0].ac_no
         trade.append(models.TradeHistory(td_val=td_val, td_dt=td_dt, td_cn=td_cn,
@@ -110,10 +110,13 @@ def create(user_id, db):
         db.refresh(i)
 
     # step.5 보험 1개 생성
-    ins = models.Insurance(is_reg_dt='2022-09-26', is_clo_dt=None, is_mat_dt='2022-11-25',
-                           is_status=10, is_pd_code=random.randint(1, 6),
-                           is_name=name, is_reg=0, fee=35000, user_id=user_id,
-                           ac_no=new_ac[2].ac_no)
-    db.add(ins)
+    ins = []
+    for i in range(1, 6):
+        ins.append(models.Insurance(is_reg_dt='2022-09-26', is_clo_dt=None, is_mat_dt='2022-11-25',
+                               is_status=10, is_pd_code=i,
+                               is_name=name, is_reg=0, fee=random.randint(1, 9) * 10000, user_id=user_id,
+                               ac_no=new_ac[random.randint(0, 9) * 2].ac_no))
+    db.add_all(ins)
     db.commit()
-    db.refresh(ins)
+    for i in ins:
+        db.refresh(i)
