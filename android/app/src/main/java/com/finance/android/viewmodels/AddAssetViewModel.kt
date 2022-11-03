@@ -5,12 +5,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.datastore.UserStore
-import com.finance.android.domain.dto.request.AccountNumberDto
-import com.finance.android.domain.dto.request.CardNumberDto
-import com.finance.android.domain.dto.request.CreateAssetRequestDto
-import com.finance.android.domain.dto.request.StockAccountNumberDto
+import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
+import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
 import com.finance.android.domain.repository.*
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,12 +34,17 @@ class AddAssetViewModel @Inject constructor(
     val stockAccountList =
         mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
     lateinit var stockAccountCheckList: Array<MutableState<Boolean>>
+    val insuranceList =
+        mutableStateOf<Response<MutableList<InsuranceInfoResponseDto>>>(Response.Loading)
+    lateinit var insuranceCheckList: Array<MutableState<Boolean>>
+
     val repAccountIndex = mutableStateOf(0)
 
     private val registerStateRepAccount = mutableStateOf<Response<Unit>>(Response.Loading)
     private val registerStateAccount = mutableStateOf<Response<Unit>>(Response.Loading)
     private val registerStateCard = mutableStateOf<Response<Unit>>(Response.Loading)
     private val registerStateStockAccount = mutableStateOf<Response<Unit>>(Response.Loading)
+    private val registerStateInsurance = mutableStateOf<Response<Unit>>(Response.Loading)
 
     fun createAssetAndLoad() {
         viewModelScope.launch {
@@ -49,12 +52,13 @@ class AddAssetViewModel @Inject constructor(
                 loadAccountList()
                 loadCardList()
                 loadStockAccountList()
+                loadInsuranceList()
             }
         }
     }
 
     fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(accountList, cardList, stockAccountList)
+        val arr = arrayOf(accountList, cardList, stockAccountList, insuranceList)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -78,7 +82,8 @@ class AddAssetViewModel @Inject constructor(
             registerStateRepAccount,
             registerStateAccount,
             registerStateCard,
-            registerStateStockAccount
+            registerStateStockAccount,
+            registerStateInsurance
         )
 
         return if (arr.any { it.value is Response.Failure }) {
@@ -94,6 +99,7 @@ class AddAssetViewModel @Inject constructor(
         accountCheckList.forEach { it.value = !selectedAll.value }
         cardCheckList.forEach { it.value = !selectedAll.value }
         stockAccountCheckList.forEach { it.value = !selectedAll.value }
+        insuranceCheckList.forEach { it.value = !selectedAll.value }
         selectedAll.value = !selectedAll.value
     }
 
@@ -112,6 +118,11 @@ class AddAssetViewModel @Inject constructor(
         calculateSelectAll()
     }
 
+    fun onClickInsuranceItem(index: Int) {
+        insuranceCheckList[index].value = !insuranceCheckList[index].value
+        calculateSelectAll()
+    }
+
     fun onClickRepAccountItem(index: Int) {
         repAccountIndex.value = index
     }
@@ -121,14 +132,16 @@ class AddAssetViewModel @Inject constructor(
             registerAccount()
             registerCard()
             registerStockAccount()
+            registerInsurance()
             registerRepAccount()
         }
     }
 
     private fun calculateSelectAll() {
         selectedAll.value = accountCheckList.all { it.value } &&
-            cardCheckList.all { it.value } &&
-            stockAccountCheckList.all { it.value }
+                cardCheckList.all { it.value } &&
+                stockAccountCheckList.all { it.value } &&
+                insuranceCheckList.all { it.value }
     }
 
     private suspend fun createAsset(onSuccess: suspend () -> Unit) {
@@ -184,6 +197,18 @@ class AddAssetViewModel @Inject constructor(
             }
     }
 
+    private suspend fun loadInsuranceList() {
+        this@AddAssetViewModel.run {
+            insuranceRepository.getInsuranceList()
+        }
+            .collect {
+                insuranceList.value = it
+                if (it is Response.Success) {
+                    insuranceCheckList = Array(it.data.size) { mutableStateOf(false) }
+                }
+            }
+    }
+
     private suspend fun registerAccount() {
         if (accountList.value !is Response.Success) {
             return
@@ -235,6 +260,24 @@ class AddAssetViewModel @Inject constructor(
         }
             .collect {
                 registerStateStockAccount.value = it
+            }
+    }
+
+    private suspend fun registerInsurance() {
+        if (insuranceList.value !is Response.Success) {
+            return
+        }
+
+        this@AddAssetViewModel.run {
+            insuranceRepository.putRegisterInsurance(
+                (insuranceList.value as Response.Success).data
+                    .filterIndexed { idx, _ -> insuranceCheckList[idx].value }
+                    .map { InsuranceIdRequestDto(it.isId) }
+                    .toTypedArray()
+            )
+        }
+            .collect {
+                registerStateInsurance.value = it
             }
     }
 
