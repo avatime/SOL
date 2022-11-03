@@ -19,7 +19,6 @@ class Card (
         cdMtYear: String,
         cdPdCode: Long,
         cdStatus: Int,
-        cdReg: Boolean,
         user: User,
         account: Account
         ) {
@@ -38,7 +37,7 @@ class Card (
 
     var cdStatus = cdStatus
 
-    var cdReg = cdReg
+    var cdReg: Boolean = false
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -46,5 +45,9 @@ class Card (
 
     @OneToOne
     val account = account
+
+    fun register(){
+        this.cdReg = !this.cdReg
+    }
 
 }

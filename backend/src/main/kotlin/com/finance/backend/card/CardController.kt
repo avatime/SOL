@@ -19,43 +19,36 @@ class CardController(
 
     @PutMapping("/asset")
     fun registerCard(@RequestBody cdNoList: List<String>): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(cardService.registerMain(cdNoList))
+        return ResponseEntity.status(200).body(cardService.registerMain(cdNoList))
     }
 
     @GetMapping("/asset")
     fun getCardInfo(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(cardService.getAssetCard(accessToken))
+        return ResponseEntity.status(200).body(cardService.getAssetCard(accessToken))
     }
 
-    @GetMapping("/bill/detail/{cd_no}/{year}/{month}")
+    @GetMapping("/asset/my")
+    fun getMyCardInfo(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(cardService.getMyCard(accessToken))
+    }
+
+    @GetMapping("/bill/detail/{cdNo}/{year}/{month}")
     fun getCardMonthInfo(@PathVariable cdNo: String, @PathVariable year: Int, @PathVariable month:Int): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(cardService.getCardMonthInfo(cdNo, year, month))
+        return ResponseEntity.status(200).body(cardService.getCardMonthInfo(cdNo, year, month))
     }
 
-    @GetMapping("/bill/{cd_no}/{year}/{month}")
+    @GetMapping("/bill/{cdNo}/{year}/{month}")
     fun getCardMonthAll(@PathVariable cdNo: String, @PathVariable year: Int, @PathVariable month:Int): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(cardService.getCardMonthAll(cdNo, year, month))
+        return ResponseEntity.status(200).body(cardService.getCardMonthAll(cdNo, year, month))
     }
 
-    @GetMapping
-    fun getCardBenefit(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(cardService.getCardBenefit(accessToken))
-    }
+//    @GetMapping
+//    fun getCardBenefit(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
+//        return ResponseEntity.status(200).body(cardService.getCardBenefit(accessToken))
+//    }
 
-    @GetMapping("/{cd_no")
-    fun getCardBenefitDetail(cdNo: String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(cardService.getCardBenefitDetail(cdNo))
+    @GetMapping("/{cdNo}")
+    fun getCardBenefitDetail(@PathVariable cdNo: String): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(cardService.getCardBenefitDetail(cdNo))
     }
 }
