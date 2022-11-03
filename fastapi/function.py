@@ -60,9 +60,8 @@ def create(user_id, db):
         while 1:
             check = ''
             for _ in range(4):
-                num = ''.join(random.sample(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], 4))
-                check = check + num + '-'
-            check = check[:-1]
+                check = check + ''.join(random.sample(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], 4))
+
             if check not in card_list:
                 card_list.append(check)
                 break
