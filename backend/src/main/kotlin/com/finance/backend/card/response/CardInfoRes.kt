@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 class CardInfoRes(
         img: String,
         name: String,
-        cdReg: Boolean
+        cdReg: Boolean,
+        cdNo: String
 ) {
     @JsonProperty("cd_img")
     val cdImg: String = img
@@ -15,6 +16,9 @@ class CardInfoRes(
 
     @JsonProperty("cd_reg")
     val cdReg = cdReg
+
+    @JsonProperty("cd_no")
+    val cdNo = cdNo
 
 
 }
