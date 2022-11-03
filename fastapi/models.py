@@ -96,11 +96,16 @@ class Finance(Base):
     __tablename__ = 'finance'
     id = Column(BigInteger, primary_key=True, index=True)
     fn_name = Column(String(12))
+    fn_logo = Column(String(197))
     fn_date = Column(Date)
-    fn_close = Column(Integer)
-    fn_per = Column(Float)
+    open = Column(Integer)
+    close = Column(Integer)
+    high = Column(Integer)
+    low = Column(Integer)
+    volume = Column(Integer)
+    per = Column(Float)
 
     def __repr__(self):
         return "<기업명='%s', 날짜='%s', 가격='%s'>" % (
-                   self.fn_name, self.fn_date, self.fn_close
+                   self.fn_name, self.fn_date, self.close
                )
