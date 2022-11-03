@@ -28,6 +28,6 @@ interface UserService {
     @GET("${Const.API_PATH}/user/account")
     suspend fun checkRepAccount(): Boolean
 
-    @GET("${Const.DATA_PATH}/user")
+    @GET("${Const.API_PATH}/user")
     suspend fun getUserProfile() : UserProfileResponseDto
 }
