@@ -7,6 +7,7 @@ import com.finance.backend.auth.request.ReLoginDto
 import com.finance.backend.auth.request.SignupCheckDto
 import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.auth.response.LoginDao
+import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.profile.Profile
 import com.finance.backend.profile.ProfileRepository
@@ -122,5 +123,17 @@ class UserServiceImpl (
 
     override fun check(phone: String): Boolean {
         return !userRepository.existsByPhoneAndType(phone, "회원")
+    }
+
+    override fun checkAccount(token: String): Boolean {
+        var able = false
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val user = userRepository.findById(userId).orElse(null)
+            if (user.account != null){
+                able = true
+            }
+        }
+        return able
     }
 }
