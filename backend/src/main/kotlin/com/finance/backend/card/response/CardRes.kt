@@ -4,15 +4,11 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.finance.backend.cardBenefit.response.CardBenefitInfo
 
 class CardRes (
-        cdImg: String,
-        cdName: String,
+        cardInfoRes: CardInfoRes,
         cardBenefitInfoList: List<CardBenefitInfo>
 ) {
-    @JsonProperty("cd_img")
-    val cdImg: String = cdImg
-
-    @JsonProperty("cd_name")
-    val cdName: String = cdName
+    @JsonProperty("card_info_res")
+    val cardInfoRes = cardInfoRes
 
     @JsonProperty("card_benefit_info_list")
     val cardBenefitInfoList = cardBenefitInfoList

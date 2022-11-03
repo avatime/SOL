@@ -10,6 +10,6 @@ class BankInfoRes(
     @JsonProperty("cp_name")
     val cpName: String = cpName
 
-    @JsonProperty("co_logo")
+    @JsonProperty("cp_logo")
     val cpLogo: String = cpLogo
 }
