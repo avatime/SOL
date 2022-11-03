@@ -60,15 +60,12 @@ class InsuranceServiceImpl (
         } else throw Exception()
     }
 
-    override fun getAllMyInsurance(accessToken: String): MyInsuranceInfoRes {
+    override fun getAllMyInsurance(accessToken: String): List<MyInsuranceInfoDetailRes> {
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             val insuranceList : List<Insurance> = insuranceRepository.findAllByUserAndIsStatus(user, 10)
-            val list = List(insuranceList.size) {i -> insuranceList[i].toEntity(isProductRepository.findById(insuranceList[i].isPdCode).orElse(null)?.isPdName ?: throw NoSuchElementException())}
-            var fee = 0
-            for (insurance in insuranceList) fee += insurance.fee
-            return MyInsuranceInfoRes(fee, list)
+            return List(insuranceList.size) {i -> insuranceList[i].toEntity(isProductRepository.findById(insuranceList[i].isPdCode).orElse(null)?.isPdName ?: throw NoSuchElementException())}
         } else throw Exception()
     }
 
