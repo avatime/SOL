@@ -2,6 +2,7 @@ package com.finance.backend.bank;
 
 
 import com.finance.backend.Exceptions.*
+import com.finance.backend.bank.request.AccountInfoReq
 import com.finance.backend.bank.response.*
 import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
@@ -60,9 +61,9 @@ class AccountServiceImpl(
         return bankAccountList
     }
 
-    override fun registerAccount(acNoList: List<String>) {
-        for(acNo in acNoList){
-            val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
+    override fun registerAccount(acNoList: List<AccountInfoReq>) {
+        for(a in acNoList){
+            val account = accountRepository.findById(a.acNo).orElse(null) ?: throw NoAccountException()
             account.acreg(!account.acReg)
             accountRepository.save(account)
         }
