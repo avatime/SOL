@@ -24,9 +24,14 @@ class Account(BaseModel):
 
 class FinanceOut(BaseModel):
     fn_name: str
+    fn_logo: str
     fn_date: date
-    fn_close: int
-    fn_per: float
+    open: int
+    close: int
+    high: int
+    low: int
+    volume: int
+    per: float
 
     class Config:
         orm_mode = True

@@ -25,21 +25,26 @@ def finance_create(engine):
 
     for name, code in code_list:
         temp = pdr.get_data_yahoo(code, start=start)
+        temp.rename(columns={'High': 'high', 'Low': 'low', 'Open': 'open', 'Close': 'close', 'Volume': 'volume'},
+                    inplace=True)
+        temp.drop(['Adj Close'], axis=1, inplace=True)
         temp['fn_name'] = name
         temp['fn_logo'] = code_logo[name]
         temp['fn_date'] = temp.index.strftime('%Y-%m-%d')
-        temp['fn_close'] = temp['Close']
-        temp['fn_per'] = round(((temp.iloc[6, 3] - temp.iloc[5, 3]) / temp.iloc[6, 3]) * 100, 2)
-        finance = pd.concat([finance, temp[['fn_name', 'fn_logo', 'fn_date', 'fn_close', 'fn_per']]], ignore_index=True)
+        temp['per'] = round(((temp.iloc[6, 3] - temp.iloc[5, 3]) / temp.iloc[6, 3]) * 100, 2)
+        finance = pd.concat([finance, temp], ignore_index=True)
 
     finance['id'] = finance.index + 1
-    print('나 지금 떨고있니?')
     dtypesql = {
         'id': sqlalchemy.types.Integer(),
         'fn_name': sqlalchemy.types.VARCHAR(12),
         'fn_logo': sqlalchemy.types.VARCHAR(197),
         'fn_date': sqlalchemy.types.Date(),
-        'fn_close': sqlalchemy.types.Integer(),
-        'fn_per': sqlalchemy.types.Float()
+        'open': sqlalchemy.types.Integer(),
+        'close': sqlalchemy.types.Integer(),
+        'high': sqlalchemy.types.Integer(),
+        'low': sqlalchemy.types.Integer(),
+        'volume': sqlalchemy.types.Integer(),
+        'per': sqlalchemy.types.Float()
     }
     finance.to_sql(name='finance', con=engine, if_exists='replace', index=False, dtype=dtypesql)
