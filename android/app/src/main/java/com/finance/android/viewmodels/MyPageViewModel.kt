@@ -28,7 +28,7 @@ class MyPageViewModel @Inject constructor(
 
     fun launchMyPage() {
         viewModelScope.launch {
-            getUserInfo { }
+            getUserInfo()
         }
     }
 
@@ -44,14 +44,14 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUserInfo(onSuccess: suspend () -> Unit) {
+    private suspend fun getUserInfo() {
         this@MyPageViewModel.run {
             userRepository.getUserProfile()
         }.collect {
             myInfo.value = it
-//            if(it is Response.Success) {
-//
-//            }
+            if(it is Response.Success) {
+                println("푸로필 불러오기 성공")
+            }
         }
     }
 }
