@@ -82,10 +82,7 @@ fun Screen(
             onClick = {
                 navController.navigate(Const.Routes.ATTENDANCE)
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(id = R.dimen.padding_medium))
-                .height(100.dp)
+            modifier = Modifier.withBottomButton()
         ) {
             Text("포인트")
             Text(text = userInfo.point.toString() + "포인트")
@@ -109,8 +106,12 @@ private fun MenuList(navController: NavController) {
             onClick = {
                 navController.navigate(Const.Routes.ATTENDANCE)
             },
-            modifier = Modifier.withBottomButton()
+            modifier = Modifier.withBottomButton().background(Color.White),
         ) {
+            Image(
+                painter = painterResource(R.drawable.ssal),
+                contentDescription = null, // 필수 param
+            )
             Text("출석체크")
         }
 
