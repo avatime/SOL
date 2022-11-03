@@ -26,4 +26,9 @@ class UserController (private val userService: UserService) {
     fun checkPhone(@RequestBody phone : PhoneReq) : ResponseEntity<Any?> {
         return ResponseEntity.status(200).body(userService.check(phone.phone))
     }
+
+    @GetMapping("/account")
+    fun checkAccount(@RequestHeader("access_token") accessToken : String) : ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(userService.checkAccount(accessToken))
+    }
 }
