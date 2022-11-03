@@ -18,24 +18,36 @@ class FinanceServiceImpl(
         val jwtUtils: JwtUtils
 ) : FinanceService {
 
-    override fun getFinanceAsset(token: String): List<BankAccountRes> {
+    override fun getFinanceAssetAll(token: String): List<BankAccountRes> {
         val bankAccountList = ArrayList<BankAccountRes>()
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val accountList = accountRepository.findByUserIdAndAcType(userId, 2).orEmpty()
             for(account in accountList){
                 val corporation = corporationRepository.findById(account.acCpCode).get()
-                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo))
+                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg))
             }
         }
         return bankAccountList
     }
 
-    override fun putFinanceAsset(acNo: String) {
-        val account = accountRepository.findById(acNo).get()
-        account.apply {
-            acReg = !acReg!!
+    override fun getFinanceAsset(token: String): List<BankAccountRes> {
+        val bankAccountList = ArrayList<BankAccountRes>()
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val accountList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 2, true).orEmpty()
+            for(account in accountList){
+                val corporation = corporationRepository.findById(account.acCpCode).get()
+                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg))
+            }
         }
-        accountRepository.save(account)
+        return bankAccountList
+    }
+    override fun putFinanceAsset(acNoList: List<String>) {
+        for (acNo in acNoList){
+            val account = accountRepository.findById(acNo).get()
+            account.acreg(!account.acReg)
+            accountRepository.save(account)
+        }
     }
 }

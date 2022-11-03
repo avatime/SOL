@@ -37,10 +37,10 @@ class AccountServiceImpl(
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val accountList = accountRepository.findByUserId(userId)
+            val accountList = accountRepository.findByUserIdAndAcType(userId, 1).orEmpty()
             for (ac in accountList){
                 val corporation = corporationRepository.findById(ac.acCpCode).get()
-                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo))
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, false))
             }
         }
         return bankAccountList
@@ -51,10 +51,10 @@ class AccountServiceImpl(
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val accountList = accountRepository.findByUserIdAndAcReg(userId, true).orEmpty()
+            val accountList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 1, true,).orEmpty()
             for (ac in accountList){
-                val corporation = corporationRepository.findById(ac.acCpCode).get()
-                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo))
+                val corporation = corporationRepository.findById(ac.acCpCode).orElse(null)
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg))
             }
         }
         return bankAccountList
@@ -63,7 +63,7 @@ class AccountServiceImpl(
     override fun registerAccount(acNoList: List<String>) {
         for(acNo in acNoList){
             val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
-            account.acreg(!account.acReg!!)
+            account.acreg(!account.acReg)
             accountRepository.save(account)
         }
     }
@@ -100,7 +100,7 @@ class AccountServiceImpl(
         var accountDetailList = ArrayList<BankTradeRes>()
         val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
         val corporation = corporationRepository.findByCpCode(account.acCpCode)?: throw NoCorporationException()
-        val bankAccountRes = BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo)
+        val bankAccountRes = BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg)
         val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNo(account.acNo).orEmpty()
         for (trade in tradeHistoryList){
             accountDetailList.add(BankTradeRes(trade.tdDt, trade.tdVal, trade.tdCn, trade.tdType))
@@ -207,13 +207,13 @@ class AccountServiceImpl(
             println(accountInfoList)
             for (account in accountInfoList){
                 val corporation = corporationRepository.findById(account.acCpCode).get()
-                accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo))
+                accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg))
             }
 
             val financeInfoList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 2, true).orEmpty()
             for (finance in financeInfoList){
                 val corporation = corporationRepository.findById(finance.acCpCode).get()
-                financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo))
+                financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo, finance.acReg))
             }
 
             val insuranceInfoList = insuranceRepository.findAllByUserIdAndIsRegAndIsStatus(userId, true, 10)
