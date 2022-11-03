@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service
 @Service
 class KafkaConsumer {
 
-    @KafkaListener(topics = ["ssafyssafy"], groupId = "shinhan")
+    @KafkaListener(topics = ["remit"], groupId = "shinhan")
     fun consume(message: String?) {
         println(String.format("Consumed message : %s", message))
     }
