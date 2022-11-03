@@ -10,7 +10,7 @@ interface InsuranceService {
     fun getAllInsuranceProduct(accessToken : String) : List<InsuranceProductInfoRes>
     fun getInsuranceProductDetail(accessToken : String, isId : Long) : InsuranceProductInfoDetailRes
     fun getAllMyRegistInsurance(accessToken: String) : MyInsuranceInfoRes
-    fun getAllMyInsurance(accessToken: String) : MyInsuranceInfoRes
+    fun getAllMyInsurance(accessToken: String) : List<MyInsuranceInfoDetailRes>
     fun getMyInsuranceDetail(accessToken: String, isId : Long) : MyInsuranceInfoDetailRes
     fun registApplication(accessToken: String, registList : List<InsuranceReq>)
 }
