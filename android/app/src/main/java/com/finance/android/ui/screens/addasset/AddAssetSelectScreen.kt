@@ -27,6 +27,7 @@ import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
+import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
 import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Response
@@ -62,7 +63,10 @@ fun AddAssetSelectScreen(
             onClickCardItem = { addAssetViewModel.onClickCardItem(it) },
             stockAccountList = (addAssetViewModel.stockAccountList.value as Response.Success).data,
             stockAccountCheckList = addAssetViewModel.stockAccountCheckList,
-            onClickStockAccountItem = { addAssetViewModel.onClickStockAccountItem(it) }
+            onClickStockAccountItem = { addAssetViewModel.onClickStockAccountItem(it) },
+            insuranceList = (addAssetViewModel.insuranceList.value as Response.Success).data,
+            insuranceCheckList = addAssetViewModel.insuranceCheckList,
+            onClickInsuranceItem = { addAssetViewModel.onClickInsuranceItem(it) }
         )
         else -> {
             Loading(
@@ -156,7 +160,10 @@ private fun Screen(
     onClickCardItem: (index: Int) -> Unit,
     stockAccountList: MutableList<BankAccountResponseDto>,
     stockAccountCheckList: Array<MutableState<Boolean>>,
-    onClickStockAccountItem: (index: Int) -> Unit
+    onClickStockAccountItem: (index: Int) -> Unit,
+    insuranceList: MutableList<InsuranceInfoResponseDto>,
+    insuranceCheckList: Array<MutableState<Boolean>>,
+    onClickInsuranceItem: (index: Int) -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -183,7 +190,9 @@ private fun Screen(
                 text = stringResource(
                     id = R.string.msg_find_asset,
                     accountList.size,
-                    cardList.size
+                    cardList.size,
+                    stockAccountList.size,
+                    insuranceList.size
                 ),
                 style = TextStyle(
                     fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
@@ -278,7 +287,11 @@ private fun Screen(
                         stockAccountCheckList = stockAccountCheckList,
                         onClickStockAccountItem = onClickStockAccountItem
                     )
-                    else -> Insurance()
+                    else -> Insurance(
+                        insuranceList = insuranceList,
+                        insuranceCheckList = insuranceCheckList,
+                        onClickInsuranceItem = onClickInsuranceItem
+                    )
                 }
             }
             var showSnackbar by remember { mutableStateOf(false) }
@@ -391,9 +404,30 @@ private fun Stock(
 }
 
 @Composable
-private fun Insurance() {
-    Column {
-        Text(text = "Insurance")
+private fun Insurance(
+    modifier: Modifier = Modifier,
+    insuranceList: MutableList<InsuranceInfoResponseDto>,
+    insuranceCheckList: Array<MutableState<Boolean>>,
+    onClickInsuranceItem: (index: Int) -> Unit
+) {
+    LazyColumn(modifier = modifier) {
+        items(
+            count = insuranceList.size,
+            key = { it },
+            itemContent = {
+                val item = insuranceList[it]
+                val checked = insuranceCheckList[it].value
+                InsuranceListItem_Check(
+                    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                    insuranceName = item.isPdName,
+                    fee = item.isPdFee,
+                    myName = item.name,
+                    isName = item.isName,
+                    checked = checked,
+                    onClickItem = { onClickInsuranceItem(it) }
+                )
+            }
+        )
     }
 }
 
@@ -413,7 +447,10 @@ private fun PreviewScreen() {
         onClickCardItem = {},
         stockAccountList = mutableListOf(),
         stockAccountCheckList = arrayOf(),
-        onClickStockAccountItem = {}
+        onClickStockAccountItem = {},
+        insuranceList = mutableListOf(),
+        insuranceCheckList = arrayOf(),
+        onClickInsuranceItem = {}
     )
 }
 
