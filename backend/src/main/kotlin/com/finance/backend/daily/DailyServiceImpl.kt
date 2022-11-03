@@ -43,7 +43,7 @@ class DailyServiceImpl(
             val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val startDate = LocalDate.of(year, month, 1)
-            val endDate = startDate.plusMonths(1).minusDays(1)
+            val endDate = startDate.plusMonths(1)
             val dayList: List<Attendance> = attendanceRepository.findAllByUserAndAttDateBetween(user, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
             return List(startDate.until(endDate, ChronoUnit.DAYS).toInt()) { i -> AttendanceDao(startDate.plusDays(i.toLong()), isAttend(dayList, startDate.plusDays(i.toLong()))) }
         } else throw Exception()
@@ -82,7 +82,7 @@ class DailyServiceImpl(
             val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val startDate = LocalDate.of(year, month, 1)
-            val endDate = startDate.plusMonths(1).minusDays(1)
+            val endDate = startDate.plusMonths(1)
             val dayList: List<Walk> = walkRepository.findAllByUserAndWalkDateBetween(user, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
             return List(startDate.until(endDate, ChronoUnit.DAYS).toInt()) { i -> isSuccess(dayList, startDate.plusDays(i.toLong())) }
         } else throw Exception()
