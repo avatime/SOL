@@ -79,8 +79,13 @@ class DummyRepositoryImpl @Inject constructor() :
                 acName = "acName",
                 cpName = "신한은행",
                 cpLogo = "https://mblogthumb-phinf.pstatic.net/20160728_194/ppanppane_1469696183585pXt1k_PNG/KB%BC%D5%C7%D8%BA%B8%C7%E8_%283%29.png?type=w800",
+                acReg = true
             )
         }
+    }
+
+    override suspend fun getRegisteredAccount(): MutableList<BankAccountResponseDto> {
+        TODO("Not yet implemented")
     }
 
     override suspend fun putRegisterAccount(acNo: String) {

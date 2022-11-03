@@ -11,6 +11,9 @@ interface BankService {
     @GET("${Const.API_PATH}/bank/asset/all")
     suspend fun getAccountList(): MutableList<BankAccountResponseDto>
 
+    @GET("${Const.API_PATH}/bank/asset")
+    suspend fun getRegisteredAccount(): MutableList<BankAccountResponseDto>
+
     @PUT("${Const.API_PATH}/bank/asset")
     suspend fun putRegisterAccount(@Field("ac_no") acNo: String)
 

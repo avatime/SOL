@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -48,25 +49,27 @@ private fun Draw(
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(companyLogoPath)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier.size(40.dp)
-        )
-        Column(
-            modifier = Modifier
-                .padding(start = 8.dp)
-        ) {
-            Text(text = accountName, fontWeight = FontWeight.Bold)
-            Text(text = DecimalFormat("#,###원").format(balance))
-            accountNumber?.let {
-                Text(text = it)
+        Row(modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(companyLogoPath)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier.size(40.dp)
+            )
+            Column(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+            ) {
+                Text(text = accountName, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(text = DecimalFormat("#,###원").format(balance))
+                accountNumber?.let {
+                    Text(text = it, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                }
             }
         }
-        Spacer(modifier = Modifier.weight(1.0f))
         trailing?.invoke()
     }
 }
@@ -103,7 +106,7 @@ fun AccountListItem_Check(
 
 @Composable
 fun AccountListItem_Remit(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     accountNumber: String,
     balance: Int,
     accountName: String,

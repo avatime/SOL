@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -30,6 +31,7 @@ import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.AddAssetViewModel
+import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
 fun AddAssetSelectScreen(
@@ -365,7 +367,8 @@ private fun PreviewAccount() {
                 acNo = "acNo",
                 balance = 10000,
                 cpName = "cpName",
-                cpLogo = "cpLogo"
+                cpLogo = "cpLogo",
+                acReg = true
             )
         },
         accountCheckList = Array(5) {

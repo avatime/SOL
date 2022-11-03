@@ -1,11 +1,14 @@
 package com.finance.android.viewmodels
 
+import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.BankInfoResponseDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
+import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collect
@@ -14,21 +17,38 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BankViewModel @Inject constructor(
+    application: Application,
+    baseRepository: BaseRepository,
     private val bankRepository: BankRepository
-) : ViewModel () {
+) : BaseViewModel(application, baseRepository) {
+    val accountList =
+        mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
 
+    fun AccountLoad() {
+        viewModelScope.launch {
+            loadAccountList()
+        }
+    }
 
-//    private val _allBackAccountData = mutableStateOf<Response<MutableList<BankInfoResponseDto>>>(
-//        Response.Loading
-//    )
-//
-//    val allBankAccountData = _allBackAccountData
-//
-//    fun getAllBankAccountData () {
-//        viewModelScope.launch {
-//            bankRepository.getAllBankAccount().collect {
-//                _allBackAccountData.value = it
-//            }
-//        }
-//    }
+    fun getLoadState(): Response<Unit> {
+        val arr = arrayOf(accountList)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    private suspend fun loadAccountList() {
+        this@BankViewModel.run {
+            bankRepository.getAccountList()
+        }
+            .collect {
+                accountList.value = it
+            }
+    }
+
 }
