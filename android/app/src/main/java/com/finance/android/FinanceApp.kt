@@ -89,11 +89,7 @@ fun FinanceApp() {
                     ),
                     exit = slideOutVertically()
                 ) {
-                    AttendanceFragment(
-                        onClose = {
-                            navController.popBackStack()
-                        }
-                    )
+                    AttendanceFragment()
                 }
             }
 
