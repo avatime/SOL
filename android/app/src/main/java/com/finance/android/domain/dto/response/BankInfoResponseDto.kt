@@ -6,6 +6,6 @@ data class BankInfoResponseDto(
     @SerializedName("cp_name")
     val cpName : String, //기업명
     @SerializedName("cp_logo")
-    val cpLogo : String //기업로고
+    val cpLogo : String? //기업로고
 )
 

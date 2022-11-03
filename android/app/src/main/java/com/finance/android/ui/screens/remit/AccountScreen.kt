@@ -16,13 +16,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.finance.android.R
+import com.finance.android.ui.components.CpListSheet
 import com.finance.android.ui.components.TextInput
+import com.finance.android.viewmodels.RemitViewModel
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-@Preview
-fun AccountScreen() {
+fun AccountScreen(remitViewModel: RemitViewModel) {
 
     var accountNumber by remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(
@@ -37,7 +38,7 @@ fun AccountScreen() {
 
     ModalBottomSheetLayout(
         sheetState = sheetState,
-        sheetContent = { BottomSheet() },
+        sheetContent = { BottomSheet(remitViewModel) },
         modifier = Modifier.fillMaxSize()
     ) {
 
@@ -88,19 +89,13 @@ fun AccountScreen() {
 }
 
 @Composable
-fun BottomSheet() {
+fun BottomSheet(remitViewModel: RemitViewModel) {
     Column(
 
+
     ) {
-        Text(
-            text = "Bottom sheet",
-            style = MaterialTheme.typography.h6
-        )
-        Spacer(modifier = Modifier.height(32.dp))
-        Text(
-            text = "Click outside the bottom sheet to hide it",
-            style = MaterialTheme.typography.body1
-        )
+        CpListSheet(modifier = Modifier, remitViewModel = remitViewModel)
+
     }
 }
 

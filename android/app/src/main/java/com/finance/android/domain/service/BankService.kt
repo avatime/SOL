@@ -37,8 +37,9 @@ interface BankService {
     suspend fun checkAccount(@Path("ac_no")acNo: String, @Path("cp_code")cdCode : Int) : String
 
     @GET("${Const.API_PATH}/bank/info")
-    suspend fun getAllBankAccount() :MutableList<BankInfoResponseDto>
+    suspend fun getAllBank() :MutableList<BankInfoResponseDto>
 
     @GET("${Const.API_PATH}/bank/register")
     suspend fun getAllMainAccount() : AccountRegisteredResponseDto
+
 }
