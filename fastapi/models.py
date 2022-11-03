@@ -109,3 +109,9 @@ class Finance(Base):
         return "<기업명='%s', 날짜='%s', 가격='%s'>" % (
                    self.fn_name, self.fn_date, self.close
                )
+
+
+class AccountProduct(Base):
+    __tablename__ = 'account_product'
+    ac_pd_code = Column(Integer, primary_key=True, index=True)
+    ac_pd_name = Column(String(44))
