@@ -31,19 +31,18 @@ import com.kizitonwose.calendar.core.DayPosition
 import com.kizitonwose.calendar.core.daysOfWeek
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.DayOfWeek
+import java.time.LocalDate
 import java.time.YearMonth
 import java.time.format.TextStyle
 import java.util.*
 
-@Preview
 @Composable
-fun ShowCalendar(dailyViewModel: DailyViewModel = hiltViewModel()) {
+fun ShowCalendar(attendanceList: MutableList<DailyAttendanceResponseDto>, dailyViewModel: DailyViewModel = hiltViewModel()) {
     val currentMonth = remember { YearMonth.now() }
-    val startMonth = remember { currentMonth.minusMonths(100) } // Adjust as needed
-    val endMonth = remember { currentMonth.plusMonths(100) } // Adjust as needed
+    val startMonth = remember { currentMonth.minusMonths(0) } // Adjust as needed
+    val endMonth = remember { currentMonth.plusMonths(0) } // Adjust as needed
     val daysOfWeek = daysOfWeek()
-//    var attendanceList = mutableListOf<DailyAttendanceResponseDto>()
-    val attendanceList = (dailyViewModel.attendanceList.value as Response.Success).data
+    val attendanceNum : Int = attendanceList.filter { i -> i.attendance }.size
 
     val state = rememberCalendarState(
         startMonth = startMonth,
@@ -65,14 +64,14 @@ fun ShowCalendar(dailyViewModel: DailyViewModel = hiltViewModel()) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = currentMonth.monthValue.toString() + "월",
+                text = state.firstVisibleMonth.yearMonth.monthValue.toString() + "월",
                 fontSize = 20.sp,
                 fontWeight = FontWeight.ExtraBold
             )
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
             Text(text = "이번 달 출석한 횟수", fontWeight = FontWeight.SemiBold)
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
-            Text(text = "N", fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
+            Text(text = attendanceNum.toString(), fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
             DaysOfWeekTitle(daysOfWeek = daysOfWeek)
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_medium)))
@@ -105,7 +104,7 @@ fun Day(day: CalendarDay, attendanceList : MutableList<DailyAttendanceResponseDt
             .aspectRatio(1f), // This is important for square sizing!
         contentAlignment = Alignment.Center
     ) {
-        if (day.position == DayPosition.MonthDate && attendanceList[day.date.dayOfMonth - 1].attendance) {
+        if (day.position == DayPosition.MonthDate && day.date.month == LocalDate.now().month && day.date.year == LocalDate.now().year && attendanceList[day.date.dayOfMonth - 1].attendance) {
             Image(
                 painter = painterResource(R.drawable.paw),
                 contentDescription = null, // 필수 param
@@ -113,7 +112,7 @@ fun Day(day: CalendarDay, attendanceList : MutableList<DailyAttendanceResponseDt
         } else {
             Text(
                 text = day.date.dayOfMonth.toString(),
-                color = if (day.position == DayPosition.MonthDate) Color.Black else Color.White
+                color = if (day.position == DayPosition.MonthDate) Color.Black else Color.Gray // Color.White
             )
         }
     }
