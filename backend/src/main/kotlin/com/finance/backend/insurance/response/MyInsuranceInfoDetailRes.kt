@@ -3,16 +3,16 @@ package com.finance.backend.insurance.response
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class MyInsuranceInfoDetailRes(
-        @JsonProperty("is_id")
+        @get:JsonProperty("is_id")
         val isId : Long,
 
-        @JsonProperty("is_pd_name")
+        @get:JsonProperty("is_pd_name")
         val isPdName : String,
 
-        @JsonProperty("is_pd_fee")
+        @get:JsonProperty("is_pd_fee")
         val isPdFee : Int,
 
-        @JsonProperty("name")
+        @get:JsonProperty("name")
         val name : String,
 
         // 피보험자
@@ -22,6 +22,6 @@ data class MyInsuranceInfoDetailRes(
         @JsonProperty("is_reg")
         val isReg : Boolean,
 
-        @JsonProperty("is_pd_id")
+        @get:JsonProperty("is_pd_id")
         val isPdId : Long,
 )
