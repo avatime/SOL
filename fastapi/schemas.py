@@ -1,5 +1,6 @@
 from typing import Optional
 from pydantic import BaseModel
+from datetime import date
 
 
 class userReq(BaseModel):
@@ -19,3 +20,13 @@ class Account(BaseModel):
     ac_close_dt: Optional[str]
     ac_rm_reg: Optional[int]
     user_id: Optional[int]
+
+
+class FinanceOut(BaseModel):
+    fn_name: str
+    fn_date: date
+    fn_close: int
+    fn_per: float
+
+    class Config:
+        orm_mode = True
