@@ -6,6 +6,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -49,12 +50,14 @@ fun AssetLifeContainer2(modifier: Modifier) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium)))
     {
-        Row {
+        Row (verticalAlignment = Alignment.CenterVertically)
+        {
             Text(text = "신한라이프",
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(end = 16.dp))
-            Text(text = "11월 납입보험료")
+            modifier = Modifier.padding(end = 16.dp),
+            )
+            Text(text = "11월 납입보험료", fontSize = 12.sp)
         }
         Text(text = "30,000원",
             fontWeight = FontWeight.Bold,

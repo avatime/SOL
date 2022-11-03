@@ -67,7 +67,7 @@ fun HomeCardContainer(modifier: Modifier, navController: NavController) {
             Text(text = "4", color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.weight(1.0f))
             IconButton(onClick = {
-                navController.navigate(Const.ASSET_FRAGMENT)
+                navController.navigate(Const.Routes.ASSET)
             },
                 modifier = Modifier.size(30.dp)) {
                 Image(painter = painterResource(R.drawable.arrow_forward_ios),
@@ -136,7 +136,7 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
                         .width(120.dp)
                         .padding(start = 20.dp),
                     buttonType = ButtonType.CIRCULAR,
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.weight(1.0f))
                 TextButton(onClick = { /*TODO*/ },
@@ -146,7 +146,7 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
                         .width(120.dp)
                         .padding(end = 20.dp),
                     buttonType = ButtonType.CIRCULAR,
-                    fontSize = 16.sp
+                    fontSize = 14.sp
                 )
             }
         }
