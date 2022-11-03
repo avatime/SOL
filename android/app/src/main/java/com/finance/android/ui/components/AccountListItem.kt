@@ -26,8 +26,8 @@ import java.text.DecimalFormat
 
 @Preview
 @Composable
-fun AccountListItem() {
-    PreviewAccountListItem_Remit()
+fun AccountListItem(onClickRemit: () -> Unit = {}) {
+    PreviewAccountListItem_Remit(onClickRemit = onClickRemit)
 }
 
 @Composable
@@ -146,7 +146,7 @@ private fun PreviewAccountListItem_Check() {
 
 @Preview
 @Composable
-private fun PreviewAccountListItem_Remit() {
+private fun PreviewAccountListItem_Remit(onClickRemit: () -> Unit = {}) {
     AccountListItem_Remit(
         modifier = Modifier,
         accountNumber = "accountNumber",
@@ -154,6 +154,6 @@ private fun PreviewAccountListItem_Remit() {
         accountName = "accountName",
         companyLogoPath = "https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png",
         onClickItem = {},
-        onClickRemit = {}
+        onClickRemit = onClickRemit
     )
 }

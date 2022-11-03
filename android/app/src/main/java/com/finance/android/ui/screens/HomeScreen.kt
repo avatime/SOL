@@ -13,22 +13,19 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import com.finance.android.R
-import com.finance.android.ui.components.*
+import com.finance.android.ui.components.AccountListItem
+import com.finance.android.ui.components.ButtonType
+import com.finance.android.ui.components.InsuranceListItem
+import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
 
 @Composable
@@ -82,7 +79,11 @@ fun HomeCardContainer(modifier: Modifier, navController: NavController) {
                 )
             }
         }
-        AccountListItem()
+        AccountListItem(
+            onClickRemit = {
+                navController.navigate("${Const.Routes.REMIT}/신한은행/1111/10")
+            }
+        )
         AccountListItem()
         AccountListItem()
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))

@@ -6,9 +6,11 @@ import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.finance.android.ui.fragments.*
 import com.finance.android.ui.screens.AttendanceFragment
 import com.finance.android.ui.theme.FinanceTheme
@@ -33,8 +35,20 @@ fun FinanceApp() {
             composable(Const.Routes.MAIN) {
                 MainFragment(navController = navController)
             }
-            composable(Const.Routes.REMIT) {
-                RemitFragment()
+            composable(
+                route = "${Const.Routes.REMIT}/{accountName}/{accountNumber}/{balance}",
+                arguments = listOf(
+                    navArgument("accountName") { type = NavType.StringType },
+                    navArgument("accountNumber") { type = NavType.StringType },
+                    navArgument("balance") { type = NavType.IntType }
+
+                )
+            ) {
+                RemitFragment(
+                    accountName = it.arguments!!.getString("accountName")!!,
+                    accountNumber = it.arguments!!.getString("accountNumber")!!,
+                    balance = it.arguments!!.getInt("balance"),
+                )
             }
             composable(Const.Routes.ADD_ASSET) {
                 AnimatedVisibility(
