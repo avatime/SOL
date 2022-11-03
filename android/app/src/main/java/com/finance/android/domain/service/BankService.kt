@@ -42,4 +42,8 @@ interface BankService {
     @GET("${Const.API_PATH}/bank/register")
     suspend fun getAllMainAccount() : AccountRegisteredResponseDto
 
+    @GET("${Const.API_PATH}/bank/finance/info")
+    suspend fun getAllStockCP(): MutableList<BankInfoResponseDto>
+
+
 }

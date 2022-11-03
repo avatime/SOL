@@ -59,4 +59,8 @@ class BankRepositoryImpl @Inject constructor(
     override suspend fun getAllMainAccount(): AccountRegisteredResponseDto {
         return bankService.getAllMainAccount()
     }
+
+    override suspend fun getAllStockCp(): MutableList<BankInfoResponseDto> {
+        return bankService.getAllStockCP()
+    }
 }

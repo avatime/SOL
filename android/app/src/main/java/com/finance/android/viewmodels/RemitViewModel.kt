@@ -52,6 +52,20 @@ class RemitViewModel @Inject constructor(
 
     }
 
+    //모든 증권 기업 조회
+    private val _allStockCpData = mutableStateOf<Response<MutableList<BankInfoResponseDto>>>(Response.Loading)
+    val allStockCpData = _allStockCpData
+    fun getAllStockCpData () {
+        viewModelScope.launch {
+            this@RemitViewModel.run {
+                bankRepository.getAllStockCp()
+            }
+                .collect{
+                    _allStockCpData.value = it
+                }
+        }
+    }
+
     fun onClickBookmark(key: Any) {
         _recommendedAccountData.value
     }
