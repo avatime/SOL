@@ -30,18 +30,22 @@ class AddAssetViewModel @Inject constructor(
     lateinit var accountCheckList: Array<MutableState<Boolean>>
     val cardList = mutableStateOf<Response<MutableList<CardInfoResponseDto>>>(Response.Loading)
     lateinit var cardCheckList: Array<MutableState<Boolean>>
+    val stockAccountList =
+        mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
+    lateinit var stockAccountCheckList: Array<MutableState<Boolean>>
 
     fun createAssetAndLoad() {
         viewModelScope.launch {
             createAsset {
                 loadAccountList()
                 loadCardList()
+                loadStockAccountList()
             }
         }
     }
 
     fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(accountList, cardList)
+        val arr = arrayOf(accountList, cardList, stockAccountList)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -55,6 +59,7 @@ class AddAssetViewModel @Inject constructor(
     fun onClickSelectAll() {
         accountCheckList.forEach { it.value = !selectedAll.value }
         cardCheckList.forEach { it.value = !selectedAll.value }
+        stockAccountCheckList.forEach { it.value = !selectedAll.value }
         selectedAll.value = !selectedAll.value
     }
 
@@ -68,8 +73,15 @@ class AddAssetViewModel @Inject constructor(
         calculateSelectAll()
     }
 
+    fun onClickStockAccountItem(index: Int) {
+        stockAccountCheckList[index].value = !stockAccountCheckList[index].value
+        calculateSelectAll()
+    }
+
     private fun calculateSelectAll() {
-        selectedAll.value = accountCheckList.all { it.value } && cardCheckList.all { it.value }
+        selectedAll.value = accountCheckList.all { it.value } &&
+            cardCheckList.all { it.value } &&
+            stockAccountCheckList.all { it.value }
     }
 
     private suspend fun createAsset(onSuccess: suspend () -> Unit) {
@@ -109,6 +121,18 @@ class AddAssetViewModel @Inject constructor(
                 cardList.value = it
                 if (it is Response.Success) {
                     cardCheckList = Array(it.data.size) { mutableStateOf(false) }
+                }
+            }
+    }
+
+    private suspend fun loadStockAccountList() {
+        this@AddAssetViewModel.run {
+            stockRepository.getStockAccountList()
+        }
+            .collect {
+                stockAccountList.value = it
+                if (it is Response.Success) {
+                    stockAccountCheckList = Array(it.data.size) { mutableStateOf(false) }
                 }
             }
     }
