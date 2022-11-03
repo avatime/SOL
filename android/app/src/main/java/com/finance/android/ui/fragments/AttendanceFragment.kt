@@ -1,10 +1,8 @@
 package com.finance.android.ui.screens
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -12,15 +10,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -32,31 +25,23 @@ import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.screens.more.ShowCalendar
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
-import com.finance.android.viewmodels.DailyViewModel
-import com.kizitonwose.calendar.compose.HorizontalCalendar
-import com.kizitonwose.calendar.compose.rememberCalendarState
-import com.kizitonwose.calendar.core.CalendarDay
-import com.kizitonwose.calendar.core.DayPosition
-import com.kizitonwose.calendar.core.daysOfWeek
-import java.time.DayOfWeek
-import java.time.YearMonth
-import java.time.format.TextStyle
+import com.finance.android.viewmodels.AttendanceViewModel
 import java.util.*
 
 @Composable
 fun AttendanceFragment(
-    dailyViewModel: DailyViewModel = hiltViewModel(),
+    attendanceViewModel: AttendanceViewModel = hiltViewModel(),
     onClose: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
-        dailyViewModel.launchAttendance()
+        attendanceViewModel.launchAttendance()
     }
 
-    when(dailyViewModel.getLoadState()) {
+    when(attendanceViewModel.getLoadState()) {
         is Response.Success -> Screen(
-            onClickIsAttend = { dailyViewModel.onClickIsAttend() },
-            attendanceList = (dailyViewModel.attendanceList.value as Response.Success).data,
-            isAttend = dailyViewModel.isAttend.value,
+            onClickIsAttend = { attendanceViewModel.onClickIsAttend() },
+            attendanceList = (attendanceViewModel.attendanceList.value as Response.Success).data,
+            isAttend = attendanceViewModel.isAttend.value,
             onClose = onClose
         )
         is Response.Failure -> Loading("실패", onClose = onClose)
