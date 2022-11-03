@@ -49,9 +49,8 @@ class MyPageViewModel @Inject constructor(
             userRepository.getUserProfile()
         }.collect {
             myInfo.value = it
-            if(it is Response.Success) {
-                println("푸로필 불러오기 성공")
-            }
+//            if(it is Response.Success) {
+//            }
         }
     }
 }

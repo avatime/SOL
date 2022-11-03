@@ -5,6 +5,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
@@ -14,9 +15,12 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode.Companion.Screen
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -61,7 +65,8 @@ fun Screen(
 ) {
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
+            .fillMaxHeight()
+            .background(color = MaterialTheme.colorScheme.background)
     ) {
         Row(
 
@@ -72,15 +77,34 @@ fun Screen(
             )
             Text(text = userInfo.username)
         }
+
         Button(
             onClick = {
                 navController.navigate(Const.Routes.ATTENDANCE)
             },
-            modifier = Modifier.withBottomButton()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_medium))
+                .height(100.dp)
         ) {
             Text("포인트")
             Text(text = userInfo.point.toString() + "포인트")
         }
+
+        MenuList(navController = navController)
+    }
+}
+
+@Composable
+private fun MenuList(navController: NavController) {
+    Column(
+        modifier = Modifier
+            .padding(dimensionResource(R.dimen.calendar_default))
+            .background(
+                MaterialTheme.colorScheme.surface,
+                RoundedCornerShape(dimensionResource(R.dimen.calendar_default))
+            )
+    ){
         Button(
             onClick = {
                 navController.navigate(Const.Routes.ATTENDANCE)
@@ -89,6 +113,7 @@ fun Screen(
         ) {
             Text("출석체크")
         }
+
         Button(
             onClick = {
                 navController.navigate(Const.Routes.ATTENDANCE)
@@ -97,6 +122,7 @@ fun Screen(
         ) {
             Text("만보기")
         }
+
         Button(
             onClick = {
                 navController.navigate(Const.Routes.ATTENDANCE)
