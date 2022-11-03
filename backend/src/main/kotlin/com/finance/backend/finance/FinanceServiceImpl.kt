@@ -2,6 +2,7 @@ package com.finance.backend.finance
 
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.bank.AccountRepository
+import com.finance.backend.bank.request.AccountInfoReq
 import com.finance.backend.bank.response.BankAccountRes
 import com.finance.backend.cardBenefit.response.CardBenefitRes
 import com.finance.backend.common.util.JwtUtils
@@ -43,9 +44,9 @@ class FinanceServiceImpl(
         }
         return bankAccountList
     }
-    override fun putFinanceAsset(acNoList: List<String>) {
-        for (acNo in acNoList){
-            val account = accountRepository.findById(acNo).get()
+    override fun putFinanceAsset(acNoList: List<AccountInfoReq>) {
+        for (a in acNoList){
+            val account = accountRepository.findById(a.acNo).get()
             account.acreg(!account.acReg)
             accountRepository.save(account)
         }

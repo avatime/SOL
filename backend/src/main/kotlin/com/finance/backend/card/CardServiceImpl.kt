@@ -3,6 +3,7 @@ package com.finance.backend.card
 import com.finance.backend.Exceptions.NoCardException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.bookmark.Bookmark
+import com.finance.backend.card.request.CardInfoReq
 import com.finance.backend.card.response.CardBillDetailRes
 import com.finance.backend.card.response.CardBillRes
 import com.finance.backend.card.response.CardInfoRes
@@ -35,9 +36,9 @@ class CardServiceImpl(
         private val jwtUtils: JwtUtils,
 
 ) : CardService {
-    override fun registerMain(cdNoList: List<String>) {
-        for (cdNo in cdNoList){
-            var card: Card = cardRepository.findById(cdNo).orElse(null)?: throw NoCardException()
+    override fun registerMain(cdNoList: List<CardInfoReq>) {
+        for (c in cdNoList){
+            var card: Card = cardRepository.findById(c.cdNo).orElse(null)?: throw NoCardException()
             card.register()
             cardRepository.save(card)
         }

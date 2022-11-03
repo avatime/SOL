@@ -1,5 +1,6 @@
 package com.finance.backend.bank;
 
+import com.finance.backend.bank.request.AccountInfoReq
 import com.finance.backend.bank.response.*
 import com.finance.backend.corporation.response.BankInfoRes
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 interface AccountService {
     fun getAccount(token: String): List<BankAccountRes>
     fun getAccountAll(token: String): List<BankAccountRes>
-    fun registerAccount(acNoList: List<String>)
+    fun registerAccount(acNoList: List<AccountInfoReq>)
     fun registerRemitAccount(acNo: String)
     fun registerBookmarkAccount(acNo: String, token: String)
     fun getAccountDetail(acNo: String): BankDetailRes

@@ -26,7 +26,7 @@ class AccountController(val accountService: AccountService) {
     }
 
     @PutMapping("/asset")
-    fun registerAccount(@RequestBody acNoList: List<String>): ResponseEntity<Any>{
+    fun registerAccount(@RequestBody acNoList: List<AccountInfoReq>): ResponseEntity<Any>{
         return ResponseEntity.status(200).body(accountService.registerAccount(acNoList))
     }
 

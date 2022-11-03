@@ -1,5 +1,6 @@
 package com.finance.backend.card
 
+import com.finance.backend.card.request.CardInfoReq
 import org.springframework.http.RequestEntity
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -18,7 +19,7 @@ class CardController(
 ) {
 
     @PutMapping("/asset")
-    fun registerCard(@RequestBody cdNoList: List<String>): ResponseEntity<Any>{
+    fun registerCard(@RequestBody cdNoList: List<CardInfoReq>): ResponseEntity<Any>{
         return ResponseEntity.status(200).body(cardService.registerMain(cdNoList))
     }
 

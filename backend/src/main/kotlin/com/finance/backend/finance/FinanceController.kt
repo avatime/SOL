@@ -1,5 +1,6 @@
 package com.finance.backend.finance
 
+import com.finance.backend.bank.request.AccountInfoReq
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -20,7 +21,7 @@ class FinanceController(
     }
 
     @PutMapping("/asset")
-    fun putFinanceAsset(@RequestBody acNoList: List<String>): ResponseEntity<Any>{
+    fun putFinanceAsset(@RequestBody acNoList: List<AccountInfoReq>): ResponseEntity<Any>{
         return ResponseEntity.status(200).body(financeService.putFinanceAsset(acNoList))
     }
 

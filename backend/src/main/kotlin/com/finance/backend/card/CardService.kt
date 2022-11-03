@@ -1,5 +1,6 @@
 package com.finance.backend.card
 
+import com.finance.backend.card.request.CardInfoReq
 import com.finance.backend.card.response.CardBillDetailRes
 import com.finance.backend.card.response.CardBillRes
 import com.finance.backend.card.response.CardInfoRes
@@ -8,7 +9,7 @@ import com.finance.backend.cardBenefit.response.CardBenefitDetailRes
 import com.finance.backend.cardBenefit.response.CardBenefitRes
 
 interface CardService {
-    fun registerMain(cdNoList: List<String>)
+    fun registerMain(cdNoList: List<CardInfoReq>)
     fun getAssetCard(token: String): List<CardInfoRes>
     fun getMyCard(token: String): List<CardRes>
     fun getCardMonthInfo(cdNo: String, year:Int, month: Int): List<CardBillDetailRes>
