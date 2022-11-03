@@ -180,7 +180,7 @@ class AccountServiceImpl(
         var bankInfoList = ArrayList<BankInfoRes>()
         val corporationList = corporationRepository.findTop16ByOrderByCpCode().orEmpty()
         for(corporation in corporationList){
-            val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo)
+            val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo, corporation.cpCode)
             bankInfoList.add(bankInfo)
         }
         return bankInfoList
@@ -190,7 +190,7 @@ class AccountServiceImpl(
         var bankInfoList = ArrayList<BankInfoRes>()
         val corporationList = corporationRepository.findTop25ByOrderByCpCodeDesc()
         for(corporation in corporationList){
-            val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo)
+            val bankInfo = BankInfoRes(corporation.cpName, corporation.cpLogo, corporation.cpCode)
             bankInfoList.add(bankInfo)
         }
         return bankInfoList

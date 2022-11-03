@@ -4,7 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty
 
 class BankInfoRes(
         cpName: String,
-        cpLogo: String
+        cpLogo: String,
+        cpCode: Long
 ) {
 
     @JsonProperty("cp_name")
@@ -12,4 +13,7 @@ class BankInfoRes(
 
     @JsonProperty("cp_logo")
     val cpLogo: String = cpLogo
+
+    @JsonProperty("cp_code")
+    val cpCode: Long = cpCode
 }
