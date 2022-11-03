@@ -20,6 +20,11 @@ class InsuranceController (private val insuranceService: InsuranceService) {
     }
 
     @GetMapping("/my")
+    fun getAllMyRegistInsurance(@RequestHeader("access_token") accessToken : String) : ResponseEntity<Any> {
+        return ResponseEntity.status(200).body(insuranceService.getAllMyRegistInsurance(accessToken))
+    }
+
+    @GetMapping("/my/all")
     fun getAllMyInsurance(@RequestHeader("access_token") accessToken : String) : ResponseEntity<Any> {
         return ResponseEntity.status(200).body(insuranceService.getAllMyInsurance(accessToken))
     }
@@ -30,7 +35,7 @@ class InsuranceController (private val insuranceService: InsuranceService) {
     }
 
     @PutMapping("/my")
-    fun registMainOrNot(@RequestHeader("access_token") accessToken : String, @RequestBody insuranceReq: InsuranceReq) : ResponseEntity<Any> {
-        return ResponseEntity.status(200).body(insuranceService.registMainOrNot(accessToken, insuranceReq.isId))
+    fun registMainOrNot(@RequestHeader("access_token") accessToken : String, @RequestBody registList : List<InsuranceReq> ): ResponseEntity<Any> {
+        return ResponseEntity.status(200).body(insuranceService.registApplication(accessToken, registList))
     }
 }

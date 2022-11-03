@@ -57,6 +57,6 @@ class Insurance (user : User, account : Account) {
     var account : Account = account
         protected set
 
-    fun registMainFlip() {this.isReg = !this.isReg}
-    fun toEntity(name : String) : MyInsuranceInfoDetailRes = MyInsuranceInfoDetailRes(this.id, name, this.fee, this.user.name, this.isName)
+    fun registApp() {this.isReg = true}
+    fun toEntity(name : String) : MyInsuranceInfoDetailRes = MyInsuranceInfoDetailRes(this.id, name, this.fee, this.user.name, this.isName, this.isReg, this.isPdCode)
 }
