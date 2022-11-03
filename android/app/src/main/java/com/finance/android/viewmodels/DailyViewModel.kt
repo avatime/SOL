@@ -11,6 +11,7 @@ import com.finance.android.domain.repository.SampleRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 import kotlin.math.log
@@ -32,7 +33,9 @@ class DailyViewModel @Inject constructor(
 
     fun onClickIsAttend() {
         isAttend.value = !isAttend.value
-//        checkAttendance { loadAttendanceList(LocalDateTime.now().year, LocalDateTime.now().monthValue) }
+        viewModelScope.launch {
+            checkAttendance { loadAttendanceList(LocalDateTime.now().year, LocalDateTime.now().monthValue) }
+        }
     }
 
     fun getLoadState(): Response<Unit> {
@@ -49,7 +52,7 @@ class DailyViewModel @Inject constructor(
 
     private suspend fun checkAttendance(onSuccess: suspend () -> Unit) {
         this@DailyViewModel.run {
-            dailyRepository.test()
+            dailyRepository.attendance()
         }.collect { res ->
             if (res is Response.Success) {
                 onSuccess()
@@ -63,9 +66,9 @@ class DailyViewModel @Inject constructor(
         }
             .collect {
                 attendanceList.value = it
-//                if(it is Response.Success) {
-//                    println(it)
-//                }
+                if(it is Response.Success) {
+                    isAttend.value = it.data[LocalDate.now().dayOfMonth - 1].attendance
+                }
             }
     }
 }
