@@ -29,30 +29,35 @@ fun AddAssetFragment(
                 modifier = modifier,
                 onClickBack = onClose,
                 onClickNext = {
-                    navController.navigate(Const.ADD_ASSET_SELECT_SCREEN) {
-                        launchSingleTop = true
-                    }
+                    navController.navigate(Const.ADD_ASSET_SELECT_SCREEN)
                 }
             )
         }
         composable(Const.ADD_ASSET_SELECT_SCREEN) {
             AddAssetSelectScreen(
                 addAssetViewModel = addAssetViewModel,
-                onClickBack = {
-                    navController.popBackStack()
-                },
+                onClickBack = onClose,
                 onClickNext = {
-                    navController.navigate(Const.ADD_ASSET_REP_SCREEN) {
-                        launchSingleTop = true
-                    }
+                    navController.navigate(Const.ADD_ASSET_REP_SCREEN)
                 }
             )
         }
         composable(Const.ADD_ASSET_REP_SCREEN) {
-            AddAssetRepresentScreen(navController = navController)
+            AddAssetRepresentScreen(
+                addAssetViewModel = addAssetViewModel,
+                onClickBack = {
+                    navController.popBackStack()
+                },
+                onClickNext = {
+                    navController.navigate(Const.ADD_ASSET_RESULT_SCREEN)
+                }
+            )
         }
         composable(Const.ADD_ASSET_RESULT_SCREEN) {
-            AddAssetResultScreen(navController = navController)
+            AddAssetResultScreen(
+                addAssetViewModel = addAssetViewModel,
+                onClickNext = onClose
+            )
         }
     }
 }

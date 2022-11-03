@@ -5,7 +5,10 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.datastore.UserStore
+import com.finance.android.domain.dto.request.AccountNumberDto
+import com.finance.android.domain.dto.request.CardNumberDto
 import com.finance.android.domain.dto.request.CreateAssetRequestDto
+import com.finance.android.domain.dto.request.StockAccountNumberDto
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
 import com.finance.android.domain.repository.*
@@ -33,6 +36,12 @@ class AddAssetViewModel @Inject constructor(
     val stockAccountList =
         mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
     lateinit var stockAccountCheckList: Array<MutableState<Boolean>>
+    val repAccountIndex = mutableStateOf(0)
+
+    private val registerStateRepAccount = mutableStateOf<Response<Unit>>(Response.Loading)
+    private val registerStateAccount = mutableStateOf<Response<Unit>>(Response.Loading)
+    private val registerStateCard = mutableStateOf<Response<Unit>>(Response.Loading)
+    private val registerStateStockAccount = mutableStateOf<Response<Unit>>(Response.Loading)
 
     fun createAssetAndLoad() {
         viewModelScope.launch {
@@ -51,6 +60,31 @@ class AddAssetViewModel @Inject constructor(
             Response.Loading
         } else if (arr.count { it.value is Response.Failure } != 0) {
             Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun getAddedAccountList(): List<BankAccountResponseDto> {
+        if (accountList.value !is Response.Success) {
+            return emptyList()
+        }
+        return (accountList.value as Response.Success).data
+            .filterIndexed { idx, _ -> accountCheckList[idx].value }
+    }
+
+    fun getRegisterState(): Response<Unit> {
+        val arr = arrayOf(
+            registerStateRepAccount,
+            registerStateAccount,
+            registerStateCard,
+            registerStateStockAccount
+        )
+
+        return if (arr.any { it.value is Response.Failure }) {
+            Response.Failure(null)
+        } else if (arr.any { it.value is Response.Loading }) {
+            Response.Loading
         } else {
             Response.Success(Unit)
         }
@@ -76,6 +110,19 @@ class AddAssetViewModel @Inject constructor(
     fun onClickStockAccountItem(index: Int) {
         stockAccountCheckList[index].value = !stockAccountCheckList[index].value
         calculateSelectAll()
+    }
+
+    fun onClickRepAccountItem(index: Int) {
+        repAccountIndex.value = index
+    }
+
+    fun registerAsset() {
+        viewModelScope.launch {
+            registerAccount()
+            registerCard()
+            registerStockAccount()
+            registerRepAccount()
+        }
     }
 
     private fun calculateSelectAll() {
@@ -134,6 +181,76 @@ class AddAssetViewModel @Inject constructor(
                 if (it is Response.Success) {
                     stockAccountCheckList = Array(it.data.size) { mutableStateOf(false) }
                 }
+            }
+    }
+
+    private suspend fun registerAccount() {
+        if (accountList.value !is Response.Success) {
+            return
+        }
+
+        this@AddAssetViewModel.run {
+            bankRepository.putRegisterAccount(
+                (accountList.value as Response.Success).data
+                    .filterIndexed { idx, _ -> accountCheckList[idx].value }
+                    .map { AccountNumberDto(it.acNo) }
+                    .toTypedArray()
+            )
+        }
+            .collect {
+                registerStateAccount.value = it
+            }
+    }
+
+    private suspend fun registerCard() {
+        if (cardList.value !is Response.Success) {
+            return
+        }
+
+        this@AddAssetViewModel.run {
+            cardRepository.putRegisterCard(
+                (cardList.value as Response.Success).data
+                    .filterIndexed { idx, _ -> cardCheckList[idx].value }
+                    .map { CardNumberDto(it.cardNumber) }
+                    .toTypedArray()
+            )
+        }
+            .collect {
+                registerStateCard.value = it
+            }
+    }
+
+    private suspend fun registerStockAccount() {
+        if (stockAccountList.value !is Response.Success) {
+            return
+        }
+
+        this@AddAssetViewModel.run {
+            stockRepository.putRegisterStockAccount(
+                (stockAccountList.value as Response.Success).data
+                    .filterIndexed { idx, _ -> stockAccountCheckList[idx].value }
+                    .map { StockAccountNumberDto(it.acNo) }
+                    .toTypedArray()
+            )
+        }
+            .collect {
+                registerStateStockAccount.value = it
+            }
+    }
+
+    private suspend fun registerRepAccount() {
+        if (accountList.value !is Response.Success) {
+            return
+        }
+
+        this@AddAssetViewModel.run {
+            val accountNumberDto = AccountNumberDto(
+                (accountList.value as Response.Success).data[repAccountIndex.value].acNo
+            )
+            bankRepository.putRegisterMainAccount(accountNumberDto)
+        }
+            .collect {
+                registerStateRepAccount.value = it
             }
     }
 }
