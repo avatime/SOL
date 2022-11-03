@@ -25,6 +25,6 @@ interface UserService {
     @POST("${Const.DATA_PATH}/user/register")
     suspend fun createAsset(@Body createAssetRequestDto: CreateAssetRequestDto)
 
-    @GET("${Const.DATA_PATH}/user")
+    @GET("${Const.API_PATH}/user")
     suspend fun getUserProfile() : UserProfileResponseDto
 }
