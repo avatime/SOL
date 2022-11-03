@@ -1,8 +1,9 @@
 package com.finance.android.ui.components
 
-
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import android.util.Log
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -11,35 +12,24 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.airbnb.lottie.compose.*
-import com.finance.android.R
-import com.finance.android.ui.screens.AccountScreen
-import com.finance.android.ui.screens.ContactScreen
-import com.finance.android.ui.screens.RecoScreen
+import com.finance.android.domain.dto.response.BankInfoResponseDto
 import com.finance.android.ui.theme.Disabled
+import com.finance.android.utils.Response
 import com.finance.android.viewmodels.RemitViewModel
-import com.google.accompanist.pager.*
-
 
 @Composable
-fun HeaderRemitTabBar(
-    modifier: Modifier = Modifier,
-    remitViewModel: RemitViewModel
-) {
-
-
+fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
     var selectedIndex by remember { mutableStateOf(0) }
 
 
-    val list = listOf("추천", "계좌", "연락처")
-    Column(modifier = modifier.fillMaxSize()) {
+
+    val list = listOf("은행", "증권")
+    Column(modifier = Modifier.padding(end = 150.dp, bottom = 30.dp)) {
         TabRow(selectedTabIndex = selectedIndex,
             backgroundColor = Color.White,
-            modifier = Modifier.padding(end = 150.dp),
+            modifier = Modifier,
             indicator = {
                 TabRowDefaults.Indicator(
                     modifier = Modifier
@@ -53,9 +43,7 @@ fun HeaderRemitTabBar(
                     color = Color.Transparent
                 )
             }
-
-
-        ) {
+            ) {
             list.forEachIndexed { index, text ->
                 val selected = selectedIndex == index
                 Tab(
@@ -63,8 +51,8 @@ fun HeaderRemitTabBar(
                     selected = selected,
                     onClick = { selectedIndex = index },
                     text = { Text(text = text, fontSize = 18.sp,) },
-                    modifier = Modifier.width(80.dp),
                     selectedContentColor = Color.Black,
+                    modifier = Modifier.width(80.dp),
                     unselectedContentColor = Disabled,
 
 
@@ -72,30 +60,44 @@ fun HeaderRemitTabBar(
             }
         }
 
+        fun launch() {
+            remitViewModel.getAllBankData()
+        }
+
+        LaunchedEffect(Unit) {
+            launch()
+        }
         when (selectedIndex) {
             0 -> {
-                RecoScreen(
-                    remitViewModel = remitViewModel
-                )
+               AllBankList(allBankData = remitViewModel.allBankData)
             }
             1 -> {
-                AccountScreen(remitViewModel = remitViewModel)
+
             }
-            2 -> {
-                ContactScreen()
-            }
+
         }
+
     }
-
-
 
 }
 
 
 
+@Composable
+fun AllBankList(allBankData : MutableState<Response<MutableList<BankInfoResponseDto>>>) {
+    Log.i("allbank",allBankData.toString())
+
+    when(val response = allBankData.value) {
+
+        is Response.Failure -> Text(text = "실패")
+        is Response.Loading -> Text(text = "로딩중")
+        is Response.Success ->
+            response.data.forEach {
+            it.cpLogo?.let { it1 -> CompanyItem(cpName = it.cpName, cpLogo = it1) }
+
+        }
+
+    }
 
 
-
-
-
-
+}

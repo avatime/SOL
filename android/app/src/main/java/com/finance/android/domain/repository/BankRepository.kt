@@ -22,6 +22,6 @@ interface BankRepository {
         @Field("cp_code") cdCode: Int
     ): String
 
-    suspend fun getAllBankAccount(): MutableList<BankInfoResponseDto>
+    suspend fun getAllBank(): MutableList<BankInfoResponseDto>
     suspend fun getAllMainAccount(): AccountRegisteredResponseDto
 }
