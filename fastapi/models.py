@@ -1,5 +1,5 @@
 from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, BigInteger, Boolean, Date, LargeBinary, ForeignKey
+from sqlalchemy import Column, Integer, String, BigInteger, Boolean, Date, LargeBinary, ForeignKey, Float
 
 Base = declarative_base()
 
@@ -90,3 +90,17 @@ class Insurance(Base):
     fee = Column(Integer)
     user_id = Column(LargeBinary, ForeignKey('user.id'))
     ac_no = Column(String(30), ForeignKey('account.ac_no'))
+
+
+class Finance(Base):
+    __tablename__ = 'finance'
+    id = Column(BigInteger, primary_key=True, index=True)
+    fn_name = Column(String(12))
+    fn_date = Column(Date)
+    fn_close = Column(Integer)
+    fn_per = Column(Float)
+
+    def __repr__(self):
+        return "<기업명='%s', 날짜='%s', 가격='%s'>" % (
+                   self.fn_name, self.fn_date, self.fn_close
+               )
