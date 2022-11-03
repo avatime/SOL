@@ -15,18 +15,17 @@ import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.rememberNavController
 import com.finance.android.ui.components.ButtonType
 
 import com.finance.android.utils.ext.withBottomButton
+import com.finance.android.viewmodels.RemitViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
-@Preview
 @Composable
-fun InputMoneyScreen() {
+fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
 
     var moneyValue by remember {
         mutableStateOf("")
@@ -88,15 +87,15 @@ fun InputMoneyScreen() {
         error.value = true
     }
 
-    if(moneyValue.isNotEmpty()&&(Integer.parseInt(moneyValue) <= Integer.parseInt(balance))) {
+    if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) <= Integer.parseInt(balance))) {
         error.value = false
     }
 
-    if(moneyValue=="0" || moneyValue=="") {
+    if (moneyValue == "0" || moneyValue == "") {
         placeholderText.value = "얼마를 보낼까요?"
     }
 
-    if(isNext) {
+    if (isNext) {
         keyboardController?.hide()
     }
 
@@ -105,15 +104,15 @@ fun InputMoneyScreen() {
 
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
         Column() {
 
-            if(isNext) {
+            if (isNext) {
                 TextButton(
-                    onClick = { isNext = false},
+                    onClick = { isNext = false },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.Black,
@@ -126,12 +125,9 @@ fun InputMoneyScreen() {
                 }
 
 
-
-            }
-
-            else {
+            } else {
                 TextField(
-                    value = moneyValue, onValueChange = { it -> moneyValue=it },
+                    value = moneyValue, onValueChange = { it -> moneyValue = it },
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .fillMaxWidth(),
@@ -172,7 +168,7 @@ fun InputMoneyScreen() {
 
 
 
-            if  (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) > Integer.parseInt(balance))) {
+            if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) > Integer.parseInt(balance))) {
                 TextButton(
                     onClick = { moneyValue = balance },
                     colors = ButtonDefaults.buttonColors(
@@ -188,7 +184,7 @@ fun InputMoneyScreen() {
 
             }
 
-            if(moneyValue.isEmpty()) {
+            if (moneyValue.isEmpty()) {
                 TextButton(
                     onClick = { moneyValue = balance },
                     colors = ButtonDefaults.buttonColors(
@@ -206,25 +202,30 @@ fun InputMoneyScreen() {
 
             if (moneyValue.isNotEmpty()) {
 
-                if(!isNext){
+                if (!isNext) {
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     com.finance.android.ui.components.TextButton(
-                        onClick = { isNext =true },
+                        onClick = { isNext = true },
                         text = "다음",
                         modifier = Modifier.withBottomButton(),
                         buttonType = ButtonType.ROUNDED,
 
                         )
 
-                }
-                else {
+                } else {
                     Spacer(modifier = Modifier.weight(1.0f))
 
                     com.finance.android.ui.components.TextButton(
-                        onClick = {navController.navigate("") {
-                            popUpTo("hom")
-                        }
+                        onClick = {
+                            remitViewModel.remitFromAccount(
+                                value = Integer.parseInt(moneyValue),
+                                receive = "",
+                                send = "",
+                                onSuccess = {
+//                                    navController.navigate()
+                                }
+                            )
                         },
                         text = "보내기",
                         modifier = Modifier.withBottomButton(),
@@ -233,23 +234,15 @@ fun InputMoneyScreen() {
                         )
 
                 }
-                
 
 
             }
-
-
-
-
-
 
 
         }
 
 
     }
-
-
 
 
 }

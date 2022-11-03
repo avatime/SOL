@@ -1,9 +1,11 @@
 package com.finance.android.ui.components
 
 import android.util.Log
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -26,10 +28,10 @@ fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
 
 
     val list = listOf("은행", "증권")
-    Column(modifier = Modifier.padding(end = 150.dp, bottom = 30.dp)) {
+    Column(modifier = Modifier.fillMaxWidth()) {
         TabRow(selectedTabIndex = selectedIndex,
             backgroundColor = Color.White,
-            modifier = Modifier,
+            modifier = Modifier.padding(end = 200.dp, bottom = 30.dp,top=10.dp),
             indicator = {
                 TabRowDefaults.Indicator(
                     modifier = Modifier
@@ -51,17 +53,16 @@ fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
                     selected = selected,
                     onClick = { selectedIndex = index },
                     text = { Text(text = text, fontSize = 18.sp,) },
+                    modifier = Modifier.width(30.dp),
                     selectedContentColor = Color.Black,
-                    modifier = Modifier.width(80.dp),
                     unselectedContentColor = Disabled,
-
-
                     )
             }
         }
 
         fun launch() {
             remitViewModel.getAllBankData()
+            remitViewModel.getAllStockCpData()
         }
 
         LaunchedEffect(Unit) {
@@ -69,10 +70,16 @@ fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
         }
         when (selectedIndex) {
             0 -> {
-               AllBankList(allBankData = remitViewModel.allBankData)
+
+                    AllBankList(allBankData = remitViewModel.allBankData,remitViewModel = remitViewModel)
+
+
             }
             1 -> {
-                AllStockCpList(allStockCpData = remitViewModel.allStockCpData )
+                Box() {
+                    AllStockCpList(allStockCpData = remitViewModel.allStockCpData, remitViewModel=remitViewModel)
+                }
+
 
             }
 
@@ -85,7 +92,7 @@ fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
 
 
 @Composable
-fun AllBankList(allBankData : MutableState<Response<MutableList<BankInfoResponseDto>>>) {
+fun AllBankList(allBankData : MutableState<Response<MutableList<BankInfoResponseDto>>> ,remitViewModel: RemitViewModel) {
     Log.i("allbank",allBankData.toString())
 
     when(val response = allBankData.value) {
@@ -93,10 +100,14 @@ fun AllBankList(allBankData : MutableState<Response<MutableList<BankInfoResponse
         is Response.Failure -> Text(text = "실패")
         is Response.Loading -> Text(text = "로딩중")
         is Response.Success ->
-            response.data.forEach {
-            it.cpLogo?.let { it1 -> CompanyItem(cpName = it.cpName, cpLogo = it1) }
+          LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
+              .fillMaxSize()
+              .background(Color.White)) {
+              items(response.data) { idx ->
+                  idx.cpName?.let { CompanyItem(cpName = it, cpLogo = idx.cpLogo , remitViewModel = remitViewModel) }
 
-        }
+              }
+          }
 
     }
 
@@ -104,16 +115,23 @@ fun AllBankList(allBankData : MutableState<Response<MutableList<BankInfoResponse
 }
 
 @Composable
-fun AllStockCpList(allStockCpData : MutableState<Response<MutableList<BankInfoResponseDto>>>) {
+fun AllStockCpList(allStockCpData : MutableState<Response<MutableList<BankInfoResponseDto>>>,remitViewModel: RemitViewModel) {
 
     when(val response = allStockCpData.value) {
 
         is Response.Failure -> Text(text = "실패")
         is Response.Loading -> Text(text = "로딩중")
         is Response.Success ->
-            response.data.forEach {
-                it.cpLogo?.let { it1 -> CompanyItem(cpName = it.cpName, cpLogo = it1) }
+            LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
+                .fillMaxSize()
+                .background(Color.White)) {
+                items(response.data) { idx ->
+                    idx.cpName?.let {
+                        CompanyItem(
+                            cpName = it, cpLogo = idx.cpLogo , remitViewModel = remitViewModel)
+                    }
 
+                }
             }
 
     }
