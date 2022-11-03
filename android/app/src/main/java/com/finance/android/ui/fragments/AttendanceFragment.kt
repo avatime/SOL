@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.finance.android.R
+import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
@@ -45,6 +46,7 @@ import java.util.*
 @Composable
 fun AttendanceFragment(
     dailyViewModel: DailyViewModel = hiltViewModel(),
+    onClose: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
         dailyViewModel.launchAttendance()
@@ -53,10 +55,12 @@ fun AttendanceFragment(
     when(dailyViewModel.getLoadState()) {
         is Response.Success -> Screen(
             onClickIsAttend = { dailyViewModel.onClickIsAttend() },
-            isAttend = dailyViewModel.isAttend.value
+            attendanceList = (dailyViewModel.attendanceList.value as Response.Success).data,
+            isAttend = dailyViewModel.isAttend.value,
+            onClose = onClose
         )
-        is Response.Failure -> Loading("실패")
-        else -> Loading()
+        is Response.Failure -> Loading("실패", onClose = onClose)
+        else -> Loading(onClose = onClose)
     }
 }
 
@@ -94,6 +98,7 @@ private fun Loading(
 @Composable
 private fun Screen(
     onClickIsAttend: () -> Unit,
+    attendanceList : MutableList<DailyAttendanceResponseDto>,
     isAttend : Boolean,
     onClose: () -> Unit = {}
 ) {
@@ -106,7 +111,7 @@ private fun Screen(
         }
     ) {
         Column(
-            verticalArrangement = Arrangement.Center,
+//            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(top = it.calculateTopPadding())
@@ -120,7 +125,7 @@ private fun Screen(
             Text(text = "쏠포인트를 모아요", fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_medium)))
 
-            ShowCalendar()
+            ShowCalendar(attendanceList)
 
             TextButton(
                 onClick = { onClickIsAttend() },
