@@ -26,10 +26,10 @@ import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.HeaderAssetTabBar
 
 @Composable
-fun AssetFragment(navController: NavController) {
+fun AssetFragment(navController: NavController, onClose: () -> Unit) {
     Scaffold(
         topBar = {
-            BackHeaderBar(text = "자산", modifier = Modifier)
+            BackHeaderBar(text = "자산", modifier = Modifier, onClickBack = onClose)
         },
 
     ) { innerPaddingModifier ->
