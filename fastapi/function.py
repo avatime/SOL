@@ -31,10 +31,8 @@ def create(user_id, db):
         while 1:
             check = ''
             for x in role:
-                num = ''.join(random.sample(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], x))
-                check = check + num + '-'
-            check = check[:-1]
-            if check not in ac_list:
+                check = check + ''.join(random.sample(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], x))
+            if check not in ac_list:    # 계좌 중복 확인
                 ac_list.append(check)
                 ac_pd_code = random.choice(ac_pd_list[cor_num])
                 name = db.query(models.AccountProduct).filter(models.AccountProduct.ac_pd_code == ac_pd_code).first().ac_pd_name
