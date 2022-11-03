@@ -17,4 +17,5 @@ interface UserService {
     fun getUserInfo(token: String) : UserDao
     fun changeProfile(token: String, id : Long)
     fun check(phone : String) : Boolean
+    fun checkAccount(token : String) : Boolean
 }
