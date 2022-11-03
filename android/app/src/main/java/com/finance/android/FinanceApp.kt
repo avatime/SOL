@@ -66,6 +66,20 @@ fun FinanceApp() {
                     )
                 }
             }
+            composable(Const.Routes.ASSET) {
+                AnimatedVisibility(
+                    initiallyVisible = false,
+                    visible = true,
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 2 }
+                    ),
+                    exit = slideOutVertically()
+                ) {
+                    AssetFragment(navController = navController, onClose = {
+                        navController.popBackStack()
+                    })
+                }
+            }
             composable(Const.Routes.ATTENDANCE) {
                 AnimatedVisibility(
                     initiallyVisible = false,
