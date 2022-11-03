@@ -15,6 +15,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -44,19 +45,25 @@ private fun Draw(
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(cardImgPath)
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            modifier = modifier
-                .size(40.dp)
-                .padding(end = dimensionResource(R.dimen.padding_small))
-        )
-        Text(text = cardName)
-        Spacer(modifier = modifier.weight(1.0f))
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(cardImgPath)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "cardImage",
+                modifier = modifier
+                    .size(40.dp)
+                    .padding(end = dimensionResource(R.dimen.padding_small))
+            )
+            Text(text = cardName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Spacer(modifier = modifier.weight(1.0f))
+        }
         trailing?.invoke()
+
     }
 }
 
@@ -70,7 +77,6 @@ fun CardListItem_Arrow(
 ) {
     Draw(
         modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
             .clickable { onClickItem() }
             .padding(contentPadding),
         cardName = cardName,
