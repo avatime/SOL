@@ -72,6 +72,7 @@ fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
                AllBankList(allBankData = remitViewModel.allBankData)
             }
             1 -> {
+                AllStockCpList(allStockCpData = remitViewModel.allStockCpData )
 
             }
 
@@ -101,3 +102,22 @@ fun AllBankList(allBankData : MutableState<Response<MutableList<BankInfoResponse
 
 
 }
+
+@Composable
+fun AllStockCpList(allStockCpData : MutableState<Response<MutableList<BankInfoResponseDto>>>) {
+
+    when(val response = allStockCpData.value) {
+
+        is Response.Failure -> Text(text = "실패")
+        is Response.Loading -> Text(text = "로딩중")
+        is Response.Success ->
+            response.data.forEach {
+                it.cpLogo?.let { it1 -> CompanyItem(cpName = it.cpName, cpLogo = it1) }
+
+            }
+
+    }
+
+
+}
+

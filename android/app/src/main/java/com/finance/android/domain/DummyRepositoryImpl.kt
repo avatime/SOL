@@ -173,6 +173,10 @@ class DummyRepositoryImpl @Inject constructor() :
         )
     }
 
+    override suspend fun getAllStockCp(): MutableList<BankInfoResponseDto> {
+        TODO("Not yet implemented")
+    }
+
     override suspend fun getAllMainAccount(): AccountRegisteredResponseDto {
         TODO("Not yet implemented")
     }
