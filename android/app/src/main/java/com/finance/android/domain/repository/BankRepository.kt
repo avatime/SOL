@@ -6,6 +6,7 @@ import retrofit2.http.Field
 
 interface BankRepository {
     suspend fun getAccountList(): MutableList<BankAccountResponseDto>
+    suspend fun getRegisteredAccount(): MutableList<BankAccountResponseDto>
     suspend fun putRegisterAccount(accountNumberDtoArray: Array<AccountNumberDto>)
     suspend fun putRegisterMainAccount(accountNumberDto: AccountNumberDto)
     suspend fun putBookmarkAccount(accountNumberDto: AccountNumberDto)
