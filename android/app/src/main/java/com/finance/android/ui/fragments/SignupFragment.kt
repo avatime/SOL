@@ -1,5 +1,6 @@
 package com.finance.android.ui.fragments
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
@@ -27,6 +28,8 @@ fun SignupFragment(
     var step by remember { mutableStateOf(SignupStep.InputUserInfo) }
     val onNextStep = { step = SignupStep.values()[step.id + 1] }
     var inputPasswordType by remember { mutableStateOf(InputPasswordType.LOGIN) }
+
+    Log.i("TEST", "fhfghfh")
 
     AnimatedVisibility(
         visible = step == SignupStep.InputUserInfo,

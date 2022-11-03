@@ -12,6 +12,8 @@ data class BankAccountResponseDto (
     @SerializedName("cp_name")
     val cpName : String, //기업명
     @SerializedName("cp_logo")
-    val cpLogo : String //기업 로고 경로
+    val cpLogo : String, //기업 로고 경로
+    @SerializedName("ac_reg")
+    val acReg : Boolean // 등록 여부
 
     )
