@@ -15,6 +15,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.ui.screens.AccountScreen
@@ -28,7 +29,8 @@ import com.google.accompanist.pager.*
 @Composable
 fun HeaderRemitTabBar(
     modifier: Modifier = Modifier,
-    remitViewModel: RemitViewModel
+    remitViewModel: RemitViewModel,
+    navController: NavController
 ) {
 
 
@@ -75,11 +77,13 @@ fun HeaderRemitTabBar(
         when (selectedIndex) {
             0 -> {
                 RecoScreen(
-                    remitViewModel = remitViewModel
+                    remitViewModel = remitViewModel,
+                    navController = navController
                 )
             }
             1 -> {
-                AccountScreen(remitViewModel = remitViewModel)
+                AccountScreen(remitViewModel = remitViewModel,                    navController = navController
+                )
             }
             2 -> {
                 ContactScreen()

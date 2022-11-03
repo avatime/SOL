@@ -1,5 +1,6 @@
 package com.finance.android.domain
 
+import com.finance.android.domain.dto.request.CheckAccountRequestDto
 import com.finance.android.domain.dto.request.RemitInfoRequestDto
 import com.finance.android.domain.dto.request.RemitPhoneRequestDto
 import com.finance.android.domain.dto.response.*
@@ -115,13 +116,6 @@ class DummyRepositoryImpl @Inject constructor() :
         TODO("Not yet implemented")
     }
 
-    override suspend fun checkAccount(
-        acNo: String,
-        cdCode: Int
-    ): String {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun getAllBank(): MutableList<BankInfoResponseDto> {
         return mutableListOf(
             BankInfoResponseDto(
@@ -178,6 +172,10 @@ class DummyRepositoryImpl @Inject constructor() :
     }
 
     override suspend fun getAllMainAccount(): AccountRegisteredResponseDto {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun checkAccount(checkAccountRequestDto: CheckAccountRequestDto): CheckAccountResponseDto {
         TODO("Not yet implemented")
     }
 }

@@ -44,11 +44,7 @@ fun FinanceApp() {
 
                 )
             ) {
-                RemitFragment(
-                    accountName = it.arguments!!.getString("accountName")!!,
-                    accountNumber = it.arguments!!.getString("accountNumber")!!,
-                    balance = it.arguments!!.getInt("balance"),
-                )
+                RemitFragment()
             }
             composable(Const.Routes.ADD_ASSET) {
                 AnimatedVisibility(

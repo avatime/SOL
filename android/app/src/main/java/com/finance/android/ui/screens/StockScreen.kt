@@ -19,5 +19,5 @@ import com.finance.android.viewmodels.SampleViewModel
 fun StockScreen(
 
 ) {
-    RemitFragment()
+
 }

@@ -1,6 +1,7 @@
 package com.finance.android.domain.repository
 
 import com.finance.android.domain.dto.request.AccountNumberDto
+import com.finance.android.domain.dto.request.CheckAccountRequestDto
 import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.service.BankService
 import javax.inject.Inject
@@ -12,10 +13,6 @@ class BankRepositoryImpl @Inject constructor(
 ) : BankRepository {
     override suspend fun getAccountList(): MutableList<BankAccountResponseDto> {
         return bankService.getAccountList()
-    }
-
-    override suspend fun getRegisteredAccount(): MutableList<BankAccountResponseDto> {
-        return bankService.getRegisteredAccount()
     }
 
     override suspend fun putRegisterAccount(accountNumberDtoArray: Array<AccountNumberDto>) {
@@ -45,13 +42,6 @@ class BankRepositoryImpl @Inject constructor(
         return bankService.getRecentAccount()
     }
 
-    override suspend fun checkAccount(
-        acNo: String,
-        cdCode: Int
-    ): String {
-        return bankService.checkAccount(acNo, cdCode)
-    }
-
     override suspend fun getAllBank(): MutableList<BankInfoResponseDto> {
         return bankService.getAllBank()
     }
@@ -62,5 +52,9 @@ class BankRepositoryImpl @Inject constructor(
 
     override suspend fun getAllStockCp(): MutableList<BankInfoResponseDto> {
         return bankService.getAllStockCP()
+    }
+
+    override suspend fun checkAccount(checkAccountRequestDto: CheckAccountRequestDto): CheckAccountResponseDto {
+        return bankService.checkAccount(checkAccountRequestDto.acNo,checkAccountRequestDto.cpCode)
     }
 }

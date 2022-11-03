@@ -129,8 +129,6 @@ fun AccountLikeItem(
 
                 )
             }
-
-
         }
     }
 }

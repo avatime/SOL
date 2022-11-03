@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.ui.components.AccountLikeItem
 import com.finance.android.utils.Response
@@ -17,7 +18,8 @@ import com.finance.android.viewmodels.RemitViewModel
 @Composable
 fun RecoScreen(
     remitViewModel: RemitViewModel,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     fun launch() {
         remitViewModel.getRecommendedAccountData()
