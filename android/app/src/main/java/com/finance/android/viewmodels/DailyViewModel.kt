@@ -1,15 +1,19 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.DailyRepository
 import com.finance.android.domain.repository.SampleRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
 import javax.inject.Inject
+import kotlin.math.log
 
 @HiltViewModel
 class DailyViewModel @Inject constructor(
@@ -17,16 +21,33 @@ class DailyViewModel @Inject constructor(
     baseRepository: BaseRepository,
     private val dailyRepository: DailyRepository,
 ) : BaseViewModel(application, baseRepository) {
+    val isAttend = mutableStateOf(false)
+    val attendanceList = mutableStateOf<Response<MutableList<DailyAttendanceResponseDto>>>(Response.Loading)
 
-    fun createAttendanceAndLoad() {
+    fun launchAttendance() {
         viewModelScope.launch {
-            createAttendance {
-                println("이거 되나?")
-            }
+            loadAttendanceList(LocalDateTime.now().year, LocalDateTime.now().monthValue)
         }
     }
 
-    private suspend fun createAttendance(onSuccess: suspend () -> Unit) {
+    fun onClickIsAttend() {
+        isAttend.value = !isAttend.value
+//        checkAttendance { loadAttendanceList(LocalDateTime.now().year, LocalDateTime.now().monthValue) }
+    }
+
+    fun getLoadState(): Response<Unit> {
+        val arr = arrayOf(attendanceList)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    private suspend fun checkAttendance(onSuccess: suspend () -> Unit) {
         this@DailyViewModel.run {
             dailyRepository.test()
         }.collect { res ->
@@ -34,5 +55,17 @@ class DailyViewModel @Inject constructor(
                 onSuccess()
             }
         }
+    }
+
+    private suspend fun loadAttendanceList(year : Int, month : Int) {
+        this@DailyViewModel.run {
+            dailyRepository.getAttendanceList(year, month)
+        }
+            .collect {
+                attendanceList.value = it
+//                if(it is Response.Success) {
+//                    println(it)
+//                }
+            }
     }
 }
