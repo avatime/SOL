@@ -19,16 +19,17 @@ class CardController(
 
     @PutMapping("/asset")
     fun registerCard(@RequestBody cdNoList: List<String>): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(cardService.registerMain(cdNoList))
+        return ResponseEntity.status(200).body(cardService.registerMain(cdNoList))
     }
 
     @GetMapping("/asset")
     fun getCardInfo(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(cardService.getAssetCard(accessToken))
+        return ResponseEntity.status(200).body(cardService.getAssetCard(accessToken))
+    }
+
+    @GetMapping("/asset/my")
+    fun getMyCardInfo(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(cardService.getMyCard(accessToken))
     }
 
     @GetMapping("/bill/detail/{cd_no}/{year}/{month}")

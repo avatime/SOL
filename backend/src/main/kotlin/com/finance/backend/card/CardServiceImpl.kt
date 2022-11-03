@@ -1,12 +1,15 @@
 package com.finance.backend.card
 
+import com.finance.backend.Exceptions.NoCardException
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.card.response.CardBillDetailRes
 import com.finance.backend.card.response.CardBillRes
 import com.finance.backend.card.response.CardInfoRes
+import com.finance.backend.card.response.CardRes
 import com.finance.backend.cardBenefit.CardBenefitRepository
 import com.finance.backend.cardBenefit.response.CardBenefitDetailRes
+import com.finance.backend.cardBenefit.response.CardBenefitInfo
 import com.finance.backend.cardBenefit.response.CardBenefitRes
 import com.finance.backend.cardBenefitImg.CardBenefitImgRepository
 import com.finance.backend.cardPaymentHistory.CardPaymentHistoryRepository
@@ -34,10 +37,8 @@ class CardServiceImpl(
 ) : CardService {
     override fun registerMain(cdNoList: List<String>) {
         for (cdNo in cdNoList){
-            var card: Card = cardRepository.findById(cdNo).get()
-            card.apply {
-                cdReg = true
-            }
+            var card: Card = cardRepository.findById(cdNo).orElse(null)?: throw NoCardException()
+            card.register()
             cardRepository.save(card)
         }
     }
@@ -50,8 +51,29 @@ class CardServiceImpl(
             val cardList = cardRepository.findAllByUserId(userId)
             for (card in cardList){
                 val cardProduct = cardProductRepository.findById(card.cdPdCode).get()
-                val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName)
+                val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg)
                 cardInfoList.add(cardInfoRes)
+            }
+        }
+        return cardInfoList
+    }
+
+    override fun getMyCard(token: String): List<CardRes> {
+        val cardInfoList = ArrayList<CardRes>()
+
+        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
+            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val cardList = cardRepository.findAllByUserIdAndCdReg(userId, true)
+            for (card in cardList){
+                val cardProduct = cardProductRepository.findById(card.cdPdCode).orElse(null)
+                val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg)
+                val cardBenefitInfoList = ArrayList<CardBenefitInfo>()
+
+                val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(card.cdPdCode)
+                for (cardBenefit in cardBenefitList){
+                    cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum))
+                }
+                cardInfoList.add(CardRes(cardInfoRes, cardBenefitInfoList))
             }
         }
         return cardInfoList

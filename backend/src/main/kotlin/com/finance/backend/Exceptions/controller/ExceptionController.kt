@@ -99,5 +99,8 @@ class ExceptionController {
         return ResponseEntity.status(403).body("Token required")
     }
 
-
+    @ExceptionHandler(NoCardException::class)
+    fun handleNoCardException(e: Exception) : ResponseEntity<String>{
+        return ResponseEntity.status(404).body("Cannot Found")
+    }
 }
