@@ -47,7 +47,7 @@ class Card (
     val account = account
 
     fun register(){
-        this.cdReg = !this.cdReg
+        this.cdReg = true
     }
 
 }
