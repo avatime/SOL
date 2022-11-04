@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.ui.components.*
+import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.AddAssetViewModel
 
@@ -23,13 +24,24 @@ fun AddAssetRepresentScreen(
     onClickBack: () -> Unit,
     onClickNext: () -> Unit
 ) {
-    Screen(
-        onClickBack = onClickBack,
-        onClickNext = onClickNext,
-        accountList = addAssetViewModel.getAddedAccountList(),
-        checkAccountIndex = addAssetViewModel.repAccountIndex.value,
-        onClickAccountItem = { addAssetViewModel.onClickRepAccountItem(it) }
-    )
+    when (val response = addAssetViewModel.checkHasRepAccount.value) {
+        is Response.Success -> {
+            if (!response.data) {
+                Screen(
+                    onClickBack = onClickBack,
+                    onClickNext = onClickNext,
+                    accountList = addAssetViewModel.getAddedAccountList(),
+                    checkAccountIndex = addAssetViewModel.repAccountIndex.value,
+                    onClickAccountItem = { addAssetViewModel.onClickRepAccountItem(it) }
+                )
+            } else {
+                LaunchedEffect(Unit) {
+                    onClickNext()
+                }
+            }
+        }
+        else -> AnimatedLoading()
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)

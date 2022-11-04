@@ -4,8 +4,10 @@ import android.app.Application
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.finance.android.datastore.UserStore
-import com.finance.android.domain.dto.request.*
+import com.finance.android.domain.dto.request.AccountNumberDto
+import com.finance.android.domain.dto.request.CardNumberDto
+import com.finance.android.domain.dto.request.InsuranceIdRequestDto
+import com.finance.android.domain.dto.request.StockAccountNumberDto
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
 import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
@@ -46,19 +48,27 @@ class AddAssetViewModel @Inject constructor(
     private val registerStateStockAccount = mutableStateOf<Response<Unit>>(Response.Loading)
     private val registerStateInsurance = mutableStateOf<Response<Unit>>(Response.Loading)
 
-    fun createAssetAndLoad() {
+    val checkHasRepAccount = mutableStateOf<Response<Boolean>>(Response.Loading)
+
+    fun init() {
         viewModelScope.launch {
-            createAsset {
-                loadAccountList()
-                loadCardList()
-                loadStockAccountList()
-                loadInsuranceList()
-            }
+            loadAccountList()
+            loadCardList()
+            loadStockAccountList()
+            loadInsuranceList()
+            loadCheckRepAccount()
         }
     }
 
     fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(accountList, cardList, stockAccountList, insuranceList)
+        val arr =
+            arrayOf(
+                accountList,
+                cardList,
+                stockAccountList,
+                insuranceList,
+                checkHasRepAccount
+            )
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -139,26 +149,9 @@ class AddAssetViewModel @Inject constructor(
 
     private fun calculateSelectAll() {
         selectedAll.value = accountCheckList.all { it.value } &&
-                cardCheckList.all { it.value } &&
-                stockAccountCheckList.all { it.value } &&
-                insuranceCheckList.all { it.value }
-    }
-
-    private suspend fun createAsset(onSuccess: suspend () -> Unit) {
-        UserStore(getApplication()).getValue(UserStore.KEY_PHONE_NUMBER)
-            .collect {
-                val createAssetRequestDto = CreateAssetRequestDto(
-                    phoneNumber = it
-                )
-                this@AddAssetViewModel.run {
-                    userRepository.createAsset(createAssetRequestDto)
-                }
-                    .collect { res ->
-                        if (res is Response.Success) {
-                            onSuccess()
-                        }
-                    }
-            }
+            cardCheckList.all { it.value } &&
+            stockAccountCheckList.all { it.value } &&
+            insuranceCheckList.all { it.value }
     }
 
     private suspend fun loadAccountList() {
@@ -282,7 +275,11 @@ class AddAssetViewModel @Inject constructor(
     }
 
     private suspend fun registerRepAccount() {
-        if (accountList.value !is Response.Success) {
+        if (accountList.value !is Response.Success ||
+            checkHasRepAccount.value !is Response.Success ||
+            (checkHasRepAccount.value as Response.Success<Boolean>).data
+        ) {
+            registerStateRepAccount.value = Response.Success(Unit)
             return
         }
 
@@ -294,6 +291,15 @@ class AddAssetViewModel @Inject constructor(
         }
             .collect {
                 registerStateRepAccount.value = it
+            }
+    }
+
+    private suspend fun loadCheckRepAccount() {
+        this@AddAssetViewModel.run {
+            userRepository.checkRepAccount()
+        }
+            .collect {
+                checkHasRepAccount.value = it
             }
     }
 }

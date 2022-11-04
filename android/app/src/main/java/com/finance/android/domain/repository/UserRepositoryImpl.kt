@@ -46,4 +46,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun createAsset(createAssetRequestDto: CreateAssetRequestDto) {
         return userService.createAsset(createAssetRequestDto)
     }
+
+    override suspend fun checkRepAccount(): Boolean {
+        return userService.checkRepAccount()
+    }
 }

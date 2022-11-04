@@ -1,5 +1,6 @@
 package com.finance.android.ui.fragments
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -20,6 +21,9 @@ fun AddAssetFragment(
     onClose: () -> Unit
 ) {
     val navController = rememberNavController()
+    BackHandler {
+        onClose()
+    }
     NavHost(
         navController = navController,
         startDestination = Const.ADD_ASSET_INTRO_SCREEN

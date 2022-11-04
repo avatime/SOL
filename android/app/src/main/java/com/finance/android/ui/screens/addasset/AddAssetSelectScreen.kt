@@ -42,7 +42,7 @@ fun AddAssetSelectScreen(
     onClickNext: () -> Unit
 ) {
     LaunchedEffect(Unit) {
-        addAssetViewModel.createAssetAndLoad()
+        addAssetViewModel.init()
     }
 
     when (addAssetViewModel.getLoadState()) {
@@ -328,10 +328,13 @@ private fun Account(
     accountCheckList: Array<MutableState<Boolean>>,
     onClickAccountItem: (index: Int) -> Unit
 ) {
-    LazyColumn(modifier = modifier) {
+    LazyColumn(
+        modifier = modifier,
+    ) {
         items(
             count = accountList.size,
             key = { it },
+            contentType = { true },
             itemContent = {
                 val item = accountList[it]
                 val checked = accountCheckList[it].value
