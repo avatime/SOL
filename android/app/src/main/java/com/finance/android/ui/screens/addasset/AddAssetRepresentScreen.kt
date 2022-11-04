@@ -128,7 +128,7 @@ private fun PreviewScreen() {
                 balance = 10000,
                 cpName = "cpName",
                 cpLogo = "cpLogo",
-                acReg = false
+                isRegister = false
             )
         },
         checkAccountIndex = 0,
