@@ -61,8 +61,7 @@ private fun Draw(
                 contentDescription = "accImage",
                 modifier = Modifier
                     .size(40.dp)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop
+                .clip(CircleShape),
             )
             Column(
                 modifier = Modifier
