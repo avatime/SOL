@@ -23,6 +23,7 @@ code_logo = {'카카오' : 'https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/ne
 
 def finance_create(engine):
     finance = pd.DataFrame()
+    print("이거 실행 되는건가요111111??????")
 
     for name, code in code_list:
         temp = pdr.get_data_yahoo(code, start=start)
@@ -34,6 +35,8 @@ def finance_create(engine):
         temp['fn_date'] = temp.index.strftime('%Y-%m-%d')
         temp['per'] = round(((temp.iloc[6, 3] - temp.iloc[5, 3]) / temp.iloc[6, 3]) * 100, 2)
         finance = pd.concat([finance, temp], ignore_index=True)
+
+    print("이거 실행 되는건가요122222222??????")
 
     finance['id'] = finance.index + 1
     dtypesql = {
@@ -48,5 +51,7 @@ def finance_create(engine):
         'volume': sqlalchemy.types.Integer(),
         'per': sqlalchemy.types.Float()
     }
+    print("이거 실행 되는건가요13333??????")
+
     finance.to_sql(name='finance', con=engine, if_exists='replace', index=False, dtype=dtypesql)
-    print("이거 실행 되는건가요??????")
+    print("이거 실행 되는건가요14444??????")

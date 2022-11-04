@@ -15,7 +15,7 @@ from finance import finance_create
 models.Base.metadata.bind = engine
 app = FastAPI()
 s = BackgroundScheduler(timezone='Asia/Seoul')
-s.add_job(finance_create, 'cron', [engine], hour='07', minute='24')
+s.add_job(finance_create, 'cron', [engine], hour='07', minute='28')
 s.start()
 print(datetime.now())
 
