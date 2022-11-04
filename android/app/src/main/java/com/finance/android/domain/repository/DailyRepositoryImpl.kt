@@ -1,6 +1,7 @@
 package com.finance.android.domain.repository
 
 import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
+import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 import com.finance.android.domain.service.DailyService
 import java.time.Month
@@ -27,6 +28,10 @@ class DailyRepositoryImpl @Inject constructor(
         month: Int
     ): MutableList<DailyWalkingResponseDto> {
         return dailyService.getWalkingList(year, month)
+    }
+
+    override suspend fun getProfileList(): MutableList<DailyProfileResponseDto> {
+        return dailyService.getProfileList()
     }
 
     override suspend fun test() {
