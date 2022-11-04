@@ -24,7 +24,7 @@ def fn():
     print(datetime.now())
 
 
-s.add_job(fn, 'interval', seconds='10')
+s.add_job(fn, 'interval', seconds=10)
 s.start()
 
 
