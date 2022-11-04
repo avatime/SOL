@@ -7,8 +7,6 @@ data class CardInfoResponseDto(
     val cardImgPath: String,
     @SerializedName("cd_name") // 카드 이름
     val cardName: String,
-    @SerializedName("cd_reg") // 카드 앱에 등록 여부
-    val cardReg: Boolean,
     @SerializedName("cd_no")
     val cardNumber: String,
     @SerializedName("cd_reg")
