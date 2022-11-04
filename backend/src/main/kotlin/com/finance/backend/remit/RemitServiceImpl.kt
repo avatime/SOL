@@ -43,7 +43,7 @@ class RemitServiceImpl(
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
 
             // 사용자의 계좌 정보
-            val accountList = accountRepository.findByUserId(userId)
+            val accountList = accountRepository.findByUserId(userId).orEmpty()
 
             // 나의 계좌는 반환하지 않도록 체크
             val myAccountList = ArrayList<String>()
