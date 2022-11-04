@@ -26,4 +26,8 @@ class Bookmark(
     @ManyToOne
     var user: User = user
 
+    fun isClick(){
+        this.bkStatus = !bkStatus
+    }
+
 }
