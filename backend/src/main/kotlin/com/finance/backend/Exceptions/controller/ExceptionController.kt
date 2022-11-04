@@ -2,6 +2,7 @@ package com.finance.backend.Exceptions.controller
 
 import com.finance.backend.Exceptions.*
 import org.springframework.http.ResponseEntity
+import org.springframework.kafka.listener.ListenerExecutionFailedException
 import org.springframework.web.bind.MissingRequestHeaderException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
@@ -100,9 +101,14 @@ class ExceptionController {
         return ResponseEntity.status(404).body("Cannot Found")
     }
 
+    @ExceptionHandler(ListenerExecutionFailedException::class)
+    fun handleListenerExecutionFailedException(e : Exception){
+        println("에러 메세지: " + e.message)
+    }
+
     @ExceptionHandler(Exception::class)
     fun handleAll(e : Exception) : ResponseEntity<String> {
-        println("e: " + e)
+        println("에러 메세지: " + e)
         return ResponseEntity.status(500).body("Internal Server Error")
     }
 }
