@@ -16,3 +16,5 @@ local.properties
 
 backend/
 frontend/
+fastapi/.env
+fastapi/.idea/workspace.xml
