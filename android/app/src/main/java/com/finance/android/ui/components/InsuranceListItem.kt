@@ -127,6 +127,25 @@ fun InsuranceListItem_Check(
     )
 }
 
+@Composable
+fun InsuranceListItem_Normal(
+    modifier: Modifier = Modifier,
+    contentPadding: PaddingValues = PaddingValues(),
+    insuranceName: String,
+    fee: Int,
+    myName: String,
+    isName: String,
+) {
+    Draw(
+        modifier = modifier
+            .padding(contentPadding),
+        insuranceName = insuranceName,
+        fee = fee,
+        myName = myName,
+        isName = isName,
+    )
+}
+
 @Preview
 @Composable
 private fun PreviewInsuranceListItem_Arrow() {

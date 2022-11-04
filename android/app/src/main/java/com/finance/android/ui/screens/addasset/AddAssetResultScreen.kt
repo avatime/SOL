@@ -25,6 +25,7 @@ import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
+import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
 import com.finance.android.ui.components.*
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
@@ -45,6 +46,8 @@ fun AddAssetResultScreen(
                 .filterIndexed { idx, _ -> addAssetViewModel.cardCheckList[idx].value },
             stockAccountList = (addAssetViewModel.stockAccountList.value as Response.Success).data
                 .filterIndexed { idx, _ -> addAssetViewModel.stockAccountCheckList[idx].value },
+            insuranceList = (addAssetViewModel.insuranceList.value as Response.Success).data
+                .filterIndexed { idx, _ -> addAssetViewModel.insuranceCheckList[idx].value },
             onClickNext = onClickNext
         )
         else -> DrawLoading(state = state)
@@ -65,6 +68,7 @@ private fun DrawScreen(
     accountList: List<BankAccountResponseDto>,
     cardList: List<CardInfoResponseDto>,
     stockAccountList: List<BankAccountResponseDto>,
+    insuranceList: List<InsuranceInfoResponseDto>,
     onClickNext: () -> Unit
 ) {
     Scaffold(
@@ -75,7 +79,6 @@ private fun DrawScreen(
         val progress by animateLottieCompositionAsState(
             composition,
             iterations = LottieConstants.IterateForever,
-            restartOnPlay = false
         )
         val dynamicProperties = rememberLottieDynamicProperties(
             rememberLottieDynamicProperty(
@@ -122,8 +125,10 @@ private fun DrawScreen(
             Spacer(modifier = Modifier.height(20.dp))
             Box(modifier = Modifier.weight(1.0f)) {
                 LazyColumn {
-                    stickyHeader {
-                        StickyHeader(stringResource(id = R.string.btn_tab_account))
+                    if (accountList.isNotEmpty()) {
+                        stickyHeader {
+                            StickyHeader(stringResource(id = R.string.btn_tab_account))
+                        }
                     }
                     items(
                         count = accountList.size,
@@ -138,8 +143,10 @@ private fun DrawScreen(
                             )
                         }
                     )
-                    stickyHeader {
-                        StickyHeader(stringResource(id = R.string.btn_tab_card))
+                    if (cardList.isNotEmpty()) {
+                        stickyHeader {
+                            StickyHeader(stringResource(id = R.string.btn_tab_card))
+                        }
                     }
                     items(
                         count = cardList.size,
@@ -152,8 +159,10 @@ private fun DrawScreen(
                             )
                         }
                     )
-                    stickyHeader {
-                        StickyHeader(stringResource(id = R.string.btn_tab_stock))
+                    if (stockAccountList.isNotEmpty()) {
+                        stickyHeader {
+                            StickyHeader(stringResource(id = R.string.btn_tab_stock))
+                        }
                     }
                     items(
                         count = stockAccountList.size,
@@ -165,6 +174,23 @@ private fun DrawScreen(
                                 balance = item.balance,
                                 accountName = item.acName,
                                 companyLogoPath = item.cpLogo
+                            )
+                        }
+                    )
+                    if (insuranceList.isNotEmpty()) {
+                        stickyHeader {
+                            StickyHeader(stringResource(id = R.string.btn_tab_insurance))
+                        }
+                    }
+                    items(
+                        count = insuranceList.size,
+                        itemContent = { idx ->
+                            val item = insuranceList[idx]
+                            InsuranceListItem_Normal(
+                                insuranceName = item.isPdName,
+                                fee = item.isPdFee,
+                                myName = item.name,
+                                isName = item.isName
                             )
                         }
                     )
@@ -210,9 +236,10 @@ private fun PreviewLoading() {
 private fun PreviewScreen() {
     DrawScreen(
         modifier = Modifier,
-        accountList = mutableListOf(),
-        cardList = mutableListOf(),
-        stockAccountList = mutableListOf(),
+        accountList = listOf(),
+        cardList = listOf(),
+        stockAccountList = listOf(),
+        insuranceList = listOf(),
         onClickNext = {}
     )
 }

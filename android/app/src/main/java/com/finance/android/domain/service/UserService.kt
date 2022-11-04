@@ -4,6 +4,7 @@ import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
 import com.finance.android.utils.Const
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 
 interface UserService {
@@ -22,4 +23,7 @@ interface UserService {
 
     @POST("${Const.DATA_PATH}/user/register")
     suspend fun createAsset(@Body createAssetRequestDto: CreateAssetRequestDto)
+
+    @GET("${Const.API_PATH}/user/account")
+    suspend fun checkRepAccount(): Boolean
 }
