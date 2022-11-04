@@ -25,21 +25,20 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.ui.components.AccountListItem_Remit
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.InsuranceListItem
-import com.finance.android.ui.components.TextButton
+import com.finance.android.domain.dto.response.CardInfoResponseDto
+import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.BankViewModel
+import com.finance.android.viewmodels.HomeViewModel
 
 @Composable
 fun HomeScreen(
     navController: NavController,
-    bankViewModel: BankViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     fun launch() {
-        bankViewModel.AccountLoad()
+        homeViewModel.Load()
     }
 
     LaunchedEffect(Unit) {
@@ -49,7 +48,7 @@ fun HomeScreen(
     Column (modifier = Modifier
         .verticalScroll(rememberScrollState())
         .background(color = MaterialTheme.colorScheme.background)) {
-        when (val data = bankViewModel.getLoadState()) {
+        when (val data = homeViewModel.getLoadState()) {
             is Response.Success -> {
                 HomeCardContainer(
                     modifier = Modifier
@@ -60,7 +59,8 @@ fun HomeScreen(
                             shape = RoundedCornerShape(10)
                         ),
                     navController = navController,
-                    data = (bankViewModel.accountList.value as Response.Success).data
+                    accData = (homeViewModel.accountList.value as Response.Success).data,
+                    cardData = (homeViewModel.cardList.value as Response.Success).data
                 )
                 HomeCardContainer2(modifier = Modifier
                     .fillMaxWidth()
@@ -79,7 +79,8 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeCardContainer(modifier: Modifier, navController: NavController, data: MutableList<BankAccountResponseDto>) {
+fun HomeCardContainer(modifier: Modifier, navController: NavController, accData: MutableList<BankAccountResponseDto>,
+cardData: MutableList<CardInfoResponseDto>) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
         ) {
@@ -93,7 +94,7 @@ fun HomeCardContainer(modifier: Modifier, navController: NavController, data: Mu
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
-            Text(text = "${data.size+1}", color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
+            Text(text = "${accData.size+cardData.size+1}", color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
             Spacer(modifier = Modifier.weight(1.0f))
             IconButton(onClick = {
                 navController.navigate(Const.Routes.ASSET)
@@ -113,7 +114,7 @@ fun HomeCardContainer(modifier: Modifier, navController: NavController, data: Mu
 //                navController.navigate("${Const.Routes.REMIT}/신한은행/1111/10")
 //            }
 //        )
-        data!!.forEach {
+        accData!!.forEach {
             AccountListItem_Remit(
                 accountNumber = it.acNo,
                 balance = it.balance,
@@ -121,8 +122,17 @@ fun HomeCardContainer(modifier: Modifier, navController: NavController, data: Mu
                 companyLogoPath = it.cpLogo,
                 onClickItem = { /*TODO*/ },
                 onClickRemit = {
-                    navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.balance}/${it.acNo}")
+                    navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.acNo}/${it.balance}")
                 })
+        }
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+        Divider()
+        cardData!!.forEach {
+            CardListItem_Arrow(
+                cardName = it.cardName,
+                cardImgPath = it.cardImgPath,
+                onClickItem = {}
+            )
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
         Divider()

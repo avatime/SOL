@@ -385,7 +385,9 @@ private fun PreviewCard() {
         cardList = MutableList(5) {
             CardInfoResponseDto(
                 cardName = "cardName",
-                cardImgPath = "path"
+                cardImgPath = "path",
+                cardReg = true,
+                CardNo = "1234567812345678"
             )
         },
         cardCheckList = Array(5) {
