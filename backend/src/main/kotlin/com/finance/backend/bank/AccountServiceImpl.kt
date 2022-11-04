@@ -129,12 +129,10 @@ class AccountServiceImpl(
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
 
             // 유저
-            val user = userRepository.findById(userId)
-            println(user.get().name)
+            val user = userRepository.findById(userId).orElse(null)
 
             // 내 계좌 가져오기
             val accountList = accountRepository.findByUserId(userId)
-
             // 내 계좌 문자열
             val myAccountList = ArrayList<String>()
             for (account in accountList){
@@ -142,29 +140,32 @@ class AccountServiceImpl(
             }
 
             // 내가 북마크 한 계좌
-            val bookmarkList = bookmarkRepository.findByUserId(userId)
+            val bookmarkList = bookmarkRepository.findByUserId(userId).orEmpty()
 
             // 북마크 한 내 계좌
             val myBookmarkList = ArrayList<String>()
             val myNotBookmarkList = ArrayList<String>()
             for (bookmark in bookmarkList){
-                if (myAccountList.contains(bookmark.acNo) && bookmark.bkStatus){
+                // 내 계좌 추가
+                if (myAccountList.contains(bookmark.acNo)){
                     myBookmarkList.add(bookmark.acNo)
-                } else if (myAccountList.contains(bookmark.acNo)){
+                }
+                // 상대 계좌 추가
+                else {
                     myNotBookmarkList.add(bookmark.acNo)
                 }
             }
 
             // 북마크 계좌 추가
             for (myBook in myBookmarkList){
-                val account = accountRepository.findById(myBook).orElse(null)
+                val account = accountRepository.findById(myBook).orElse(null)?: throw NoAccountException()
                 val corporation = corporationRepository.findById(account.acCpCode).orElse(null)
                 accountDetailList.add((RecentMyTradeRes(account.acName, myBook, corporation.cpName, true, corporation.cpLogo)))
             }
 
             // 북마크 아닌 계좌 추가
             for (myBook in myNotBookmarkList){
-                val account = accountRepository.findById(myBook).orElse(null)
+                val account = accountRepository.findById(myBook).orElse(null)?: throw NoAccountException()
                 val corporation = corporationRepository.findById(account.acCpCode).orElse(null)
                 accountDetailList.add((RecentMyTradeRes(account.acName, myBook, corporation.cpName, false, corporation.cpLogo)))
             }
