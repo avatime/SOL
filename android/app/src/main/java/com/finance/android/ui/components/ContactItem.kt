@@ -19,14 +19,17 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
+import com.finance.android.utils.Const
+import com.finance.android.viewmodels.RemitViewModel
 
 @Composable
-fun ContactItem(name: String, number: String, avatar: String, modifier: Modifier) {
+fun ContactItem(name: String, number: String, avatar: String, modifier: Modifier, remitViewModel: RemitViewModel,navController: NavController) {
 
-    Button (onClick = {}, colors = ButtonDefaults.buttonColors(Color.White)){
+    Button (onClick = {remitViewModel.phoneNum.value = number; navController.navigate(Const.INPUT_MONEY_SCREEN)}, colors = ButtonDefaults.buttonColors(Color.White) ){
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,8 +84,8 @@ fun ContactItem(name: String, number: String, avatar: String, modifier: Modifier
 
 }
 
-@Preview
-@Composable
-fun contact () {
-    ContactItem(name = "채윤선", number = "010-4901-6695", avatar = "null", modifier = Modifier)
-}
+//@Preview
+//@Composable
+//fun contact () {
+//    ContactItem(name = "채윤선", number = "010-4901-6695", avatar = "null", modifier = Modifier)
+//}

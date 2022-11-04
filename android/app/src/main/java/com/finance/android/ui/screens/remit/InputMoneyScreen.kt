@@ -17,22 +17,27 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.NavController
 import com.finance.android.ui.components.ButtonType
+import com.finance.android.utils.Const
 
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.RemitViewModel
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
+fun InputMoneyScreen(
+    modifier: Modifier,
+    remitViewModel: RemitViewModel,
+    navController: NavController
+) {
 
     var moneyValue by remember {
         mutableStateOf("")
     }
 
     var balance by remember {
-        mutableStateOf("55555")
+        mutableStateOf(remitViewModel.balance)
     }
 
 
@@ -44,26 +49,6 @@ fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
 
     var keyboardController = LocalSoftwareKeyboardController.current
 
-    //보내는 계좌 은행
-    var acName by remember {
-        mutableStateOf("국민은행")
-    }
-
-    //받는 계좌 은행
-    var acTag by remember {
-        mutableStateOf("국민은행")
-    }
-
-    //보내는 계좌 번호
-    var acSend by remember {
-        mutableStateOf("015402040675")
-
-    }
-
-    //받는 계좌 번호
-    var acReceive by remember {
-        mutableStateOf("010-4901-6695")
-    }
 
     //나에게 표시
     var receive by remember {
@@ -79,15 +64,11 @@ fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
         mutableStateOf(false)
     }
 
-    val navController = rememberNavController()
-
-
-
-    if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) > Integer.parseInt(balance))) {
+    if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) > balance!!)) {
         error.value = true
     }
 
-    if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) <= Integer.parseInt(balance))) {
+    if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) <= balance!!)) {
         error.value = false
     }
 
@@ -98,6 +79,7 @@ fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
     if (isNext) {
         keyboardController?.hide()
     }
+
 
 
 
@@ -131,7 +113,6 @@ fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .fillMaxWidth(),
-//                .height(150.dp)
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     placeholder = {
@@ -168,9 +149,9 @@ fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
 
 
 
-            if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) > Integer.parseInt(balance))) {
+            if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) > balance!!)) {
                 TextButton(
-                    onClick = { moneyValue = balance },
+                    onClick = { moneyValue = balance.toString() },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.Black,
@@ -186,7 +167,7 @@ fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
 
             if (moneyValue.isEmpty()) {
                 TextButton(
-                    onClick = { moneyValue = balance },
+                    onClick = { moneyValue = balance.toString() },
                     colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.Black,
@@ -218,14 +199,23 @@ fun InputMoneyScreen(modifier: Modifier, remitViewModel: RemitViewModel) {
 
                     com.finance.android.ui.components.TextButton(
                         onClick = {
-                            remitViewModel.remitFromAccount(
-                                value = Integer.parseInt(moneyValue),
-                                receive = "",
-                                send = "",
-                                onSuccess = {
-//                                    navController.navigate()
-                                }
-                            )
+                            if(!remitViewModel.requestRemit.value){
+                                remitViewModel.remitFromAccount(
+                                    value = Integer.parseInt(moneyValue),
+                                    receive = "",
+                                    send = "",
+                                    onSuccess = {
+                                        navController.navigate(Const.REMIT_OK_SCREEN)
+                                    }
+                                )
+                            }else{
+                                remitViewModel.remitFromPhone(value = Integer.parseInt(moneyValue), receive = "",
+                                    send = "",
+                                    onSuccess = {
+                                        navController.navigate(Const.REMIT_OK_SCREEN)
+                                    })
+                            }
+
                         },
                         text = "보내기",
                         modifier = Modifier.withBottomButton(),

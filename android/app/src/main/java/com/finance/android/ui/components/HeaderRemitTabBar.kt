@@ -1,7 +1,6 @@
 package com.finance.android.ui.components
 
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
@@ -11,19 +10,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.airbnb.lottie.compose.*
-import com.finance.android.R
 import com.finance.android.ui.screens.AccountScreen
 import com.finance.android.ui.screens.ContactScreen
-import com.finance.android.ui.screens.RecoScreen
+import com.finance.android.ui.screens.remit.RecoScreen
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.viewmodels.RemitViewModel
-import com.google.accompanist.pager.*
 
 
 @Composable
@@ -64,7 +58,7 @@ fun HeaderRemitTabBar(
 
                     selected = selected,
                     onClick = { selectedIndex = index },
-                    text = { Text(text = text, fontSize = 18.sp,) },
+                    text = { Text(text = text, fontSize = 18.sp) },
                     modifier = Modifier.width(80.dp),
                     selectedContentColor = Color.Black,
                     unselectedContentColor = Disabled,
@@ -82,15 +76,15 @@ fun HeaderRemitTabBar(
                 )
             }
             1 -> {
-                AccountScreen(remitViewModel = remitViewModel,                    navController = navController
+                AccountScreen(
+                    remitViewModel = remitViewModel, navController = navController
                 )
             }
             2 -> {
-                ContactScreen()
+                ContactScreen(remitViewModel = remitViewModel, navController = navController)
             }
         }
     }
-
 
 
 }

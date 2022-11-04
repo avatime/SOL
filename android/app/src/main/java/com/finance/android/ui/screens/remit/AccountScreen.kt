@@ -41,6 +41,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) {
+    remitViewModel.requestRemit.value = false
 
     var accountNumber = remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(

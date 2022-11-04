@@ -1,4 +1,4 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.screens.remit
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text

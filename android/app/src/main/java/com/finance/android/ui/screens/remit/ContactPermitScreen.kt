@@ -17,12 +17,14 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.finance.android.MainActivity
 import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.screens.remit.ContactListScreen
+import com.finance.android.viewmodels.RemitViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.rememberPermissionState
 
@@ -33,8 +35,7 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-@Preview
-fun ContactScreen() {
+fun ContactScreen(remitViewModel: RemitViewModel, navController: NavController) {
 
 
 
@@ -46,7 +47,7 @@ fun ContactScreen() {
 
     when {
         permissionState.hasPermission -> {
-            ContactListScreen()
+            ContactListScreen(remitViewModel = remitViewModel, navController = navController)
 
         }
         permissionState.shouldShowRationale -> {
