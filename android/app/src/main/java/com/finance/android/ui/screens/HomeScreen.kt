@@ -122,7 +122,7 @@ cardData: MutableList<CardInfoResponseDto>) {
                 companyLogoPath = it.cpLogo,
                 onClickItem = { /*TODO*/ },
                 onClickRemit = {
-                    navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.balance}/10")
+                    navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.acNo}/${it.balance}")
                 })
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
