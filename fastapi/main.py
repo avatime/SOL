@@ -12,12 +12,20 @@ from datetime import datetime
 
 # models.Base.metadata.create_all(bind=engine)
 from finance import finance_create
+
 models.Base.metadata.bind = engine
 app = FastAPI()
 s = BackgroundScheduler(timezone='Asia/Seoul')
-s.add_job(finance_create, 'cron', [engine], hour='07', minute='28')
+# s.add_job(finance_create, 'cron', [engine], hour='07', minute='28')
+# s.start()
+
+
+def fn():
+    print(datetime.now())
+
+
+s.add_job(fn, 'interval', seconds='10')
 s.start()
-print(datetime.now())
 
 
 def get_db():
@@ -38,12 +46,15 @@ async def test(user: schemas.userReq, response: Response, db: Session = Depends(
     #     response.status_code = status.HTTP_409_CONFLICT
 
 
-@app.get("/data/v1/finance", response_model=List[schemas.FinanceOut], response_model_include={"fn_name", "fn_logo", "fn_date", "close", "per"}, status_code=200)
+@app.get("/data/v1/finance", response_model=List[schemas.FinanceOut],
+         response_model_include={"fn_name", "fn_logo", "fn_date", "close", "per"}, status_code=200)
 async def finance(db: Session = Depends(get_db)):
-    a = db.query(models.Finance).filter(models.Finance.fn_name == '기아').order_by(desc(models.Finance.fn_date)).first().fn_date
+    a = db.query(models.Finance).filter(models.Finance.fn_name == '기아').order_by(
+        desc(models.Finance.fn_date)).first().fn_date
     return db.query(models.Finance).filter(models.Finance.fn_date == a).all()
 
 
-@app.get("/data/v1/finance/{fn_name}", response_model=List[schemas.FinanceOut], response_model_exclude={"id", "fn_logo"}, status_code=200)
+@app.get("/data/v1/finance/{fn_name}", response_model=List[schemas.FinanceOut],
+         response_model_exclude={"id", "fn_logo"}, status_code=200)
 async def finance_detail(fn_name: str, db: Session = Depends(get_db)):
     return db.query(models.Finance).filter(models.Finance.fn_name == fn_name).all()
