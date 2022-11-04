@@ -11,13 +11,19 @@ from Connection import SessionLocal, engine
 
 # models.Base.metadata.create_all(bind=engine)
 from finance import finance_create
-
+print("========================")
+print("===========시작==========")
+print("========================")
 models.Base.metadata.bind = engine
+print("성공1")
 app = FastAPI()
+print("성공2")
 s = BackgroundScheduler(timezone='Asia/Seoul')
-s.add_job(finance_create, 'cron', [engine], hour='06', minute='58')
+print("성공3")
+s.add_job(finance_create, 'cron', [engine], hour='07', minute='02')
+print("성공4")
 s.start()
-
+print("끝")
 def get_db():
     try:
         db = SessionLocal()
