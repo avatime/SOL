@@ -6,7 +6,7 @@ data class BankInfoResponseDto(
 //    @SerializedName("cp_code")
 //    var cpCode : Int,
     @SerializedName("cp_name")
-    var cpName : String?, //기업명
+    var cpName : String, //기업명
     @SerializedName("cp_logo")
     var cpLogo : String //기업로고
 )
