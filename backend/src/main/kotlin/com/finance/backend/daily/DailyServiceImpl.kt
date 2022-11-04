@@ -124,8 +124,8 @@ class DailyServiceImpl(
         try {
             val factory = HttpComponentsClientHttpRequestFactory();
 
-            factory.setConnectTimeout(5000)
-            factory.setReadTimeout(5000)
+            factory.setConnectTimeout(50000)
+            factory.setReadTimeout(50000)
 
             val restTemplate = RestTemplate(factory)
             //restTemplate은 Rest방식 api를 호출할 수 있는 spring 내장 클래스이다.

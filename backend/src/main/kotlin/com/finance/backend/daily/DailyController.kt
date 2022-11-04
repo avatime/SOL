@@ -40,7 +40,7 @@ class DailyController(private val dailyService: DailyService) {
     }
 
     @GetMapping("/test/scheduled")
-    @Scheduled(cron = "0 15 9 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 45 17 * * *", zone = "Asia/Seoul")
     fun registFinanceData() : ResponseEntity<Any?> {
         println("GetFinance 스케줄러 정상 작동 " + LocalDateTime.now())
         return ResponseEntity.status(200).body(dailyService.sendRequest())
