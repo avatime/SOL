@@ -13,4 +13,7 @@ interface StockService {
 
     @PUT("${Const.API_PATH}/finance/asset")
     suspend fun putRegisterStockAccount(@Body stockAccountNumberDtoArray: Array<StockAccountNumberDto>)
+
+    @GET("${Const.DATA_PATH}/finance")
+    suspend fun getFinanceList():
 }
