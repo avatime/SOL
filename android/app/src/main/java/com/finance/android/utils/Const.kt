@@ -26,5 +26,6 @@ object Const {
         const val ADD_ASSET = "route_add_asset"
         const val ATTENDANCE = "route_attendance"
         const val ASSET = "route_asset"
+        const val ACC_DETAIL = "route_accountDetail"
     }
 }
