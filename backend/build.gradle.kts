@@ -54,6 +54,8 @@ dependencies {
 	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.11.2")
 	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.2")
 	annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+	// api 호출
+	implementation("org.apache.httpcomponents:httpclient:4.5")
 }
 
 noArg {

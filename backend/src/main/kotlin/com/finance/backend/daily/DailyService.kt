@@ -13,4 +13,5 @@ interface DailyService {
 //    fun walk(accessToken: String)
     fun getWalk(accessToken: String, year: Int, month: Int) : List<WalkDao>
     fun getAllProfiles(accessToken: String) : List<ProfileRes>
+    fun sendRequest() : String
 }
