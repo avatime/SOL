@@ -1,11 +1,9 @@
 package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.FabPosition
 import androidx.compose.material.IconButton
@@ -20,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import com.finance.android.R
@@ -50,12 +49,19 @@ fun AccountDetailFragment(
             .background(color = MaterialTheme.colorScheme.background))
         {
             AccountCardComp(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.padding_medium))
+                    .background(
+                        color = MaterialTheme.colorScheme.primary,
+                        shape = RoundedCornerShape(15)
+                    ),
                 acName = acName,
                 cpName = cpName,
                 acNo = acNo,
                 balance = balance,
                 onClickButton = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${acName}/${cpName}/${acNo}/${balance}")
+                    navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
                 }
             )
         }

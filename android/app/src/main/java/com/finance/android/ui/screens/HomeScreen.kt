@@ -120,7 +120,9 @@ cardData: MutableList<CardInfoResponseDto>) {
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
-                onClickItem = { /*TODO*/ },
+                onClickItem = {
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.balance}")
+                },
                 onClickRemit = {
                     navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.acNo}/${it.balance}")
                 })

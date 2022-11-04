@@ -37,7 +37,7 @@ fun HeaderAssetTabBar(
         TabRow(
 
             selectedTabIndex = selectedIndex,
-            backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.surface,
+            backgroundColor = androidx.compose.material3.MaterialTheme.colorScheme.background,
             modifier = Modifier
                 .padding(end = 0.dp),
             indicator = {
