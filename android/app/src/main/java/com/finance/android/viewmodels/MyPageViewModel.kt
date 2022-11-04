@@ -1,34 +1,32 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
+import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.DailyRepository
-import com.finance.android.domain.repository.SampleRepository
 import com.finance.android.domain.repository.UserRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
-import java.time.LocalDateTime
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
 class MyPageViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     private val userRepository: UserRepository,
+    private val dailyRepository: DailyRepository
 ) : BaseViewModel(application, baseRepository) {
     val myInfo = mutableStateOf<Response<UserProfileResponseDto>>(Response.Loading)
+    val profileList = mutableStateOf<Response<MutableList<DailyProfileResponseDto>>>(Response.Loading)
 
     fun launchMyPage() {
         viewModelScope.launch {
             getUserInfo()
+            getProfileList()
         }
     }
 
@@ -49,6 +47,16 @@ class MyPageViewModel @Inject constructor(
             userRepository.getUserProfile()
         }.collect {
             myInfo.value = it
+//            if(it is Response.Success) {
+//            }
+        }
+    }
+
+    private suspend fun getProfileList() {
+        this@MyPageViewModel.run {
+            dailyRepository.getProfileList()
+        }.collect {
+            profileList.value = it
 //            if(it is Response.Success) {
 //            }
         }

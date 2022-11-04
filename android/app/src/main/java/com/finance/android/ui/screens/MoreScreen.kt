@@ -29,6 +29,7 @@ import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.request.ImageRequest
 import com.finance.android.R
+import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.utils.Const
@@ -55,7 +56,8 @@ fun MoreScreen(
     when(myPageViewModel.getLoadState()) {
         is Response.Success -> Screen(
             navController = navController,
-            userInfo = (myPageViewModel.myInfo.value as Response.Success).data
+            userInfo = (myPageViewModel.myInfo.value as Response.Success).data,
+            profileList = (myPageViewModel.profileList.value as Response.Success).data
         )
         is Response.Failure -> Loading("실패")
         else -> Loading()
@@ -65,7 +67,8 @@ fun MoreScreen(
 @Composable
 fun Screen(
     navController: NavController,
-    userInfo : UserProfileResponseDto
+    userInfo : UserProfileResponseDto,
+    profileList : MutableList<DailyProfileResponseDto>
 ) {
     Column(
         modifier = Modifier
