@@ -8,22 +8,18 @@ import models
 import schemas
 from typing import List
 from Connection import SessionLocal, engine
+from datetime import datetime
 
 # models.Base.metadata.create_all(bind=engine)
 from finance import finance_create
-print("========================")
-print("===========시작==========")
-print("========================")
 models.Base.metadata.bind = engine
-print("성공1")
 app = FastAPI()
-print("성공2")
 s = BackgroundScheduler(timezone='Asia/Seoul')
-print("성공3")
 s.add_job(finance_create, 'cron', [engine], hour='07', minute='02')
-print("성공4")
 s.start()
-print("끝")
+print(datetime.now())
+
+
 def get_db():
     try:
         db = SessionLocal()
