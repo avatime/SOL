@@ -29,16 +29,12 @@ class RemitController(val remitService: RemitService, val kafka: KafkaProducer) 
 
     @PostMapping("/phone")
     fun postRemitPhone(@RequestBody remitPhoneReq: RemitPhoneReq): ResponseEntity<Any>{
-        kafka.phoneMessage(remitPhoneReq)
-        return ResponseEntity
-                .ok()
-                .body(remitService.postRemitPhone(remitPhoneReq))
+        return ResponseEntity.status(200).body(remitService.postRemitPhone(remitPhoneReq))
+
     }
 
     @PutMapping("/bookmark")
     fun putBookmark(@RequestBody acNo: String, @RequestHeader("access_token") accessToken: String): ResponseEntity<Any>{
-        return ResponseEntity
-                .ok()
-                .body(remitService.putBookmark(acNo, accessToken))
+        return ResponseEntity.status(200).body(remitService.putBookmark(acNo, accessToken))
     }
 }
