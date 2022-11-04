@@ -87,7 +87,7 @@ class ExceptionController {
 
     @ExceptionHandler(RemitFailedException::class)
     fun handleRemitFailed(e: Exception) : ResponseEntity<String>{
-        return ResponseEntity.status(500).body("Remit failed")
+        return ResponseEntity.status(418).body("Remit failed")
     }
 
     @ExceptionHandler(MissingRequestHeaderException::class)
