@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.HeaderRemitTabBar
 import com.finance.android.ui.screens.*
+import com.finance.android.ui.screens.remit.RemitOKScreen
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.RemitViewModel
 
@@ -24,13 +25,17 @@ fun RemitFragment(
 ) {
     val innerNavController = rememberNavController()
 
+
     Scaffold(containerColor = Color.White,
         topBar = {
-            BackHeaderBar(text = "", modifier = Modifier, onClickBack = {
-                innerNavController.popBackStack()
-            },
-                backgroundColor = MaterialTheme.colorScheme.surface
-            )
+            if (remitViewModel.enabled.value) {
+
+                BackHeaderBar(
+                    text = "", modifier = Modifier, onClickBack = {
+                        innerNavController.popBackStack()
+                    }, backgroundColor = MaterialTheme.colorScheme.surface
+                )
+            }
         }
 
 
@@ -42,6 +47,7 @@ fun RemitFragment(
             startDestination = Const.INPUT_RECEIVER_SCREEN
         ) {
             composable(Const.INPUT_RECEIVER_SCREEN) {
+
                 HeaderRemitTabBar(
                     modifier = modifier,
                     remitViewModel = remitViewModel,
@@ -51,9 +57,17 @@ fun RemitFragment(
             composable(Const.INPUT_MONEY_SCREEN) {
                 InputMoneyScreen(
                     modifier = modifier,
-                    remitViewModel = remitViewModel
+                    remitViewModel = remitViewModel,
+                    navController = innerNavController
                 )
             }
+            composable(Const.REMIT_OK_SCREEN) { RemitOKScreen(
+                    remitViewModel = remitViewModel
+                , navController = innerNavController) }
+
+
+
+
         }
 
 

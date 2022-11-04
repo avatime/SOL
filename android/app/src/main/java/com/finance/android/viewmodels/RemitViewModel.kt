@@ -2,11 +2,14 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.request.CheckAccountRequestDto
 import com.finance.android.domain.dto.request.RemitInfoRequestDto
+import com.finance.android.domain.dto.request.RemitPhoneRequestDto
 import com.finance.android.domain.dto.response.BankInfoResponseDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
@@ -28,6 +31,8 @@ class RemitViewModel @Inject constructor(
     val accountName = savedStateHandle.get<String>("accountName") //acName
     val accountNumber = savedStateHandle.get<String>("accountNumber") //ac_send
     val balance = savedStateHandle.get<Int>("balance")
+    val enabled = mutableStateOf(false)
+    val requestRemit = mutableStateOf(false)
 
     private val _recommendedAccountData =
         mutableStateOf<Response<MutableList<RecentTradeResponseDto>>>(Response.Loading)
@@ -44,6 +49,7 @@ class RemitViewModel @Inject constructor(
                 }
         }
     }
+
 
     //모든 은행 기업 조회
     private val _allBankData =
@@ -134,6 +140,43 @@ class RemitViewModel @Inject constructor(
             }
         }
 
+    }
+
+    val phoneNum = mutableStateOf("")
+
+    //전화번호 가져오기
+    fun onClickContact(phone: String) {
+        phoneNum.value = phone
+
+    }
+
+    //전화번호로 송금하기
+    fun remitFromPhone(
+        value: Int, receive: String,
+        send: String,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            this@RemitViewModel.run {
+                remitRepository.postRemitToPhone(
+                    RemitPhoneRequestDto(
+                        acSend = accountNumber,
+                        acName = accountName,
+                        value = value,
+                        receive = receive,
+                        send = send,
+                        phone = phoneNum.value
+                    )
+                )
+            }.collect {
+                if (it is Response.Success) {
+                    Log.i("remitAccount", "전번도 갓찬영")
+                    onSuccess()
+                } else if (it is Response.Failure) {
+                    Log.i("remitAccount", "전번도 김챤챤영 ㅡㅡ")
+                }
+            }
+        }
     }
 
 
