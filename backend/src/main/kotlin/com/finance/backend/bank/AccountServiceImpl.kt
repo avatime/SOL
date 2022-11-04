@@ -140,7 +140,7 @@ class AccountServiceImpl(
 
             for (account in accountList){
                 // 내가 북마크한 내 계좌
-                if (bookmarkRepository.existsByUserIdAndAcNo(userId, account.acNo)){
+                if (bookmarkRepository.existsByUserIdAndAcNoAndBkStatus(userId, account.acNo, true)){
                     myBookmarkList.add(account.acNo)
                 }else{
                     myNotBookmarkList.add(account.acNo)
