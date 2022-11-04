@@ -2,22 +2,22 @@ package com.finance.backend.remit.request
 
 import com.fasterxml.jackson.annotation.JsonProperty
 
-class RemitInfoReq {
+data class RemitInfoReq (
     @JsonProperty("ac_name")
-    val acName: String = ""
+    val acName: String = "",
 
     @JsonProperty("ac_tag")
-    val acTag: String = ""
+    val acTag: String = "",
 
     @JsonProperty("ac_send")
-    val acSend: String = ""
+    val acSend: String = "",
 
     @JsonProperty("ac_receive")
-    val acReceive: String = ""
+    val acReceive: String = "",
 
-    val value: Long = 0
+    val value: Long = 0,
 
-    val receive: String = ""
+    val receive: String = "",
 
     val send: String = ""
-}
+)

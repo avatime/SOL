@@ -62,6 +62,7 @@ class ExceptionController {
 
     @ExceptionHandler(NullPointerException::class)
     fun handleNullPointer(e : Exception) : ResponseEntity<String> {
+        println("e "+ e)
         return ResponseEntity.status(404).body("Unexpected Server Error")
     }
 
@@ -70,15 +71,10 @@ class ExceptionController {
         return ResponseEntity.status(403).body("Cannot Access")
     }
 
-    @ExceptionHandler(Exception::class)
-    fun handleAll(e : Exception) : ResponseEntity<String> {
-        return ResponseEntity.status(500).body("Internal Server Error")
-    }
     @ExceptionHandler(NoAccountException::class)
     fun handleNoAccount(e : Exception) : ResponseEntity<String> {
         return ResponseEntity.status(404).body("Cannot Found")
     }
-
     @ExceptionHandler(NoTradeHistoryException::class)
     fun handleNoTradeHistory(e: Exception) : ResponseEntity<String>{
         return ResponseEntity.status(404).body("Cannot Found")
@@ -102,5 +98,11 @@ class ExceptionController {
     @ExceptionHandler(NoCardException::class)
     fun handleNoCardException(e: Exception) : ResponseEntity<String>{
         return ResponseEntity.status(404).body("Cannot Found")
+    }
+
+    @ExceptionHandler(Exception::class)
+    fun handleAll(e : Exception) : ResponseEntity<String> {
+        println("e: " + e)
+        return ResponseEntity.status(500).body("Internal Server Error")
     }
 }
