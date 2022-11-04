@@ -15,3 +15,9 @@ val MainColor = Color(0xFF0046FF)
 val BlueGrey = Color(0xFFF2F4F6)
 
 val Disabled = Color(0xFFA1A1AA)
+
+val Info = Color(0xFF03A9F4)
+val Warning = Color(0xFFFF9800)
+val ErrorLight = Color(0xFFEF5350)
+
+val ErrorDark = Color(0xFFC62828)

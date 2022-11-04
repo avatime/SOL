@@ -5,10 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.datastore.UserStore
 import com.finance.android.domain.RetrofitClient
-import com.finance.android.domain.dto.request.CheckUserRequestDto
-import com.finance.android.domain.dto.request.LoginRequestDto
-import com.finance.android.domain.dto.request.ReLoginRequestDto
-import com.finance.android.domain.dto.request.SignupRequestDto
+import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.UserRepository
@@ -62,7 +59,9 @@ class LoginViewModel @Inject constructor(
                 InputUserInfoStep.BIRTHDAY -> validateBirthday(birthday.value)
                 InputUserInfoStep.PHONE_NUM -> validatePhoneNum(phoneNumber.value)
             }
-            SignupStep.TestPhone -> code.value.isNotEmpty() && rightCode.value is Response.Success<String> && (rightCode.value as Response.Success<String>).data.equals(code.value)
+            SignupStep.TestPhone -> code.value.isNotEmpty() && rightCode.value is Response.Success<String> && (rightCode.value as Response.Success<String>).data.equals(
+                code.value
+            )
             SignupStep.InputPassword -> {
                 if (passwordRepeat.value == null) {
                     password.value.length == 6
@@ -149,10 +148,13 @@ class LoginViewModel @Inject constructor(
                 birthday = formatBirthday(),
                 sex = (Random.nextInt(0, 10) % 2) + 1
             )
-            this@LoginViewModel.run { userRepository.signup(signupRequestDto) }
+            this@LoginViewModel.run {
+                userRepository.signup(signupRequestDto)
+            }
                 .collect {
                     if (it is Response.Success) {
                         saveUserInfo(it.data)
+                        userRepository.createAsset(CreateAssetRequestDto(phoneNumber.value))
                         onMoveLoginDoneScreen()
                     }
                 }

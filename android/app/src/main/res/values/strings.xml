@@ -17,7 +17,16 @@
     <string name="msg_desc_add_asset">계좌, 카드, 보험, 증권을\n한번에 관리하세요\n1분 안에\n내 자산을 추가할 수 있어요.</string>
     <string name="msg_loading_asset_title">자산을 찾고 있어요</string>
     <string name="msg_loading_asset_desc">서버 상태 및 네트워크 연결 상태에 따라\n최대 1분 소요될 수 있어요</string>
-    <string name="msg_find_asset">계좌 %1$d개, 카드 %2$d개\n증권 개, 보험 개를\n찾았어요</string>
+    <string name="msg_find_asset">계좌 %1$d개, 카드 %2$d개\n증권 %3$d개, 보험 %4$d개를\n찾았어요</string>
+    <string name="msg_select_rep_account">간편 송금에 사용할\n대표 계좌를 선택해주세요</string>
+    <string name="msg_snack_select_rep_account">1개 이상의 계좌를 추가해주세요</string>
+    <string name="msg_register_asset">%1$d개 자산 등록 완료</string>
+    <string name="msg_wait_register_asset">자산을 등록하고 있어요</string>
+    <string name="msg_hasnt_asset_to_register">등록할 자산이 없어요</string>
+    <string name="msg_hasnt_account_to_register">등록할 계좌가 없어요</string>
+    <string name="msg_hasnt_card_to_register">등록할 카드가 없어요</string>
+    <string name="msg_hasnt_stock_account_to_register">등록할 증권이 없어요</string>
+    <string name="msg_hasnt_insurance_to_register">등록할 보험이 없어요</string>
 
     <string name="btn_confirm">확인</string>
     <string name="btn_re_receive_test_phone_code">인증번호 다시 받기</string>

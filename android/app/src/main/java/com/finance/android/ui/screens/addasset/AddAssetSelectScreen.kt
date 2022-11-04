@@ -1,5 +1,6 @@
 package com.finance.android.ui.screens.addasset
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -11,7 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.focus.FocusRequester.Companion.createRefs
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
@@ -26,12 +27,12 @@ import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
+import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
 import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.AddAssetViewModel
-import kotlinx.coroutines.NonDisposableHandle.parent
 
 @Composable
 fun AddAssetSelectScreen(
@@ -41,23 +42,50 @@ fun AddAssetSelectScreen(
     onClickNext: () -> Unit
 ) {
     LaunchedEffect(Unit) {
-        addAssetViewModel.createAssetAndLoad()
+        addAssetViewModel.init()
     }
 
     when (addAssetViewModel.getLoadState()) {
-        is Response.Success -> Screen(
-            modifier = modifier,
-            onClickBack = onClickBack,
-            onClickNext = onClickNext,
-            selectedAll = addAssetViewModel.selectedAll.value,
-            onClickSelectAll = { addAssetViewModel.onClickSelectAll() },
-            accountList = (addAssetViewModel.accountList.value as Response.Success).data,
-            accountCheckList = addAssetViewModel.accountCheckList,
-            onClickAccountItem = { addAssetViewModel.onClickAccountItem(it) },
-            cardList = (addAssetViewModel.cardList.value as Response.Success).data,
-            cardCheckList = addAssetViewModel.cardCheckList,
-            onClickCardItem = { addAssetViewModel.onClickCardItem(it) }
-        )
+        is Response.Success -> {
+            if (!addAssetViewModel.hasAssetToRegister()) {
+                Box {
+                    Loading(
+                        modifier = modifier,
+                        onClickBack = onClickBack
+                    )
+                    CustomDialog(
+                        dialogType = DialogType.ERROR,
+                        dialogActionType = DialogActionType.ONE_BUTTON,
+                        title = stringResource(id = R.string.msg_hasnt_asset_to_register),
+                        onPositive = onClickBack
+                    )
+                }
+            } else {
+                Screen(
+                    modifier = modifier,
+                    onClickBack = onClickBack,
+                    onClickNext = {
+                        addAssetViewModel.registerAsset()
+                        onClickNext()
+                    },
+                    selectedAll = addAssetViewModel.selectedAll.value,
+                    onClickSelectAll = { addAssetViewModel.onClickSelectAll() },
+                    accountList = (addAssetViewModel.accountList.value as Response.Success).data,
+                    accountCheckList = addAssetViewModel.accountCheckList,
+                    onClickAccountItem = { addAssetViewModel.onClickAccountItem(it) },
+                    cardList = (addAssetViewModel.cardList.value as Response.Success).data,
+                    cardCheckList = addAssetViewModel.cardCheckList,
+                    onClickCardItem = { addAssetViewModel.onClickCardItem(it) },
+                    stockAccountList = (addAssetViewModel.stockAccountList.value as Response.Success).data,
+                    stockAccountCheckList = addAssetViewModel.stockAccountCheckList,
+                    onClickStockAccountItem = { addAssetViewModel.onClickStockAccountItem(it) },
+                    insuranceList = (addAssetViewModel.insuranceList.value as Response.Success).data,
+                    insuranceCheckList = addAssetViewModel.insuranceCheckList,
+                    onClickInsuranceItem = { addAssetViewModel.onClickInsuranceItem(it) },
+                    hasRepAccount = (addAssetViewModel.checkHasRepAccount.value as Response.Success).data
+                )
+            }
+        }
         else -> {
             Loading(
                 modifier = modifier,
@@ -147,7 +175,14 @@ private fun Screen(
     onClickAccountItem: (index: Int) -> Unit,
     cardList: MutableList<CardInfoResponseDto>,
     cardCheckList: Array<MutableState<Boolean>>,
-    onClickCardItem: (index: Int) -> Unit
+    onClickCardItem: (index: Int) -> Unit,
+    stockAccountList: MutableList<BankAccountResponseDto>,
+    stockAccountCheckList: Array<MutableState<Boolean>>,
+    onClickStockAccountItem: (index: Int) -> Unit,
+    insuranceList: MutableList<InsuranceInfoResponseDto>,
+    insuranceCheckList: Array<MutableState<Boolean>>,
+    onClickInsuranceItem: (index: Int) -> Unit,
+    hasRepAccount: Boolean
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -171,7 +206,13 @@ private fun Screen(
             Text(
                 modifier = modifier
                     .padding(start = dimensionResource(id = R.dimen.padding_medium).value.dp),
-                text = stringResource(id = R.string.msg_find_asset, accountList.size, cardList.size),
+                text = stringResource(
+                    id = R.string.msg_find_asset,
+                    accountList.size,
+                    cardList.size,
+                    stockAccountList.size,
+                    insuranceList.size
+                ),
                 style = TextStyle(
                     fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
                     lineHeight = dimensionResource(id = R.dimen.font_size_medium).value.sp
@@ -245,10 +286,7 @@ private fun Screen(
                     )
                 }
             }
-            Box(
-                modifier = modifier
-                    .weight(1.0f)
-            ) {
+            Box(modifier = modifier.weight(1.0f)) {
                 when (selectedTabIndex) {
                     0 -> Account(
                         accountList = accountList,
@@ -260,13 +298,38 @@ private fun Screen(
                         cardCheckList = cardCheckList,
                         onClickCardItem = onClickCardItem
                     )
-                    2 -> Stock()
-                    else -> Insurance()
+                    2 -> Stock(
+                        stockAccountList = stockAccountList,
+                        stockAccountCheckList = stockAccountCheckList,
+                        onClickStockAccountItem = onClickStockAccountItem
+                    )
+                    else -> Insurance(
+                        insuranceList = insuranceList,
+                        insuranceCheckList = insuranceCheckList,
+                        onClickInsuranceItem = onClickInsuranceItem
+                    )
+                }
+            }
+            var showSnackbar by remember { mutableStateOf(false) }
+            if (showSnackbar) {
+                TransientSnackbar(
+                    onDismiss = { showSnackbar = false }
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.msg_snack_select_rep_account),
+                        color = MaterialTheme.colorScheme.surface
+                    )
                 }
             }
             TextButton(
-                onClick = onClickNext,
-                text = stringResource(id = R.string.btn_add_asset),
+                onClick = {
+                    if (!hasRepAccount && accountCheckList.all { c -> !c.value }) {
+                        showSnackbar = true
+                        return@TextButton
+                    }
+                    onClickNext()
+                },
+                text = stringResource(id = R.string.btn_confirm),
                 buttonType = ButtonType.ROUNDED,
                 modifier = Modifier.withBottomButton()
             )
@@ -276,14 +339,20 @@ private fun Screen(
 
 @Composable
 private fun Account(
+    modifier: Modifier = Modifier,
     accountList: MutableList<BankAccountResponseDto>,
     accountCheckList: Array<MutableState<Boolean>>,
-    onClickAccountItem: (index: Int) -> Unit,
+    onClickAccountItem: (index: Int) -> Unit
 ) {
-    LazyColumn() {
+    if (accountList.isEmpty()) {
+        Empty(message = stringResource(id = R.string.msg_hasnt_account_to_register))
+        return
+    }
+    LazyColumn(modifier = modifier) {
         items(
             count = accountList.size,
             key = { it },
+            contentType = { true },
             itemContent = {
                 val item = accountList[it]
                 val checked = accountCheckList[it].value
@@ -303,11 +372,16 @@ private fun Account(
 
 @Composable
 private fun Card(
+    modifier: Modifier = Modifier,
     cardList: MutableList<CardInfoResponseDto>,
     cardCheckList: Array<MutableState<Boolean>>,
-    onClickCardItem: (index: Int) -> Unit,
+    onClickCardItem: (index: Int) -> Unit
 ) {
-    LazyColumn() {
+    if (cardList.isEmpty()) {
+        Empty(message = stringResource(id = R.string.msg_hasnt_card_to_register))
+        return
+    }
+    LazyColumn(modifier = modifier) {
         items(
             count = cardList.size,
             key = { it },
@@ -327,16 +401,66 @@ private fun Card(
 }
 
 @Composable
-private fun Stock() {
-    Column {
-        Text(text = "Stock")
+private fun Stock(
+    modifier: Modifier = Modifier,
+    stockAccountList: MutableList<BankAccountResponseDto>,
+    stockAccountCheckList: Array<MutableState<Boolean>>,
+    onClickStockAccountItem: (index: Int) -> Unit
+) {
+    if (stockAccountList.isEmpty()) {
+        Empty(message = stringResource(id = R.string.msg_hasnt_stock_account_to_register))
+        return
+    }
+    LazyColumn(modifier = modifier) {
+        items(
+            count = stockAccountList.size,
+            key = { it },
+            itemContent = {
+                val item = stockAccountList[it]
+                val checked = stockAccountCheckList[it].value
+                AccountListItem_Check(
+                    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                    accountNumber = item.acNo,
+                    balance = item.balance,
+                    accountName = item.acName,
+                    companyLogoPath = item.cpLogo,
+                    checked = checked,
+                    onClickItem = { onClickStockAccountItem(it) }
+                )
+            }
+        )
     }
 }
 
 @Composable
-private fun Insurance() {
-    Column {
-        Text(text = "Insurance")
+private fun Insurance(
+    modifier: Modifier = Modifier,
+    insuranceList: MutableList<InsuranceInfoResponseDto>,
+    insuranceCheckList: Array<MutableState<Boolean>>,
+    onClickInsuranceItem: (index: Int) -> Unit
+) {
+    if (insuranceList.isEmpty()) {
+        Empty(message = stringResource(id = R.string.msg_hasnt_insurance_to_register))
+        return
+    }
+    LazyColumn(modifier = modifier) {
+        items(
+            count = insuranceList.size,
+            key = { it },
+            itemContent = {
+                val item = insuranceList[it]
+                val checked = insuranceCheckList[it].value
+                InsuranceListItem_Check(
+                    contentPadding = PaddingValues(horizontal = dimensionResource(id = R.dimen.padding_medium)),
+                    insuranceName = item.isPdName,
+                    fee = item.isPdFee,
+                    myName = item.name,
+                    isName = item.isName,
+                    checked = checked,
+                    onClickItem = { onClickInsuranceItem(it) }
+                )
+            }
+        )
     }
 }
 
@@ -344,16 +468,23 @@ private fun Insurance() {
 @Composable
 private fun PreviewScreen() {
     Screen(
-        onClickBack = { /*TODO*/ },
-        onClickNext = { /*TODO*/ },
+        onClickBack = { },
+        onClickNext = { },
         selectedAll = false,
-        onClickSelectAll = { /*TODO*/ },
+        onClickSelectAll = { },
         accountList = mutableListOf(),
         accountCheckList = arrayOf(),
         onClickAccountItem = {},
         cardList = mutableListOf(),
         cardCheckList = arrayOf(),
-        onClickCardItem ={}
+        onClickCardItem = {},
+        stockAccountList = mutableListOf(),
+        stockAccountCheckList = arrayOf(),
+        onClickStockAccountItem = {},
+        insuranceList = mutableListOf(),
+        insuranceCheckList = arrayOf(),
+        onClickInsuranceItem = {},
+        hasRepAccount = true
     )
 }
 
@@ -361,6 +492,7 @@ private fun PreviewScreen() {
 @Composable
 private fun PreviewAccount() {
     Account(
+        modifier = Modifier.background(Color.White),
         accountList = MutableList(5) {
             BankAccountResponseDto(
                 acName = "acName",
@@ -368,7 +500,7 @@ private fun PreviewAccount() {
                 balance = 10000,
                 cpName = "cpName",
                 cpLogo = "cpLogo",
-                acReg = true
+                isRegister = false
             )
         },
         accountCheckList = Array(5) {
@@ -382,17 +514,41 @@ private fun PreviewAccount() {
 @Composable
 private fun PreviewCard() {
     Card(
+        modifier = Modifier.background(Color.White),
         cardList = MutableList(5) {
             CardInfoResponseDto(
+                cardNumber = "123",
                 cardName = "cardName",
                 cardImgPath = "path",
                 cardReg = true,
-                CardNo = "1234567812345678"
+                isRegister = false
             )
         },
         cardCheckList = Array(5) {
             mutableStateOf(it % 2 == 0)
         },
         onClickCardItem = {}
+    )
+}
+
+@Preview
+@Composable
+private fun PreviewStock() {
+    Stock(
+        modifier = Modifier.background(Color.White),
+        stockAccountList = MutableList(5) {
+            BankAccountResponseDto(
+                acName = "acName",
+                acNo = "acNo",
+                balance = 10000,
+                cpName = "cpName",
+                cpLogo = "cpLogo",
+                isRegister = false
+            )
+        },
+        stockAccountCheckList = Array(5) {
+            mutableStateOf(it % 2 == 0)
+        },
+        onClickStockAccountItem = {}
     )
 }
