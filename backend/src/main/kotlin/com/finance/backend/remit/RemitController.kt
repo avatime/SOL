@@ -24,13 +24,13 @@ class RemitController(val remitService: RemitService, val kafka: KafkaProducer) 
 
     @PostMapping("/account")
     fun postRemit(@RequestBody remitInfoReq: RemitInfoReq): ResponseEntity<Any>{
-        kafka.accountMessage(remitInfoReq)
+//        kafka.accountMessage(remitInfoReq)
         return ResponseEntity.status(200).body(remitService.postRemit(remitInfoReq))
     }
 
     @PostMapping("/phone")
     fun postRemitPhone(@RequestBody remitPhoneReq: RemitPhoneReq): ResponseEntity<Any>{
-        kafka.phoneMessage(remitPhoneReq)
+//        kafka.phoneMessage(remitPhoneReq)
         return ResponseEntity
                 .ok()
                 .body(remitService.postRemitPhone(remitPhoneReq))
