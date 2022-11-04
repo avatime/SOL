@@ -21,7 +21,6 @@ code_logo = {'카카오' : 'https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/ne
 
 
 def finance_create(engine):
-    print('어서오세요')
     finance = pd.DataFrame()
 
     for name, code in code_list:
@@ -50,4 +49,3 @@ def finance_create(engine):
     }
 
     finance.to_sql(name='finance', con=engine, if_exists='replace', index=False, dtype=dtypesql)
-    print('feels good')

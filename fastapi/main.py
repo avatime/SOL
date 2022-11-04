@@ -5,9 +5,11 @@ from sqlalchemy.orm import Session
 import function
 import models
 import schemas
-import finance
+from finance import finance_create
 from typing import List
 from Connection import SessionLocal, engine
+
+
 
 # models.Base.metadata.create_all(bind=engine)
 
@@ -21,6 +23,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+
+@app.get("/data/v1/finance/scheduler", status_code=200)
+async def scdd():
+    finance_create(engine)
 
 
 @app.post("/data/v1/user/register", status_code=200)
@@ -46,7 +53,3 @@ async def finance(db: Session = Depends(get_db)):
 async def finance_detail(fn_name: str, db: Session = Depends(get_db)):
     return db.query(models.Finance).filter(models.Finance.fn_name == fn_name).all()
 
-
-@app.get("/data/v1/finance/scheduler", status_code=200)
-async def scheduler():
-    finance.finance_create(engine)
