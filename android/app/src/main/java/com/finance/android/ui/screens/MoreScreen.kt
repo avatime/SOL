@@ -117,7 +117,7 @@ private fun MenuList(navController: NavController) {
 
         Button(
             onClick = {
-                navController.navigate(Const.Routes.ATTENDANCE)
+                navController.navigate(Const.Routes.WALK)
             },
             modifier = Modifier.withBottomButton()
         ) {
