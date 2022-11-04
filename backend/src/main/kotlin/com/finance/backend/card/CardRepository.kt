@@ -5,5 +5,5 @@ import java.util.UUID
 
 interface CardRepository : JpaRepository<Card, String> {
     fun findAllByUserId(UUID: UUID): List<Card>
-    fun findAllByUserIdAndCdReg(userId: UUID, cdReg: Boolean): List<Card>
+    fun findAllByUserIdAndCdReg(userId: UUID, cdReg: Boolean): List<Card>?
 }
