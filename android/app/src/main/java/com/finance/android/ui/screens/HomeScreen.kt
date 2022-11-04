@@ -1,24 +1,20 @@
 package com.finance.android.ui.screens
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Divider
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -29,78 +25,121 @@ import com.finance.android.domain.dto.response.CardInfoResponseDto
 import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
-import com.finance.android.viewmodels.BankViewModel
 import com.finance.android.viewmodels.HomeViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
-    fun launch() {
-        homeViewModel.Load()
-    }
-
     LaunchedEffect(Unit) {
-        launch()
+        homeViewModel.load()
     }
 
-    Column (modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .background(color = MaterialTheme.colorScheme.background)) {
-        when (val data = homeViewModel.getLoadState()) {
-            is Response.Success -> {
-                HomeCardContainer(
+    Scaffold(
+        topBar = {},
+        containerColor = MaterialTheme.colorScheme.background
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(top = it.calculateTopPadding())
+        ) {
+            when (homeViewModel.getLoadState()) {
+                is Response.Success -> Screen(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                        .background(
-                            color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(10)
-                        ),
-                    navController = navController,
-                    accData = (homeViewModel.accountList.value as Response.Success).data,
-                    cardData = (homeViewModel.cardList.value as Response.Success).data
+                        .verticalScroll(rememberScrollState()),
+                    onClickAsset = {
+                        navController.navigate(Const.Routes.ASSET)
+                    },
+                    accountList = (homeViewModel.accountList.value as Response.Success).data,
+                    onClickAccountItem = {},
+                    onClickAccountRemit = { cpName, acNo, balance ->
+                        navController.navigate("${Const.Routes.REMIT}/$cpName/$acNo/$balance")
+                    },
+                    cardList = (homeViewModel.cardList.value as Response.Success).data,
+                    onClickCardItem = {}
                 )
-                HomeCardContainer2(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.padding_medium))
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(10)
-                    ),
-                    navController = navController
-                )
+                else -> AnimatedLoading()
             }
-            is Response.Loading -> {}
-            else -> {}
+
         }
     }
 }
 
 @Composable
-fun HomeCardContainer(modifier: Modifier, navController: NavController, accData: MutableList<BankAccountResponseDto>,
-cardData: MutableList<CardInfoResponseDto>) {
-    Column(modifier = modifier
-        .padding(dimensionResource(R.dimen.padding_medium))
+private fun Screen(
+    modifier: Modifier,
+    onClickAsset: () -> Unit,
+    accountList: MutableList<BankAccountResponseDto>,
+    onClickAccountItem: () -> Unit,
+    onClickAccountRemit: (cpName: String, acNo: String, balance: Int) -> Unit,
+    cardList: MutableList<CardInfoResponseDto>,
+    onClickCardItem: () -> Unit
+) {
+    Column(modifier = modifier) {
+        HomeCardContainer(
+            onClickAsset = onClickAsset,
+            accountList = accountList,
+            onClickAccountItem = onClickAccountItem,
+            onClickAccountRemit = onClickAccountRemit,
+            cardList = cardList,
+            onClickCardItem = onClickCardItem
+        )
+    }
+
+//        HomeCardContainer2(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(dimensionResource(R.dimen.padding_medium))
+//                .background(
+//                    color = MaterialTheme.colorScheme.surface,
+//                    shape = RoundedCornerShape(10)
+//                ),
+//            navController = navController
+//        )
+}
+
+@Composable
+fun HomeCardContainer(
+    onClickAsset: () -> Unit,
+    accountList: MutableList<BankAccountResponseDto>,
+    onClickAccountItem: () -> Unit,
+    onClickAccountRemit: (cpName: String, acNo: String, balance: Int) -> Unit,
+    cardList: MutableList<CardInfoResponseDto>,
+    onClickCardItem: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .padding(dimensionResource(R.dimen.padding_medium))
+            .clip(RoundedCornerShape(dimensionResource(id = R.dimen.card_radius)))
+            .background(MaterialTheme.colorScheme.surface)
+            .padding(dimensionResource(R.dimen.padding_medium))
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = dimensionResource(R.dimen.padding_small)),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-        Row(modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = dimensionResource(R.dimen.padding_small)),
-            verticalAlignment = Alignment.CenterVertically)
-        {
             Text(
                 text = "자산",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
-            Text(text = "${accData.size+cardData.size+1}", color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
+            Text(
+                text = "${accountList.size + accountList.size}",
+                color = Color.Gray,
+                modifier = Modifier.padding(start = 8.dp)
+            )
             Spacer(modifier = Modifier.weight(1.0f))
-            IconButton(onClick = {
-                navController.navigate(Const.Routes.ASSET)
-            },
-                modifier = Modifier.size(30.dp)) {
-                Image(painter = painterResource(R.drawable.arrow_forward_ios),
+            IconButton(
+                onClick = onClickAsset,
+                modifier = Modifier.size(30.dp)
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.arrow_forward_ios),
                     contentDescription = "forwardArrow",
                     modifier = Modifier
                         .fillMaxWidth()
@@ -109,41 +148,39 @@ cardData: MutableList<CardInfoResponseDto>) {
                 )
             }
         }
-//        AccountListItem(
-//            onClickRemit = {
-//                navController.navigate("${Const.Routes.REMIT}/신한은행/1111/10")
-//            }
-//        )
-        accData!!.forEach {
+        accountList.forEach {
             AccountListItem_Remit(
                 accountNumber = it.acNo,
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
-                onClickItem = { /*TODO*/ },
+                onClickItem = onClickAccountItem,
                 onClickRemit = {
-                    navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.acNo}/${it.balance}")
-                })
+                    onClickAccountRemit(it.cpName, it.acNo, it.balance)
+                }
+            )
+
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
         Divider()
-        cardData!!.forEach {
+        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
+        cardList.forEach {
             CardListItem_Arrow(
                 cardName = it.cardName,
                 cardImgPath = it.cardImgPath,
-                onClickItem = {}
+                onClickItem = onClickCardItem
             )
         }
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
-        Divider()
-        InsuranceListItem()
+//        Divider()
+//        InsuranceListItem()
     }
 }
 
 @Composable
-fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
-    Column(modifier = modifier
-        .padding(dimensionResource(R.dimen.padding_medium))
+fun HomeCardContainer2(modifier: Modifier, navController: NavController) {
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.padding_medium))
     ) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -153,7 +190,8 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
             )
             Spacer(modifier = Modifier.weight(1.0f))
             IconButton(onClick = { /*TODO*/ }, modifier = Modifier.size(30.dp)) {
-                Image(painter = painterResource(R.drawable.arrow_forward_ios),
+                Image(
+                    painter = painterResource(R.drawable.arrow_forward_ios),
                     contentDescription = null,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -162,22 +200,27 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
                 )
             }
         }
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .wrapContentSize(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally) {
-            Image(painter = painterResource(R.drawable.ssal),
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentSize(Alignment.Center),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ssal),
                 contentDescription = null,
                 modifier = Modifier
                     .height(150.dp)
                     .width(150.dp)
             )
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = dimensionResource(R.dimen.padding_medium)),
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = dimensionResource(R.dimen.padding_medium)),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                TextButton(onClick = { /*TODO*/ },
+                TextButton(
+                    onClick = { /*TODO*/ },
                     text = "만보기",
                     modifier = Modifier
                         .height(40.dp)
@@ -187,7 +230,8 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
                     fontSize = 14.sp
                 )
                 Spacer(modifier = Modifier.weight(1.0f))
-                TextButton(onClick = { /*TODO*/ },
+                TextButton(
+                    onClick = { /*TODO*/ },
                     text = "출석체크",
                     modifier = Modifier
                         .height(40.dp)
@@ -198,5 +242,34 @@ fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
                 )
             }
         }
+    }
+}
+
+@Preview
+@Composable
+private fun PreviewHomeCardContainer() {
+    HomeCardContainer(
+        onClickAsset = { /*TODO*/ },
+        accountList = MutableList(5) {
+            BankAccountResponseDto(
+                acNo = "acNo",
+                acName = "acName",
+                balance = 100,
+                cpLogo = "",
+                cpName = "cpName",
+                isRegister = true
+            )
+        },
+        onClickAccountItem = { /*TODO*/ },
+        onClickAccountRemit = { _, _, _ -> },
+        cardList = MutableList(5) {
+            CardInfoResponseDto(
+                cardNumber = "cardNumber",
+                cardName = "cardName",
+                cardImgPath = "",
+                isRegister = true
+            )
+        }
+    ) {
     }
 }

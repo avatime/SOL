@@ -2,18 +2,14 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.domain.dto.response.BankInfoResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
-import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.CardRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -30,7 +26,7 @@ class HomeViewModel @Inject constructor(
     val cardList =
         mutableStateOf<Response<MutableList<CardInfoResponseDto>>>(Response.Loading)
 
-    fun Load() {
+    fun load() {
         viewModelScope.launch {
             loadAccountList()
             loadCardList()
