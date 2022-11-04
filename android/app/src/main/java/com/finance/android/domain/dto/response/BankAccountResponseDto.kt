@@ -6,6 +6,7 @@ data class BankAccountResponseDto(
 
     @SerializedName("ac_no")
     val acNo: String, //계좌번호
+    @SerializedName("balance")
     val balance: Int, //잔액
     @SerializedName("ac_name")
     val acName: String, //계좌 이름

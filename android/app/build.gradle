@@ -6,6 +6,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        debug {
+            storeFile file('C:\\Users\\SSAFY\\Desktop\\key.jks')
+            storePassword 'solsolsol'
+            keyAlias 'upload'
+            keyPassword 'solsolsol'
+        }
+    }
     namespace 'com.finance.android'
     compileSdk 33
 
@@ -24,7 +32,8 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }

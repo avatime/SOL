@@ -11,9 +11,13 @@ data class RemitPhoneRequestDto(
     val acSend : String,
     @SerializedName("ac_receive") // 받는 계좌 번호
     val acReceive : String,
+    @SerializedName("value")
     val value : Int, // 금액
+    @SerializedName("receive")
     val receive : String, // 나에게 표시
+    @SerializedName("send")
     val send : String, // 받는 분에게 표시
+    @SerializedName("phone")
     val phone : String //연락처
 
 )
