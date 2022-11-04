@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -24,13 +23,13 @@ class RemitController(val remitService: RemitService, val kafka: KafkaProducer) 
 
     @PostMapping("/account")
     fun postRemit(@RequestBody remitInfoReq: RemitInfoReq): ResponseEntity<Any>{
-//        kafka.accountMessage(remitInfoReq)
+        kafka.accountMessage(remitInfoReq)
         return ResponseEntity.status(200).body(remitService.postRemit(remitInfoReq))
     }
 
     @PostMapping("/phone")
     fun postRemitPhone(@RequestBody remitPhoneReq: RemitPhoneReq): ResponseEntity<Any>{
-//        kafka.phoneMessage(remitPhoneReq)
+        kafka.phoneMessage(remitPhoneReq)
         return ResponseEntity
                 .ok()
                 .body(remitService.postRemitPhone(remitPhoneReq))
