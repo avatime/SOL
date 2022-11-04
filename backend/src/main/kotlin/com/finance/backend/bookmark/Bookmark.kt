@@ -27,7 +27,6 @@ class Bookmark(
     var user: User = user
 
     fun isClick(){
-        this.bkStatus = !bkStatus
+        this.bkStatus = !this.bkStatus
     }
-
 }
