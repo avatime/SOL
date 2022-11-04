@@ -49,3 +49,4 @@ def finance_create(engine):
         'per': sqlalchemy.types.Float()
     }
     finance.to_sql(name='finance', con=engine, if_exists='replace', index=False, dtype=dtypesql)
+    print("이거 실행 되는건가요??????")
