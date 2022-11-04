@@ -28,8 +28,8 @@ class RemitViewModel @Inject constructor(
     private val remitRepository: RemitRepository,
     private val bankRepository: BankRepository
 ) : BaseViewModel(application, baseRepository) {
-    val accountName = savedStateHandle.get<String>("accountName") //acName
-    val accountNumber = savedStateHandle.get<String>("accountNumber") //ac_send
+    val accountName = savedStateHandle.get<String>("accountName")!! //acName
+    val accountNumber = savedStateHandle.get<String>("accountNumber")!! //ac_send
     val balance = savedStateHandle.get<Int>("balance")
     val enabled = mutableStateOf(false)
     val requestRemit = mutableStateOf(false)
@@ -121,7 +121,7 @@ class RemitViewModel @Inject constructor(
             this@RemitViewModel.run {
                 remitRepository.postRemitToAccount(
                     RemitInfoRequestDto(
-                        acTag = selectedReceiveBank.value?.cpName,
+                        acTag = selectedReceiveBank.value!!.cpName,
                         acReceive = validRecieveAccountNumber.value,
                         acSend = accountNumber,
                         acName = accountName,
@@ -165,7 +165,7 @@ class RemitViewModel @Inject constructor(
                         value = value,
                         receive = receive,
                         send = send,
-                        phone = phoneNum.value
+                        phone = phoneNum.value,
                     )
                 )
             }.collect {
@@ -178,6 +178,22 @@ class RemitViewModel @Inject constructor(
             }
         }
     }
+
+//    //남의 계좌 북마크
+//    fun onClickAccountBookmark () {
+//        viewModelScope.launch {
+//            this@RemitViewModel.run{
+//                remitRepository.putRemitBookmark()
+//            }.collect {
+//                if (it is Response.Success) {
+//                    Log.i("remitAccount", "북마크 갓찬영")
+//
+//                } else if (it is Response.Failure) {
+//                    Log.i("remitAccount", "북마크 김챤챤영 ㅡㅡ")
+//                }
+//            }
+//        }
+//    }
 
 
     fun onClickBookmark(key: Any) {

@@ -520,7 +520,6 @@ private fun PreviewCard() {
                 cardNumber = "123",
                 cardName = "cardName",
                 cardImgPath = "path",
-                cardReg = true,
                 isRegister = false
             )
         },
