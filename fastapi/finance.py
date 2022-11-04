@@ -4,7 +4,6 @@ from pandas_datareader import data as pdr
 import sqlalchemy
 
 
-
 start = (datetime.today() - timedelta(8)).strftime('%Y-%m-%d')
 code_list = [['카카오', '035720.KS'], ['삼성전자', '005930.KS'], ['카카오뱅크', '323410.KS'], ['롯데정보통신', '286940.KS'],
              ['네이버', '035420.KS'], ['SK하이닉스', '000660.KS'], ['LG전자', '066570.KS'], ['현대차', '005380.KS'],
@@ -22,8 +21,8 @@ code_logo = {'카카오' : 'https://t1.kakaocdn.net/kakaocorp/kakaocorp/admin/ne
 
 
 def finance_create(engine):
+    print('어서오세요')
     finance = pd.DataFrame()
-    print("이거 실행 되는건가요111111??????")
 
     for name, code in code_list:
         temp = pdr.get_data_yahoo(code, start=start)
@@ -35,8 +34,6 @@ def finance_create(engine):
         temp['fn_date'] = temp.index.strftime('%Y-%m-%d')
         temp['per'] = round(((temp.iloc[6, 3] - temp.iloc[5, 3]) / temp.iloc[6, 3]) * 100, 2)
         finance = pd.concat([finance, temp], ignore_index=True)
-
-    print("이거 실행 되는건가요122222222??????")
 
     finance['id'] = finance.index + 1
     dtypesql = {
@@ -51,7 +48,6 @@ def finance_create(engine):
         'volume': sqlalchemy.types.Integer(),
         'per': sqlalchemy.types.Float()
     }
-    print("이거 실행 되는건가요13333??????")
 
     finance.to_sql(name='finance', con=engine, if_exists='replace', index=False, dtype=dtypesql)
-    print("이거 실행 되는건가요14444??????")
+    print('feels good')
