@@ -82,30 +82,27 @@ class RemitServiceImpl(
     }
 
     override fun postRemit(remitInfoReq: RemitInfoReq) {
-        val value = remitInfoReq.value
-        val date = LocalDateTime.now()
-        val remitTarget = remitInfoReq.acTag
-        val targetAccount = remitInfoReq.acReceive
-        val receive = remitInfoReq.receive
-        val send = remitInfoReq.send
-        val remitAccount = accountRepository.findById(remitInfoReq.acSend).get()
+        val value = remitInfoReq.value  // 이체 금액
+        val date = LocalDateTime.now()  // 이체 일자
+        val remitTarget = remitInfoReq.acTag    // 입금 받는 계좌 은행
+        val targetAccount = remitInfoReq.acReceive  // 입금 받는 계좌 번호
+        val receive = remitInfoReq.receive  // 받는 사람 이름
+        val send = remitInfoReq.send    // 보내는 사람 이름
+        val remitAccount = accountRepository.findById(remitInfoReq.acSend).orElse(null)?: throw NoAccountException()// 송금 하는 계좌 객체
 
         // 출금 거래 내역
         val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
+        // 잔액 변경 저장
         val accountRemit = accountRepository.findById(remitInfoReq.acSend).get()
-        if (accountRemit.balance >= value){
-            accountRemit.withdraw(value)
-            accountRepository.save(accountRemit)
-        }else{
-            throw RemitFailedException()
-        }
-
+        accountRemit.withdraw(value)
+        accountRepository.save(accountRemit)
 
         // 입금 거래 내역
-        val depositAccount = accountRepository.findById(remitInfoReq.acReceive).get()
+        val depositAccount = accountRepository.findById(remitInfoReq.acReceive).orElse(null)?: throw NoAccountException()
         val depositRemitHistory = TradeHistory("입금",value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
+        // 잔액 변경 저장
         val accountDeposit = accountRepository.findById(remitInfoReq.acReceive).get()
         accountDeposit.deposit(value)
         accountRepository.save(accountDeposit)
@@ -113,39 +110,39 @@ class RemitServiceImpl(
     }
 
     override fun postRemitPhone(remitPhoneReq: RemitPhoneReq) {
-        val phone = remitPhoneReq.phone
-        val value = remitPhoneReq.value
-        val date = LocalDateTime.now()
+        val phone = remitPhoneReq.phone // 폰 번호
+        val value = remitPhoneReq.value // 이체 금액
+        val date = LocalDateTime.now()  // 이체 일자
 
-        val user = userRepository.findByPhone(phone)!!
-        val userAccount = accountRepository.findByAcNo(user.account!!)!!
-        val userCorporation = corporationRepository.findByCpCode(userAccount.acCpCode!!)!!
+        if (userRepository.existsByPhone(phone)){
+            val user = userRepository.findByPhone(phone)!! // 폰 주인
 
-        val remitTarget = userCorporation.cpName
-        val targetAccount = userAccount.acNo
-        val receive = remitPhoneReq.receive
-        val send = remitPhoneReq.send
-        val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
+            val userAccount = accountRepository.findByAcNo(user.account?: throw NoAccountException())?: throw NoAccountException()// 대표 계좌 없으면 404 반환
+            val userCorporation = corporationRepository.findByCpCode(userAccount.acCpCode!!)!!
 
-        // 출금 거래 내역
-        val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
-        tradeHistoryRepository.save(tradeRemitHistory)
-        val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
-        if (accountRemit.balance >= value){
+            val remitTarget = userCorporation.cpName
+            val targetAccount = userAccount.acNo
+            val receive = remitPhoneReq.receive
+            val send = remitPhoneReq.send
+            val remitAccount = accountRepository.findById(remitPhoneReq.acSend).get()
+
+            // 출금 거래 내역
+            val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+            tradeHistoryRepository.save(tradeRemitHistory)
+            // 잔액 변경 저장
+            val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
             accountRemit.withdraw(value)
             accountRepository.save(accountRemit)
-        }else{
-            throw RemitFailedException()
+
+            // 입금 거래 내역
+            val depositAccount = accountRepository.findById(targetAccount).get()
+            val depositRemitHistory = TradeHistory("입금",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
+            tradeHistoryRepository.save(depositRemitHistory)
+            // 잔액 변경 저장
+            val accountDeposit = accountRepository.findById(targetAccount).get()
+            accountDeposit.deposit(value)
+            accountRepository.save(accountDeposit)
         }
-
-        // 입금 거래 내역
-        val depositAccount = accountRepository.findById(targetAccount).get()
-        val depositRemitHistory = TradeHistory("입금",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
-        tradeHistoryRepository.save(depositRemitHistory)
-        val accountDeposit = accountRepository.findById(targetAccount).get()
-        accountDeposit.deposit(value)
-        accountRepository.save(accountDeposit)
-
     }
 
     override fun putBookmark(acNo: String, token: String) {
@@ -156,9 +153,7 @@ class RemitServiceImpl(
             user = userRepository.findById(userId).get()
             if (bookmarkRepository.existsByUserIdAndAcNo(userId, acNo)){
                 var bookmark = bookmarkRepository.findByUserIdAndAcNo(userId, acNo)
-                bookmark.apply {
-                    bkStatus = !bkStatus
-                }
+                bookmark.isClick()
                 bookmarkRepository.save(bookmark)
             }else{
                 var bookmark = Bookmark(acNo, user, true)
