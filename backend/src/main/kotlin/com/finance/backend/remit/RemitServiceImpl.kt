@@ -57,7 +57,7 @@ class RemitServiceImpl(
             // 내가 북마크 한 계좌 하나씩 뽑기
             val bookmarkTradeHistoryList = tradeHistoryRepository.getBookMarkTradeHistoriesByUserId(userId).orEmpty()
             for (bookmark in bookmarkTradeHistoryList){
-                if (!myAccountList.contains(bookmark.tdTgAc)){
+                if (!myAccountList.contains(bookmark.tdTgAc) && !checkBookmarkList.contains(bookmark.tdTgAc)){
                     val bookmarkAccount = accountRepository.findById(bookmark.tdTgAc!!).orElse(null)
                     val bookmarkUser = userRepository.findById(bookmarkAccount.user.id).orElse(null)
                     val bookmarkCorporation = corporationRepository.findById(bookmarkAccount.acCpCode).orElse(null)
@@ -74,6 +74,7 @@ class RemitServiceImpl(
                     val recentUser = userRepository.findById(recentAccount.user.id).orElse(null)
                     val recentCorporation = corporationRepository.findById(recentAccount.acCpCode).orElse(null)
                     accountDetailList.add(RecentTradeRes(recentUser.name, recentAccount.acNo, recentCorporation.cpName, false, recentCorporation.cpLogo, recentHistory.tdDt))
+                    checkBookmarkList.add(recentAccount.acNo)
                 }
             }
         }
