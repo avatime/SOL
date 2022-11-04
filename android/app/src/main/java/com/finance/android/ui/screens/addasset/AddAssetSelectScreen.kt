@@ -46,28 +46,46 @@ fun AddAssetSelectScreen(
     }
 
     when (addAssetViewModel.getLoadState()) {
-        is Response.Success -> Screen(
-            modifier = modifier,
-            onClickBack = onClickBack,
-            onClickNext = {
-                addAssetViewModel.registerAsset()
-                onClickNext()
-            },
-            selectedAll = addAssetViewModel.selectedAll.value,
-            onClickSelectAll = { addAssetViewModel.onClickSelectAll() },
-            accountList = (addAssetViewModel.accountList.value as Response.Success).data,
-            accountCheckList = addAssetViewModel.accountCheckList,
-            onClickAccountItem = { addAssetViewModel.onClickAccountItem(it) },
-            cardList = (addAssetViewModel.cardList.value as Response.Success).data,
-            cardCheckList = addAssetViewModel.cardCheckList,
-            onClickCardItem = { addAssetViewModel.onClickCardItem(it) },
-            stockAccountList = (addAssetViewModel.stockAccountList.value as Response.Success).data,
-            stockAccountCheckList = addAssetViewModel.stockAccountCheckList,
-            onClickStockAccountItem = { addAssetViewModel.onClickStockAccountItem(it) },
-            insuranceList = (addAssetViewModel.insuranceList.value as Response.Success).data,
-            insuranceCheckList = addAssetViewModel.insuranceCheckList,
-            onClickInsuranceItem = { addAssetViewModel.onClickInsuranceItem(it) }
-        )
+        is Response.Success -> {
+            if (!addAssetViewModel.hasAssetToRegister()) {
+                Box {
+                    Loading(
+                        modifier = modifier,
+                        onClickBack = onClickBack
+                    )
+                    CustomDialog(
+                        dialogType = DialogType.ERROR,
+                        dialogActionType = DialogActionType.ONE_BUTTON,
+                        title = stringResource(id = R.string.msg_hasnt_asset_to_register),
+                        onPositive = onClickBack
+                    )
+                }
+            } else {
+                Screen(
+                    modifier = modifier,
+                    onClickBack = onClickBack,
+                    onClickNext = {
+                        addAssetViewModel.registerAsset()
+                        onClickNext()
+                    },
+                    selectedAll = addAssetViewModel.selectedAll.value,
+                    onClickSelectAll = { addAssetViewModel.onClickSelectAll() },
+                    accountList = (addAssetViewModel.accountList.value as Response.Success).data,
+                    accountCheckList = addAssetViewModel.accountCheckList,
+                    onClickAccountItem = { addAssetViewModel.onClickAccountItem(it) },
+                    cardList = (addAssetViewModel.cardList.value as Response.Success).data,
+                    cardCheckList = addAssetViewModel.cardCheckList,
+                    onClickCardItem = { addAssetViewModel.onClickCardItem(it) },
+                    stockAccountList = (addAssetViewModel.stockAccountList.value as Response.Success).data,
+                    stockAccountCheckList = addAssetViewModel.stockAccountCheckList,
+                    onClickStockAccountItem = { addAssetViewModel.onClickStockAccountItem(it) },
+                    insuranceList = (addAssetViewModel.insuranceList.value as Response.Success).data,
+                    insuranceCheckList = addAssetViewModel.insuranceCheckList,
+                    onClickInsuranceItem = { addAssetViewModel.onClickInsuranceItem(it) },
+                    hasRepAccount = (addAssetViewModel.checkHasRepAccount.value as Response.Success).data
+                )
+            }
+        }
         else -> {
             Loading(
                 modifier = modifier,
@@ -163,7 +181,8 @@ private fun Screen(
     onClickStockAccountItem: (index: Int) -> Unit,
     insuranceList: MutableList<InsuranceInfoResponseDto>,
     insuranceCheckList: Array<MutableState<Boolean>>,
-    onClickInsuranceItem: (index: Int) -> Unit
+    onClickInsuranceItem: (index: Int) -> Unit,
+    hasRepAccount: Boolean
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -267,10 +286,7 @@ private fun Screen(
                     )
                 }
             }
-            Box(
-                modifier = modifier
-                    .weight(1.0f)
-            ) {
+            Box(modifier = modifier.weight(1.0f)) {
                 when (selectedTabIndex) {
                     0 -> Account(
                         accountList = accountList,
@@ -307,7 +323,7 @@ private fun Screen(
             }
             TextButton(
                 onClick = {
-                    if (accountCheckList.all { c -> !c.value }) {
+                    if (!hasRepAccount && accountCheckList.all { c -> !c.value }) {
                         showSnackbar = true
                         return@TextButton
                     }
@@ -328,9 +344,11 @@ private fun Account(
     accountCheckList: Array<MutableState<Boolean>>,
     onClickAccountItem: (index: Int) -> Unit
 ) {
-    LazyColumn(
-        modifier = modifier,
-    ) {
+    if (accountList.isEmpty()) {
+        Empty(message = stringResource(id = R.string.msg_hasnt_account_to_register))
+        return
+    }
+    LazyColumn(modifier = modifier) {
         items(
             count = accountList.size,
             key = { it },
@@ -359,6 +377,10 @@ private fun Card(
     cardCheckList: Array<MutableState<Boolean>>,
     onClickCardItem: (index: Int) -> Unit
 ) {
+    if (cardList.isEmpty()) {
+        Empty(message = stringResource(id = R.string.msg_hasnt_card_to_register))
+        return
+    }
     LazyColumn(modifier = modifier) {
         items(
             count = cardList.size,
@@ -385,6 +407,10 @@ private fun Stock(
     stockAccountCheckList: Array<MutableState<Boolean>>,
     onClickStockAccountItem: (index: Int) -> Unit
 ) {
+    if (stockAccountList.isEmpty()) {
+        Empty(message = stringResource(id = R.string.msg_hasnt_stock_account_to_register))
+        return
+    }
     LazyColumn(modifier = modifier) {
         items(
             count = stockAccountList.size,
@@ -413,6 +439,10 @@ private fun Insurance(
     insuranceCheckList: Array<MutableState<Boolean>>,
     onClickInsuranceItem: (index: Int) -> Unit
 ) {
+    if (insuranceList.isEmpty()) {
+        Empty(message = stringResource(id = R.string.msg_hasnt_insurance_to_register))
+        return
+    }
     LazyColumn(modifier = modifier) {
         items(
             count = insuranceList.size,
@@ -453,7 +483,8 @@ private fun PreviewScreen() {
         onClickStockAccountItem = {},
         insuranceList = mutableListOf(),
         insuranceCheckList = arrayOf(),
-        onClickInsuranceItem = {}
+        onClickInsuranceItem = {},
+        hasRepAccount = true
     )
 }
 
@@ -469,7 +500,7 @@ private fun PreviewAccount() {
                 balance = 10000,
                 cpName = "cpName",
                 cpLogo = "cpLogo",
-                acReg = false
+                isRegister = false
             )
         },
         accountCheckList = Array(5) {
@@ -490,7 +521,7 @@ private fun PreviewCard() {
                 cardName = "cardName",
                 cardImgPath = "path",
                 cardReg = true,
-                CardNo = "1234567812345678"
+                isRegister = false
             )
         },
         cardCheckList = Array(5) {
@@ -512,7 +543,7 @@ private fun PreviewStock() {
                 balance = 10000,
                 cpName = "cpName",
                 cpLogo = "cpLogo",
-                acReg = false
+                isRegister = false
             )
         },
         stockAccountCheckList = Array(5) {

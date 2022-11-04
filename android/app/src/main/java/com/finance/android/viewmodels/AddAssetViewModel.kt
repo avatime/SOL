@@ -147,6 +147,13 @@ class AddAssetViewModel @Inject constructor(
         }
     }
 
+    fun hasAssetToRegister(): Boolean {
+        return (accountList.value as Response.Success).data.isNotEmpty() &&
+            (cardList.value as Response.Success).data.isNotEmpty() &&
+            (stockAccountList.value as Response.Success).data.isNotEmpty() &&
+            (insuranceList.value as Response.Success).data.isNotEmpty()
+    }
+
     private fun calculateSelectAll() {
         selectedAll.value = accountCheckList.all { it.value } &&
             cardCheckList.all { it.value } &&
@@ -157,6 +164,8 @@ class AddAssetViewModel @Inject constructor(
     private suspend fun loadAccountList() {
         this@AddAssetViewModel.run {
             bankRepository.getAccountList()
+                .filter { !it.isRegister }
+                .toMutableList()
         }
             .collect {
                 accountList.value = it
@@ -169,6 +178,8 @@ class AddAssetViewModel @Inject constructor(
     private suspend fun loadCardList() {
         this@AddAssetViewModel.run {
             cardRepository.getCardList()
+                .filter { !it.isRegister }
+                .toMutableList()
         }
             .collect {
                 cardList.value = it
@@ -181,6 +192,8 @@ class AddAssetViewModel @Inject constructor(
     private suspend fun loadStockAccountList() {
         this@AddAssetViewModel.run {
             stockRepository.getStockAccountList()
+                .filter { !it.isRegister }
+                .toMutableList()
         }
             .collect {
                 stockAccountList.value = it
@@ -193,6 +206,8 @@ class AddAssetViewModel @Inject constructor(
     private suspend fun loadInsuranceList() {
         this@AddAssetViewModel.run {
             insuranceRepository.getInsuranceList()
+                .filter { !it.isRegister }
+                .toMutableList()
         }
             .collect {
                 insuranceList.value = it
