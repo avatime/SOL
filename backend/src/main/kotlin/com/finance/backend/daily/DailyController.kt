@@ -30,7 +30,12 @@ class DailyController(private val dailyService: DailyService) {
         return ResponseEntity.status(200).body(dailyService.getWalk(accessToken, year, month))
     }
 
-    @GetMapping("")
+    @GetMapping("/profiles")
+    fun getAllProfiles(@RequestHeader("access_token") accessToken : String) : ResponseEntity<Any?> {
+        return ResponseEntity.status(200).body(dailyService.getAllProfiles(accessToken))
+    }
+
+    @GetMapping("/test")
     fun test(@RequestHeader("access_token") accessToken : String) : ResponseEntity<Any?> {
         return ResponseEntity.status(200).body("Success")
     }

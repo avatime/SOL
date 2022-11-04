@@ -1,5 +1,6 @@
 package com.finance.backend.profile
 
+import com.finance.backend.daily.response.ProfileRes
 import javax.persistence.*
 
 @Entity(name = "profile")
@@ -17,4 +18,6 @@ class Profile {
     @Column(nullable = false)
     var pfImg: String = ""
         protected set
+
+    fun toEntity() : ProfileRes = ProfileRes(this.pfName, this.pfImg)
 }

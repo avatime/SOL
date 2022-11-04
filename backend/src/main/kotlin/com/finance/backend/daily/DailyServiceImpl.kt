@@ -9,8 +9,11 @@ import com.finance.backend.daily.entity.Attendance
 import com.finance.backend.daily.entity.Walk
 import com.finance.backend.daily.repository.AttendanceRepository
 import com.finance.backend.daily.repository.WalkRepository
+import com.finance.backend.daily.response.ProfileRes
 import com.finance.backend.point.RewardService
 import com.finance.backend.point.RewardServiceImpl
+import com.finance.backend.profile.Profile
+import com.finance.backend.profile.ProfileRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
@@ -28,6 +31,7 @@ class DailyServiceImpl(
         private val attendanceRepository: AttendanceRepository,
         private val rewardService: RewardServiceImpl,
         private val walkRepository: WalkRepository,
+        private val profileRepository: ProfileRepository,
         private val jwtUtils: JwtUtils
 ) : DailyService {
     private val goal : Int = 5000
@@ -89,6 +93,16 @@ class DailyServiceImpl(
             val endDate = startDate.plusMonths(1)
             val dayList: List<Walk> = walkRepository.findAllByUserAndWalkDateBetween(user, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
             return List(startDate.until(endDate, ChronoUnit.DAYS).toInt()) { i -> isSuccess(dayList, startDate.plusDays(i.toLong())) }
+        } else throw Exception()
+    }
+
+    override fun getAllProfiles(accessToken: String): List<ProfileRes> {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
+            val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
+            val list : List<Profile> = profileRepository.findAll()
+            return List(list.size) {i -> list[i].toEntity()}
         } else throw Exception()
     }
 
