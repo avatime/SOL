@@ -32,8 +32,7 @@ class RemitServiceImpl(
         val accountRepository: AccountRepository,
         val corporationRepository: CorporationRepository,
         val tradeHistoryRepository: TradeHistoryRepository,
-        val userRepository: UserRepository,
-        val accountProductRepository: AccountProductRepository
+        val userRepository: UserRepository
 ) : RemitService {
 
     override fun getRecommendationAccount(token: String): List<RecentTradeRes> {
@@ -42,7 +41,7 @@ class RemitServiceImpl(
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            println(userRepository.findById(userId).get().name)
+
             // 사용자의 계좌 정보
             val accountList = accountRepository.findByUserId(userId)
 
@@ -89,24 +88,26 @@ class RemitServiceImpl(
         val receive = remitInfoReq.receive  // 받는 사람 이름
         val send = remitInfoReq.send    // 보내는 사람 이름
         val remitAccount = accountRepository.findById(remitInfoReq.acSend).orElse(null)?: throw NoAccountException()// 송금 하는 계좌 객체
+        println("보냄: " + remitTarget)
+        println("받음: " + targetAccount)
+        if (remitAccount.acNo == targetAccount){ throw RemitFailedException()}
 
         // 출금 거래 내역
         val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
         // 잔액 변경 저장
-        val accountRemit = accountRepository.findById(remitInfoReq.acSend).get()
+        val accountRemit = accountRepository.findById(remitInfoReq.acSend).orElse(null)?: throw NoAccountException()
         accountRemit.withdraw(value)
         accountRepository.save(accountRemit)
 
         // 입금 거래 내역
-        val depositAccount = accountRepository.findById(remitInfoReq.acReceive).orElse(null)?: throw NoAccountException()
+        val depositAccount = accountRepository.findById(remitInfoReq.acReceive).orElse(null)?: throw NoAccountException() // 입금 받는 계좌 객체
         val depositRemitHistory = TradeHistory("입금",value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
         // 잔액 변경 저장
-        val accountDeposit = accountRepository.findById(remitInfoReq.acReceive).get()
+        val accountDeposit = accountRepository.findById(remitInfoReq.acReceive).orElse(null)?: throw NoAccountException()
         accountDeposit.deposit(value)
         accountRepository.save(accountDeposit)
-
     }
 
     override fun postRemitPhone(remitPhoneReq: RemitPhoneReq) {
@@ -130,7 +131,7 @@ class RemitServiceImpl(
             val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
             tradeHistoryRepository.save(tradeRemitHistory)
             // 잔액 변경 저장
-            val accountRemit = accountRepository.findById(remitPhoneReq.acSend).get()
+            val accountRemit = accountRepository.findById(remitPhoneReq.acSend).orElse(null)?: throw NoAccountException()
             accountRemit.withdraw(value)
             accountRepository.save(accountRemit)
 
@@ -139,7 +140,7 @@ class RemitServiceImpl(
             val depositRemitHistory = TradeHistory("입금",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
             tradeHistoryRepository.save(depositRemitHistory)
             // 잔액 변경 저장
-            val accountDeposit = accountRepository.findById(targetAccount).get()
+            val accountDeposit = accountRepository.findById(targetAccount).orElse(null)?: throw NoAccountException()
             accountDeposit.deposit(value)
             accountRepository.save(accountDeposit)
         }
@@ -147,7 +148,6 @@ class RemitServiceImpl(
 
     override fun putBookmark(acNo: String, token: String) {
         val user: User
-
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             user = userRepository.findById(userId).get()

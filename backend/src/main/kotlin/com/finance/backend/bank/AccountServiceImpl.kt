@@ -41,7 +41,7 @@ class AccountServiceImpl(
             val accountList = accountRepository.findByUserIdAndAcType(userId, 1).orEmpty()
             for (ac in accountList){
                 val corporation = corporationRepository.findById(ac.acCpCode).get()
-                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, false))
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg))
             }
         }
         return bankAccountList
