@@ -6,6 +6,9 @@ import com.finance.backend.bank.request.AccountInfoReq
 import com.finance.backend.bank.response.*
 import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
+import com.finance.backend.card.CardRepository
+import com.finance.backend.card.response.CardInfoRes
+import com.finance.backend.cardProduct.CardProductRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
 import com.finance.backend.corporation.response.BankInfoRes
@@ -30,6 +33,8 @@ class AccountServiceImpl(
         private val corporationRepository: CorporationRepository,
         private val insuranceRepository: InsuranceRepository,
         private val isProductRepository: IsProductRepository,
+        private val cardRepository: CardRepository,
+        private val cardProductRepository: CardProductRepository,
         private val jwtUtils: JwtUtils
 ) : AccountService {
 
@@ -86,9 +91,7 @@ class AccountServiceImpl(
             user = userRepository.findById(userId).orElse(null)
             if (bookmarkRepository.existsByUserIdAndAcNo(userId, acNo)){
                 val bookmark = bookmarkRepository.findByUserIdAndAcNo(userId, acNo)
-                bookmark.apply {
-                    bkStatus = !bkStatus
-                }
+                bookmark.isClick()
                 bookmarkRepository.save(bookmark)
             }else{
                 var bookmark = Bookmark(acNo, user, true)
@@ -200,12 +203,14 @@ class AccountServiceImpl(
     override fun getAccountRegistered(token: String): AccountRegisteredRes {
         val accountList = ArrayList<BankAccountRes>()
         val financeList = ArrayList<BankAccountRes>()
+        val cardList = ArrayList<CardInfoRes>()
         lateinit var insuranceList : List<MyInsuranceInfoDetailRes>
+
 
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val accountInfoList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 1, true).orEmpty()
-            println(accountInfoList)
+
             for (account in accountInfoList){
                 val corporation = corporationRepository.findById(account.acCpCode).get()
                 accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg))
@@ -217,10 +222,17 @@ class AccountServiceImpl(
                 financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo, finance.acReg))
             }
 
+            val cardInfoList = cardRepository.findAllByUserIdAndCdReg(userId, true).orEmpty()
+            for (card in cardInfoList){
+                println(card.cdPdCode)
+                val cardProduct = cardProductRepository.findByCdPdCode(card.cdPdCode)
+                cardList.add(CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo))
+            }
+
             val insuranceInfoList = insuranceRepository.findAllByUserIdAndIsRegAndIsStatus(userId, true, 10)
             insuranceList = List(insuranceInfoList.size) {i -> insuranceInfoList[i].toEntity(isProductRepository.findById(insuranceInfoList[i].isPdCode).orElse(null)?.isPdName ?: throw NoSuchElementException())}
-        }
 
-        return AccountRegisteredRes(accountList, insuranceList, financeList)
+        }
+        return AccountRegisteredRes(accountList, insuranceList, financeList, cardList)
     }
 }

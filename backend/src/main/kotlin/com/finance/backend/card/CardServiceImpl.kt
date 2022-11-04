@@ -65,7 +65,7 @@ class CardServiceImpl(
 
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-            val cardList = cardRepository.findAllByUserIdAndCdReg(userId, true)
+            val cardList = cardRepository.findAllByUserIdAndCdReg(userId, true).orEmpty()
             for (card in cardList){
                 val cardProduct = cardProductRepository.findById(card.cdPdCode).orElse(null)
                 val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo)
