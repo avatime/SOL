@@ -4,6 +4,7 @@ from pandas_datareader import data as pdr
 import sqlalchemy
 
 
+
 start = (datetime.today() - timedelta(8)).strftime('%Y-%m-%d')
 code_list = [['카카오', '035720.KS'], ['삼성전자', '005930.KS'], ['카카오뱅크', '323410.KS'], ['롯데정보통신', '286940.KS'],
              ['네이버', '035420.KS'], ['SK하이닉스', '000660.KS'], ['LG전자', '066570.KS'], ['현대차', '005380.KS'],

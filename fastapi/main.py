@@ -1,22 +1,22 @@
+from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, Response, status
 from fastapi.params import Depends
 from sqlalchemy import desc
 from sqlalchemy.orm import Session
-from apscheduler.schedulers.background import BackgroundScheduler
 import function
 import models
 import schemas
 from typing import List
 from Connection import SessionLocal, engine
-from finance import finance_create
 
 # models.Base.metadata.create_all(bind=engine)
+from finance import finance_create
+
 models.Base.metadata.bind = engine
 app = FastAPI()
 s = BackgroundScheduler(timezone='Asia/Seoul')
-s.add_job(finance_create, 'cron', [engine], hour='09', minute='15')
+s.add_job(finance_create, 'cron', [engine], hour='06', minute='58')
 s.start()
-
 
 def get_db():
     try:
