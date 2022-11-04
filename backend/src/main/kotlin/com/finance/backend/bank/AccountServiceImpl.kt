@@ -132,27 +132,18 @@ class AccountServiceImpl(
             val user = userRepository.findById(userId).orElse(null)
 
             // 내 계좌 가져오기
-            val accountList = accountRepository.findByUserId(userId)
-            // 내 계좌 문자열
-            val myAccountList = ArrayList<String>()
-            for (account in accountList){
-                myAccountList.add(account.acNo)
-            }
-
-            // 내가 북마크 한 계좌
-            val bookmarkList = bookmarkRepository.findByUserId(userId).orEmpty()
+            val accountList = accountRepository.findByUserId(userId).orEmpty()
 
             // 북마크 한 내 계좌
             val myBookmarkList = ArrayList<String>()
             val myNotBookmarkList = ArrayList<String>()
-            for (bookmark in bookmarkList){
-                // 내 계좌 추가
-                if (myAccountList.contains(bookmark.acNo)){
-                    myBookmarkList.add(bookmark.acNo)
-                }
-                // 상대 계좌 추가
-                else {
-                    myNotBookmarkList.add(bookmark.acNo)
+
+            for (account in accountList){
+                // 내가 북마크한 내 계좌
+                if (bookmarkRepository.existsByUserIdAndAcNo(userId, account.acNo)){
+                    myBookmarkList.add(account.acNo)
+                }else{
+                    myNotBookmarkList.add(account.acNo)
                 }
             }
 
