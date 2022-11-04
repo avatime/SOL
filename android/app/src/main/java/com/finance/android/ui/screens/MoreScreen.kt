@@ -16,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -24,6 +25,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter.State.Empty.painter
+import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.BackHeaderBar
@@ -69,13 +73,25 @@ fun Screen(
             .background(color = MaterialTheme.colorScheme.background)
     ) {
         Row(
-
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.calendar_default))
         ){
-            Image(
-                painter = painterResource(R.drawable.paw),
-                contentDescription = null, // 필수 param
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(userInfo.profileUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(80.dp)
+                    .padding(end = dimensionResource(R.dimen.padding_small))
             )
-            Text(text = userInfo.username)
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(text = userInfo.username)
+            }
         }
 
         Button(
@@ -106,7 +122,9 @@ private fun MenuList(navController: NavController) {
             onClick = {
                 navController.navigate(Const.Routes.ATTENDANCE)
             },
-            modifier = Modifier.withBottomButton().background(Color.White),
+            modifier = Modifier
+                .withBottomButton()
+                .background(Color.White),
         ) {
             Image(
                 painter = painterResource(R.drawable.ssal),
