@@ -70,7 +70,9 @@ class RemitServiceImpl(
             val recentAccountList = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
             for (recentHistory in recentAccountList){
                 if (!myAccountList.contains(recentHistory.tdTgAc) && !checkBookmarkList.contains(recentHistory.tdTgAc)){
+                    println("시작: " + recentHistory.tdTgAc)
                     val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).orElse(null)
+                    println("계좌번호: " + recentAccount.acNo)
                     val recentUser = userRepository.findById(recentAccount.user.id).orElse(null)
                     val recentCorporation = corporationRepository.findById(recentAccount.acCpCode).orElse(null)
                     accountDetailList.add(RecentTradeRes(recentUser.name, recentAccount.acNo, recentCorporation.cpName, false, recentCorporation.cpLogo, recentHistory.tdDt))
@@ -88,7 +90,7 @@ class RemitServiceImpl(
         val receive = remitInfoReq.receive  // 받는 사람 이름
         val send = remitInfoReq.send    // 보내는 사람 이름
         val remitAccount = accountRepository.findById(remitInfoReq.acSend).orElse(null)?: throw NoAccountException()// 송금 하는 계좌 객체
-        println("보냄: " + remitTarget)
+        println("보냄: " + remitAccount.acNo)
         println("받음: " + targetAccount)
         if (remitAccount.acNo == targetAccount){ throw RemitFailedException()}
 
@@ -111,7 +113,7 @@ class RemitServiceImpl(
     }
 
     override fun postRemitPhone(remitPhoneReq: RemitPhoneReq) {
-        val phone = remitPhoneReq.phone // 폰 번호
+        val phone = remitPhoneReq.phone.replace("-", "") // 폰 번호
         val value = remitPhoneReq.value // 이체 금액
         val date = LocalDateTime.now()  // 이체 일자
 
@@ -129,6 +131,7 @@ class RemitServiceImpl(
 
             // 출금 거래 내역
             val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+            println("출금계좌: " + tradeRemitHistory.tdTgAc)
             tradeHistoryRepository.save(tradeRemitHistory)
             // 잔액 변경 저장
             val accountRemit = accountRepository.findById(remitPhoneReq.acSend).orElse(null)?: throw NoAccountException()
