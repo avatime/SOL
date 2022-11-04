@@ -10,7 +10,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+
     }
 }
-rootProject.name = "Finance"
+rootProject.name = "SOL#"
 include ':app'

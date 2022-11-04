@@ -16,6 +16,9 @@ object Const {
     const val ADD_ASSET_SELECT_SCREEN = "add_asset_select_screen"
     const val ADD_ASSET_REP_SCREEN = "add_asset_rep_screen"
     const val ADD_ASSET_RESULT_SCREEN = "add_asset_result_screen"
+    const val INPUT_RECEIVER_SCREEN = "input_receiver_screen"
+    const val INPUT_MONEY_SCREEN = "input_money_screen"
+    const val REMIT_OK_SCREEN = "remit_ok_screen"
 
     object Routes {
         const val LOGIN = "route_login"
