@@ -2,6 +2,7 @@ package com.finance.android.domain.repository
 
 import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
+import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.utils.Response
 import kotlinx.coroutines.flow.Flow
 
@@ -13,4 +14,5 @@ interface UserRepository {
     suspend fun signup(signupRequestDto: SignupRequestDto): LoginResponseDto
     suspend fun createAsset(createAssetRequestDto: CreateAssetRequestDto)
     suspend fun checkRepAccount(): Boolean
+    suspend fun getUserProfile() : UserProfileResponseDto
 }

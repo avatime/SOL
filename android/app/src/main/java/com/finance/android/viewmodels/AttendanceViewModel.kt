@@ -1,23 +1,20 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.DailyRepository
-import com.finance.android.domain.repository.SampleRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
-import kotlin.math.log
 
 @HiltViewModel
-class DailyViewModel @Inject constructor(
+class AttendanceViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     private val dailyRepository: DailyRepository,
@@ -51,7 +48,7 @@ class DailyViewModel @Inject constructor(
     }
 
     private suspend fun checkAttendance(onSuccess: suspend () -> Unit) {
-        this@DailyViewModel.run {
+        this@AttendanceViewModel.run {
             dailyRepository.attendance()
         }.collect { res ->
             if (res is Response.Success) {
@@ -61,7 +58,7 @@ class DailyViewModel @Inject constructor(
     }
 
     private suspend fun loadAttendanceList(year : Int, month : Int) {
-        this@DailyViewModel.run {
+        this@AttendanceViewModel.run {
             dailyRepository.getAttendanceList(year, month)
         }
             .collect {
