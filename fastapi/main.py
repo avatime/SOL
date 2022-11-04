@@ -1,4 +1,3 @@
-from apscheduler.schedulers.background import BackgroundScheduler
 from fastapi import FastAPI, Response, status
 from fastapi.params import Depends
 from sqlalchemy import desc
@@ -6,27 +5,14 @@ from sqlalchemy.orm import Session
 import function
 import models
 import schemas
+import finance
 from typing import List
 from Connection import SessionLocal, engine
-from datetime import datetime
 
 # models.Base.metadata.create_all(bind=engine)
-from finance import finance_create
 
 models.Base.metadata.bind = engine
 app = FastAPI()
-# s = BackgroundScheduler(timezone='Asia/Seoul')
-s = BackgroundScheduler()
-# s.add_job(finance_create, 'cron', [engine], hour='07', minute='28')
-# s.start()
-
-
-def fn():
-    print(datetime.now())
-
-
-s.add_job(fn, 'interval', seconds=10)
-s.start()
 
 
 def get_db():
@@ -39,12 +25,12 @@ def get_db():
 
 @app.post("/data/v1/user/register", status_code=200)
 async def test(user: schemas.userReq, response: Response, db: Session = Depends(get_db)):
-    # try:
-    user_id = db.query(models.User).filter(models.User.phone == user.phone).first().id
-    function.create(user_id, db)
+    try:
+        user_id = db.query(models.User).filter(models.User.phone == user.phone).first().id
+        function.create(user_id, db)
 
-    # except:
-    #     response.status_code = status.HTTP_409_CONFLICT
+    except:
+        response.status_code = status.HTTP_409_CONFLICT
 
 
 @app.get("/data/v1/finance", response_model=List[schemas.FinanceOut],
@@ -59,3 +45,8 @@ async def finance(db: Session = Depends(get_db)):
          response_model_exclude={"id", "fn_logo"}, status_code=200)
 async def finance_detail(fn_name: str, db: Session = Depends(get_db)):
     return db.query(models.Finance).filter(models.Finance.fn_name == fn_name).all()
+
+
+@app.get("/data/v1/finance/scheduler", status_code=200)
+async def scheduler():
+    finance.finance_create(engine)
