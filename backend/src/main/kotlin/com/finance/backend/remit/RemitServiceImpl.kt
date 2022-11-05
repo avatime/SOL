@@ -58,7 +58,7 @@ class RemitServiceImpl(
             val bookmarkTradeHistoryList = tradeHistoryRepository.getBookMarkTradeHistoriesByUserId(userId).orEmpty()
             for (bookmark in bookmarkTradeHistoryList){
                 if (!myAccountList.contains(bookmark.tdTgAc) && !checkBookmarkList.contains(bookmark.tdTgAc)){
-                    val bookmarkAccount = accountRepository.findById(bookmark.tdTgAc!!).orElse(null)
+                    val bookmarkAccount = accountRepository.findById(bookmark.tdTgAc!!).orElse(null)?: throw NoAccountException()
                     val bookmarkUser = userRepository.findById(bookmarkAccount.user.id).orElse(null)
                     val bookmarkCorporation = corporationRepository.findById(bookmarkAccount.acCpCode).orElse(null)
                     accountDetailList.add(RecentTradeRes(bookmarkUser.name, bookmark.tdTgAc!!, bookmarkCorporation.cpName, true, bookmarkCorporation.cpLogo, bookmark.tdDt))
@@ -70,7 +70,7 @@ class RemitServiceImpl(
             val recentAccountList = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
             for (recentHistory in recentAccountList){
                 if (!myAccountList.contains(recentHistory.tdTgAc) && !checkBookmarkList.contains(recentHistory.tdTgAc)){
-                    val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).orElse(null)
+                    val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).orElse(null)?: throw NoAccountException()
                     val recentUser = userRepository.findById(recentAccount.user.id).orElse(null)
                     val recentCorporation = corporationRepository.findById(recentAccount.acCpCode).orElse(null)
                     accountDetailList.add(RecentTradeRes(recentUser.name, recentAccount.acNo, recentCorporation.cpName, false, recentCorporation.cpLogo, recentHistory.tdDt))
