@@ -18,8 +18,8 @@ interface StockService {
     suspend fun putRegisterStockAccount(@Body stockAccountNumberDtoArray: Array<StockAccountNumberDto>)
 
     @GET("${Const.DATA_PATH}/finance")
-    suspend fun getFinanceList(): MutableList<FinanceResponseDto>
+    suspend fun getFinanceList(): Array<FinanceResponseDto>
 
     @GET("${Const.DATA_PATH}/finance/{fn_name}")
-    suspend fun getFinanceDetailList(@Path("fn_name")fnName: String) : MutableList<FinanceDetailResponseDto>
+    suspend fun getFinanceDetailList(@Path("fn_name")fnName: String) : Array<FinanceDetailResponseDto>
 }
