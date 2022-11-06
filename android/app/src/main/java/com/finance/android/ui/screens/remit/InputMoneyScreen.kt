@@ -1,6 +1,7 @@
 package com.finance.android.ui.screens
 
 
+import android.icu.number.IntegerWidth
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -50,16 +51,6 @@ fun InputMoneyScreen(
     var keyboardController = LocalSoftwareKeyboardController.current
 
 
-    //나에게 표시
-    var receive by remember {
-        mutableStateOf("")
-    }
-
-    //받는 분에게 표시
-    var send by remember {
-        mutableStateOf("")
-    }
-
     var isNext by remember {
         mutableStateOf(false)
     }
@@ -79,11 +70,6 @@ fun InputMoneyScreen(
     if (isNext) {
         keyboardController?.hide()
     }
-
-
-
-
-
 
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -205,7 +191,8 @@ fun InputMoneyScreen(
                                     receive = "",
                                     send = "",
                                     onSuccess = {
-                                        navController.navigate(Const.REMIT_OK_SCREEN)
+                                        navController.navigate(Const.REMIT_OK_SCREEN);
+                                        remitViewModel.moneyValue.value = moneyValue
                                     }
                                 )
                             }else{
@@ -213,6 +200,7 @@ fun InputMoneyScreen(
                                     send = "",
                                     onSuccess = {
                                         navController.navigate(Const.REMIT_OK_SCREEN)
+                                        remitViewModel.moneyValue.value = moneyValue
                                     })
                             }
 
@@ -220,6 +208,7 @@ fun InputMoneyScreen(
                         text = "보내기",
                         modifier = Modifier.withBottomButton(),
                         buttonType = ButtonType.ROUNDED,
+
 
                         )
 

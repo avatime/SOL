@@ -1,5 +1,6 @@
 package com.finance.android.domain.service
 
+import com.finance.android.domain.dto.request.AccountNumberDto
 import com.finance.android.domain.dto.request.RemitInfoRequestDto
 import com.finance.android.domain.dto.request.RemitPhoneRequestDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
@@ -19,6 +20,6 @@ interface RemitService {
     @POST("${Const.API_PATH}/remit/phone")
     suspend fun postRemitToPhone(@Body remitPhoneRequestDto: RemitPhoneRequestDto)
 
-    @PUT("${Const.API_PATH}/remit/bookmark")
-    suspend fun putRemitBookmark(@Body acNo : String)
+    @PUT("${Const.API_PATH}/bank/bookmark")
+    suspend fun putRemitBookmark(@Body accountNumberDto: AccountNumberDto)
 }

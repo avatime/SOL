@@ -2,10 +2,13 @@ package com.finance.android.ui.components
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -24,11 +27,9 @@ import com.finance.android.viewmodels.RemitViewModel
 @Composable
 fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
     var selectedIndex by remember { mutableStateOf(0) }
-
-
-
     val list = listOf("은행", "증권")
-    Column(modifier = Modifier.fillMaxWidth()) {
+    Column(modifier = Modifier
+        .height(450.dp)) {
         TabRow(selectedTabIndex = selectedIndex,
             backgroundColor = Color.White,
             modifier = Modifier.padding(end = 200.dp, bottom = 30.dp,top=10.dp),
@@ -49,7 +50,6 @@ fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
             list.forEachIndexed { index, text ->
                 val selected = selectedIndex == index
                 Tab(
-
                     selected = selected,
                     onClick = { selectedIndex = index },
                     text = { Text(text = text, fontSize = 18.sp,) },
@@ -69,14 +69,18 @@ fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
             launch()
         }
         when (selectedIndex) {
-            0 -> {
 
+            0 -> {
+                Column(modifier = modifier.fillMaxSize()
+                        ){
                     AllBankList(allBankData = remitViewModel.allBankData,remitViewModel = remitViewModel)
+                }
+
 
 
             }
             1 -> {
-                Box() {
+                Column(modifier = modifier.fillMaxSize()) {
                     AllStockCpList(allStockCpData = remitViewModel.allStockCpData, remitViewModel=remitViewModel)
                 }
 
@@ -101,10 +105,10 @@ fun AllBankList(allBankData : MutableState<Response<MutableList<BankInfoResponse
         is Response.Loading -> Text(text = "로딩중")
         is Response.Success ->
           LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
-              .fillMaxSize()
+              .width(400.dp)
               .background(Color.White)) {
               items(response.data) { idx ->
-                  idx.cpName?.let { CompanyItem(cpName = it, cpLogo = idx.cpLogo , remitViewModel = remitViewModel) }
+                  idx.cpName?.let { CompanyItem(cpCode = idx.cpCode, cpName = it, cpLogo = idx.cpLogo , remitViewModel = remitViewModel) }
 
               }
           }
@@ -123,11 +127,11 @@ fun AllStockCpList(allStockCpData : MutableState<Response<MutableList<BankInfoRe
         is Response.Loading -> Text(text = "로딩중")
         is Response.Success ->
             LazyVerticalGrid(columns = GridCells.Fixed(2), modifier = Modifier
-                .fillMaxSize()
+                .height(400.dp)
                 .background(Color.White)) {
                 items(response.data) { idx ->
                     idx.cpName?.let {
-                        CompanyItem(
+                        CompanyItem(cpCode= idx.cpCode,
                             cpName = it, cpLogo = idx.cpLogo , remitViewModel = remitViewModel)
                     }
 

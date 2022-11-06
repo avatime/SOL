@@ -19,7 +19,7 @@ import com.finance.android.viewmodels.RemitViewModel
 
 @Composable
 fun CompanyItem(
-    cpName: String, cpLogo: String, remitViewModel: RemitViewModel
+    cpCode : Int, cpName: String, cpLogo: String, remitViewModel: RemitViewModel
 ) {
     Row(
         modifier = Modifier
@@ -27,11 +27,11 @@ fun CompanyItem(
             .padding(5.dp)
             .clip(RoundedCornerShape(10.dp))
             .clickable {
-                remitViewModel.onClickReceiveBank(BankInfoResponseDto(cpName,cpLogo))
+                remitViewModel.onClickReceiveBank(BankInfoResponseDto(cpCode,cpName,cpLogo));
+                remitViewModel.cpCode.value = cpCode
             }
             .padding(20.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -44,7 +44,7 @@ fun CompanyItem(
                 .clip(CircleShape)
         )
         Spacer(modifier = Modifier.padding(5.dp))
-        Text(text = "${cpName}은행")
+        Text(text = "${cpName}은행" , softWrap = true, maxLines = 1, )
     }
 }
 

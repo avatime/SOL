@@ -61,4 +61,8 @@ class BankRepositoryImpl @Inject constructor(
     override suspend fun checkAccount(checkAccountRequestDto: CheckAccountRequestDto): CheckAccountResponseDto {
         return bankService.checkAccount(checkAccountRequestDto.acNo,checkAccountRequestDto.cpCode)
     }
+
+    override suspend fun getRecentMyAccount(): MutableList<RecentMyTradeResponseDto> {
+        return bankService.getRecentMyAccount()
+    }
 }

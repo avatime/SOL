@@ -3,9 +3,12 @@ package com.finance.android.ui.screens
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.TextFieldDefaults.indicatorLine
 import androidx.compose.material.icons.Icons
@@ -46,7 +49,6 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
     var accountNumber = remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
-        confirmStateChange = { it != ModalBottomSheetValue.Expanded }
     )
     val coroutineScope = rememberCoroutineScope()
 
@@ -94,7 +96,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
-                                    .data(remitViewModel.selectedReceiveBank.value?.cpLogo)
+                                    .data(remitViewModel.selectedReceiveBank.value!!.cpLogo)
                                     .crossfade(true)
                                     .build(),
                                 contentDescription = "회사 로고",
@@ -105,7 +107,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                                     .clip(CircleShape)
                             )
                             Spacer(modifier = Modifier.padding(5.dp))
-                            Text(text = "${remitViewModel.selectedReceiveBank.value?.cpName}은행")
+                            Text(text = "${remitViewModel.selectedReceiveBank.value!!.cpName}은행")
                         }
                     }
 
@@ -131,7 +133,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                 com.finance.android.ui.components.TextButton(
                     onClick = {
                         remitViewModel.checkRightAccount(
-                            cpCode = 1,
+                            cpCode = remitViewModel.cpCode.value,
                             acNo = accountNumber.value,
                             onSuccess = {
                                 navController.navigate(Const.INPUT_MONEY_SCREEN)
@@ -150,12 +152,16 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheet(remitViewModel: RemitViewModel) {
-    Column(
+    Box(
+        modifier = Modifier
+            .height(450.dp)
     ) {
         CpListSheet(modifier = Modifier, remitViewModel = remitViewModel)
     }
+
 }
 
 
