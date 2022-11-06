@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -63,7 +64,8 @@ fun RemitFragment(
             }
             composable(Const.REMIT_OK_SCREEN) { RemitOKScreen(
                     remitViewModel = remitViewModel
-                , navController = innerNavController) }
+                , navController = innerNavController
+            ) }
 
 
 

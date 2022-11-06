@@ -25,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -32,6 +33,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.ui.theme.Disabled
+import com.finance.android.viewmodels.RemitViewModel
 
 
 @OptIn(ExperimentalAnimationApi::class)
@@ -41,18 +43,21 @@ fun AccountLikeItem(
     cpLogo: String,
     name: String,
     accountNumber: String,
-    cpName: String
+    cpName: String,
+    onClickItem: () -> Unit,
+    onClickBookmark: () -> Unit
 ) {
 
     var isSelected = remember { mutableStateOf(bkStatus) }
-
-
 
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 10.dp)
-            .height(75.dp).clickable {  },
+            .height(75.dp)
+            .clickable {
+                onClickItem()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
 
@@ -69,15 +74,18 @@ fun AccountLikeItem(
                 .clip(CircleShape)
 
         )
-        Spacer(modifier = Modifier.weight(0.2f))
+        Spacer(modifier = Modifier.padding(10.dp))
 
 
-        Column {
+        Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = name, fontSize = dimensionResource(R.dimen.account_like_name).value.sp,
+                overflow = TextOverflow.Ellipsis,
+                softWrap = false,
+
             )
             Spacer(modifier = Modifier.padding(3.dp))
-            Row {
+            Row(modifier = Modifier.fillMaxHeight()) {
                 Text(
                     text = cpName,
                     fontSize = dimensionResource(R.dimen.account_like_account_number).value.sp,
@@ -94,13 +102,16 @@ fun AccountLikeItem(
             }
 
         }
-        Spacer(modifier = Modifier.weight(0.8f))
 
-        IconButton(onClick = { isSelected.value = !isSelected.value }) {
+
+        IconButton(onClick = {
+            isSelected.value = !isSelected.value
+            onClickBookmark()
+        }, modifier = Modifier.padding(end=5.dp)) {
 
 
             AnimatedVisibility(
-                visible = isSelected.value,
+                visible = !isSelected.value,
                 enter = scaleIn() + expandVertically(expandFrom = Alignment.CenterVertically),
                 exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
             ) {
@@ -116,7 +127,7 @@ fun AccountLikeItem(
             }
 
             AnimatedVisibility(
-                visible = !isSelected.value,
+                visible = isSelected.value,
                 enter = scaleIn(transformOrigin = TransformOrigin(0f, 0f)) +
                         fadeIn() + expandIn(expandFrom = Alignment.TopStart),
                 exit = scaleOut(transformOrigin = TransformOrigin(0f, 0f)) +
@@ -126,7 +137,7 @@ fun AccountLikeItem(
                     Icons.Filled.Star,
                     contentDescription = "like",
                     modifier = Modifier.size(35.dp),
-                    tint = if (!isSelected.value) Color.LightGray else Color(0XFF736979)
+                    tint = if (!isSelected.value) Color.LightGray else Color(0xffeeca66)
 
                 )
             }
@@ -134,14 +145,3 @@ fun AccountLikeItem(
     }
 }
 
-@Preview
-@Composable
-private fun Preview() {
-    AccountLikeItem(
-        bkStatus = true,
-        cpLogo = "it.cpLogo",
-        name = "it.acReceive",
-        accountNumber = "it.acNo",
-        cpName = "it.cpName"
-    )
-}
