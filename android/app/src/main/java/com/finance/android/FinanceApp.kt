@@ -47,6 +47,24 @@ fun FinanceApp() {
             ) {
                 RemitFragment()
             }
+            composable(
+                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}/{balance}",
+                arguments = listOf(
+                    navArgument("acName") { type = NavType.StringType },
+                    navArgument("cpName") { type = NavType.StringType },
+                    navArgument("acNo") { type = NavType.StringType },
+                    navArgument("balance") { type = NavType.IntType }
+                )
+            ) {
+                AccountDetailFragment(
+                    acName = it.arguments!!.getString("acName")!!,
+                    cpName = it.arguments!!.getString("cpName")!!,
+                    acNo = it.arguments!!.getString("acNo")!!,
+                    balance = it.arguments!!.getInt("balance"),
+                    navController = navController,
+                    onClose = { navController.popBackStack() }
+                )
+            }
             composable(Const.Routes.ADD_ASSET) {
                 AnimatedVisibility(
                     initiallyVisible = false,
@@ -109,23 +127,6 @@ fun FinanceApp() {
                     )
                 }
             }
-            //            composable(
-//                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}/{balance}",
-//                arguments = listOf(
-//                    navArgument("acName") { type = NavType.StringType },
-//                    navArgument("cpName") { type = NavType.StringType },
-//                    navArgument("acNo") { type = NavType.StringType },
-//                    navArgument("balance") { type = NavType.IntType }
-//
-//                )
-//            ) {
-//                AccountDetailFragment(
-//                    acName = it.arguments!!.getString("acName"),
-//                    cpName = it.arguments!!.getString("cpName"),
-//                    acNo = it.arguments!!.getString("acNo"),
-//                    balance = it.arguments!!.getInt("balance"),
-//                )
-//            }
         }
     }
 }

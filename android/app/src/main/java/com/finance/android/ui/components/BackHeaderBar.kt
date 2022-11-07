@@ -22,7 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 fun BackHeaderBar(
     modifier: Modifier = Modifier,
     text: String,
-    backgroundColor: Color = MaterialTheme.colorScheme.background,
+    backgroundColor: Color = MaterialTheme.colorScheme.surface,
     onClickBack: (() -> Unit)? = null
 ) {
     Box(

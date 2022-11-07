@@ -8,9 +8,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
@@ -18,6 +21,7 @@ import java.text.DecimalFormat
 
 @Composable
 fun AccountCardComp(
+    modifier: Modifier,
     acName: String, // 계좌 이름
     cpName: String, // 기업 이름
     acNo: String, // 계좌번호
@@ -25,22 +29,30 @@ fun AccountCardComp(
     onClickButton: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .padding(dimensionResource(R.dimen.padding_medium))
+        modifier = modifier
+            .padding(18.dp)
     ) {
-        Text(text = acName, color = MaterialTheme.colorScheme.surface)
+        Text(text = acName,
+            color = MaterialTheme.colorScheme.surface,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
         Text(
             text = "$cpName $acNo",
             color = MaterialTheme.colorScheme.surface,
             fontSize = 12.sp,
             modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_small))
         )
-        Row(modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_medium),
-        bottom = dimensionResource(R.dimen.padding_large))) {
+        Row(
+            modifier = Modifier.padding(
+                top = dimensionResource(R.dimen.padding_medium),
+            ),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
             Text(
                 text = DecimalFormat("#,###원").format(balance),
                 fontWeight = FontWeight.Bold,
-                fontSize = 20.sp,
+                fontSize = 24.sp,
                 color = MaterialTheme.colorScheme.surface
             )
             Spacer(modifier = Modifier.weight(1.0f))
