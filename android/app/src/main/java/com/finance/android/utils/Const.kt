@@ -19,6 +19,9 @@ object Const {
     const val INPUT_RECEIVER_SCREEN = "input_receiver_screen"
     const val INPUT_MONEY_SCREEN = "input_money_screen"
     const val REMIT_OK_SCREEN = "remit_ok_screen"
+    const val GROUP_ACCOUNT_MAIN_SCREEN = "group_account_main_screen"
+    const val GROUP_ACCOUNT_MAKE_SCREEN = "group_account_make_screen"
+    const val GROUP_ACCOUNT_DETAIL_SCREEN = "group_account_detail_screen"
 
     object Routes {
         const val LOGIN = "route_login"
