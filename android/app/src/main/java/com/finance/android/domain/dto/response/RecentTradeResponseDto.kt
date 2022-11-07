@@ -11,9 +11,23 @@ data class RecentTradeResponseDto(
     @SerializedName("cp_name") // 기업 이름
     val cpName: String,
     @SerializedName("bk_status") // 북마크 여부
-    val bkStatus: Boolean,
+    var bkStatus: Boolean,
     @SerializedName("cp_logo") // 기업 여부
     val cpLogo: String,
     @SerializedName("td_dt") // 거래 일자
     val tdData: String
-)
+){
+    override fun equals(other: Any?): Boolean {
+         return false
+    }
+
+    override fun hashCode(): Int {
+        var result = acReceive.hashCode()
+        result = 31 * result + acNo.hashCode()
+        result = 31 * result + cpName.hashCode()
+        result = 31 * result + bkStatus.hashCode()
+        result = 31 * result + cpLogo.hashCode()
+        result = 31 * result + tdData.hashCode()
+        return result
+    }
+}

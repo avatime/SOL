@@ -89,7 +89,7 @@ fun InputMoneyScreen(
 
 
                 ) {
-                    Text(text = "${moneyValue}원 보낼까요?", fontSize = 40.sp)
+                    Text(text = "${moneyValue}원 보낼까요?", fontSize = 30.sp, softWrap = true, maxLines = 1)
                 }
 
 
@@ -104,7 +104,7 @@ fun InputMoneyScreen(
                     placeholder = {
                         Text(
                             text = placeholderText.value,
-                            fontSize = 40.sp,
+                            fontSize = 30.sp,
                             textAlign = TextAlign.Center,
                         )
 
@@ -116,7 +116,7 @@ fun InputMoneyScreen(
                             unfocusedIndicatorColor = Transparent,
                             cursorColor = Transparent,
                         ),
-                    textStyle = androidx.compose.ui.text.TextStyle().copy(fontSize = 50.sp),
+                    textStyle = androidx.compose.ui.text.TextStyle().copy(fontSize = 40.sp),
                     isError = error.value,
 
 
@@ -185,7 +185,7 @@ fun InputMoneyScreen(
 
                     com.finance.android.ui.components.TextButton(
                         onClick = {
-                            if(!remitViewModel.requestRemit.value){
+                            if(!remitViewModel.requestRemit.value && Integer.parseInt(moneyValue)>0){
                                 remitViewModel.remitFromAccount(
                                     value = Integer.parseInt(moneyValue),
                                     receive = "",
@@ -195,7 +195,7 @@ fun InputMoneyScreen(
                                         remitViewModel.moneyValue.value = moneyValue
                                     }
                                 )
-                            }else{
+                            }else if(Integer.parseInt(moneyValue)>0){
                                 remitViewModel.remitFromPhone(value = Integer.parseInt(moneyValue), receive = "",
                                     send = "",
                                     onSuccess = {

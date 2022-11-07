@@ -88,26 +88,26 @@ private fun DrawDialogWithOneButton(
 ) {
     Dialog(onDismissRequest = { }) {
         Column(
-            modifier = Modifier.width(200.dp)
+            modifier = Modifier.width(300.dp)
                 .clip(RoundedCornerShape(10.dp))
                 .background(color = MaterialTheme.colorScheme.surface)
-                .padding(dimensionResource(id = R.dimen.padding_medium).value.dp),
+                .padding(30.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
                 dialogType.getIcon(),
-                modifier = Modifier.size(40.dp),
+                modifier = Modifier.size(50.dp),
                 contentDescription = "icon",
                 tint = dialogType.getTintColor()
             )
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             Text(
                 text = title,
                 textAlign = TextAlign.Center,
                 fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(15.dp))
             subTitle?.let {
                 Text(
                     text = it,
@@ -115,7 +115,7 @@ private fun DrawDialogWithOneButton(
                     fontSize = dimensionResource(id = R.dimen.font_size_small).value.sp,
                 )
             }
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(30.dp))
             TextButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onClick,

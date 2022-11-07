@@ -21,6 +21,8 @@ import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.RemitViewModel
+import java.util.*
+import kotlin.Comparator
 
 @Composable
 fun RecoScreen(
@@ -76,27 +78,33 @@ private fun Recent(
         when (val response = recentMyAccountData.value) {
             is Response.Failure -> Text(text = "실패")
             is Response.Loading -> AnimatedLoading(text = "가져오고 있어요")
-            is Response.Success ->
-                response.data.forEach {
-                AccountLikeItem(
-                    bkStatus = it.bkStatus,
-                    cpLogo = it.cpLogo,
-                    name = it.acName,
-                    accountNumber = it.acNo,
-                    cpName = it.cpName,
-                    onClickBookmark = { remitViewModel.onClickAccountBookmark(it.acNo) },
-                    onClickItem = {
-                        remitViewModel.onClickReceiveBank(
-                            BankInfoResponseDto(cpCode = remitViewModel.cpCode.value,
-                                cpLogo = it.cpName, cpName = it.cpName
-                            )
+            is Response.Success -> {
+                response.data.forEach { it ->
+                    if(it.acNo != remitViewModel.accountNumber) {
+                        AccountLikeItem(
+                            bkStatus = it.bkStatus,
+                            cpLogo = it.cpLogo,
+                            name = it.acName,
+                            accountNumber = it.acNo,
+                            cpName = it.cpName,
+                            onClickBookmark = { remitViewModel.onClickAccountBookmark(it);
+                            },
+                            onClickItem = {
+                                remitViewModel.onClickReceiveBank(
+                                    BankInfoResponseDto(cpCode = remitViewModel.cpCode.value,
+                                        cpLogo = it.cpName, cpName = it.cpName
+                                    )
+                                )
+                                remitViewModel.validRecieveAccountNumber.value = it.acNo
+                                navController.navigate(Const.INPUT_MONEY_SCREEN)
+                            }
                         )
-                        remitViewModel.validRecieveAccountNumber.value = it.acNo
-                        navController.navigate(Const.INPUT_MONEY_SCREEN)
                     }
-                )
+            }
+
 
             }
+
         }
 
         Spacer(modifier = Modifier.padding(8.dp))
@@ -118,7 +126,7 @@ private fun Recent(
                     name = it.acReceive,
                     accountNumber = it.acNo,
                     cpName = it.cpName,
-                    onClickBookmark = { remitViewModel.onClickAccountBookmark(it.acNo) },
+                    onClickBookmark = { remitViewModel.onClickAccountBookmark(it)},
                     onClickItem = {
                         remitViewModel.onClickReceiveBank(
                             BankInfoResponseDto(cpCode = remitViewModel.cpCode.value,

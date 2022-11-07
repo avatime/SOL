@@ -62,12 +62,12 @@ fun RemitOKScreen(
         )
         Spacer(modifier = Modifier.padding(10.dp))
 
-        Text(text = "${remitViewModel.moneyValue.value}원",  fontSize = dimensionResource(id = R.dimen.font_size_title_desc).value.sp,)
-        Text(text = "송금완료",  fontSize = dimensionResource(id = R.dimen.font_size_title_desc).value.sp,)
+        Text(text = "${remitViewModel.moneyValue.value}원",  fontSize = 25.sp,)
+        Text(text = "송금완료",  fontSize = 25.sp)
         Spacer(modifier = Modifier.padding(10.dp))
         com.finance.android.ui.components.TextButton(
             onClick = {
-                navController.navigate(Const.INPUT_RECEIVER_SCREEN)
+                navController.popBackStack()
             },
             text = "완료",
             modifier = Modifier.withBottomButton(),
