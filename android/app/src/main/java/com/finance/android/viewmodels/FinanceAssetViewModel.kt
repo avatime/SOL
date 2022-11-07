@@ -14,19 +14,12 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class FinanceViewModel @Inject constructor(
+class FinanceAssetViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     private val stockRepository: StockRepository
 ) : BaseViewModel(application, baseRepository){
-    val financeList = mutableStateOf<Response<Array<FinanceResponseDto>>>(Response.Loading)
-    val myFinanceList = mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
-
-    fun Load() {
-       viewModelScope.launch {
-           loadFinanceList()
-       }
-    }
+    val financeList = mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
 
     fun myFinanceLoad() {
         viewModelScope.launch {
@@ -46,33 +39,12 @@ class FinanceViewModel @Inject constructor(
         }
     }
 
-    fun getLoadState2(): Response<Unit> {
-        val arr = arrayOf(myFinanceList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
-        }
-    }
-
-    private suspend fun loadFinanceList() {
-        this@FinanceViewModel.run {
-            stockRepository.getFinanceList()
-        }
-            .collect {
-                financeList.value = it
-            }
-    }
-
     private suspend fun loadMyFinanceList() {
-        this@FinanceViewModel.run {
+        this@FinanceAssetViewModel.run {
             stockRepository.getMyFinanceList()
         }
             .collect {
-                myFinanceList.value = it
+                financeList.value = it
             }
     }
 
