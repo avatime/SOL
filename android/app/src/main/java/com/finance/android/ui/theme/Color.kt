@@ -13,6 +13,7 @@ val Pink40 = Color(0xFF7D5260)
 val White = Color(0xFFFFFFFF)
 val MainColor = Color(0xFF0046FF)
 val BlueGrey = Color(0xFFF2F4F6)
+val DarkBlueGrey = Color(0xFFE1E2E4)
 
 val Disabled = Color(0xFFA1A1AA)
 
