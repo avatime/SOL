@@ -151,14 +151,14 @@ class AccountServiceImpl(
             for (myBook in myBookmarkList){
                 val account = accountRepository.findById(myBook).orElse(null)?: throw NoAccountException()
                 val corporation = corporationRepository.findById(account.acCpCode).orElse(null)
-                accountDetailList.add((RecentMyTradeRes(account.acName, myBook, corporation.cpName, true, corporation.cpLogo)))
+                accountDetailList.add((RecentMyTradeRes(account.acName, myBook, corporation.cpName, true, corporation.cpLogo, corporation.cpCode)))
             }
 
             // 북마크 아닌 계좌 추가
             for (myBook in myNotBookmarkList){
                 val account = accountRepository.findById(myBook).orElse(null)?: throw NoAccountException()
                 val corporation = corporationRepository.findById(account.acCpCode).orElse(null)
-                accountDetailList.add((RecentMyTradeRes(account.acName, myBook, corporation.cpName, false, corporation.cpLogo)))
+                accountDetailList.add((RecentMyTradeRes(account.acName, myBook, corporation.cpName, false, corporation.cpLogo, corporation.cpCode)))
             }
         }
 
