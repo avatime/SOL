@@ -200,19 +200,19 @@ private fun MenuList(navController: NavController) {
         Spacer(modifier = Modifier.size(10.dp))
 
         MoreMenuItem(
-            onClick = { navController.navigate(Const.Routes.ATTENDANCE) },
+            onClickMenu = { navController.navigate(Const.Routes.ATTENDANCE) },
             painter = painterResource(R.drawable.ssal),
             text = "출석체크"
         )
 
         MoreMenuItem(
-            onClick = { navController.navigate(Const.Routes.WALK) },
+            onClickMenu = { navController.navigate(Const.Routes.WALK) },
             painter = painterResource(R.drawable.ssal),
             text = "만보기"
         )
 
         MoreMenuItem(
-            onClick = { navController.navigate(Const.Routes.ATTENDANCE) },
+            onClickMenu = { navController.navigate(Const.Routes.ATTENDANCE) },
             painter = painterResource(R.drawable.ssal),
             text = "모두의 통장"
         )
@@ -223,7 +223,7 @@ private fun MenuList(navController: NavController) {
 
 @Composable
 fun MoreMenuItem(
-    onClick: () -> Unit = {},
+    onClickMenu: () -> Unit = {},
     painter: Painter,
     text : String
 ){
@@ -234,7 +234,7 @@ fun MoreMenuItem(
         Row(
             modifier = Modifier
                 .withBottomButton()
-                .clickable { onClick },
+                .clickable { onClickMenu() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
