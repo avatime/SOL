@@ -26,7 +26,9 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
+import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
+import com.finance.android.ui.components.showProfileList
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.toPx
@@ -57,7 +59,7 @@ fun MoreScreen(
         is Response.Success -> Screen(
             navController = navController,
             userInfo = (myPageViewModel.myInfo.value as Response.Success).data,
-//            profileList = (myPageViewModel.profileList.value as Response.Success).data
+            profileList = (myPageViewModel.profileList.value as Response.Success).data
         )
         is Response.Failure -> Loading("실패")
         else -> Loading()
@@ -68,56 +70,11 @@ fun MoreScreen(
 fun Screen(
     navController: NavController,
     userInfo : UserProfileResponseDto,
-//    profileList : MutableList<DailyProfileResponseDto>
+    profileList : MutableList<DailyProfileResponseDto>
 ) {
     val context = LocalContext.current
     var showProfileList by remember { mutableStateOf(false) }
-    // BottomSheetProperties
-    // NavigationBarProperties
-    val surfaceColor = Color.Blue
-    var navigationBarColor by remember(surfaceColor) {
-        mutableStateOf(surfaceColor)
-    }
-    var darkIcons by remember {
-        mutableStateOf(Color.Red)
-    }
-    var navigationBarContrastEnforced by remember {
-        mutableStateOf(true)
-    }
-    // BottomSheetBehaviorProperties
-    var state by remember {
-        mutableStateOf(BottomSheetBehaviorProperties.State.Collapsed)
-    }
-    var maxWidth by remember {
-        mutableStateOf(BottomSheetBehaviorProperties.Size.NotSet)
-    }
-    var maxHeight by remember {
-        mutableStateOf(BottomSheetBehaviorProperties.Size.NotSet)
-    }
-    var isDraggable by remember {
-        mutableStateOf(true)
-    }
-    var expandedOffset by remember {
-        mutableStateOf(0)
-    }
-    var halfExpandedRatio by remember {
-        mutableStateOf(0.5F)
-    }
-    var isHideable by remember {
-        mutableStateOf(true)
-    }
-    var peekHeight by remember {
-        mutableStateOf(BottomSheetBehaviorProperties.PeekHeight.Auto)
-    }
-    var isFitToContents by remember {
-        mutableStateOf(true)
-    }
-    var skipCollapsed by remember {
-        mutableStateOf(false)
-    }
-    var isGestureInsetBottomIgnored by remember {
-        mutableStateOf(false)
-    }
+
     if(showProfileList) {
         val outMetrics = DisplayMetrics()
 
@@ -127,22 +84,9 @@ fun Screen(
                     showProfileList = false
                 },
                 properties = BottomSheetDialogProperties(
-                    navigationBarProperties = NavigationBarProperties(
-                        color = navigationBarColor,
-                        navigationBarContrastEnforced = navigationBarContrastEnforced
-                    ),
+                    navigationBarProperties = NavigationBarProperties(),
                     behaviorProperties = BottomSheetBehaviorProperties(
-                        state = state,
-                        maxWidth = maxWidth,
                         maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
-                        isDraggable = isDraggable,
-                        expandedOffset = expandedOffset,
-                        halfExpandedRatio = halfExpandedRatio,
-                        isHideable = isHideable,
-                        peekHeight = peekHeight,
-                        isFitToContents = isFitToContents,
-                        skipCollapsed = skipCollapsed,
-                        isGestureInsetBottomIgnored = isGestureInsetBottomIgnored
                     )
                 )
             ) {
@@ -156,13 +100,8 @@ fun Screen(
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Text(text = "Title", style = MaterialTheme.typography.headlineMedium)
-                        repeat(30) { index ->
-                            Text(
-                                text = "Item $index",
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                        }
+                        Text(text = "프로필 이미지", style = MaterialTheme.typography.headlineMedium)
+                        showProfileList(profileList)
                     }
                 }
             }
@@ -184,7 +123,7 @@ fun Screen(
                         .data(userInfo.profileUrl)
                         .crossfade(true)
                         .build(),
-                    contentDescription = null,
+                    contentDescription = userInfo.profileName,
                     modifier = Modifier
                         .size(80.dp)
                         .padding(end = dimensionResource(R.dimen.padding_small))
