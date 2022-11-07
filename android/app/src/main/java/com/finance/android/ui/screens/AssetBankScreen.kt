@@ -30,7 +30,7 @@ fun AssetBankScreen(
     bankViewModel: BankViewModel = hiltViewModel()
 ) {
     fun launch() {
-        bankViewModel.RegisteredAccountLoad()
+        bankViewModel.myAccountLoad()
     }
 
     LaunchedEffect(Unit) {
@@ -60,7 +60,7 @@ fun AssetBankScreen(
 }
 
 @Composable
-fun AssetBankContainer(
+private fun AssetBankContainer(
     modifier: Modifier,
     navController: NavController,
     accData: MutableList<BankAccountResponseDto>

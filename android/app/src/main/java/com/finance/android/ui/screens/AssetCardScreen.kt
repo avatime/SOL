@@ -35,7 +35,7 @@ fun AssetCardScreen(
     cardViewModel: CardViewModel = hiltViewModel()
 ) {
     fun launch() {
-        cardViewModel.RegisteredCardLoad()
+        cardViewModel.myCardLoad()
     }
 
     LaunchedEffect(Unit) {
