@@ -8,6 +8,7 @@ class RecentMyTradeRes (acName : String,
                         cpName : String,
                         bkStatus: Boolean,
                         cpLogo: String,
+                        cpCode: Long,
 ) {
     @JsonProperty("ac_name")
     val acName: String = acName
@@ -23,4 +24,7 @@ class RecentMyTradeRes (acName : String,
 
     @JsonProperty("cp_logo")
     val cpLogo: String = cpLogo
+
+    @JsonProperty("cp_code")
+    val cpCode : Long = cpCode
 }
