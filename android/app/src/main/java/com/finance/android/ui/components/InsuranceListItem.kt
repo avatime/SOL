@@ -16,6 +16,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,7 +61,7 @@ private fun Draw(
             modifier = Modifier
                 .padding(start = 8.dp)
         ) {
-            Text(text = insuranceName, fontSize = 12.sp)
+            Text(text = insuranceName, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(text = "보험료: ${DecimalFormat("#,###원").format(fee)}", fontWeight = FontWeight.Bold)
             Text(text = "계약자: ${myName}|피보험자: $isName", fontSize = 10.sp)
         }

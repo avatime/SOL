@@ -2,36 +2,32 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.domain.dto.response.BankInfoResponseDto
-import com.finance.android.domain.dto.response.RecentTradeResponseDto
-import com.finance.android.domain.repository.BankRepository
+import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.repository.BaseRepository
+import com.finance.android.domain.repository.CardRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BankViewModel @Inject constructor(
+class CardViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
-    private val bankRepository: BankRepository
+    private val cardRepository: CardRepository
 ) : BaseViewModel(application, baseRepository) {
-    val accountList =
-        mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
+    val cardList =
+        mutableStateOf<Response<MutableList<CardResponseDto>>>(Response.Loading)
 
-    fun myAccountLoad() {
+    fun myCardLoad() {
         viewModelScope.launch {
-            loadMyAccountList()
+            loadMyCardList()
         }
     }
 
     fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(accountList)
+        val arr = arrayOf(cardList)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -42,12 +38,12 @@ class BankViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadMyAccountList() {
-        this@BankViewModel.run {
-            bankRepository.getMyAccount()
+    private suspend fun loadMyCardList() {
+        this@CardViewModel.run {
+            cardRepository.getMyCardList()
         }
             .collect {
-                accountList.value = it
+                cardList.value = it
             }
     }
 

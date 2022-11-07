@@ -2,36 +2,32 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.domain.dto.response.BankInfoResponseDto
-import com.finance.android.domain.dto.response.RecentTradeResponseDto
-import com.finance.android.domain.repository.BankRepository
+import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.repository.BaseRepository
+import com.finance.android.domain.repository.InsuranceRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class BankViewModel @Inject constructor(
+class InsuranceViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
-    private val bankRepository: BankRepository
+    private val insuranceRepository: InsuranceRepository,
 ) : BaseViewModel(application, baseRepository) {
-    val accountList =
-        mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
+    val isList =
+        mutableStateOf<Response<MyInsuranceInfoResponseDto>>(Response.Loading)
 
-    fun myAccountLoad() {
+    fun myIsLoad() {
         viewModelScope.launch {
-            loadMyAccountList()
+            loadMyIsList()
         }
     }
 
     fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(accountList)
+        val arr = arrayOf(isList)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -42,12 +38,12 @@ class BankViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadMyAccountList() {
-        this@BankViewModel.run {
-            bankRepository.getMyAccount()
+    private suspend fun loadMyIsList() {
+        this@InsuranceViewModel.run {
+            insuranceRepository.getMyInsurance()
         }
             .collect {
-                accountList.value = it
+                isList.value = it
             }
     }
 

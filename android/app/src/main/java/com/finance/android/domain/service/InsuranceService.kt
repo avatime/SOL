@@ -16,5 +16,5 @@ interface InsuranceService {
     suspend fun getInsuranceList(): MutableList<InsuranceInfoResponseDto>
 
     @GET("${Const.API_PATH}/insurance/my")
-    suspend fun getMyInsuranceList(): MutableList<MyInsuranceInfoResponseDto>
+    suspend fun getMyInsurance(): MyInsuranceInfoResponseDto
 }

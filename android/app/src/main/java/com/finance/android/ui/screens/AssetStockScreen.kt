@@ -15,8 +15,7 @@ import com.finance.android.ui.components.AccountListItem
 
 @Composable
 fun AssetStockScreen(navController: NavController) {
-    Column(modifier = Modifier
-        .padding(top = dimensionResource(R.dimen.padding_medium)))
+    Column()
     {
         AssetStockContainer(modifier = Modifier
             .fillMaxWidth()

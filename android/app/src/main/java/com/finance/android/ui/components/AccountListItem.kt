@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,16 +63,16 @@ private fun Draw(
                 contentDescription = "accImage",
                 modifier = Modifier
                     .size(40.dp)
-                .clip(CircleShape),
+                    .clip(CircleShape),
             )
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp)
             ) {
-                Text(text = accountName, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                Text(text = DecimalFormat("#,###원").format(balance))
+                Text(text = accountName, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 14.sp)
+                Text(text = DecimalFormat("#,###원").format(balance), fontWeight = FontWeight.Bold)
                 accountNumber?.let {
-                    Text(text = it, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(text = it, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 12.sp)
                 }
             }
         }
@@ -185,6 +186,32 @@ fun AccountListItem_Select(
     )
 }
 
+@Composable
+fun AccountListItem_Arrow(
+    modifier: Modifier = Modifier,
+    accountNumber: String,
+    balance: Int,
+    accountName: String,
+    companyLogoPath: String,
+    onClickItem: () -> Unit
+) {
+    Draw(
+        modifier = modifier.clickable {
+            onClickItem()
+        },
+        accountNumber = accountNumber,
+        balance = balance,
+        accountName = accountName,
+        companyLogoPath = companyLogoPath,
+        trailing = {
+            Icon(
+                painter = painterResource(R.drawable.arrow_forward_ios),
+                contentDescription = "forwardArrow"
+            )
+        }
+    )
+}
+
 @Preview
 @Composable
 private fun PreviewAccountListItem_Check() {
@@ -222,6 +249,18 @@ private fun PreviewAccountListItem_Select() {
         accountName = "accountName",
         companyLogoPath = "123",
         selected = true,
+        onClickItem = {}
+    )
+}
+
+@Preview
+@Composable
+private fun PreviewAccountListItem_Arrow() {
+    AccountListItem_Arrow(
+        accountNumber = "accountNumber",
+        balance = 10000,
+        accountName = "accountName",
+        companyLogoPath = "123",
         onClickItem = {}
     )
 }

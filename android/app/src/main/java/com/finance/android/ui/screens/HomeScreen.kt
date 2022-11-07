@@ -109,11 +109,6 @@ cardData: MutableList<CardInfoResponseDto>) {
                 )
             }
         }
-//        AccountListItem(
-//            onClickRemit = {
-//                navController.navigate("${Const.Routes.REMIT}/신한은행/1111/10")
-//            }
-//        )
         accData!!.forEach {
             AccountListItem_Remit(
                 accountNumber = it.acNo,

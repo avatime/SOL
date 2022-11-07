@@ -19,7 +19,7 @@ class InsuranceRepositoryImpl @Inject constructor(
         return insuranceService.getInsuranceList()
     }
 
-    override suspend fun getMyInsuranceList(): MutableList<MyInsuranceInfoResponseDto> {
-        return insuranceService.getMyInsuranceList()
+    override suspend fun getMyInsurance(): MyInsuranceInfoResponseDto {
+        return insuranceService.getMyInsurance()
     }
 }
