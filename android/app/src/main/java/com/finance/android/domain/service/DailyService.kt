@@ -23,6 +23,9 @@ interface DailyService {
     @GET("${Const.API_PATH}/daily/profiles")
     suspend fun getProfileList() : MutableList<DailyProfileResponseDto>
 
+    @POST("${Const.API_PATH}/user/profile")
+    suspend fun changeProfile(changeProfileRequestDto: ChangeProfileRequestDto)
+
     @GET("${Const.API_PATH}/daily")
     suspend fun test()
 }
