@@ -1,9 +1,6 @@
 package com.finance.backend.remit
 
-import com.finance.backend.Exceptions.InvalidUserException
-import com.finance.backend.Exceptions.NoAccountException
-import com.finance.backend.Exceptions.RemitFailedException
-import com.finance.backend.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.*
 import com.finance.backend.accountProduct.AccountProductRepository
 import com.finance.backend.bank.Account
 import com.finance.backend.bank.AccountRepository
@@ -90,6 +87,8 @@ class RemitServiceImpl(
         val send = remitInfoReq.send    // 보내는 사람 이름
         val remitAccount = accountRepository.findById(remitInfoReq.acSend).orElse(null)?: throw NoAccountException()// 송금 하는 계좌 객체
 
+        if (remitAccount.balance < value){ throw InsufficientBalanceException()} // 잔액 부족시 418 에러
+
         if (remitAccount.acNo == targetAccount){ throw RemitFailedException() } // 보내는 계좌 받는 계좌 같으면 예외 처리
 
         // 출금 거래 내역
@@ -125,6 +124,8 @@ class RemitServiceImpl(
             val receive = remitPhoneReq.receive
             val send = remitPhoneReq.send
             val remitAccount = accountRepository.findById(remitPhoneReq.acSend).orElse(null)?: throw NoAccountException()
+
+            if (remitAccount.balance < value){ throw InsufficientBalanceException()} // 잔액 부족시 418 에러
 
             if (remitAccount.acNo == targetAccount){ throw RemitFailedException() } // 보내는 계좌 받는 계좌 같으면 예외 처리
 
