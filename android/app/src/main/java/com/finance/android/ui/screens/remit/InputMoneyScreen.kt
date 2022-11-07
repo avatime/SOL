@@ -1,6 +1,7 @@
 package com.finance.android.ui.screens
 
 
+import android.icu.number.IntegerWidth
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -50,16 +51,6 @@ fun InputMoneyScreen(
     var keyboardController = LocalSoftwareKeyboardController.current
 
 
-    //나에게 표시
-    var receive by remember {
-        mutableStateOf("")
-    }
-
-    //받는 분에게 표시
-    var send by remember {
-        mutableStateOf("")
-    }
-
     var isNext by remember {
         mutableStateOf(false)
     }
@@ -80,11 +71,6 @@ fun InputMoneyScreen(
         keyboardController?.hide()
     }
 
-
-
-
-
-
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -103,7 +89,7 @@ fun InputMoneyScreen(
 
 
                 ) {
-                    Text(text = "${moneyValue}원 보낼까요?", fontSize = 40.sp)
+                    Text(text = "${moneyValue}원 보낼까요?", fontSize = 30.sp, softWrap = true, maxLines = 1)
                 }
 
 
@@ -118,7 +104,7 @@ fun InputMoneyScreen(
                     placeholder = {
                         Text(
                             text = placeholderText.value,
-                            fontSize = 40.sp,
+                            fontSize = 30.sp,
                             textAlign = TextAlign.Center,
                         )
 
@@ -130,7 +116,7 @@ fun InputMoneyScreen(
                             unfocusedIndicatorColor = Transparent,
                             cursorColor = Transparent,
                         ),
-                    textStyle = androidx.compose.ui.text.TextStyle().copy(fontSize = 50.sp),
+                    textStyle = androidx.compose.ui.text.TextStyle().copy(fontSize = 40.sp),
                     isError = error.value,
 
 
@@ -199,20 +185,22 @@ fun InputMoneyScreen(
 
                     com.finance.android.ui.components.TextButton(
                         onClick = {
-                            if(!remitViewModel.requestRemit.value){
+                            if(!remitViewModel.requestRemit.value && Integer.parseInt(moneyValue)>0){
                                 remitViewModel.remitFromAccount(
                                     value = Integer.parseInt(moneyValue),
                                     receive = "",
                                     send = "",
                                     onSuccess = {
-                                        navController.navigate(Const.REMIT_OK_SCREEN)
+                                        navController.navigate(Const.REMIT_OK_SCREEN);
+                                        remitViewModel.moneyValue.value = moneyValue
                                     }
                                 )
-                            }else{
+                            }else if(Integer.parseInt(moneyValue)>0){
                                 remitViewModel.remitFromPhone(value = Integer.parseInt(moneyValue), receive = "",
                                     send = "",
                                     onSuccess = {
                                         navController.navigate(Const.REMIT_OK_SCREEN)
+                                        remitViewModel.moneyValue.value = moneyValue
                                     })
                             }
 
@@ -220,6 +208,7 @@ fun InputMoneyScreen(
                         text = "보내기",
                         modifier = Modifier.withBottomButton(),
                         buttonType = ButtonType.ROUNDED,
+
 
                         )
 

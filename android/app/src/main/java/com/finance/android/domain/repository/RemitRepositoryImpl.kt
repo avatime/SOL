@@ -1,5 +1,6 @@
 package com.finance.android.domain.repository
 
+import com.finance.android.domain.dto.request.AccountNumberDto
 import com.finance.android.domain.dto.request.RemitInfoRequestDto
 import com.finance.android.domain.dto.request.RemitPhoneRequestDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
@@ -21,7 +22,7 @@ class RemitRepositoryImpl @Inject constructor(
         return remitService.postRemitToPhone(remitPhoneRequestDto)
     }
 
-    override suspend fun putRemitBookmark(acNo: String) {
-        remitService.putRemitBookmark(acNo)
+    override suspend fun putRemitBookmark(accountNumberDto: AccountNumberDto) {
+        return remitService.putRemitBookmark(accountNumberDto)
     }
 }

@@ -1,11 +1,15 @@
 package com.finance.android.ui.screens
 
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.TextFieldDefaults.indicatorLine
 import androidx.compose.material.icons.Icons
@@ -29,10 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.CompanyItem
-import com.finance.android.ui.components.CpListSheet
-import com.finance.android.ui.components.TextInput
+import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.RemitViewModel
@@ -46,7 +47,6 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
     var accountNumber = remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
-        confirmStateChange = { it != ModalBottomSheetValue.Expanded }
     )
     val coroutineScope = rememberCoroutineScope()
 
@@ -94,7 +94,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                         Row(verticalAlignment = Alignment.CenterVertically) {
                             AsyncImage(
                                 model = ImageRequest.Builder(LocalContext.current)
-                                    .data(remitViewModel.selectedReceiveBank.value?.cpLogo)
+                                    .data(remitViewModel.selectedReceiveBank.value!!.cpLogo)
                                     .crossfade(true)
                                     .build(),
                                 contentDescription = "회사 로고",
@@ -105,7 +105,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                                     .clip(CircleShape)
                             )
                             Spacer(modifier = Modifier.padding(5.dp))
-                            Text(text = "${remitViewModel.selectedReceiveBank.value?.cpName}은행")
+                            Text(text = "${remitViewModel.selectedReceiveBank.value!!.cpName}은행")
                         }
                     }
 
@@ -131,7 +131,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                 com.finance.android.ui.components.TextButton(
                     onClick = {
                         remitViewModel.checkRightAccount(
-                            cpCode = 1,
+                            cpCode = remitViewModel.cpCode.value,
                             acNo = accountNumber.value,
                             onSuccess = {
                                 navController.navigate(Const.INPUT_MONEY_SCREEN)
@@ -143,6 +143,21 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
 
                     )
             }
+            val isShow  = remember { mutableStateOf(false) }
+           if(!remitViewModel.isRightAccount.value){
+               if(!isShow.value) {
+                   CustomDialog(
+                       dialogType = DialogType.ERROR,
+                       dialogActionType = DialogActionType.ONE_BUTTON,
+                       title = "계좌번호 오류",
+                       subTitle = "다시 한번 확인해주세요",
+                       onPositive = {
+                           isShow.value = true;
+                       },
+                   )
+               }
+           }
+
 
 
         }
@@ -150,12 +165,16 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheet(remitViewModel: RemitViewModel) {
-    Column(
+    Box(
+        modifier = Modifier
+            .height(450.dp)
     ) {
         CpListSheet(modifier = Modifier, remitViewModel = remitViewModel)
     }
+
 }
 
 

@@ -42,10 +42,10 @@ fun FinanceApp() {
                     navArgument("accountName") { type = NavType.StringType },
                     navArgument("accountNumber") { type = NavType.StringType },
                     navArgument("balance") { type = NavType.IntType }
-
+                    // TODD 받는계좌번호, 받는계좌은행이름, 금액
                 )
             ) {
-                RemitFragment()
+                RemitFragment(navController = navController)
             }
             composable(
                 route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}/{balance}",
