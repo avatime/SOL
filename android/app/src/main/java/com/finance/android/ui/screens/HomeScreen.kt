@@ -29,6 +29,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
 import androidx.navigation.NavController
 import com.finance.android.R
+import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
 import com.finance.android.ui.components.*
@@ -42,7 +43,7 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     fun launch() {
-        homeViewModel.Load()
+        homeViewModel.load()
     }
 
     LaunchedEffect(Unit) {
@@ -78,8 +79,7 @@ fun HomeScreen(
                             shape = RoundedCornerShape(10)
                         ),
                     navController = navController,
-                    accData = (homeViewModel.accountList.value as Response.Success).data,
-                    cardData = (homeViewModel.cardList.value as Response.Success).data
+                    mainData = (homeViewModel.mainData.value as Response.Success).data,
                 )
                 HomeCardContainer2(modifier = Modifier
                     .fillMaxWidth()
@@ -98,8 +98,13 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeCardContainer(modifier: Modifier, navController: NavController, accData: MutableList<BankAccountResponseDto>,
-cardData: MutableList<CardInfoResponseDto>) {
+private fun HomeCardContainer(
+    modifier: Modifier,
+    navController: NavController,
+    mainData: AccountRegisteredResponseDto
+) {
+    val totalSize = mainData.accountList.size+mainData.cardList.size+mainData.financeList.size+mainData.insuranceList.size
+    
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
         ) {
@@ -113,7 +118,10 @@ cardData: MutableList<CardInfoResponseDto>) {
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
-            Text(text = "${accData.size+cardData.size+1}", color = Color.Gray, modifier = Modifier.padding(start = 8.dp))
+            Text(text = "$totalSize",
+                color = Color.Gray,
+                modifier = Modifier.padding(start = 8.dp)
+            )
             Spacer(modifier = Modifier.weight(1.0f))
             IconButton(onClick = {
                 navController.navigate(Const.Routes.ASSET)
@@ -128,7 +136,7 @@ cardData: MutableList<CardInfoResponseDto>) {
                 )
             }
         }
-        accData!!.forEach {
+        mainData.accountList!!.forEach {
             AccountListItem_Remit(
                 accountNumber = it.acNo,
                 balance = it.balance,
@@ -141,23 +149,47 @@ cardData: MutableList<CardInfoResponseDto>) {
                     navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.acNo}/${it.balance}")
                 })
         }
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
-        Divider(modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_medium)))
-        cardData!!.forEach {
+        if(mainData.cardList.size != 0) {
+            Divider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium)))
+        }
+        mainData.cardList!!.forEach {
             CardListItem_Arrow(
                 cardName = it.cardName,
                 cardImgPath = it.cardImgPath,
                 onClickItem = {}
             )
         }
-        Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
-        Divider()
-        InsuranceListItem()
+        if(mainData.insuranceList.size != 0) {
+            Divider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium)))
+        }
+        mainData.insuranceList!!.forEach {
+            InsuranceListItem_Normal(
+                insuranceName = it.isPdName,
+                fee = it.isPdFee,
+                myName = it.name,
+                isName = it.isName
+            )
+        }
+        if(mainData.financeList.size != 0) {
+            Divider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium)))
+        }
+        mainData.financeList!!.forEach {
+            AccountListItem_Arrow(
+                accountNumber = it.acNo,
+                balance = it.balance,
+                accountName = it.acName,
+                companyLogoPath = it.cpLogo,
+                onClickItem = {}
+            )
+        }
+        if(totalSize == 0) {
+            Text(text = "자산 등록이 필요해요!", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+        }
     }
 }
 
 @Composable
-fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
+private fun HomeCardContainer2 (modifier: Modifier, navController: NavController) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium))
     ) {
