@@ -86,7 +86,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
     implementation "com.google.accompanist:accompanist-pager:0.20.1"
     implementation "com.google.accompanist:accompanist-pager-indicators:0.20.1"
-    implementation "com.google.accompanist:accompanist-permissions:0.21.1-beta"
+    implementation "com.google.accompanist:accompanist-permissions:0.27.0"
 
 
     implementation "com.squareup.retrofit2:retrofit:$squareup_retrofit2_version"

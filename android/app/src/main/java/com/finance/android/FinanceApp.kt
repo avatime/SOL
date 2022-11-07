@@ -133,6 +133,33 @@ fun FinanceApp() {
                     navArgument("per") { type = NavType.FloatType },
                 )
             ) {
+                StockDetailFragment(
+                    fnName = it.arguments!!.getString("fnName")!!,
+                    close = it.arguments!!.getInt("close"),
+                    per = it.arguments!!.getFloat("per"),
+                    onClose = {
+                        navController.popBackStack()
+                    }
+                )
+            }
+            //            composable(
+//                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}/{balance}",
+//                arguments = listOf(
+//                    navArgument("acName") { type = NavType.StringType },
+//                    navArgument("cpName") { type = NavType.StringType },
+//                    navArgument("acNo") { type = NavType.StringType },
+//                    navArgument("balance") { type = NavType.IntType }
+//
+//                )
+//            ) {
+//                AccountDetailFragment(
+//                    acName = it.arguments!!.getString("acName"),
+//                    cpName = it.arguments!!.getString("cpName"),
+//                    acNo = it.arguments!!.getString("acNo"),
+//                    balance = it.arguments!!.getInt("balance"),
+//                )
+//            }
+            composable(Const.Routes.PEDOMETER) {
                 AnimatedVisibility(
                     initiallyVisible = false,
                     visible = true,
@@ -141,14 +168,10 @@ fun FinanceApp() {
                     ),
                     exit = slideOutVertically()
                 ) {
-                     StockDetailFragment(
-                         fnName = it.arguments!!.getString("fnName")!!,
-                         close = it.arguments!!.getInt("close"),
-                         per = it.arguments!!.getFloat("per"),
-                         onClose = {
-                             navController.popBackStack()
-                         }
-                     )
+
+                    PedometerFragment(
+                        onClose = { navController.popBackStack() }
+                    )
                 }
             }
         }

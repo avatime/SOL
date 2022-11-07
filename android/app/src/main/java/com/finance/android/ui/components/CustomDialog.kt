@@ -66,20 +66,36 @@ fun CustomDialog(
     positiveText: String = stringResource(id = R.string.btn_confirm),
     negativeText: String? = null
 ) {
+    val modifier = Modifier.defaultMinSize(minWidth = 300.dp)
+            .clip(RoundedCornerShape(10.dp))
+            .background(color = MaterialTheme.colorScheme.surface)
+            .padding(dimensionResource(id = R.dimen.padding_medium).value.dp)
+
     when (dialogActionType) {
         DialogActionType.ONE_BUTTON -> DrawDialogWithOneButton(
+            modifier = modifier,
             dialogType = dialogType,
             title = title,
             subTitle = subTitle,
             onClick = onPositive,
             buttonText = positiveText
         )
-        DialogActionType.TWO_BUTTON -> TODO()
+        DialogActionType.TWO_BUTTON -> DrawDialogWithTwoButton(
+            modifier = modifier,
+            dialogType = dialogType,
+            title = title,
+            subTitle = subTitle,
+            onPositive = onPositive,
+            positiveText = positiveText,
+            onNegative = onNegative ?: {},
+            negativeText = negativeText ?: ""
+        )
     }
 }
 
 @Composable
 private fun DrawDialogWithOneButton(
+    modifier: Modifier,
     dialogType: DialogType,
     title: String,
     subTitle: String? = null,
@@ -88,40 +104,95 @@ private fun DrawDialogWithOneButton(
 ) {
     Dialog(onDismissRequest = { }) {
         Column(
-            modifier = Modifier.width(300.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(color = MaterialTheme.colorScheme.surface)
-                .padding(30.dp),
+            modifier = modifier,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Icon(
                 dialogType.getIcon(),
-                modifier = Modifier.size(50.dp),
+                modifier = Modifier.size(40.dp),
                 contentDescription = "icon",
                 tint = dialogType.getTintColor()
             )
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = title,
                 textAlign = TextAlign.Center,
                 fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(15.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             subTitle?.let {
                 Text(
                     text = it,
                     textAlign = TextAlign.Center,
-                    fontSize = dimensionResource(id = R.dimen.font_size_small).value.sp,
+                    fontSize = dimensionResource(id = R.dimen.font_size_small).value.sp
                 )
             }
-            Spacer(modifier = Modifier.height(30.dp))
+            Spacer(modifier = Modifier.height(5.dp))
             TextButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onClick,
                 text = buttonText,
                 buttonType = ButtonType.ROUNDED
             )
+        }
+    }
+}
+
+@Composable
+private fun DrawDialogWithTwoButton(
+    modifier: Modifier,
+    dialogType: DialogType,
+    title: String,
+    subTitle: String? = null,
+    onPositive: () -> Unit,
+    positiveText: String,
+    onNegative: () -> Unit,
+    negativeText: String
+) {
+    Dialog(onDismissRequest = { }) {
+        Column(
+            modifier = modifier,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Icon(
+                dialogType.getIcon(),
+                modifier = Modifier.size(40.dp),
+                contentDescription = "icon",
+                tint = dialogType.getTintColor()
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                text = title,
+                textAlign = TextAlign.Center,
+                fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            subTitle?.let {
+                Text(
+                    text = it,
+                    textAlign = TextAlign.Center,
+                    fontSize = dimensionResource(id = R.dimen.font_size_small).value.sp
+                )
+            }
+            Spacer(modifier = Modifier.height(5.dp))
+            Row {
+                TextButton(
+                    modifier = Modifier.weight(1.0f),
+                    onClick = onNegative,
+                    text = negativeText,
+                    buttonType = ButtonType.ROUNDED,
+                    buttonColor = ButtonColor.WHITE
+                )
+                Spacer(modifier = Modifier.width(10.dp))
+                TextButton(
+                    modifier = Modifier.weight(1.0f),
+                    onClick = onPositive,
+                    text = positiveText,
+                    buttonType = ButtonType.ROUNDED
+                )
+            }
         }
     }
 }
@@ -156,6 +227,18 @@ private fun PreviewCustomDialogOneButton_Error() {
     CustomDialog(
         dialogType = DialogType.ERROR,
         dialogActionType = DialogActionType.ONE_BUTTON,
+        title = "title",
+        subTitle = "subTitle",
+        onPositive = { }
+    )
+}
+
+@Preview
+@Composable
+private fun PreviewCustomDialogTwoButton_Info() {
+    CustomDialog(
+        dialogType = DialogType.INFO,
+        dialogActionType = DialogActionType.TWO_BUTTON,
         title = "title",
         subTitle = "subTitle",
         onPositive = { }
