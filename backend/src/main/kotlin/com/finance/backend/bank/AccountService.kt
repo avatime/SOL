@@ -19,4 +19,5 @@ interface AccountService {
     fun getBankInfo():List<BankInfoRes>
     fun getFinanceInfo(): List<BankInfoRes>
     fun getAccountRegistered(token: String): AccountRegisteredRes
+    fun getAccountBalance(acNo: String): Long
 }

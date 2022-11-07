@@ -13,7 +13,7 @@ class ExceptionController {
 
     @ExceptionHandler(InsufficientBalanceException::class)
     fun handleInsufficient(e : Exception) : ResponseEntity<String> {
-        return ResponseEntity.status(400).body("Out of Balance")
+        return ResponseEntity.status(418).body("Out of Balance")
     }
 
     @ExceptionHandler(AccountNotSubToUserException::class)

@@ -227,4 +227,8 @@ class AccountServiceImpl(
         }
         return AccountRegisteredRes(accountList, insuranceList, financeList, cardList)
     }
+
+    override fun getAccountBalance(acNo: String): Long {
+        return accountRepository.findByAcNo(acNo)!!.balance
+    }
 }

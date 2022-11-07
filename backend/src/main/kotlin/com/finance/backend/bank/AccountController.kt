@@ -78,4 +78,9 @@ class AccountController(val accountService: AccountService) {
         println(response.insuranceList)
         return ResponseEntity.status(200).body(response)
     }
+
+    @GetMapping("/balance/{acNo}")
+    fun getAccountBalance(@PathVariable acNo : String): ResponseEntity<Any> {
+        return ResponseEntity.status(200).body(accountService.getAccountBalance(acNo))
+    }
 }
