@@ -29,7 +29,6 @@ import com.finance.android.domain.dto.response.CardInfoResponseDto
 import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
-import com.finance.android.viewmodels.BankViewModel
 import com.finance.android.viewmodels.HomeViewModel
 
 @Composable
@@ -46,6 +45,7 @@ fun HomeScreen(
     }
 
     Column (modifier = Modifier
+        .fillMaxSize()
         .verticalScroll(rememberScrollState())
         .background(color = MaterialTheme.colorScheme.background)) {
         when (val data = homeViewModel.getLoadState()) {

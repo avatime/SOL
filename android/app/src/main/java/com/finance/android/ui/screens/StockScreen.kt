@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,6 +23,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.finance.android.R
 import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.FinanceViewModel
@@ -30,22 +32,20 @@ import java.text.DecimalFormat
 @Composable
 fun StockScreen(
     navController: NavController,
-    financeViewModel: FinanceViewModel = hiltViewModel()) {
+    financeViewModel: FinanceViewModel = hiltViewModel()
+) {
     LaunchedEffect(Unit) {
         financeViewModel.Load()
     }
-    Column(modifier = Modifier
-        .verticalScroll(rememberScrollState())
-        .background(color = MaterialTheme.colorScheme.background)) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .background(color = MaterialTheme.colorScheme.background)
+    ) {
         when (val data = financeViewModel.getLoadState()) {
             is Response.Success -> {
                 StockContainer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(
-                            color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(10)
-                        ),
                     navController = navController,
                     accData = (financeViewModel.financeList.value as Response.Success).data,
                 )
@@ -56,17 +56,43 @@ fun StockScreen(
     }
 }
 
+
 @Composable
-fun Draw(
-    modifier: Modifier,
+fun StockContainer(
+    navController: NavController,
+    accData: Array<FinanceResponseDto>
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth()
+            .padding(dimensionResource(R.dimen.padding_medium))
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(10)
+            )
+            .padding(dimensionResource(R.dimen.padding_medium))
+    ) {
+        accData.forEach {
+            DrawListItem(
+                fnName = it.fnName,
+                fnLogo = it.fnLogo,
+                close = it.close,
+                per = it.per
+            )
+        }
+    }
+}
+
+@Composable
+fun DrawListItem(
     fnName: String,
     fnLogo: String,
     close: Int,
     per: Double
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 3.dp),
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 3.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
@@ -79,33 +105,29 @@ fun Draw(
                 .size(40.dp)
                 .clip(CircleShape),
         )
-        Spacer(modifier = Modifier
-            .weight(.05f))
-        Text(text = fnName,
+        Spacer(
+            modifier = Modifier
+                .weight(.05f)
+        )
+        Text(
+            text = fnName,
             fontWeight = FontWeight.Bold,
             fontSize = 25.sp
-            )
-        Spacer(modifier = Modifier
-            .weight(1f))
+        )
+        Spacer(
+            modifier = Modifier
+                .weight(1f)
+        )
         Column(horizontalAlignment = Alignment.End) {
-            Text(text = "$per%",
-                color = if(per > 0) Color(0xFFFF0000) else Color(0xFF3F51B5),
+            Text(
+                text = "$per%",
+                color = if (per > 0) Color(0xFFFF0000) else Color(0xFF3F51B5),
                 fontSize = 19.sp
             )
-            Text(text = DecimalFormat("#,###원").format(close),
-                fontSize = 15.sp)
+            Text(
+                text = DecimalFormat("#,###원").format(close),
+                fontSize = 15.sp
+            )
         }
-    }
-}
-
-@Composable
-fun StockContainer(modifier: Modifier, navController: NavController, accData: Array<FinanceResponseDto>) {
-    accData.forEach {
-        Draw(
-            modifier = Modifier,
-            fnName = it.fnName,
-            fnLogo = it.fnLogo,
-            close = it.close,
-            per = it.per)
     }
 }
