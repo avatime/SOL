@@ -143,7 +143,7 @@ private fun HomeCardContainer(
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.balance}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}")
                 },
                 onClickRemit = {
                     navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.acNo}/${it.balance}")
@@ -179,7 +179,9 @@ private fun HomeCardContainer(
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
-                onClickItem = {}
+                onClickItem = {
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}")
+                }
             )
         }
         if(totalSize == 0) {

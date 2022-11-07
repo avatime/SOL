@@ -19,6 +19,7 @@ import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.ui.components.AccountListItem
 import com.finance.android.ui.components.AccountListItem_Arrow
+import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.FinanceAssetViewModel
 import com.finance.android.viewmodels.FinanceViewModel
@@ -68,7 +69,9 @@ fun AssetStockContainer(modifier: Modifier,
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
-                onClickItem = {}
+                onClickItem = {
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}")
+                }
             )
         }
         if(financeData.size == 0) {

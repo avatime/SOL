@@ -2,6 +2,7 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.BankAccountResponseDto
@@ -19,6 +20,7 @@ import javax.inject.Inject
 class BankViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
+    savedStateHandle: SavedStateHandle = SavedStateHandle(),
     private val bankRepository: BankRepository
 ) : BaseViewModel(application, baseRepository) {
     val accountList =
@@ -49,6 +51,34 @@ class BankViewModel @Inject constructor(
             .collect {
                 accountList.value = it
             }
+    }
+
+    val accountBalance = mutableStateOf<Response<Int>>(Response.Loading)
+
+    fun getLoadAccountBalance(): Response<Unit> {
+        val arr = arrayOf(accountBalance)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun loadAccountBalance(
+        acNo: String
+    ) {
+        viewModelScope.launch {
+            this@BankViewModel.run {
+                bankRepository.getAccountBalance(
+                    acNo = acNo
+                )
+            }.collect {
+                accountBalance.value = it
+            }
+        }
     }
 
 }
