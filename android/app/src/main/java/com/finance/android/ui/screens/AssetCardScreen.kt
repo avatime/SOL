@@ -105,8 +105,7 @@ fun benefitListItem(
     companyLogoPath: String
 ) {
     Row(modifier = Modifier
-        .fillMaxWidth()
-        .padding(vertical = 4.dp),
+        .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically)
     {
         AsyncImage(
@@ -123,7 +122,7 @@ fun benefitListItem(
 
         Text(text = "$benefitSummary",
             fontWeight = FontWeight.Bold,
-            maxLines = 2,
+            maxLines = 1,
             overflow = TextOverflow.Ellipsis)
     }
 }

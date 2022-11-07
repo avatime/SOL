@@ -10,7 +10,7 @@ interface BankService {
     suspend fun getAccountList(): MutableList<BankAccountResponseDto>
 
     @GET("${Const.API_PATH}/bank/asset")
-    suspend fun getRegisteredAccount(): MutableList<BankAccountResponseDto>
+    suspend fun getMyAccount(): MutableList<BankAccountResponseDto>
 
     @PUT("${Const.API_PATH}/bank/asset")
     suspend fun putRegisterAccount(@Body accountNumberDtoArray: Array<AccountNumberDto>)

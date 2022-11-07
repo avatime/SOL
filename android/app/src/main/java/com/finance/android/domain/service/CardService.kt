@@ -13,7 +13,7 @@ interface CardService {
     suspend fun getCardList(): MutableList<CardInfoResponseDto>
 
     @GET("${Const.API_PATH}/card/asset/my")
-    suspend fun getRegisteredCardList(): MutableList<CardResponseDto>
+    suspend fun getMyCardList(): MutableList<CardResponseDto>
 
     @PUT("${Const.API_PATH}/card/asset")
     suspend fun putRegisterCard(@Body cardNumberDtoArray: Array<CardNumberDto>)

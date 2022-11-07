@@ -40,7 +40,7 @@ class CardViewModel @Inject constructor(
 
     private suspend fun loadRegisteredCardList() {
         this@CardViewModel.run {
-            cardRepository.getRegisteredCardList()
+            cardRepository.getMyCardList()
         }
             .collect {
                 cardList.value = it
