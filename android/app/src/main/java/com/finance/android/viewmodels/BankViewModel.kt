@@ -24,9 +24,9 @@ class BankViewModel @Inject constructor(
     val accountList =
         mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
 
-    fun RegisteredAccountLoad() {
+    fun myAccountLoad() {
         viewModelScope.launch {
-            loadRegisteredAccountList()
+            loadMyAccountList()
         }
     }
 
@@ -42,7 +42,7 @@ class BankViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadRegisteredAccountList() {
+    private suspend fun loadMyAccountList() {
         this@BankViewModel.run {
             bankRepository.getMyAccount()
         }

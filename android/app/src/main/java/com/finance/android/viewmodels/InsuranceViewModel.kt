@@ -5,29 +5,29 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.repository.BaseRepository
-import com.finance.android.domain.repository.CardRepository
+import com.finance.android.domain.repository.InsuranceRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class CardViewModel @Inject constructor(
+class InsuranceViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
-    private val cardRepository: CardRepository
+    private val insuranceRepository: InsuranceRepository,
 ) : BaseViewModel(application, baseRepository) {
-    val cardList =
-        mutableStateOf<Response<MutableList<CardResponseDto>>>(Response.Loading)
+    val isList =
+        mutableStateOf<Response<MyInsuranceInfoResponseDto>>(Response.Loading)
 
-    fun myCardLoad() {
+    fun myIsLoad() {
         viewModelScope.launch {
-            loadMyCardList()
+            loadMyIsList()
         }
     }
 
     fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(cardList)
+        val arr = arrayOf(isList)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -38,12 +38,12 @@ class CardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadMyCardList() {
-        this@CardViewModel.run {
-            cardRepository.getMyCardList()
+    private suspend fun loadMyIsList() {
+        this@InsuranceViewModel.run {
+            insuranceRepository.getMyInsurance()
         }
             .collect {
-                cardList.value = it
+                isList.value = it
             }
     }
 

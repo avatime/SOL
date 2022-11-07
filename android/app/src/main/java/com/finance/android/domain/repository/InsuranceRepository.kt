@@ -8,5 +8,5 @@ import retrofit2.http.Body
 interface InsuranceRepository {
     suspend fun putRegisterInsurance(@Body insuranceIdRequestDtoArray: Array<InsuranceIdRequestDto>)
     suspend fun getInsuranceList(): MutableList<InsuranceInfoResponseDto>
-    suspend fun getMyInsuranceList(): MutableList<MyInsuranceInfoResponseDto>
+    suspend fun getMyInsurance(): MyInsuranceInfoResponseDto
 }
