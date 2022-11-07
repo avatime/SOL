@@ -19,5 +19,5 @@ class Profile {
     var pfImg: String = ""
         protected set
 
-    fun toEntity() : ProfileRes = ProfileRes(this.pfName, this.pfImg)
+    fun toEntity() : ProfileRes = ProfileRes(this.pfId, this.pfName, this.pfImg)
 }
