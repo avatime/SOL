@@ -1,6 +1,6 @@
 package com.finance.android.ui.screens
 
-import android.accessibilityservice.AccessibilityService.ScreenshotResult
+import android.util.DisplayMetrics
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -9,32 +9,33 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.BlendMode.Companion.Screen
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.UserProfileResponseDto
-import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
+import com.finance.android.utils.ext.toPx
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.MyPageViewModel
+import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
+import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
+import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
+import com.holix.android.bottomsheetdialog.compose.NavigationBarProperties
 
 
 @Composable
@@ -55,7 +56,8 @@ fun MoreScreen(
     when(myPageViewModel.getLoadState()) {
         is Response.Success -> Screen(
             navController = navController,
-            userInfo = (myPageViewModel.myInfo.value as Response.Success).data
+            userInfo = (myPageViewModel.myInfo.value as Response.Success).data,
+//            profileList = (myPageViewModel.profileList.value as Response.Success).data
         )
         is Response.Failure -> Loading("실패")
         else -> Loading()
@@ -65,8 +67,107 @@ fun MoreScreen(
 @Composable
 fun Screen(
     navController: NavController,
-    userInfo : UserProfileResponseDto
+    userInfo : UserProfileResponseDto,
+//    profileList : MutableList<DailyProfileResponseDto>
 ) {
+    val context = LocalContext.current
+    var showProfileList by remember { mutableStateOf(false) }
+    // BottomSheetProperties
+    // NavigationBarProperties
+    val surfaceColor = Color.Blue
+    var navigationBarColor by remember(surfaceColor) {
+        mutableStateOf(surfaceColor)
+    }
+    var darkIcons by remember {
+        mutableStateOf(Color.Red)
+    }
+    var navigationBarContrastEnforced by remember {
+        mutableStateOf(true)
+    }
+    // BottomSheetBehaviorProperties
+    var state by remember {
+        mutableStateOf(BottomSheetBehaviorProperties.State.Collapsed)
+    }
+    var maxWidth by remember {
+        mutableStateOf(BottomSheetBehaviorProperties.Size.NotSet)
+    }
+    var maxHeight by remember {
+        mutableStateOf(BottomSheetBehaviorProperties.Size.NotSet)
+    }
+    var isDraggable by remember {
+        mutableStateOf(true)
+    }
+    var expandedOffset by remember {
+        mutableStateOf(0)
+    }
+    var halfExpandedRatio by remember {
+        mutableStateOf(0.5F)
+    }
+    var isHideable by remember {
+        mutableStateOf(true)
+    }
+    var peekHeight by remember {
+        mutableStateOf(BottomSheetBehaviorProperties.PeekHeight.Auto)
+    }
+    var isFitToContents by remember {
+        mutableStateOf(true)
+    }
+    var skipCollapsed by remember {
+        mutableStateOf(false)
+    }
+    var isGestureInsetBottomIgnored by remember {
+        mutableStateOf(false)
+    }
+    if(showProfileList) {
+        val outMetrics = DisplayMetrics()
+
+        BoxWithConstraints {
+            BottomSheetDialog(
+                onDismissRequest = {
+                    showProfileList = false
+                },
+                properties = BottomSheetDialogProperties(
+                    navigationBarProperties = NavigationBarProperties(
+                        color = navigationBarColor,
+                        navigationBarContrastEnforced = navigationBarContrastEnforced
+                    ),
+                    behaviorProperties = BottomSheetBehaviorProperties(
+                        state = state,
+                        maxWidth = maxWidth,
+                        maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
+                        isDraggable = isDraggable,
+                        expandedOffset = expandedOffset,
+                        halfExpandedRatio = halfExpandedRatio,
+                        isHideable = isHideable,
+                        peekHeight = peekHeight,
+                        isFitToContents = isFitToContents,
+                        skipCollapsed = skipCollapsed,
+                        isGestureInsetBottomIgnored = isGestureInsetBottomIgnored
+                    )
+                )
+            ) {
+                Surface (
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                    ) {
+                        Text(text = "Title", style = MaterialTheme.typography.headlineMedium)
+                        repeat(30) { index ->
+                            Text(
+                                text = "Item $index",
+                                style = MaterialTheme.typography.labelMedium
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -77,16 +178,19 @@ fun Screen(
                 .fillMaxWidth()
                 .padding(dimensionResource(R.dimen.calendar_default))
         ){
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(userInfo.profileUrl)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(80.dp)
-                    .padding(end = dimensionResource(R.dimen.padding_small))
-            )
+            Button(onClick = {showProfileList = !showProfileList}) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(userInfo.profileUrl)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(80.dp)
+                        .padding(end = dimensionResource(R.dimen.padding_small))
+                )
+            }
+
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

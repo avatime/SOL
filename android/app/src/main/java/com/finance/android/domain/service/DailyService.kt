@@ -2,6 +2,7 @@ package com.finance.android.domain.service
 
 import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
+import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 import com.finance.android.utils.Const
 import retrofit2.http.GET
@@ -18,6 +19,9 @@ interface DailyService {
 
     @GET("${Const.API_PATH}/daily/walk/{year}/{month}")
     suspend fun getWalkingList(@Path("year") year: Int, @Path("month") month: Int) : MutableList<DailyWalkingResponseDto>
+
+    @GET("${Const.API_PATH}/daily/profiles")
+    suspend fun getProfileList() : MutableList<DailyProfileResponseDto>
 
     @GET("${Const.API_PATH}/daily")
     suspend fun test()
