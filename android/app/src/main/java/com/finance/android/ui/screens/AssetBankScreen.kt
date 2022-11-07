@@ -80,7 +80,7 @@ fun AssetBankContainer(
             )
         }
         if(accData.size == 0) {
-            Text(text = "등록된 자산이 없습니다.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Text(text = "등록된 자산이 없어요.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
     }
 }
