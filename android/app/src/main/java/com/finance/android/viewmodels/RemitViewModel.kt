@@ -2,7 +2,9 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.SavedStateHandle
@@ -17,6 +19,9 @@ import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.RemitRepository
+import com.finance.android.ui.components.CustomDialog
+import com.finance.android.ui.components.DialogActionType
+import com.finance.android.ui.components.DialogType
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -35,9 +40,10 @@ class RemitViewModel @Inject constructor(
     val accountNumber = savedStateHandle.get<String>("accountNumber")!! //ac_send
     val moneyValue = mutableStateOf("")
     val balance = savedStateHandle.get<Int>("balance")
-    val enabled = mutableStateOf(false)
+    val enabledBackHeader = mutableStateOf(false)
     val requestRemit = mutableStateOf(false)
     var cpCode = mutableStateOf(0)
+    val isBackToMain = mutableStateOf(false)
 
     private val _recommendedAccountData =
         mutableStateOf<Response<MutableList<RecentTradeResponseDto>>>(Response.Loading)
@@ -54,9 +60,9 @@ class RemitViewModel @Inject constructor(
                 }
         }
     }
-
     //송금 내 계좌 조회
-    private val _recentMyAccountData = mutableStateOf<Response<MutableList<RecentMyTradeResponseDto>>>(Response.Loading)
+    private val _recentMyAccountData =
+        mutableStateOf<Response<MutableList<RecentMyTradeResponseDto>>>(Response.Loading)
     val recentMyAccountData = _recentMyAccountData
 
     fun getRecentMyAccountData() {
@@ -103,7 +109,7 @@ class RemitViewModel @Inject constructor(
     }
 
     //계좌 체크
-    var isRightAccount = mutableStateOf(false)
+    var isRightAccount = mutableStateOf(true)
     var validRecieveAccountNumber = mutableStateOf("0")
     var validRecieveBankName = mutableStateOf("0")
 
@@ -114,6 +120,7 @@ class RemitViewModel @Inject constructor(
             }.collect {
                 if (it is Response.Success) {
                     if (it.data.userName.isEmpty()) {
+                        isRightAccount.value = false
 
                     } else {
                         Log.i("test", "Success")
@@ -197,13 +204,29 @@ class RemitViewModel @Inject constructor(
     }
 
     //북마크
-    fun onClickAccountBookmark (accountNumber : String) {
+    fun onClickAccountBookmark(recentTradeResponseDto: RecentTradeResponseDto) {
         viewModelScope.launch {
-            this@RemitViewModel.run{
-                remitRepository.putRemitBookmark(accountNumberDto = AccountNumberDto(accountNumber))
+            this@RemitViewModel.run {
+                remitRepository.putRemitBookmark(
+                    accountNumberDto = AccountNumberDto(
+                        recentTradeResponseDto.acNo
+                    )
+                )
             }.collect {
                 if (it is Response.Success) {
                     Log.i("remitAccount", "북마크 갓찬영")
+                    recentTradeResponseDto.bkStatus = !recentTradeResponseDto.bkStatus
+                    recommendedAccountData.value =
+                        Response.Success((recommendedAccountData.value as Response.Success).data.sortedWith { a, b ->
+                            if (a.bkStatus && b.bkStatus) {
+                                return@sortedWith b.tdData.compareTo(a.tdData)
+                            } else if (a.bkStatus) {
+                                return@sortedWith -1
+                            } else {
+                                return@sortedWith 1
+                            }
+                        }
+                            .toMutableList())
 
                 } else if (it is Response.Failure) {
                     Log.i("remitAccount", "북마크 김챤챤영 ㅡㅡ")
@@ -212,6 +235,38 @@ class RemitViewModel @Inject constructor(
         }
     }
 
+    fun onClickAccountBookmark(recentMyTradeResponseDto: RecentMyTradeResponseDto) {
+        viewModelScope.launch {
+            this@RemitViewModel.run {
+                remitRepository.putRemitBookmark(
+                    accountNumberDto = AccountNumberDto(
+                        recentMyTradeResponseDto.acNo
+                    )
+                )
+            }.collect {
+                if (it is Response.Success) {
+                    Log.i("remitAccount", "북마크 갓찬영")
+                    recentMyTradeResponseDto.bkStatus = !recentMyTradeResponseDto.bkStatus
+                    recentMyAccountData.value =
+                        Response.Success(mutableListOf<RecentMyTradeResponseDto>().apply {
+                            addAll((recentMyAccountData.value as Response.Success).data.sortedWith { a, b ->
+                                if (a.bkStatus && b.bkStatus) {
+                                    return@sortedWith a.acNo.compareTo(b.acNo)
+                                } else if (a.bkStatus) {
+                                    return@sortedWith -1
+                                } else {
+                                    return@sortedWith 1
+                                }
+                            }
+                            )
+                        })
+
+                } else if (it is Response.Failure) {
+                    Log.i("remitAccount", "북마크 김챤챤영 ㅡㅡ")
+                }
+            }
+        }
+    }
 
 
     fun onClickAccount(key: Any) {

@@ -9,6 +9,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.SavedStateHandle
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -22,23 +23,25 @@ import com.finance.android.viewmodels.RemitViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RemitFragment(
+    navController: NavController,
     remitViewModel: RemitViewModel = hiltViewModel(),
 ) {
     val innerNavController = rememberNavController()
-
-
     Scaffold(containerColor = Color.White,
         topBar = {
-            if (remitViewModel.enabled.value) {
-
+            if (!remitViewModel.enabledBackHeader.value) {
                 BackHeaderBar(
                     text = "", modifier = Modifier, onClickBack = {
-                        innerNavController.popBackStack()
+                        if(remitViewModel.isBackToMain.value){
+                            navController.popBackStack()
+                        }else {
+                            innerNavController.popBackStack()
+                        }
+
                     }, backgroundColor = MaterialTheme.colorScheme.surface
                 )
             }
         }
-
 
     ) { innerPaddingModifier ->
         val modifier = Modifier.padding(top = innerPaddingModifier.calculateTopPadding())
@@ -48,7 +51,7 @@ fun RemitFragment(
             startDestination = Const.INPUT_RECEIVER_SCREEN
         ) {
             composable(Const.INPUT_RECEIVER_SCREEN) {
-
+                remitViewModel.isBackToMain.value = true
                 HeaderRemitTabBar(
                     modifier = modifier,
                     remitViewModel = remitViewModel,
@@ -56,20 +59,20 @@ fun RemitFragment(
                 )
             }
             composable(Const.INPUT_MONEY_SCREEN) {
+                remitViewModel.isBackToMain.value = false
                 InputMoneyScreen(
                     modifier = modifier,
                     remitViewModel = remitViewModel,
                     navController = innerNavController
                 )
             }
-            composable(Const.REMIT_OK_SCREEN) { RemitOKScreen(
+            composable(Const.REMIT_OK_SCREEN) {
+                remitViewModel.isBackToMain.value = false
+                remitViewModel.enabledBackHeader.value = true
+                RemitOKScreen(
                     remitViewModel = remitViewModel
-                , navController = innerNavController
+                , navController = navController
             ) }
-
-
-
-
         }
 
 

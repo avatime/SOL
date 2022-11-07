@@ -1,6 +1,7 @@
 package com.finance.android.ui.screens
 
 
+import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.scrollable
@@ -32,10 +33,7 @@ import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.CompanyItem
-import com.finance.android.ui.components.CpListSheet
-import com.finance.android.ui.components.TextInput
+import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.RemitViewModel
@@ -145,6 +143,21 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
 
                     )
             }
+            val isShow  = remember { mutableStateOf(false) }
+           if(!remitViewModel.isRightAccount.value){
+               if(!isShow.value) {
+                   CustomDialog(
+                       dialogType = DialogType.ERROR,
+                       dialogActionType = DialogActionType.ONE_BUTTON,
+                       title = "계좌번호 오류",
+                       subTitle = "다시 한번 확인해주세요",
+                       onPositive = {
+                           isShow.value = true;
+                       },
+                   )
+               }
+           }
+
 
 
         }

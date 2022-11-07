@@ -47,9 +47,6 @@ fun AccountLikeItem(
     onClickItem: () -> Unit,
     onClickBookmark: () -> Unit
 ) {
-
-    var isSelected = remember { mutableStateOf(bkStatus) }
-
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -75,8 +72,6 @@ fun AccountLikeItem(
 
         )
         Spacer(modifier = Modifier.padding(10.dp))
-
-
         Column(modifier = Modifier.weight(1f)) {
             Text(
                 text = name, fontSize = dimensionResource(R.dimen.account_like_name).value.sp,
@@ -103,15 +98,13 @@ fun AccountLikeItem(
 
         }
 
-
         IconButton(onClick = {
-            isSelected.value = !isSelected.value
             onClickBookmark()
         }, modifier = Modifier.padding(end=5.dp)) {
 
 
             AnimatedVisibility(
-                visible = !isSelected.value,
+                visible = !bkStatus,
                 enter = scaleIn() + expandVertically(expandFrom = Alignment.CenterVertically),
                 exit = scaleOut() + shrinkVertically(shrinkTowards = Alignment.CenterVertically)
             ) {
@@ -119,7 +112,7 @@ fun AccountLikeItem(
                     Icons.Filled.Star,
                     contentDescription = "like",
                     modifier = Modifier.size(35.dp),
-                    tint = if (isSelected.value) Color(0xffeeca66) else Color.LightGray
+                    tint = if (bkStatus) Color(0xffeeca66) else Color.LightGray
 
                 )
 
@@ -127,7 +120,7 @@ fun AccountLikeItem(
             }
 
             AnimatedVisibility(
-                visible = isSelected.value,
+                visible = bkStatus,
                 enter = scaleIn(transformOrigin = TransformOrigin(0f, 0f)) +
                         fadeIn() + expandIn(expandFrom = Alignment.TopStart),
                 exit = scaleOut(transformOrigin = TransformOrigin(0f, 0f)) +
@@ -137,7 +130,7 @@ fun AccountLikeItem(
                     Icons.Filled.Star,
                     contentDescription = "like",
                     modifier = Modifier.size(35.dp),
-                    tint = if (!isSelected.value) Color.LightGray else Color(0xffeeca66)
+                    tint = if (!bkStatus) Color.LightGray else Color(0xffeeca66)
 
                 )
             }

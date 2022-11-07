@@ -6,11 +6,13 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.provider.ContactsContract
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -21,8 +23,8 @@ import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.finance.android.MainActivity
 import com.finance.android.R
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.TextButton
+import com.finance.android.domain.dto.response.Contact
+import com.finance.android.ui.components.*
 import com.finance.android.ui.screens.remit.ContactListScreen
 import com.finance.android.viewmodels.RemitViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
@@ -51,12 +53,17 @@ fun ContactScreen(remitViewModel: RemitViewModel, navController: NavController) 
 
         }
         permissionState.shouldShowRationale -> {
-            Column {
-                Text(text = "Reading external permission is required by this app")
-            }
+
         }
         !permissionState.hasPermission && !permissionState.shouldShowRationale -> {
-            Text(text = "Permission fully denied. Go to settings to enable")
+            val isShow = remember {
+                mutableStateOf(false)
+            }
+            if(!isShow.value) {
+                CustomDialog(dialogType = DialogType.WARNING, dialogActionType = DialogActionType.ONE_BUTTON, title = "접근 불가", subTitle = "앱의 설정에서 연락처 접근을 허용해주세요",onPositive = {isShow.value = true})
+            }
+
+
         }
     }
 
