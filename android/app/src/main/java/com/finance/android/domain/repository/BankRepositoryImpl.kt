@@ -15,6 +15,10 @@ class BankRepositoryImpl @Inject constructor(
         return bankService.getAccountList()
     }
 
+    override suspend fun getRegisteredAccount(): MutableList<BankAccountResponseDto> {
+        return bankService.getRegisteredAccount()
+    }
+
     override suspend fun putRegisterAccount(accountNumberDtoArray: Array<AccountNumberDto>) {
         return bankService.putRegisterAccount(accountNumberDtoArray)
     }

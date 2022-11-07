@@ -21,8 +21,7 @@ import com.finance.android.ui.components.CardListItem
 
 @Composable
 fun AssetCardScreen(navController : NavController) {
-    Column(modifier = Modifier
-        .padding(top = dimensionResource(R.dimen.padding_small)))
+    Column()
     {
         AssetCardContainer(modifier = Modifier
             .fillMaxWidth()
