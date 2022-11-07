@@ -4,10 +4,7 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.domain.dto.response.BankInfoResponseDto
-import com.finance.android.domain.dto.response.CardInfoResponseDto
-import com.finance.android.domain.dto.response.RecentTradeResponseDto
+import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.CardRepository
@@ -22,23 +19,17 @@ class HomeViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     private val bankRepository: BankRepository,
-    private val cardRepository: CardRepository
 ) : BaseViewModel(application, baseRepository) {
-    val accountList =
-        mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
+    val mainData = mutableStateOf<Response<AccountRegisteredResponseDto>>(Response.Loading)
 
-    val cardList =
-        mutableStateOf<Response<MutableList<CardInfoResponseDto>>>(Response.Loading)
-
-    fun Load() {
+    fun load() {
         viewModelScope.launch {
-            loadAccountList()
-            loadCardList()
+            loadList()
         }
     }
 
     fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(accountList, cardList)
+        val arr = arrayOf(mainData)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -49,21 +40,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun loadAccountList() {
+    private suspend fun loadList() {
         this@HomeViewModel.run {
-            bankRepository.getAccountList()
+            bankRepository.getAllMainAccount()
         }
             .collect {
-                accountList.value = it
-            }
-    }
-
-    private suspend fun loadCardList() {
-        this@HomeViewModel.run {
-            cardRepository.getCardList()
-        }
-            .collect {
-                cardList.value = it
+                mainData.value = it
             }
     }
 
