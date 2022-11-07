@@ -52,7 +52,6 @@ fun AssetLifeScreen(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(10)
                     ),
-                    navController = navController,
                     isList = isData.list
                 )
                 AssetLifeContainer2(modifier = Modifier
@@ -73,7 +72,6 @@ fun AssetLifeScreen(
 @Composable
 private fun AssetLifeContainer(
     modifier: Modifier,
-    navController: NavController,
     isList: MutableList<InsuranceInfoResponseDto>
     ) {
     Column(modifier = modifier
