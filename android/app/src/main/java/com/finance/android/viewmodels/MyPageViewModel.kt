@@ -3,6 +3,7 @@ package com.finance.android.viewmodels
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.request.ChangeProfileRequestDto
 import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.domain.repository.BaseRepository
@@ -30,8 +31,15 @@ class MyPageViewModel @Inject constructor(
         }
     }
 
+    fun callChangeProfile(profileId : Int) {
+        println(profileId)
+        viewModelScope.launch {
+            changeUserProfile(ChangeProfileRequestDto(profileNo = profileId))
+        }
+    }
+
     fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(myInfo)
+        val arr = arrayOf(myInfo, profileList)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -39,6 +47,17 @@ class MyPageViewModel @Inject constructor(
             Response.Failure(null)
         } else {
             Response.Success(Unit)
+        }
+    }
+
+    private suspend fun changeUserProfile(changeProfileRequestDto: ChangeProfileRequestDto) {
+        this@MyPageViewModel.run {
+            println(changeProfileRequestDto.toString())
+            dailyRepository.changeProfile(changeProfileRequestDto)
+        }.collect {
+            if(it is Response.Success) {
+                getUserInfo()
+            }
         }
     }
 
@@ -57,8 +76,9 @@ class MyPageViewModel @Inject constructor(
             dailyRepository.getProfileList()
         }.collect {
             profileList.value = it
-//            if(it is Response.Success) {
-//            }
+            if(it is Response.Success) {
+                println(it.data.toString())
+            }
         }
     }
 }

@@ -1,10 +1,10 @@
 package com.finance.android.domain.repository
 
+import com.finance.android.domain.dto.request.ChangeProfileRequestDto
 import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
 import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 import com.finance.android.domain.service.DailyService
-import java.time.Month
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -32,6 +32,10 @@ class DailyRepositoryImpl @Inject constructor(
 
     override suspend fun getProfileList(): MutableList<DailyProfileResponseDto> {
         return dailyService.getProfileList()
+    }
+
+    override suspend fun changeProfile(changeProfileRequestDto: ChangeProfileRequestDto) {
+        return dailyService.changeProfile(changeProfileRequestDto)
     }
 
     override suspend fun test() {

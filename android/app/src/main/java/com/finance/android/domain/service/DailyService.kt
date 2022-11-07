@@ -5,6 +5,7 @@ import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
 import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 import com.finance.android.utils.Const
+import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
@@ -22,6 +23,9 @@ interface DailyService {
 
     @GET("${Const.API_PATH}/daily/profiles")
     suspend fun getProfileList() : MutableList<DailyProfileResponseDto>
+
+    @POST("${Const.API_PATH}/user/profile")
+    suspend fun changeProfile(@Body changeProfileRequestDto: ChangeProfileRequestDto)
 
     @GET("${Const.API_PATH}/daily")
     suspend fun test()

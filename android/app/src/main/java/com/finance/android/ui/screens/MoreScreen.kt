@@ -1,13 +1,10 @@
 package com.finance.android.ui.screens
 
 import android.util.DisplayMetrics
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
+import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -15,9 +12,11 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -26,7 +25,10 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
+import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
+import com.finance.android.ui.components.TransientSnackbar
+import com.finance.android.ui.components.showProfileList
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.toPx
@@ -50,6 +52,18 @@ fun MoreScreen(
 //            name = it
 //        }
 //    }
+    var showSnackbar by remember { mutableStateOf(false) }
+    if (showSnackbar) {
+        TransientSnackbar(
+            onDismiss = { showSnackbar = false }
+        ) {
+            Text(
+                text = "프로필 변경 완료!",
+                color = MaterialTheme.colorScheme.surface
+            )
+        }
+    }
+
     LaunchedEffect(Unit) {
         myPageViewModel.launchMyPage()
     }
@@ -57,7 +71,10 @@ fun MoreScreen(
         is Response.Success -> Screen(
             navController = navController,
             userInfo = (myPageViewModel.myInfo.value as Response.Success).data,
-//            profileList = (myPageViewModel.profileList.value as Response.Success).data
+            profileList = (myPageViewModel.profileList.value as Response.Success).data,
+            onClick = {
+                myPageViewModel.callChangeProfile(it)
+            }
         )
         is Response.Failure -> Loading("실패")
         else -> Loading()
@@ -68,56 +85,12 @@ fun MoreScreen(
 fun Screen(
     navController: NavController,
     userInfo : UserProfileResponseDto,
-//    profileList : MutableList<DailyProfileResponseDto>
+    profileList : MutableList<DailyProfileResponseDto>,
+    onClick : (profileId: Int) -> Unit = {}
 ) {
     val context = LocalContext.current
     var showProfileList by remember { mutableStateOf(false) }
-    // BottomSheetProperties
-    // NavigationBarProperties
-    val surfaceColor = Color.Blue
-    var navigationBarColor by remember(surfaceColor) {
-        mutableStateOf(surfaceColor)
-    }
-    var darkIcons by remember {
-        mutableStateOf(Color.Red)
-    }
-    var navigationBarContrastEnforced by remember {
-        mutableStateOf(true)
-    }
-    // BottomSheetBehaviorProperties
-    var state by remember {
-        mutableStateOf(BottomSheetBehaviorProperties.State.Collapsed)
-    }
-    var maxWidth by remember {
-        mutableStateOf(BottomSheetBehaviorProperties.Size.NotSet)
-    }
-    var maxHeight by remember {
-        mutableStateOf(BottomSheetBehaviorProperties.Size.NotSet)
-    }
-    var isDraggable by remember {
-        mutableStateOf(true)
-    }
-    var expandedOffset by remember {
-        mutableStateOf(0)
-    }
-    var halfExpandedRatio by remember {
-        mutableStateOf(0.5F)
-    }
-    var isHideable by remember {
-        mutableStateOf(true)
-    }
-    var peekHeight by remember {
-        mutableStateOf(BottomSheetBehaviorProperties.PeekHeight.Auto)
-    }
-    var isFitToContents by remember {
-        mutableStateOf(true)
-    }
-    var skipCollapsed by remember {
-        mutableStateOf(false)
-    }
-    var isGestureInsetBottomIgnored by remember {
-        mutableStateOf(false)
-    }
+
     if(showProfileList) {
         val outMetrics = DisplayMetrics()
 
@@ -127,22 +100,9 @@ fun Screen(
                     showProfileList = false
                 },
                 properties = BottomSheetDialogProperties(
-                    navigationBarProperties = NavigationBarProperties(
-                        color = navigationBarColor,
-                        navigationBarContrastEnforced = navigationBarContrastEnforced
-                    ),
+                    navigationBarProperties = NavigationBarProperties(),
                     behaviorProperties = BottomSheetBehaviorProperties(
-                        state = state,
-                        maxWidth = maxWidth,
                         maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
-                        isDraggable = isDraggable,
-                        expandedOffset = expandedOffset,
-                        halfExpandedRatio = halfExpandedRatio,
-                        isHideable = isHideable,
-                        peekHeight = peekHeight,
-                        isFitToContents = isFitToContents,
-                        skipCollapsed = skipCollapsed,
-                        isGestureInsetBottomIgnored = isGestureInsetBottomIgnored
                     )
                 )
             ) {
@@ -156,18 +116,18 @@ fun Screen(
                             .verticalScroll(rememberScrollState()),
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
-                        Text(text = "Title", style = MaterialTheme.typography.headlineMedium)
-                        repeat(30) { index ->
-                            Text(
-                                text = "Item $index",
-                                style = MaterialTheme.typography.labelMedium
-                            )
-                        }
+                        Text(text = "프로필 이미지", style = MaterialTheme.typography.headlineMedium)
+                        showProfileList(profileList, onClickImage = {
+                            onClick(it)
+                            println("프로필 이미지 변경 $it")
+//                            showSnackbar = true
+                        })
                     }
                 }
             }
         }
     }
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -176,36 +136,50 @@ fun Screen(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.calendar_default))
+                .padding(start = dimensionResource(R.dimen.calendar_default))
+                .padding(end = dimensionResource(R.dimen.calendar_default))
+                .padding(top = 35.dp)
+                .padding(bottom = 13.dp),
+            verticalAlignment = Alignment.CenterVertically
         ){
-            Button(onClick = {showProfileList = !showProfileList}) {
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(userInfo.profileUrl)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .size(80.dp)
-                        .padding(end = dimensionResource(R.dimen.padding_small))
-                )
-            }
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(userInfo.profileUrl)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = userInfo.profileName,
+                modifier = Modifier
+                    .size(60.dp)
+                    .padding(end = dimensionResource(R.dimen.padding_small))
+                    .clickable { showProfileList = !showProfileList }
+            )
 
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.padding(start = 10.dp)
             ) {
-                Text(text = userInfo.username)
+                Text(text = userInfo.username, fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 18.sp))
             }
         }
 
-        Button(
-            onClick = {
-                navController.navigate(Const.Routes.ATTENDANCE)
-            },
-            modifier = Modifier.withBottomButton()
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = dimensionResource(id = R.dimen.padding_medium))
+                .padding(end = dimensionResource(id = R.dimen.padding_medium))
+                .padding(bottom = dimensionResource(id = R.dimen.padding_medium))
+                .height(100.dp)
+                .clickable { navController.navigate(Const.Routes.ATTENDANCE) }
+                .background(
+                    MaterialTheme.colorScheme.primary,
+                    RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2),
+                ),
+            verticalArrangement = Arrangement.Center
         ) {
-            Text("포인트")
-            Text(text = userInfo.point.toString() + "포인트")
+            Column(modifier = Modifier.padding(start = 23.dp)) {
+                Text(text = "포인트", fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+                Text(text = userInfo.point.toString() + "포인트", fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
+            }
         }
 
         MenuList(navController = navController)
@@ -214,46 +188,64 @@ fun Screen(
 
 @Composable
 private fun MenuList(navController: NavController) {
+
     Column(
         modifier = Modifier
-            .padding(dimensionResource(R.dimen.calendar_default))
+            .padding(dimensionResource(R.dimen.account_like_account_number))
             .background(
                 MaterialTheme.colorScheme.surface,
                 RoundedCornerShape(dimensionResource(R.dimen.calendar_default))
             )
     ){
-        Button(
-            onClick = {
-                navController.navigate(Const.Routes.ATTENDANCE)
-            },
+        Spacer(modifier = Modifier.size(10.dp))
+
+        MoreMenuItem(
+            onClick = { navController.navigate(Const.Routes.ATTENDANCE) },
+            painter = painterResource(R.drawable.ssal),
+            text = "출석체크"
+        )
+
+        MoreMenuItem(
+            onClick = { navController.navigate(Const.Routes.WALK) },
+            painter = painterResource(R.drawable.ssal),
+            text = "만보기"
+        )
+
+        MoreMenuItem(
+            onClick = { navController.navigate(Const.Routes.ATTENDANCE) },
+            painter = painterResource(R.drawable.ssal),
+            text = "모두의 통장"
+        )
+
+        Spacer(modifier = Modifier.size(40.dp))
+    }
+}
+
+@Composable
+fun MoreMenuItem(
+    onClick: () -> Unit = {},
+    painter: Painter,
+    text : String
+){
+    Column(
+//        modifier = Modifier.background(Color.Blue),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Row(
             modifier = Modifier
                 .withBottomButton()
-                .background(Color.White),
+                .clickable { onClick },
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
-                painter = painterResource(R.drawable.ssal),
+                painter = painter,
                 contentDescription = null, // 필수 param
             )
-            Text("출석체크")
+            Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_btn_small_text)))
+            Text(text)
         }
 
-        Button(
-            onClick = {
-                navController.navigate(Const.Routes.WALK)
-            },
-            modifier = Modifier.withBottomButton()
-        ) {
-            Text("만보기")
-        }
-
-        Button(
-            onClick = {
-                navController.navigate(Const.Routes.ATTENDANCE)
-            },
-            modifier = Modifier.withBottomButton()
-        ) {
-            Text("모두의 통장")
-        }
+        Divider(modifier = Modifier.fillMaxWidth(0.92f))
     }
 }
 
