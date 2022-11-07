@@ -1,6 +1,7 @@
 package com.finance.android.ui.screens
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -14,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
@@ -25,6 +27,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.FinanceResponseDto
+import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.FinanceViewModel
 import java.text.DecimalFormat
@@ -76,7 +79,10 @@ fun StockContainer(
                 fnName = it.fnName,
                 fnLogo = it.fnLogo,
                 close = it.close,
-                per = it.per
+                per = it.per,
+                onClickItem = {
+                    navController.navigate("${Const.Routes.STOCK}/${it.fnName}/${it.close}/${it.per}")
+                }
             )
         }
     }
@@ -87,12 +93,16 @@ fun DrawListItem(
     fnName: String,
     fnLogo: String,
     close: Int,
-    per: Double
+    per: Double,
+    onClickItem: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 3.dp),
+            .padding(vertical = 8.dp)
+            .clickable {
+                       onClickItem()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
@@ -101,6 +111,7 @@ fun DrawListItem(
                 .crossfade(true)
                 .build(),
             contentDescription = "기업로고",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(40.dp)
                 .clip(CircleShape),
