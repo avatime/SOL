@@ -44,7 +44,7 @@ class BankViewModel @Inject constructor(
 
     private suspend fun loadRegisteredAccountList() {
         this@BankViewModel.run {
-            bankRepository.getRegisteredAccount()
+            bankRepository.getMyAccount()
         }
             .collect {
                 accountList.value = it
