@@ -3,6 +3,7 @@ package com.finance.android.ui.screens
 import android.util.DisplayMetrics
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
@@ -18,6 +20,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -201,20 +204,24 @@ private fun MenuList(navController: NavController) {
 
         MoreMenuItem(
             onClickMenu = { navController.navigate(Const.Routes.ATTENDANCE) },
-            painter = painterResource(R.drawable.ssal),
-            text = "출석체크"
+            painter = painterResource(R.drawable.ic_blue_calendar),
+            text = "출석체크",
+            color = Color(0xffe6def5),
+            size = 36.dp
         )
 
         MoreMenuItem(
             onClickMenu = { navController.navigate(Const.Routes.WALK) },
-            painter = painterResource(R.drawable.ssal),
-            text = "만보기"
+            painter = painterResource(R.drawable.ic_running_shoe),
+            text = "만보기",
+            color = Color(0xffbfd0ff)
         )
 
         MoreMenuItem(
             onClickMenu = { navController.navigate(Const.Routes.ATTENDANCE) },
-            painter = painterResource(R.drawable.ssal),
-            text = "모두의 통장"
+            painter = painterResource(R.drawable.ic_moim),
+            text = "모두의 통장",
+            color = Color(0xffc0f0d2)
         )
 
         Spacer(modifier = Modifier.size(40.dp))
@@ -225,7 +232,9 @@ private fun MenuList(navController: NavController) {
 fun MoreMenuItem(
     onClickMenu: () -> Unit = {},
     painter: Painter,
-    text : String
+    text : String,
+    color: Color = Color(0x0046FF),
+    size : Dp = 40.dp
 ){
     Column(
 //        modifier = Modifier.background(Color.Blue),
@@ -237,12 +246,19 @@ fun MoreMenuItem(
                 .clickable { onClickMenu() },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painter,
-                contentDescription = null, // 필수 param
-            )
+            Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_small)))
+            Box(
+                modifier = Modifier.size(50.dp).clip(shape = CircleShape).background(color),
+                contentAlignment = Alignment.Center
+            ){
+                Image(
+                    painter = painter,
+                    contentDescription = null, // 필수 param
+                    modifier = Modifier.size(size)
+                )
+            }
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_btn_small_text)))
-            Text(text)
+            Text(text, fontSize = 20.sp)
         }
 
         Divider(modifier = Modifier.fillMaxWidth(0.92f))
