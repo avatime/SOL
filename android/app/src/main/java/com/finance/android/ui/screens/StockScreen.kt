@@ -1,23 +1,111 @@
 package com.finance.android.ui.screens
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.finance.android.ui.fragments.RemitFragment
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.utils.Response
-import com.finance.android.utils.ext.withBottomButton
-import com.finance.android.viewmodels.SampleViewModel
+import com.finance.android.viewmodels.FinanceViewModel
+import java.text.DecimalFormat
 
 @Composable
 fun StockScreen(
+    navController: NavController,
+    financeViewModel: FinanceViewModel = hiltViewModel()) {
+    LaunchedEffect(Unit) {
+        financeViewModel.Load()
+    }
+    Column(modifier = Modifier
+        .verticalScroll(rememberScrollState())
+        .background(color = MaterialTheme.colorScheme.background)) {
+        when (val data = financeViewModel.getLoadState()) {
+            is Response.Success -> {
+                StockContainer(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(10)
+                        ),
+                    navController = navController,
+                    accData = (financeViewModel.financeList.value as Response.Success).data,
+                )
+            }
+            is Response.Loading -> {}
+            else -> {}
+        }
+    }
+}
 
+@Composable
+fun Draw(
+    modifier: Modifier,
+    fnName: String,
+    fnLogo: String,
+    close: Int,
+    per: Double
 ) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .padding(vertical = 3.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(fnLogo)
+                .crossfade(true)
+                .build(),
+            contentDescription = "기업로고",
+            modifier = Modifier
+                .size(40.dp)
+                .clip(CircleShape),
+        )
+        Spacer(modifier = Modifier
+            .weight(.05f))
+        Text(text = fnName,
+            fontWeight = FontWeight.Bold,
+            fontSize = 25.sp
+            )
+        Spacer(modifier = Modifier
+            .weight(1f))
+        Column(horizontalAlignment = Alignment.End) {
+            Text(text = "$per%",
+                color = if(per > 0) Color(0xFFFF0000) else Color(0xFF3F51B5),
+                fontSize = 19.sp
+            )
+            Text(text = DecimalFormat("#,###원").format(close),
+                fontSize = 15.sp)
+        }
+    }
+}
 
+@Composable
+fun StockContainer(modifier: Modifier, navController: NavController, accData: Array<FinanceResponseDto>) {
+    accData.forEach {
+        Draw(
+            modifier = Modifier,
+            fnName = it.fnName,
+            fnLogo = it.fnLogo,
+            close = it.close,
+            per = it.per)
+    }
 }
