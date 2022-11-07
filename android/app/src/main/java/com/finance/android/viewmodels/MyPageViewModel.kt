@@ -32,8 +32,9 @@ class MyPageViewModel @Inject constructor(
     }
 
     fun callChangeProfile(profileId : Int) {
+        println(profileId)
         viewModelScope.launch {
-            changeUserProfile(ChangeProfileRequestDto(profileId))
+            changeUserProfile(ChangeProfileRequestDto(profileNo = profileId))
         }
     }
 
@@ -51,10 +52,11 @@ class MyPageViewModel @Inject constructor(
 
     private suspend fun changeUserProfile(changeProfileRequestDto: ChangeProfileRequestDto) {
         this@MyPageViewModel.run {
+            println(changeProfileRequestDto.toString())
             dailyRepository.changeProfile(changeProfileRequestDto)
         }.collect {
             if(it is Response.Success) {
-                getProfileList()
+                getUserInfo()
             }
         }
     }

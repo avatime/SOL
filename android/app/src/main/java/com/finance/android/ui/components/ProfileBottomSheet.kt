@@ -17,7 +17,7 @@ import com.finance.android.domain.dto.response.DailyProfileResponseDto
 @Composable
 fun showProfileList(
     profileList: MutableList<DailyProfileResponseDto>,
-    onClickImage: () -> Unit = {}
+    onClickImage: (profileId : Int) -> Unit = {}
 ) {
     MyGrid(content = profileList , columnSize = 3, onClickImage)
 }
@@ -27,7 +27,7 @@ fun showProfileList(
  * @param columnSize : grid column 개수
  */
 @Composable
-fun MyGrid(content: MutableList<DailyProfileResponseDto>, columnSize: Int, onClickImage: () -> Unit){
+fun MyGrid(content: MutableList<DailyProfileResponseDto>, columnSize: Int, onClickImage: (profileId: Int) -> Unit){
     val rowsCount = 1 + (content.size -1)/columnSize // row 개수
     BoxWithConstraints {
         val maxWidth = this.maxWidth
@@ -49,7 +49,7 @@ fun MyGrid(content: MutableList<DailyProfileResponseDto>, columnSize: Int, onCli
  * @param columnWidth : row item들을 동일 width로 보여주기 위해 maxWidth를 column으로 나눈 dp 값
  */
 @Composable
-fun RowOfGrid(rowList: List<DailyProfileResponseDto>, columnWidth: Dp, onClickImage: () -> Unit){
+fun RowOfGrid(rowList: List<DailyProfileResponseDto>, columnWidth: Dp, onClickImage: (profileId : Int) -> Unit){
     Row (
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier.padding(25.dp),
@@ -65,7 +65,7 @@ fun RowOfGrid(rowList: List<DailyProfileResponseDto>, columnWidth: Dp, onClickIm
                 modifier = Modifier
                     .size(80.dp)
                     .padding(end = dimensionResource(R.dimen.padding_small))
-                    .clickable { onClickImage() }
+                    .clickable { onClickImage(item.id) }
             )
             if(index != 2) Spacer(modifier = Modifier.padding(20.dp))
         }
