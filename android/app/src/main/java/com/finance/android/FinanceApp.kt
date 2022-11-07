@@ -127,6 +127,50 @@ fun FinanceApp() {
                     )
                 }
             }
+            composable(
+                route = "${Const.Routes.STOCK}/{fnName}/{close}/{per}",
+                arguments = listOf(
+                    navArgument("fnName") { type = NavType.StringType },
+                    navArgument("close") { type = NavType.IntType },
+                    navArgument("per") { type = NavType.FloatType },
+                )
+            ) {
+                AnimatedVisibility(
+                    initiallyVisible = false,
+                    visible = true,
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 2 }
+                    ),
+                    exit = slideOutVertically()
+                ) {
+                     StockDetailFragment(
+                         fnName = it.arguments!!.getString("fnName")!!,
+                         close = it.arguments!!.getInt("close"),
+                         per = it.arguments!!.getFloat("per"),
+                         onClose = {
+                             navController.popBackStack()
+                         }
+                     )
+                }
+            }
+
+//                        composable(
+//                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}/{balance}",
+//                arguments = listOf(
+//                    navArgument("acName") { type = NavType.StringType },
+//                    navArgument("cpName") { type = NavType.StringType },
+//                    navArgument("acNo") { type = NavType.StringType },
+//                    navArgument("balance") { type = NavType.IntType }
+//
+//                )
+//            ) {
+//                AccountDetailFragment(
+//                    acName = it.arguments!!.getString("acName"),
+//                    cpName = it.arguments!!.getString("cpName"),
+//                    acNo = it.arguments!!.getString("acNo"),
+//                    balance = it.arguments!!.getInt("balance"),
+//                )
+//            }
         }
     }
 }
