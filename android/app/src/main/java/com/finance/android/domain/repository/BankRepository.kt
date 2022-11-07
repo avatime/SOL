@@ -23,4 +23,5 @@ interface BankRepository {
     suspend fun getAllMainAccount(): AccountRegisteredResponseDto
     suspend fun getAllStockCp() : MutableList<BankInfoResponseDto>
     suspend fun getRecentMyAccount() : MutableList<RecentMyTradeResponseDto>
+    suspend fun getAccountBalance(acNo: String): Int
 }
