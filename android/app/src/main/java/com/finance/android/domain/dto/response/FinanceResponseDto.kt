@@ -10,6 +10,8 @@ data class FinanceResponseDto (
     val fnLogo: String,
     @SerializedName("fn_date") // 오늘 날짜
     val fnDate: Date,
+    @SerializedName("close")
     val close: Int, // 가격
+    @SerializedName("per")
     val per: Double // 등락율
 )
