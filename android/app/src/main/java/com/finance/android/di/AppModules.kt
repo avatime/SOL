@@ -52,10 +52,10 @@ class AppModules {
         dailyService: DailyService
     ): DailyRepository = DailyRepositoryImpl(dailyService)
 
-//    @Provides
-//    fun provideGroupAccountRepository(
-//        groupAccountService: GroupAccountService
-//    ): GroupAccountRepository = GroupAccountRepositoryImpl(GroupAccountService)
+    @Provides
+    fun provideGroupAccountRepository(
+        groupAccountService: GroupAccountService
+    ): GroupAccountRepository = GroupAccountRepositoryImpl(groupAccountService)
 
     @Provides
     fun provideBaseRepository(baseService: BaseService): BaseRepository = BaseRepositoryImpl(baseService)
