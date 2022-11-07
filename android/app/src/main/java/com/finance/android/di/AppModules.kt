@@ -1,5 +1,6 @@
 package com.finance.android.di
 
+import androidx.compose.ui.input.key.Key.Companion.G
 import com.finance.android.domain.DummyRepositoryImpl
 import com.finance.android.domain.RetrofitClient
 import com.finance.android.domain.repository.*
@@ -52,6 +53,11 @@ class AppModules {
     ): DailyRepository = DailyRepositoryImpl(dailyService)
 
     @Provides
+    fun provideGroupAccountRepository(
+        groupAccountService: GroupAccountService
+    ): GroupAccountRepository = GroupAccountRepositoryImpl(groupAccountService)
+
+    @Provides
     fun provideBaseRepository(baseService: BaseService): BaseRepository = BaseRepositoryImpl(baseService)
 
     @Provides
@@ -96,4 +102,9 @@ class AppModules {
     fun provideDailyService(
         retrofit: Retrofit
     ) : DailyService = retrofit.create(DailyService::class.java)
+
+    @Provides
+    fun provideGroupAccountService(
+        retrofit: Retrofit
+    ) : GroupAccountService = retrofit.create(GroupAccountService::class.java)
 }
