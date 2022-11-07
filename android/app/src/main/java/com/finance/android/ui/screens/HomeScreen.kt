@@ -142,7 +142,7 @@ cardData: MutableList<CardInfoResponseDto>) {
                 })
         }
         Spacer(modifier = Modifier.height(dimensionResource(R.dimen.padding_medium)))
-        Divider()
+        Divider(modifier = Modifier.padding(bottom = dimensionResource(R.dimen.padding_medium)))
         cardData!!.forEach {
             CardListItem_Arrow(
                 cardName = it.cardName,

@@ -1,4 +1,4 @@
-package com.finance.android.domain.service
+    package com.finance.android.domain.service
 
 import com.finance.android.domain.dto.request.StockAccountNumberDto
 import com.finance.android.domain.dto.response.BankAccountResponseDto
@@ -22,4 +22,7 @@ interface StockService {
 
     @GET("${Const.DATA_PATH}/finance/{fn_name}")
     suspend fun getFinanceDetailList(@Path("fn_name")fnName: String) : Array<FinanceDetailResponseDto>
+
+    @GET("${Const.API_PATH}/finance/asset")
+    suspend fun getMyFinanceList(): MutableList<BankAccountResponseDto>
 }

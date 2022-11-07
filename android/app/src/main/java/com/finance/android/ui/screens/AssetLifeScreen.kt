@@ -85,6 +85,9 @@ private fun AssetLifeContainer(
                 isName = it.isName
             )
         }
+        if(isList.size == 0) {
+            Text(text = "등록된 자산이 없어요.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        }
     }
 }
 
