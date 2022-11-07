@@ -32,7 +32,6 @@ import com.finance.android.ui.components.TextInput
 import com.finance.android.ui.screens.login.InputUserInfoStep
 import com.finance.android.ui.theme.Typography
 import com.finance.android.utils.ext.withBottomButton
-import com.finance.android.viewmodels.GroupViewModel
 import com.finance.android.viewmodels.MyPageViewModel
 
 @Preview
