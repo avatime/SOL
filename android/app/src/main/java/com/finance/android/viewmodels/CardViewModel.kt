@@ -47,12 +47,13 @@ class CardViewModel @Inject constructor(
             }
     }
 
-    // 카드 청구서 조회
+    // 카드 청구서, 혜택 조회
 
     val cardBill = mutableStateOf<Response<CardBillResponseDto>>(Response.Loading)
+    val cardBenefit = mutableStateOf<Response<MutableList<CardBenefitInfoResponseDto>>>(Response.Loading)
 
-    fun getLoadCardBill(): Response<Unit> {
-        val arr = arrayOf(cardBill)
+    fun getLoadCardBillandBenefit(): Response<Unit> {
+        val arr = arrayOf(cardBill, cardBenefit)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -81,5 +82,18 @@ class CardViewModel @Inject constructor(
         }
     }
 
+    fun loadCardBenefit(
+        cdNo: String
+    ) {
+        viewModelScope.launch {
+            this@CardViewModel.run {
+                cardRepository.getCardBenefit(
+                    cdNo = cdNo
+                )
+            }.collect {
+                cardBenefit.value = it
+            }
+        }
+    }
 
 }
