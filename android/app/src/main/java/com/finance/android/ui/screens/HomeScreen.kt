@@ -39,7 +39,7 @@ import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
 import com.finance.android.services.WalkService
 import com.finance.android.ui.components.*
-import com.finance.android.ui.theme.Disabled
+import com.finance.android.ui.theme.LightMainColor
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.HomeViewModel
@@ -430,7 +430,7 @@ private fun PedometerOnStateButton(
             ) {
                 CircularProgressIndicator(
                     progress = 1f,
-                    color = Disabled
+                    color = LightMainColor
                 )
                 CircularProgressIndicator(
                     progress = it.toFloat() / 5000,

@@ -106,6 +106,7 @@ class WalkService : Service(), SensorEventListener {
 
     override fun onSensorChanged(p0: SensorEvent?) {
         Log.i("TEST", "WalkService - onSensorChanged ${p0?.values?.get(0)?.toInt() ?: -1}")
+        steps = p0?.values?.get(0)?.toInt() ?: -1
         if (p0 == null) {
             steps = -1
         } else {

@@ -1,16 +1,18 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
+import com.finance.android.datastore.WalkStore
 import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.DailyRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 import java.time.LocalDateTime
 import javax.inject.Inject
 
@@ -19,8 +21,9 @@ class WalkViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     private val dailyRepository: DailyRepository,
-) : BaseViewModel(application, baseRepository) {
+) : BaseViewModel(application, baseRepository), SensorEventListener {
     val walkingList = mutableStateOf<Response<MutableList<DailyWalkingResponseDto>>>(Response.Loading)
+    val walkCount = mutableStateOf<Int?>(null)
 
     fun launchAttendance() {
         viewModelScope.launch {
@@ -50,5 +53,20 @@ class WalkViewModel @Inject constructor(
 //
 //                }
             }
+    }
+
+    private suspend fun loadWalkCount() {
+        WalkStore(getApplication()).getCount().collect {
+            walkCount.value = it
+        }
+    }
+
+    override fun onSensorChanged(p0: SensorEvent?) {
+        viewModelScope.launch {
+            loadWalkCount()
+        }
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
     }
 }
