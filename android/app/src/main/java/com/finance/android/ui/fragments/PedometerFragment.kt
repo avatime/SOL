@@ -13,10 +13,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,7 +29,10 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.finance.android.R
+import com.finance.android.datastore.WalkStore
+import com.finance.android.services.WalkService
 import com.finance.android.ui.components.*
+import com.finance.android.ui.screens.WalkScreen
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.ext.withBottomButton
 import com.google.accompanist.permissions.*
@@ -48,7 +48,7 @@ fun PedometerFragment(
         CustomDialog(
             dialogType = DialogType.WARNING,
             dialogActionType = DialogActionType.TWO_BUTTON,
-            title = "권한을 허용해주세요.",
+            title = "신체활동 권한을 허용해주세요",
             positiveText = "허용하기",
             onPositive = {
                 val i = Intent(ACTION_LOCATION_SOURCE_SETTINGS).apply {
@@ -67,25 +67,6 @@ fun PedometerFragment(
                 showDialog.value = false
             }
         )
-    }
-
-    if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
-        val parState =
-            rememberPermissionState(permission = Manifest.permission.ACTIVITY_RECOGNITION)
-
-        if (!parState.status.isGranted) {
-            NoSensorScreen(
-                onClose = onClose,
-                onPositive = {
-                    if (parState.status is PermissionStatus.Denied) {
-                        showDialog.value = true
-                    } else {
-                        parState.launchPermissionRequest()
-                    }
-                }
-            )
-            return
-        }
     }
 
     if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
@@ -109,8 +90,6 @@ fun PedometerFragment(
             }
         }
 
-
-
         if (!notiState.value) {
             NoNotificationScreen(
                 onClose = onClose,
@@ -129,15 +108,64 @@ fun PedometerFragment(
             return
         }
     }
+
+    val activeWalkCounter = remember { mutableStateOf<Boolean?>(null) }
+    LaunchedEffect(Unit) {
+        WalkStore(context).isActive().collect {
+            activeWalkCounter.value = it
+        }
+    }
+
+    if (activeWalkCounter.value == null) {
+        AnimatedLoading()
+        return
+    }
+
+    if (activeWalkCounter.value == false) {
+        if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
+            val parState =
+                rememberPermissionState(permission = Manifest.permission.ACTIVITY_RECOGNITION)
+
+            IntroScreen(
+                onClose = onClose,
+                onPositive = {
+                    if (!parState.status.isGranted) {
+                        if (parState.status is PermissionStatus.Denied) {
+                            showDialog.value = true
+                        } else {
+                            parState.launchPermissionRequest()
+                        }
+                    } else {
+                        activeWalkCounter.value = true
+                    }
+                }
+            )
+        } else {
+            IntroScreen(
+                onClose = onClose,
+                onPositive = {
+                    activeWalkCounter.value = true
+                }
+            )
+        }
+        return
+    }
+
+    WalkScreen(onClose = onClose)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
-private fun NoSensorScreen(
+private fun IntroScreen(
     onClose: () -> Unit = {},
     onPositive: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(Unit) {
+        context.stopService(Intent(context, WalkService::class.java))
+    }
+
     Scaffold(
         topBar = {
             BackHeaderBar(
