@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.R
+import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.components.TextInput
@@ -38,17 +39,16 @@ import com.finance.android.ui.theme.Typography
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 import com.finance.android.viewmodels.MyPageViewModel
+import androidx.compose.material.Scaffold
+import com.finance.android.ui.fragments.GroupAccountFragment
 
 @Composable
 fun GroupAccountMakeScreen(
     navController: NavController,
-    groupAccountViewModel: GroupAccountViewModel
-
+    groupAccountViewModel: GroupAccountViewModel,
+    innerNavController: NavController
 ){
-
     val pageId = remember { mutableStateOf(0) }
-
-
     if(pageId.value==1){
         InputGroupName(groupAccountViewModel = groupAccountViewModel)
     }
@@ -57,10 +57,11 @@ fun GroupAccountMakeScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
-            .background(color = MaterialTheme.colorScheme.onBackground),
+            .background(color = MaterialTheme.colorScheme.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        BackHeaderBar(text = "",modifier = Modifier)
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_large)))
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_large)))
         Text(text = "모두의 통장", style = Typography.headlineLarge)
@@ -76,14 +77,14 @@ fun GroupAccountMakeScreen(
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
         Spacer(modifier = Modifier.weight(1f))
         TextButton(
-            onClick = {pageId.value = 1},
+            onClick = { pageId.value = 1 },
             modifier = Modifier
                 .withBottomButton(),
 
             text = "30초만에 시작하기",
             buttonType = ButtonType.ROUNDED,
-
         )
+
     }
 }
 
