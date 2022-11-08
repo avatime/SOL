@@ -180,7 +180,7 @@ fun Screen(
                 .padding(end = dimensionResource(id = R.dimen.padding_medium))
                 .padding(bottom = dimensionResource(id = R.dimen.padding_medium))
                 .height(100.dp)
-                .clickable { navController.navigate(Const.Routes.ATTENDANCE) }
+                .clickable { navController.navigate(Const.Routes.POINT) }
                 .background(
                     MaterialTheme.colorScheme.primary,
                     RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2),
