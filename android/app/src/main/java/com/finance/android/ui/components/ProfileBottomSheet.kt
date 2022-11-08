@@ -32,7 +32,6 @@ fun MyGrid(content: MutableList<DailyProfileResponseDto>, columnSize: Int, onCli
     BoxWithConstraints {
         val maxWidth = this.maxWidth
         Column(
-
         ) {
             repeat(rowsCount) { rowIndex ->
                 val rangeStart = rowIndex * columnSize
@@ -51,8 +50,8 @@ fun MyGrid(content: MutableList<DailyProfileResponseDto>, columnSize: Int, onCli
 @Composable
 fun RowOfGrid(rowList: List<DailyProfileResponseDto>, columnWidth: Dp, onClickImage: (profileId : Int) -> Unit){
     Row (
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.padding(25.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        modifier = Modifier.padding(bottom = 25.dp, top = 10.dp),
     ) {
         repeat(rowList.size) { index ->
             val item = rowList[index]
