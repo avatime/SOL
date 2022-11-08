@@ -2,7 +2,11 @@ package com.finance.android.ui.screens
 
 import android.Manifest
 import android.app.NotificationManager
+import android.app.Service
 import android.content.Context
+import android.content.Intent
+import android.hardware.Sensor
+import android.hardware.SensorManager
 import android.os.Build
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -11,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -24,13 +29,16 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
+import com.finance.android.services.WalkService
 import com.finance.android.ui.components.*
+import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.HomeViewModel
@@ -68,7 +76,10 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            TopBar(navController = navController)
+            TopBar(
+                navController = navController,
+                homeViewModel = homeViewModel
+            )
         },
         containerColor = MaterialTheme.colorScheme.background
     ) {
@@ -283,7 +294,8 @@ private fun HomeCardContainer2(modifier: Modifier, navController: NavController)
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun TopBar(
-    navController: NavController
+    navController: NavController,
+    homeViewModel: HomeViewModel
 ) {
     Row(
         modifier = Modifier
@@ -320,7 +332,8 @@ private fun TopBar(
         }
 
         PedometerOnStateButton(
-            onClick = onClick
+            onClick = onClick,
+            homeViewModel = homeViewModel
         )
     }
 }
@@ -357,8 +370,45 @@ private fun PedometerOffStateButton(
 @Composable
 private fun PedometerOnStateButton(
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {}
+    onClick: () -> Unit = {},
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
+    val context = LocalContext.current
+    val lifecycleOwner = rememberUpdatedState(LocalLifecycleOwner.current)
+
+    LaunchedEffect(Unit) {
+        val serviceIntent = Intent(context, WalkService::class.java)
+        ContextCompat.startForegroundService(context, serviceIntent)
+    }
+
+    DisposableEffect(lifecycleOwner.value) {
+        val lifecycle = lifecycleOwner.value.lifecycle
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_RESUME -> {
+                    val sensorManager =
+                        context.getSystemService(Service.SENSOR_SERVICE) as SensorManager
+                    sensorManager.registerListener(
+                        homeViewModel,
+                        sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),
+                        SensorManager.SENSOR_DELAY_GAME
+                    )
+                }
+                Lifecycle.Event.ON_PAUSE -> {
+                    (context.getSystemService(Service.SENSOR_SERVICE) as SensorManager).unregisterListener(
+                        homeViewModel
+                    )
+                }
+                else -> {}
+            }
+        }
+
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
+
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(10.dp))
@@ -369,8 +419,23 @@ private fun PedometerOnStateButton(
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(
-            text = "만보기 ON 상태다!!"
-        )
+        homeViewModel.walkCount.value?.let {
+            Box(
+                modifier = Modifier.size(24.dp)
+            ) {
+                CircularProgressIndicator(
+                    progress = 1f,
+                    color = Disabled
+                )
+                CircularProgressIndicator(
+                    progress = it.toFloat() / 5000,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Text(
+                text = "$it 걸음"
+            )
+        }
     }
 }
