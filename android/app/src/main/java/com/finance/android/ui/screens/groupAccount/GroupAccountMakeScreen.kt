@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 
 import androidx.navigation.NavController
 import com.finance.android.R
+import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.components.TextInput
@@ -31,18 +32,14 @@ import com.finance.android.ui.theme.Typography
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 
-
 @Composable
 fun GroupAccountMakeScreen(
     navController: NavController,
     groupAccountViewModel: GroupAccountViewModel
 
 ) {
-
     val pageId = remember { mutableStateOf(0) }
-
-
-    if (pageId.value == 1) {
+    if(pageId.value==1){
         InputGroupName(groupAccountViewModel = groupAccountViewModel)
     }
 
@@ -50,10 +47,11 @@ fun GroupAccountMakeScreen(
         modifier = Modifier
             .fillMaxSize()
             .padding(8.dp)
-            .background(color = MaterialTheme.colorScheme.onBackground),
+            .background(color = MaterialTheme.colorScheme.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
+        BackHeaderBar(text = "",modifier = Modifier)
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_large)))
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_large)))
         Text(text = "모두의 통장", style = Typography.headlineLarge)
@@ -74,48 +72,6 @@ fun GroupAccountMakeScreen(
                 .withBottomButton(),
 
             text = "30초만에 시작하기",
-            buttonType = ButtonType.ROUNDED,
-
-            )
-    }
-}
-
-@Preview
-@Composable
-fun GroupAccountIntro(
-
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-            .background(color = MaterialTheme.colorScheme.background),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_large)))
-        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_large)))
-        Text(text = "모두의 통장", style = Typography.headlineLarge)
-        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
-        Text(text = "가족, 친구, 연인과 함께", fontSize = 20.sp)
-        Text(text = "돈 같이 모으고 함께 써요", fontSize = 20.sp)
-        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_small)))
-
-        Image(
-            painter = painterResource(id = R.drawable.ic_groupintro),
-            contentDescription = "GroupAccount Intro"
-        )
-        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
-        Spacer(modifier = Modifier.weight(1f))
-        TextButton(
-            onClick = { },
-            modifier = Modifier
-                .withBottomButton(),
-
-
-//            enabled = !isAttend,
-            text = "30초만에 시작하기",
-//            text = if(!isAttend) "절대 누르지 마시오" else "출석완료",
             buttonType = ButtonType.ROUNDED,
 
             )
