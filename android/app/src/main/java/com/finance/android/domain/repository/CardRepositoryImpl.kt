@@ -1,6 +1,7 @@
 package com.finance.android.domain.repository
 
 import com.finance.android.domain.dto.request.CardNumberDto
+import com.finance.android.domain.dto.response.CardBenefitInfoResponseDto
 import com.finance.android.domain.dto.response.CardBillResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
 import com.finance.android.domain.dto.response.CardResponseDto
@@ -26,5 +27,9 @@ class CardRepositoryImpl @Inject constructor(
 
     override suspend fun getCardBill(cdNo: String, year: Int, month: Int): CardBillResponseDto {
         return cardService.getCardBill(cdNo, year, month);
+    }
+
+    override suspend fun getCardBenefit(cdNo: String): MutableList<CardBenefitInfoResponseDto> {
+        return cardService.getCardBenefit(cdNo)
     }
 }

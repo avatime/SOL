@@ -23,7 +23,6 @@ object Const {
     const val GROUP_ACCOUNT_MAKE_SCREEN = "group_account_make_screen"
     const val GROUP_ACCOUNT_DETAIL_SCREEN = "group_account_detail_screen"
 
-
     object Routes {
         const val LOGIN = "route_login"
         const val SIGNUP = "route_signup"
@@ -34,9 +33,9 @@ object Const {
         const val ATTENDANCE = "route_attendance"
         const val ASSET = "route_asset"
         const val ACC_DETAIL = "route_accountDetail"
+        const val WALK = "route_walk"
         const val STOCK = "route_stock"
         const val PEDOMETER = "route_pedometer"
-        const val GROUPACCOUNT = "group_account"
-        const val POINT = "route_point"
+        const val CARD_DETAIL = "route_cardDetail"
     }
 }

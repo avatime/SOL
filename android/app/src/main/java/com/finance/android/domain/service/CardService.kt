@@ -1,6 +1,7 @@
 package com.finance.android.domain.service
 
 import com.finance.android.domain.dto.request.CardNumberDto
+import com.finance.android.domain.dto.response.CardBenefitInfoResponseDto
 import com.finance.android.domain.dto.response.CardBillResponseDto
 import com.finance.android.domain.dto.response.CardInfoResponseDto
 import com.finance.android.domain.dto.response.CardResponseDto
@@ -26,5 +27,8 @@ interface CardService {
         year: Int,
         month: Int
     ): CardBillResponseDto
+
+    @GET("${Const.API_PATH}/card/benefit/{cd_no}")
+    suspend fun getCardBenefit(@Path("cd_no") cdNo: String): MutableList<CardBenefitInfoResponseDto>
 
 }
