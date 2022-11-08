@@ -31,17 +31,16 @@ import com.finance.android.ui.components.TextInput
 import com.finance.android.ui.theme.Typography
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
+import com.finance.android.viewmodels.MyPageViewModel
+import androidx.compose.material.Scaffold
+import com.finance.android.ui.fragments.GroupAccountFragment
 
 @Composable
 fun GroupAccountMakeScreen(
-    navController: NavController,
-    groupAccountViewModel: GroupAccountViewModel
-
-) {
+    groupAccountViewModel: GroupAccountViewModel,
+    innerNavController: NavController
+){
     val pageId = remember { mutableStateOf(0) }
-    if(pageId.value==1){
-        InputGroupName(groupAccountViewModel = groupAccountViewModel)
-    }
 
     Column(
         modifier = Modifier
@@ -73,53 +72,8 @@ fun GroupAccountMakeScreen(
 
             text = "30초만에 시작하기",
             buttonType = ButtonType.ROUNDED,
-
-            )
-    }
-}
-
-@Composable
-fun InputGroupName(
-    groupAccountViewModel : GroupAccountViewModel
-) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-
-            .background(Color.Red)
-
-            .background(color = MaterialTheme.colorScheme.surface),
-
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
-    ) {
-        Text(
-            text = "모두의 통장 이름을",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-        )
-        Text(
-            text = "입력해주세용",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
         )
     }
-
-    Spacer(modifier = Modifier.size(0.dp, 70.dp))
-    TextInput(
-        value = groupAccountViewModel.name.value,
-        onValueChange = {
-            if (it.length <= 20) {
-                groupAccountViewModel.name.value = it
-            }
-        },
-        modifier = Modifier
-            .padding(dimensionResource(id = R.dimen.padding_medium))
-            .fillMaxWidth()
-            .padding(0.dp)
-    )
-
 }
 
 
