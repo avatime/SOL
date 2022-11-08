@@ -22,3 +22,5 @@ val Warning = Color(0xFFFF9800)
 val ErrorLight = Color(0xFFEF5350)
 
 val ErrorDark = Color(0xFFC62828)
+
+val LightMainColor = Color(0x330046FF)
