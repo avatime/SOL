@@ -218,7 +218,7 @@ private fun MenuList(navController: NavController) {
         )
 
         MoreMenuItem(
-            onClickMenu = { navController.navigate(Const.Routes.WALK) },
+            onClickMenu = { navController.navigate(Const.Routes.PEDOMETER) },
             painter = painterResource(R.drawable.ic_running_shoe),
             text = "만보기"
         )
