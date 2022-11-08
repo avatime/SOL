@@ -7,7 +7,7 @@ import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.annotation.RequiresPermission
-import com.finance.android.domain.dto.response.Contact
+import com.finance.android.domain.dto.response.ContactDto
 
 /**
  * @author aminography
@@ -30,7 +30,7 @@ fun Context.isContactExists(
         return (it?.moveToFirst() == true)
     }
 }
-val result: MutableList<Contact> = mutableListOf()
+val result: MutableList<ContactDto> = mutableListOf()
 
 @SuppressLint("Range")
 @RequiresPermission(Manifest.permission.READ_CONTACTS)
@@ -40,7 +40,7 @@ fun Context.retrieveAllContacts(
     retrieveAvatar: Boolean = true,
     limit: Int = -1,
     offset: Int = -1
-): List<Contact> {
+): List<ContactDto> {
 
     contentResolver.query(
         ContactsContract.Contacts.CONTENT_URI,
@@ -60,7 +60,7 @@ fun Context.retrieveAllContacts(
                 } else mutableListOf()
 
                 val avatar = if (retrieveAvatar) retrieveAvatar(contactId) else null
-                result.add(Contact(contactId, name, phoneNumber, avatar.toString()))
+                result.add(ContactDto(contactId, name, phoneNumber, avatar.toString()))
             } while (it.moveToNext())
         }
     }
