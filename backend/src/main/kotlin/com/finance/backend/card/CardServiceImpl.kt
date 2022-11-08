@@ -73,7 +73,7 @@ class CardServiceImpl(
 
                 val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(card.cdPdCode)
                 for (cardBenefit in cardBenefitList){
-                    cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum))
+                    cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
                 }
                 cardInfoList.add(CardRes(cardInfoRes, cardBenefitInfoList))
             }
