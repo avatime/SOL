@@ -3,9 +3,12 @@ package com.finance.android.ui.components
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,17 +28,23 @@ import java.time.format.DateTimeFormatter
 @Preview
 @Composable
 fun showHistoryList(
-//    onClick : (year : Int, month : Int) -> Unit
-    onClick : () -> Unit = {}
+    onClick : (year : Int, month : Int, type : String) -> Unit = { year: Int, month: Int, type : String -> {}},
+    type : String = "계좌",
+//    onClick : () -> Unit = {}
 ) {
-    val currentMonth = remember { YearMonth.now() }
+    var currentMonth = remember { mutableStateOf(YearMonth.now()) }
+    var currentMenu = remember { mutableStateOf("모두") }
+    var isDropDownMenuExpanded = remember { mutableStateOf(false) }
+    val menuList : List<String> = when(type) {
+        "포인트" -> listOf("모두", "적립", "출금")
+        else -> listOf("모두", "입금", "출금")
+    }
 
     Column(
         modifier = Modifier
-            .verticalScroll(rememberScrollState())
             .height(700.dp)
             .background(
-                color = MaterialTheme.colorScheme.background,
+                color = MaterialTheme.colorScheme.surface,
                 RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2)
             )
     ) {
@@ -44,29 +53,64 @@ fun showHistoryList(
             verticalArrangement = Arrangement.Center
         ){
             Row(
-                modifier = Modifier.padding(10.dp, top = 20.dp, bottom = 20.dp),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
-            ){
-                Image(
-                    painter = painterResource(id = R.drawable.ic_back),
-                    modifier = Modifier.clickable {
-                        currentMonth.minusMonths(1)
-                        onClick()
-                    },
-                    contentDescription = "",
-                )
-                Text(text = currentMonth.year.toString() + "년 " + currentMonth.monthValue.toString() + "월", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                Image(
-                    painter = painterResource(id = R.drawable.ic_next),
-                    contentDescription = "",
-                    modifier = Modifier.clickable {
-                        currentMonth.plusMonths(1)
-                        onClick()
+            ) {
+                Row(
+                    modifier = Modifier.padding(10.dp, top = 20.dp, bottom = 20.dp),
+                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                ){
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_back),
+                        modifier = Modifier.padding(top = 4.dp).clickable {
+                            currentMonth.value = currentMonth.value.minusMonths(1)
+                            onClick(currentMonth.value.year, currentMonth.value.monthValue, currentMenu.value)
+                        },
+                        contentDescription = "",
+                    )
+                    Text(text = currentMonth.value.year.toString() + "년 " + currentMonth.value.monthValue.toString() + "월", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_next),
+                        contentDescription = "",
+                        modifier = Modifier.padding(top = 4.dp).clickable {
+                            currentMonth.value = currentMonth.value.plusMonths(1)
+                            onClick(currentMonth.value.year, currentMonth.value.monthValue, currentMenu.value)
+                        }
+                    )
+                }
+                Column(
+                    modifier = Modifier
+                        .clickable { isDropDownMenuExpanded.value = true }
+                        .padding(10.dp)
+                ) {
+                    Text(text = currentMenu.value + " ▾")
+                    DropdownMenu(
+                        modifier = Modifier.wrapContentSize()
+                            .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            RoundedCornerShape(7.dp)
+                        ),
+                        expanded = isDropDownMenuExpanded.value,
+                        onDismissRequest = { isDropDownMenuExpanded.value = false }
+                    ) {
+                        repeat(3) {
+                            if(currentMenu.value != menuList[it]) {
+                                DropdownMenuItem(onClick = {
+                                    currentMenu.value = menuList[it]
+                                    isDropDownMenuExpanded.value = false
+                                }) {
+                                    Text(text = menuList[it])
+                                }
+                            }
+                        }
                     }
-                )
+                }
             }
-            Column() {
+            Column(
+                modifier = Modifier
+                .verticalScroll(rememberScrollState())
+            ) {
                 repeat(30) {
                     HistoryItem()
                 }
@@ -85,6 +129,7 @@ fun HistoryItem(
     type : String = "출금"
     ) {
     val dec = DecimalFormat("#,###")
+
     Row(
         modifier = Modifier
             .padding(10.dp)
@@ -100,7 +145,7 @@ fun HistoryItem(
                 DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString())
             }
             Column(
-
+                verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 BasicHistoryText(text = title)
                 GrayHistoryText(date.format(DateTimeFormatter.ofPattern("HH:mm")).toString())
@@ -134,7 +179,7 @@ fun DateText(
 fun GrayHistoryText(
     text : String = "Gray"
 ) {
-    Text( text = text, color = Color.Gray, fontSize = 10.sp)
+    Text( text = text, color = Color.Gray, fontSize = 12.sp)
 }
 
 @Preview

@@ -125,22 +125,22 @@ fun FinanceApp() {
                     )
                 }
             }
-//            composable(Const.Routes.WALK) {
-//                AnimatedVisibility(
-//                    initiallyVisible = false,
-//                    visible = true,
-//                    enter = slideInVertically(
-//                        initialOffsetY = { it / 2 }
-//                    ),
-//                    exit = slideOutVertically()
-//                ) {
-//                    GroupFragment(
-//                        onClose = {
-//                            navController.popBackStack()
-//                        }
-//                    )
-//                }
-//            }
+            composable(Const.Routes.POINT) {
+                AnimatedVisibility(
+                    initiallyVisible = false,
+                    visible = true,
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 2 }
+                    ),
+                    exit = slideOutVertically()
+                ) {
+                    PointFragment(
+                        onClose = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
             composable(
                 route = "${Const.Routes.STOCK}/{fnName}/{close}/{per}",
                 arguments = listOf(
