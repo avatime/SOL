@@ -36,6 +36,8 @@ object Const {
         const val WALK = "route_walk"
         const val STOCK = "route_stock"
         const val PEDOMETER = "route_pedometer"
+        const val GROUPACCOUNT = "route_groupAccount"
+        const val POINT = "route_point"
         const val CARD_DETAIL = "route_cardDetail"
     }
 }
