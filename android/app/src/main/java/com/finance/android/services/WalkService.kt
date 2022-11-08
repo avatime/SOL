@@ -27,8 +27,8 @@ class WalkService : Service(), SensorEventListener {
 
     private lateinit var notificationManager: NotificationManager
     private lateinit var sensorManager: SensorManager
-    private var updated = false
     private var steps = -1
+    private val job = SupervisorJob()
 
     override fun onBind(p0: Intent?): IBinder? {
         return null
@@ -79,9 +79,9 @@ class WalkService : Service(), SensorEventListener {
         }
     }
 
-    private fun getNotification(): Notification? {
+    private fun getNotification(): Notification {
         val context = this
-        CoroutineScope(Dispatchers.IO + SupervisorJob()).launch {
+        CoroutineScope(Dispatchers.IO + job).launch {
             WalkStore(context).setActive(steps != -1)
         }
 
@@ -106,8 +106,18 @@ class WalkService : Service(), SensorEventListener {
 
     override fun onSensorChanged(p0: SensorEvent?) {
         Log.i("TEST", "WalkService - onSensorChanged ${p0?.values?.get(0)?.toInt() ?: -1}")
-        steps = p0?.values?.get(0)?.toInt() ?: -1
-        updated = true
+        if (p0 == null) {
+            steps = -1
+        } else {
+            val context = this
+            CoroutineScope(Dispatchers.IO + job).launch {
+                WalkStore(context).getCount().collect {
+                    steps = it + 1
+                    WalkStore(context).setCount(steps)
+                }
+            }
+        }
+
         notificationManager.notify(NOTIFICATION_ID, getNotification())
     }
 
