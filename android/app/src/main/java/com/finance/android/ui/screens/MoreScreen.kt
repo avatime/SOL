@@ -3,6 +3,7 @@ package com.finance.android.ui.screens
 import android.util.DisplayMetrics
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
@@ -11,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
@@ -94,7 +96,7 @@ fun Screen(
     if(showProfileList) {
         val outMetrics = DisplayMetrics()
 
-        BoxWithConstraints {
+        BoxWithConstraints(modifier = Modifier.background(color = Color.Blue)) {
             BottomSheetDialog(
                 onDismissRequest = {
                     showProfileList = false
@@ -114,14 +116,23 @@ fun Screen(
                             .fillMaxWidth()
                             .padding(16.dp)
                             .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.spacedBy(16.dp)
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        Text(text = "프로필 이미지", style = MaterialTheme.typography.headlineMedium)
-                        showProfileList(profileList, onClickImage = {
-                            onClick(it)
-                            println("프로필 이미지 변경 $it")
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                        ) {
+                            Text(text = "프로필 이미지", style = MaterialTheme.typography.headlineMedium)
+                        }
+                        Column {
+                            showProfileList(profileList, onClickImage = {
+                                onClick(it)
+                                println("프로필 이미지 변경 $it")
 //                            showSnackbar = true
-                        })
+                            })
+                        }
                     }
                 }
             }
@@ -158,7 +169,7 @@ fun Screen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 10.dp)
             ) {
-                Text(text = userInfo.username, fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 18.sp))
+                Text(text = userInfo.username, fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 20.sp))
             }
         }
 
@@ -201,20 +212,21 @@ private fun MenuList(navController: NavController) {
 
         MoreMenuItem(
             onClickMenu = { navController.navigate(Const.Routes.ATTENDANCE) },
-            painter = painterResource(R.drawable.ssal),
+            painter = painterResource(R.drawable.ic_calendar),
+            color = Color(0xffe6def5),
             text = "출석체크"
         )
 
         MoreMenuItem(
             onClickMenu = { navController.navigate(Const.Routes.WALK) },
-            painter = painterResource(R.drawable.ssal),
+            painter = painterResource(R.drawable.ic_running_shoe),
             text = "만보기"
         )
 
         MoreMenuItem(
-
             onClickMenu = { navController.navigate(Const.Routes.GROUPACCOUNT) },
-            painter = painterResource(R.drawable.ssal),
+            painter = painterResource(R.drawable.ic_moim),
+            color = Color(0xffc0f0d2),
             text = "모두의 통장"
         )
 
@@ -226,6 +238,7 @@ private fun MenuList(navController: NavController) {
 fun MoreMenuItem(
     onClickMenu: () -> Unit = {},
     painter: Painter,
+    color: Color = Color(0xffbfd0ff),
     text : String
 ){
     Column(
@@ -238,10 +251,15 @@ fun MoreMenuItem(
                 .clickable { onClickMenu() },
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Image(
-                painter = painter,
-                contentDescription = null, // 필수 param
-            )
+            Box(
+                modifier = Modifier.size(50.dp).clip(CircleShape).background(color),
+                contentAlignment = Alignment.Center
+            ) {
+                Image(
+                    painter = painter,
+                    contentDescription = null, // 필수 param
+                )
+            }
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_btn_small_text)))
             Text(text)
         }
