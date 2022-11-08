@@ -1,6 +1,7 @@
 package com.finance.backend.finance
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.GeneratedValue
 import javax.persistence.GenerationType
@@ -10,9 +11,7 @@ class Finance(
         id: Long,
         fnName: String,
         fnCode: Int,
-        fnClos: Int,
-        fnPer: Double
-
+        fnDate : LocalDateTime
 ) {
 
     @Id
@@ -27,8 +26,17 @@ class Finance(
     val fnCode: Int = fnCode
 
     @JsonProperty("fn_close")
-    val fnClose: Int = fnClos
+    val fnDate : LocalDateTime = fnDate
 
-    @JsonProperty("fn_per")
-    val fnPer: Double = fnPer
+    val open : Int = 0
+
+    val close : Int = 0
+
+    val high : Int = 0
+
+    val low : Int = 0
+    
+    val volume : Int = 0
+
+    val per : Double = 0.0
 }
