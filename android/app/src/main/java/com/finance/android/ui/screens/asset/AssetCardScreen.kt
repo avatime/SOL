@@ -1,5 +1,6 @@
 package com.finance.android.ui.screens
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -26,12 +27,13 @@ import com.finance.android.R
 import com.finance.android.domain.dto.response.CardResponseDto
 import com.finance.android.ui.components.CardListItem
 import com.finance.android.ui.components.CardListItem_Arrow
+import com.finance.android.utils.Const
 import com.finance.android.viewmodels.CardViewModel
 import com.finance.android.utils.Response
 
 @Composable
 fun AssetCardScreen(
-    navController : NavController,
+    navController: NavController,
     cardViewModel: CardViewModel = hiltViewModel()
 ) {
     fun launch() {
@@ -48,18 +50,19 @@ fun AssetCardScreen(
             is Response.Success -> {
                 val cardData = (cardViewModel.cardList.value as Response.Success).data
                 cardData!!.forEach {
-                    AssetCardContainer(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                        .background(
-                            color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(10)
-                        ),
+                    AssetCardContainer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(dimensionResource(R.dimen.padding_medium))
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = RoundedCornerShape(10)
+                            ),
                         navController = navController,
                         cardData = it
                     )
                 }
-                if(cardData.size == 0) {
+                if (cardData.size == 0) {
                     Text(text = "등록된 자산이 없어요.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
                 }
             }
@@ -75,27 +78,35 @@ fun AssetCardContainer(
     navController: NavController,
     cardData: CardResponseDto
 ) {
-    Column(modifier = modifier
-        .padding(dimensionResource(R.dimen.padding_medium)))
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.padding_medium))
+    )
     {
-            CardListItem_Arrow(
-                cardName = cardData.cardInfoRes.cardName,
-                cardImgPath = cardData.cardInfoRes.cardImgPath,
-                onClickItem = {}
-            )
-            Text(text = "지금 받을 수 있는 혜택",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier
-                    .padding(top = dimensionResource(R.dimen.padding_small),
-                        bottom = dimensionResource(R.dimen.padding_small))
-            )
-            cardData.cardBenefitInfoList!!.forEach { benefit ->
-                benefitListItem(
-                    benefitSummary = benefit.cardBenefitSummary,
-                    companyLogoPath = benefit.cardBenefitImage
-                )
+        val pathTmp = Uri.encode(cardData.cardInfoRes.cardImgPath)
+        CardListItem_Arrow(
+            cardName = cardData.cardInfoRes.cardName,
+            cardImgPath = cardData.cardInfoRes.cardImgPath,
+            onClickItem = {
+                navController.navigate("${Const.Routes.CARD_DETAIL}/${cardData.cardInfoRes.cardNumber}/${pathTmp}/${cardData.cardInfoRes.cardName}")
             }
+        )
+        Text(
+            text = "지금 받을 수 있는 혜택",
+            fontSize = 24.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier
+                .padding(
+                    top = dimensionResource(R.dimen.padding_small),
+                    bottom = dimensionResource(R.dimen.padding_small)
+                )
+        )
+        cardData.cardBenefitInfoList!!.forEach { benefit ->
+            benefitListItem(
+                benefitSummary = benefit.cardBenefitSummary,
+                companyLogoPath = benefit.cardBenefitImage
+            )
+        }
     }
 }
 
@@ -104,9 +115,11 @@ fun benefitListItem(
     benefitSummary: String?,
     companyLogoPath: String
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically
+    )
     {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
@@ -118,11 +131,13 @@ fun benefitListItem(
                 .size(45.dp)
                 .padding(end = dimensionResource(R.dimen.padding_medium)),
             colorFilter = ColorFilter.tint(colorResource(R.color.noActiveColor))
-            )
+        )
 
-        Text(text = "$benefitSummary",
+        Text(
+            text = "$benefitSummary",
             fontWeight = FontWeight.Bold,
             maxLines = 1,
-            overflow = TextOverflow.Ellipsis)
+            overflow = TextOverflow.Ellipsis
+        )
     }
 }

@@ -97,7 +97,7 @@ private fun AssetLifeContainer2(
     value: Int
 ) {
     val current = LocalDateTime.now()
-    val formatter = DateTimeFormatter.ofPattern("MM월")
+    val formatter = DateTimeFormatter.ofPattern("M월")
     val formatted = current.format(formatter)
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium)))

@@ -47,4 +47,53 @@ class CardViewModel @Inject constructor(
             }
     }
 
+    // 카드 청구서, 혜택 조회
+
+    val cardBill = mutableStateOf<Response<CardBillResponseDto>>(Response.Loading)
+    val cardBenefit = mutableStateOf<Response<MutableList<CardBenefitInfoResponseDto>>>(Response.Loading)
+
+    fun getLoadCardBillandBenefit(): Response<Unit> {
+        val arr = arrayOf(cardBill, cardBenefit)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun loadCardBill(
+        cdNo: String,
+        year: Int,
+        month: Int
+    ) {
+        viewModelScope.launch {
+            this@CardViewModel.run {
+                cardRepository.getCardBill(
+                    cdNo = cdNo,
+                    year = year,
+                    month = month
+                )
+            }.collect {
+                cardBill.value = it
+            }
+        }
+    }
+
+    fun loadCardBenefit(
+        cdNo: String
+    ) {
+        viewModelScope.launch {
+            this@CardViewModel.run {
+                cardRepository.getCardBenefit(
+                    cdNo = cdNo
+                )
+            }.collect {
+                cardBenefit.value = it
+            }
+        }
+    }
+
 }

@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.finance.android.ui.fragments.*
 import com.finance.android.ui.screens.AttendanceFragment
+import com.finance.android.ui.screens.WalkFragment
 import com.finance.android.ui.theme.FinanceTheme
 import com.finance.android.utils.Const
 import dagger.hilt.android.HiltAndroidApp
@@ -108,6 +109,22 @@ fun FinanceApp() {
                     )
                 }
             }
+            composable(Const.Routes.WALK) {
+                AnimatedVisibility(
+                    initiallyVisible = false,
+                    visible = true,
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 2 }
+                    ),
+                    exit = slideOutVertically()
+                ) {
+                    WalkFragment(
+                        onClose = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
             composable(
                 route = "${Const.Routes.STOCK}/{fnName}/{close}/{per}",
                 arguments = listOf(
@@ -125,23 +142,6 @@ fun FinanceApp() {
                     }
                 )
             }
-            //            composable(
-//                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}/{balance}",
-//                arguments = listOf(
-//                    navArgument("acName") { type = NavType.StringType },
-//                    navArgument("cpName") { type = NavType.StringType },
-//                    navArgument("acNo") { type = NavType.StringType },
-//                    navArgument("balance") { type = NavType.IntType }
-//
-//                )
-//            ) {
-//                AccountDetailFragment(
-//                    acName = it.arguments!!.getString("acName"),
-//                    cpName = it.arguments!!.getString("cpName"),
-//                    acNo = it.arguments!!.getString("acNo"),
-//                    balance = it.arguments!!.getInt("balance"),
-//                )
-//            }
             composable(Const.Routes.PEDOMETER) {
                 AnimatedVisibility(
                     initiallyVisible = false,
@@ -157,9 +157,23 @@ fun FinanceApp() {
                     )
                 }
             }
-            composable(Const.Routes.GROUPACCOUNT) {
-                GroupAccountFragment(navController = navController)
+            composable(
+                route = "${Const.Routes.CARD_DETAIL}/{cdNo}/{cdImgPath}/{cdName}",
+                arguments = listOf(
+                    navArgument("cdNo") { type = NavType.StringType },
+                    navArgument("cdImgPath") { type = NavType.StringType },
+                    navArgument("cdName") { type = NavType.StringType },
+                )
+            ) {
+                CardDetailFragment(
+                    cdNo = it.arguments!!.getString("cdNo")!!,
+                    cdImgPath = it.arguments!!.getString("cdImgPath")!!,
+                    cdName = it.arguments!!.getString("cdName")!!,
+                    navController = navController,
+                    onClose = { navController.popBackStack() }
+                )
             }
+
         }
     }
 }
