@@ -13,7 +13,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.finance.android.ui.fragments.*
 import com.finance.android.ui.screens.AttendanceFragment
-import com.finance.android.ui.screens.WalkFragment
 import com.finance.android.ui.theme.FinanceTheme
 import com.finance.android.utils.Const
 import dagger.hilt.android.HiltAndroidApp
@@ -103,38 +102,6 @@ fun FinanceApp() {
                     exit = slideOutVertically()
                 ) {
                     AttendanceFragment(
-                        onClose = {
-                            navController.popBackStack()
-                        }
-                    )
-                }
-            }
-            composable(Const.Routes.WALK) {
-                AnimatedVisibility(
-                    initiallyVisible = false,
-                    visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
-                    exit = slideOutVertically()
-                ) {
-                    WalkFragment(
-                        onClose = {
-                            navController.popBackStack()
-                        }
-                    )
-                }
-            }
-            composable(Const.Routes.POINT) {
-                AnimatedVisibility(
-                    initiallyVisible = false,
-                    visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
-                    exit = slideOutVertically()
-                ) {
-                    PointFragment(
                         onClose = {
                             navController.popBackStack()
                         }

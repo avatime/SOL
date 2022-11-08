@@ -34,7 +34,6 @@ object Const {
         const val ATTENDANCE = "route_attendance"
         const val ASSET = "route_asset"
         const val ACC_DETAIL = "route_accountDetail"
-        const val WALK = "route_walk"
         const val STOCK = "route_stock"
         const val PEDOMETER = "route_pedometer"
         const val GROUPACCOUNT = "group_account"
