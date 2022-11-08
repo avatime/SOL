@@ -32,6 +32,7 @@ import com.finance.android.ui.components.TextInput
 import com.finance.android.ui.screens.login.InputUserInfoStep
 import com.finance.android.ui.theme.Typography
 import com.finance.android.utils.ext.withBottomButton
+import com.finance.android.viewmodels.GroupAccountViewModel
 import com.finance.android.viewmodels.MyPageViewModel
 
 @Preview
@@ -78,7 +79,7 @@ fun GroupAccountIntro(
 
 @Composable
 fun InputGroupName(
-    name : String
+    groupAccountViewModel: GroupAccountViewModel
 ){
     Column(
         modifier = Modifier
@@ -99,20 +100,19 @@ fun InputGroupName(
             fontWeight = FontWeight.Bold,
         )
     }
-    Column() {
-        TextInput(
-            value = name,
-            onValueChange = {
-                            if (it.length >= 20){
-                                val name = it
-                            }
-            },
-            modifier = Modifier
-                .padding(dimensionResource(id = R.dimen.padding_medium))
-                .fillMaxWidth()
-                .padding(0.dp)
-        )
+    Spacer(modifier = Modifier.size(0.dp, 70.dp))
+    TextInput(
+        value = groupAccountViewModel.name.value,
+        onValueChange = {
+                        if (it.length <= 20){
+                            groupAccountViewModel.name.value = it
+                        }
+        },
+        modifier = Modifier
+            .padding(dimensionResource(id = R.dimen.padding_medium))
+            .fillMaxWidth()
+            .padding(0.dp)
+    )
 
-    }
 }
 
