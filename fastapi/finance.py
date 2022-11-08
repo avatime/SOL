@@ -2,6 +2,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 from pandas_datareader import data as pdr
 import sqlalchemy
+from Connection import engine
 
 
 start = (datetime.today() - timedelta(8)).strftime('%Y-%m-%d')
@@ -31,7 +32,7 @@ def finance_create(engine):
         temp['fn_name'] = name
         temp['fn_logo'] = code_logo[name]
         temp['fn_date'] = temp.index.strftime('%Y-%m-%d')
-        temp['per'] = round(((temp.iloc[6, 3] - temp.iloc[5, 3]) / temp.iloc[6, 3]) * 100, 2)
+        temp['per'] = round(((temp.iloc[-1, 3] - temp.iloc[-2, 3]) / temp.iloc[-1, 3]) * 100, 2)
         finance = pd.concat([finance, temp], ignore_index=True)
 
     finance['id'] = finance.index + 1
@@ -49,3 +50,6 @@ def finance_create(engine):
     }
 
     finance.to_sql(name='finance', con=engine, if_exists='replace', index=False, dtype=dtypesql)
+
+
+finance_create(engine)
