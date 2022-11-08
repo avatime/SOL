@@ -1,7 +1,6 @@
 package com.finance.android.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
@@ -22,17 +21,20 @@ import com.finance.android.R
 fun UserBalanceInfo(
     title : String = "신한 주거래 S20",
     isAccount : Boolean = true,
+    type : String = "계좌",
     account: String = "신한은행 1234567890",
     balance : String = "100,000,000원",
-    buttonText : String = "이체",
     onClick: () -> Unit = {}
 ) {
+    val buttonText = when(type) {
+        "포인트" -> "출금"
+        else -> "이체"
+    }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.padding_medium))
             .height(200.dp)
-            .clickable { onClick() }
             .background(
                 MaterialTheme.colorScheme.primary,
                 RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2),
@@ -73,6 +75,6 @@ fun test () {
         title = "포인트",
         isAccount = false,
         balance = "100 포인트",
-        buttonText = "출금"
+        type = "포인트"
     )
 }
