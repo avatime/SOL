@@ -155,7 +155,7 @@ fun Day(day: CalendarDay, attendanceList : MutableList<DailyAttendanceResponseDt
         } else {
             Text(
                 text = day.date.dayOfMonth.toString(),
-                color = if (day.position == DayPosition.MonthDate) Color.Black else Color.Gray // Color.White
+                color = if (day.position == DayPosition.MonthDate) Color.Black else Color.White // Color.White
             )
         }
     }
