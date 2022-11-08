@@ -12,7 +12,7 @@ import com.finance.android.ui.screens.groupAccount.GroupAccountMainScreen
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.GroupAccountViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun GroupAccountFragment(
     navController: NavController,
@@ -25,7 +25,14 @@ fun GroupAccountFragment(
         startDestination = Const.GROUP_ACCOUNT_MAIN_SCREEN
     ) {
         composable(Const.GROUP_ACCOUNT_MAIN_SCREEN){
+
             GroupAccountMainScreen( navController = innerNavController, groupAccountViewModel = groupAccountViewModel)
+        }
+
+
+        composable(Const.GROUP_ACCOUNT_MAKE_SCREEN){
+            GroupAccountMainScreen(navController = innerNavController, groupAccountViewModel = groupAccountViewModel)
+
         }
 
         composable(Const.GROUP_ACCOUNT_DETAIL_SCREEN){
