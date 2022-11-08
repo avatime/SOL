@@ -66,8 +66,8 @@ fun AccountLikeItem(
             contentDescription = "회사 로고",
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .width(70.dp)
-                .height(70.dp)
+                .width(60.dp)
+                .height(60.dp)
                 .clip(CircleShape)
 
         )
