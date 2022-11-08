@@ -47,4 +47,39 @@ class CardViewModel @Inject constructor(
             }
     }
 
+    // 카드 청구서 조회
+
+    val cardBill = mutableStateOf<Response<CardBillResponseDto>>(Response.Loading)
+
+    fun getLoadCardBill(): Response<Unit> {
+        val arr = arrayOf(cardBill)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun loadCardBill(
+        cdNo: String,
+        year: Int,
+        month: Int
+    ) {
+        viewModelScope.launch {
+            this@CardViewModel.run {
+                cardRepository.getCardBill(
+                    cdNo = cdNo,
+                    year = year,
+                    month = month
+                )
+            }.collect {
+                cardBill.value = it
+            }
+        }
+    }
+
+
 }
