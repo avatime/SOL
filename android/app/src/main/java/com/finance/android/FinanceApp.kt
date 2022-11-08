@@ -174,6 +174,9 @@ fun FinanceApp() {
                     )
                 }
             }
+            composable(Const.Routes.GROUPACCOUNT) {
+                GroupAccountFragment(navController = navController)
+            }
         }
     }
 }
