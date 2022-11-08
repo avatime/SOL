@@ -32,25 +32,28 @@ fun UserBalanceInfo(
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.padding_medium))
             .height(200.dp)
-            .clickable { onClick }
+            .clickable { onClick() }
             .background(
                 MaterialTheme.colorScheme.primary,
                 RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2),
             ),
         verticalArrangement = Arrangement.Center
     ) {
-        Row(
-
+         Column(
+            modifier = Modifier.padding(start = 23.dp, end = 23.dp, bottom = 23.dp).fillMaxWidth().fillMaxHeight(),
+             verticalArrangement = Arrangement.SpaceEvenly
         ) {
-            Column(modifier = Modifier.padding(start = 23.dp)) {
-                Text(text = title, fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
-                if(isAccount) Text(text = account, fontSize = 10.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
-                Text(text = balance, fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
+            Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
+                Text(text = title, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+                if(isAccount) Text(text = account, fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.Normal)
             }
-            
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                Text(text = balance, fontSize = 25.sp, color = Color.White, fontWeight = FontWeight.Bold)
                 TextButton(
                     onClick = { onClick() },
                     text = buttonText,
