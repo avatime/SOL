@@ -32,5 +32,6 @@ object Const {
         const val ACC_DETAIL = "route_accountDetail"
         const val WALK = "route_walk"
         const val STOCK = "route_stock"
+        const val GROUP = "route_group"
     }
 }
