@@ -212,7 +212,7 @@ private fun MenuList(navController: NavController) {
         )
 
         MoreMenuItem(
-            onClickMenu = { navController.navigate(Const.Routes.ATTENDANCE) },
+            onClickMenu = { navController.navigate(Const.Routes.GROUPACCOUNT) },
             painter = painterResource(R.drawable.ssal),
             text = "모두의 통장"
         )
