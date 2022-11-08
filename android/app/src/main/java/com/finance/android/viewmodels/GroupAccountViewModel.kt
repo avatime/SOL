@@ -1,6 +1,7 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
+import androidx.compose.runtime.mutableStateOf
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.GroupAccountRepository
 import com.finance.android.domain.repository.StockRepository
@@ -12,4 +13,5 @@ class GroupAccountViewModel @Inject constructor(
     private val groupAccountRepository: GroupAccountRepository
 ) : BaseViewModel(application, baseRepository){
 
+    val name = mutableStateOf("")
 }
