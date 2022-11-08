@@ -44,6 +44,8 @@ class BankViewModel @Inject constructor(
         }
     }
 
+    // 계좌 잔액 불러오기
+
     private suspend fun loadMyAccountList() {
         this@BankViewModel.run {
             bankRepository.getMyAccount()
