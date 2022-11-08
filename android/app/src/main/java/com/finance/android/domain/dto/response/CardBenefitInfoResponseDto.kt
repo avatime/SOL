@@ -7,4 +7,6 @@ data class CardBenefitInfoResponseDto(
     val cardBenefitImage: String,
     @SerializedName("cd_bf_sum") // 카드 혜택 요약
     val cardBenefitSummary: String,
+    @SerializedName("cd_bf_name") // 카드 혜택 이름
+    val cardBenefitName: String,
 )
