@@ -32,15 +32,16 @@ def create(user_id, db):
             check = ''
             for x in role:
                 check = check + ''.join(random.sample(['1', '2', '3', '4', '5', '6', '7', '8', '9', '0'], x))
-            if check not in ac_list:    # 계좌 중복 확인
+            if check not in ac_list:  # 계좌 중복 확인
                 ac_list.append(check)
                 ac_pd_code = random.choice(ac_pd_list[cor_num])
-                name = db.query(models.AccountProduct).filter(models.AccountProduct.ac_pd_code == ac_pd_code).first().ac_pd_name
-                if type == 2:    # 증권계좌 생성
+                name = db.query(models.AccountProduct).filter(
+                    models.AccountProduct.ac_pd_code == ac_pd_code).first().ac_pd_name
+                if type == 2:  # 증권계좌 생성
                     cor_num = random.randint(32, 56)
                     name = fi_name[cor_num - 32]
                     ac_pd_code = 99
-                new_ac.append(models.Account(ac_no=check, balance=random.randint(5, 500)*10000, ac_type=type,
+                new_ac.append(models.Account(ac_no=check, balance=random.randint(5, 500) * 10000, ac_type=type,
                                              ac_name=name, ac_pd_code=ac_pd_code, ac_cp_code=cor_num,
                                              ac_status=10, ac_reg=0, ac_new_dt="2022-09-26", ac_close_dt="2023-01-01",
                                              ac_rm_reg=0, user_id=user_id))
@@ -76,16 +77,33 @@ def create(user_id, db):
 
     # step.3 카드 결제 내역 생성
     card_his = []
-    for i in range(10):    # 신용, 체크
+    for i in range(10):  # 신용, 체크
         for day in ['2022-11-14', '2022-11-15', '2022-11-16', '2022-11-17', '2022-11-18']:
             name = random.choice(td_list)
-            money = random.randint(5, 100) * 1000
+            money = random.randint(1, 50) * 1000
             card_his.append(models.CardPaymentHistory(cd_py_dt=day, cd_py_name=name,
                                                       cd_val=money, cd_tp=1,
                                                       cd_no=new_card[i].cd_no))
     db.add_all(card_his)
     db.commit()
     for i in card_his:
+        db.refresh(i)
+
+    card_his_new = []  # 45 개 추가생성
+    for i in range(5):
+        for m in range(7, 12):
+            day = random.sample(list(range(1, 29)), 10 if i != 11 else 5)
+            for d in day:
+                name = random.choice(td_list)
+                money = random.randint(1, 50) * 1000
+                day = '2022-' + str(m) + '-' + str(d)
+                card_his_new.append(models.CardPaymentHistory(cd_py_dt=day, cd_py_name=name,
+                                                              cd_val=money, cd_tp=1,
+                                                              cd_no=new_card[i].cd_no))
+
+    db.add_all(card_his_new)
+    db.commit()
+    for i in card_his_new:
         db.refresh(i)
 
     # stpe.4 거래 내역 생성
@@ -110,9 +128,9 @@ def create(user_id, db):
     ins = []
     for i in range(1, 6):
         ins.append(models.Insurance(is_reg_dt='2022-09-26', is_clo_dt=None, is_mat_dt='2022-11-25',
-                               is_status=10, is_pd_code=i,
-                               is_name=name, is_reg=0, fee=random.randint(1, 9) * 10000, user_id=user_id,
-                               ac_no=new_ac[random.randint(0, 9) * 2].ac_no))
+                                    is_status=10, is_pd_code=i,
+                                    is_name=name, is_reg=0, fee=random.randint(1, 9) * 10000, user_id=user_id,
+                                    ac_no=new_ac[random.randint(0, 9) * 2].ac_no))
     db.add_all(ins)
     db.commit()
     for i in ins:
