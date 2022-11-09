@@ -2,20 +2,15 @@ package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
-import androidx.compose.material.icons.materialIcon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.dimensionResource
@@ -29,7 +24,6 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
-import com.finance.android.domain.dto.response.CardBenefitInfoResponseDto
 import com.finance.android.ui.components.*
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.CardViewModel
@@ -38,11 +32,11 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 
-fun CardDetailFragment(
+fun CardDetailScreen(
     navController: NavController,
     onClose: () -> Unit,
     cardViewModel: CardViewModel = hiltViewModel(),
-    cdNo: String,
+    cardProductCode: Int,
     cdImgPath: String,
     cdName: String,
 ) {
@@ -53,8 +47,7 @@ fun CardDetailFragment(
     val year = formattedY.toInt()
 
     fun launch() {
-        cardViewModel.loadCardBill(cdNo, year, month)
-        cardViewModel.loadCardBenefit(cdNo)
+        cardViewModel.loadCardBenefit(cardProductCode)
     }
 
     LaunchedEffect(Unit) {
@@ -70,7 +63,7 @@ fun CardDetailFragment(
                 .fillMaxSize()
                 .padding(top = innerPaddingModifier.calculateTopPadding())
         ) {
-            when (val data = cardViewModel.getLoadCardBillandBenefit()) {
+            when (val data = cardViewModel.getLoadCardBenefit()) {
                 is Response.Success -> {
                     Column(
                         modifier = Modifier

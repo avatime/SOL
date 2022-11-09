@@ -174,15 +174,15 @@ fun FinanceApp() {
                 }
             }
             composable(
-                route = "${Const.Routes.CARD_DETAIL}/{cdNo}/{cdImgPath}/{cdName}",
+                route = "${Const.Routes.CARD_DETAIL}/{cardProductCode}/{cdImgPath}/{cdName}",
                 arguments = listOf(
-                    navArgument("cdNo") { type = NavType.StringType },
+                    navArgument("cardProductCode") { type = NavType.IntType },
                     navArgument("cdImgPath") { type = NavType.StringType },
                     navArgument("cdName") { type = NavType.StringType },
                 )
             ) {
-                CardDetailFragment(
-                    cdNo = it.arguments!!.getString("cdNo")!!,
+                CardDetailScreen(
+                    cardProductCode = it.arguments!!.getInt("cardProductCode"),
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
                     cdName = it.arguments!!.getString("cdName")!!,
                     navController = navController,
