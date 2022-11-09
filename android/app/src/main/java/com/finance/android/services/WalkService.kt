@@ -9,6 +9,7 @@ import android.hardware.SensorManager
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.finance.android.MainActivity
 import com.finance.android.R
@@ -17,6 +18,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 
 class WalkService : Service(), SensorEventListener {
     companion object {
@@ -96,9 +98,16 @@ class WalkService : Service(), SensorEventListener {
                 PendingIntent.FLAG_UPDATE_CURRENT
             }
         )
+
+        val view = RemoteViews(context.packageName, R.layout.notification_walk_count).apply {
+            setTextViewText(R.id.walkCount, DecimalFormat("#,###").format(steps))
+        }
         return NotificationCompat.Builder(this, CHANNEL_ID)
-            .setContentTitle("SOL# 만보기")
-            .setContentText(if (steps == -1) "신체활동 권한을 켜주세요" else "$steps 걸음")
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(view)
+            .setShowWhen(false)
+//            .setContentTitle("SOL# 만보기")
+//            .setContentText(if (steps == -1) "신체활동 권한을 켜주세요" else "$steps 걸음")
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .build()

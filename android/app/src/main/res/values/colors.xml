@@ -10,4 +10,6 @@
     <color name="noActiveColor">#FF736979</color>
     <color name="light_gray">#F2F4F6</color>
     <color name="background_gray">#D9D9D9</color>
+    <color name="mainColor">#0046FF</color>
+    <color name="lightMainColor">#770046FF</color>
 </resources>
