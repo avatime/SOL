@@ -37,8 +37,6 @@ import com.finance.android.utils.Const
 fun GroupAccountMakeScreen(
     navController: NavController,
     groupAccountViewModel: GroupAccountViewModel
-
-
 ) {
 
     Column(
