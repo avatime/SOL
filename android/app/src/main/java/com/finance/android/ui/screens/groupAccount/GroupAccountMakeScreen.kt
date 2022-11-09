@@ -44,7 +44,7 @@ fun GroupAccountMakeScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
-            .background(color = MaterialTheme.colorScheme.onBackground),
+            .background(color = MaterialTheme.colorScheme.surface),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
