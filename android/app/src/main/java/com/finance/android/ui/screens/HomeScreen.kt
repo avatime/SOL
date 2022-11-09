@@ -39,7 +39,7 @@ import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
 import com.finance.android.services.WalkService
 import com.finance.android.ui.components.*
-import com.finance.android.ui.theme.Disabled
+import com.finance.android.ui.theme.LightMainColor
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.HomeViewModel
@@ -360,6 +360,7 @@ private fun PedometerOffStateButton(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Icon(
+            modifier = Modifier.size(24.dp),
             painter = painterResource(id = R.drawable.ic_running_shoe),
             contentDescription = "running_shoe",
             tint = Color.Unspecified
@@ -430,10 +431,10 @@ private fun PedometerOnStateButton(
             ) {
                 CircularProgressIndicator(
                     progress = 1f,
-                    color = Disabled
+                    color = LightMainColor
                 )
                 CircularProgressIndicator(
-                    progress = it.toFloat() / 5000,
+                    progress = it.toFloat() / Const.GOAL_WALK_COUNT,
                     color = MaterialTheme.colorScheme.primary
                 )
             }

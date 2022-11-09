@@ -29,4 +29,7 @@ interface DailyService {
 
     @GET("${Const.API_PATH}/daily")
     suspend fun test()
+
+    @POST("${Const.API_PATH}/daily/walk")
+    suspend fun receiveWalkPoint()
 }

@@ -28,6 +28,7 @@ import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.screens.more.ShowAttendanceCalendar
 import com.finance.android.ui.screens.more.ShowWalkingCalendar
+import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.AttendanceViewModel
 import com.finance.android.viewmodels.WalkViewModel
@@ -121,7 +122,7 @@ private fun Screen(
                         fontWeight = FontWeight.ExtraBold,
                         color = Color.Blue
                     )
-                    Text(text = "목표는 5000걸음", fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
+                    Text(text = "목표는 ${Const.GOAL_WALK_COUNT}걸음", fontSize = 20.sp, fontWeight = FontWeight.ExtraBold)
                 }
                Column(
                    modifier = Modifier

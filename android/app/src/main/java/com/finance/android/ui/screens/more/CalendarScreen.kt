@@ -15,6 +15,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
@@ -79,9 +80,10 @@ fun ShowAttendanceCalendar(
     }
 }
 
+@Preview
 @Composable
 fun ShowWalkingCalendar(
-    attendanceList: MutableList<DailyWalkingResponseDto>
+    attendanceList: MutableList<DailyWalkingResponseDto> = mutableListOf()
 ) {
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(0) } // Adjust as needed
@@ -108,7 +110,11 @@ fun ShowWalkingCalendar(
 //            verticalArrangement = Arrangement.Center,
 //            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "미션 달성 기록", fontWeight = FontWeight.SemiBold)
+            Text(
+                text = "미션 달성 기록",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
             Text(
                 text = state.firstVisibleMonth.yearMonth.year.toString() + "년 " + state.firstVisibleMonth.yearMonth.monthValue.toString() + "월",
