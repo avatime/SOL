@@ -61,7 +61,9 @@ class WalkViewModel @Inject constructor(
     private suspend fun loadWalkCount() {
         WalkStore(getApplication()).getCount().collect {
             walkCount.value = it
-            enableReceiveWalkPoint.value = !(walkingList.value as Response.Success).data[LocalDate.now().dayOfMonth - 1].success && Const.GOAL_WALK_COUNT <= it
+            if (walkingList.value is Response.Success) {
+                enableReceiveWalkPoint.value = !(walkingList.value as Response.Success).data[LocalDate.now().dayOfMonth - 1].success && Const.GOAL_WALK_COUNT <= it
+            }
         }
     }
 
