@@ -21,6 +21,8 @@ class DailyController(private val dailyService: DailyService) {
 
     @GetMapping("/{year}/{month}")
     fun getAttendance(@RequestHeader("access_token") accessToken : String,@PathVariable year: Int, @PathVariable month: Int) : ResponseEntity<Any?> {
+        val list = dailyService.getAttendance(accessToken, year, month)
+        for (d in list) println(d.day.toString() + " : " + d.attendance)
         return ResponseEntity.status(200).body(dailyService.getAttendance(accessToken, year, month))
     }
 
