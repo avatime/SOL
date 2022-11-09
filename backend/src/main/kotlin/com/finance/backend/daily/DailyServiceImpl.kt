@@ -76,6 +76,7 @@ class DailyServiceImpl(
                 }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
+            rewardService.accumulatePoint(user, 500, "걷기 목표 달성")
             walkRepository.save(Walk(user))
         } else throw Exception()
     }
