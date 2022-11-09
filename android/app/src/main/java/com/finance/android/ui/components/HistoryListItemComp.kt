@@ -1,18 +1,17 @@
 package com.finance.android.ui.components
 
+import android.util.DisplayMetrics
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.DropdownMenuItem
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -20,6 +19,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
+import com.finance.android.utils.ext.toPx
+import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
+import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
+import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
+import com.holix.android.bottomsheetdialog.compose.NavigationBarProperties
 import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.YearMonth
@@ -38,9 +42,10 @@ fun showHistoryList(
     type : String = "계좌",
     historyList : List<HistoryEntity>
 ) {
+    val context = LocalContext.current
     var currentMonth = remember { mutableStateOf(YearMonth.now()) }
     var currentMenu = remember { mutableStateOf(0) }
-    var isDropDownMenuExpanded = remember { mutableStateOf(false) }
+    var showMenuList by remember { mutableStateOf(false) }
     val menuList : List<String> = when(type) {
         "포인트" -> listOf("모두", "적립", "출금")
         else -> listOf("모두", "입금", "출금")
@@ -48,6 +53,50 @@ fun showHistoryList(
     val moneyType = when(type) {
         "포인트" -> "포인트"
         else -> "원"
+    }
+
+    if(showMenuList) {
+        val outMetrics = DisplayMetrics()
+
+        BoxWithConstraints(modifier = Modifier.background(color = Color.Blue)) {
+            BottomSheetDialog(
+                onDismissRequest = {
+                    showMenuList = false
+                },
+                properties = BottomSheetDialogProperties(
+                    navigationBarProperties = NavigationBarProperties(),
+                    behaviorProperties = BottomSheetBehaviorProperties(
+                        maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
+                    )
+                )
+            ) {
+                Surface (
+                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        repeat(3) {
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Text(text = menuList[it])
+//                                Image(
+//                                    painter = painterResource(id = R.drawable.ic_check),
+//                                    modifier = Modifier.padding(top = 4.dp),
+//                                    contentDescription = "",
+//                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     Column(
@@ -91,7 +140,10 @@ fun showHistoryList(
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .clickable {
-                                if(YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) {
+                                if (YearMonth
+                                        .from(LocalDateTime.now())
+                                        .isAfter(currentMonth.value)
+                                ) {
                                     currentMonth.value = currentMonth.value.plusMonths(1)
                                     onClick(
                                         currentMonth.value.year,
@@ -103,31 +155,10 @@ fun showHistoryList(
                 }
                 Column(
                     modifier = Modifier
-                        .clickable { isDropDownMenuExpanded.value = true }
+                        .clickable { showMenuList = true }
                         .padding(10.dp)
                 ) {
                     Text(text = menuList[currentMenu.value] + " ▾")
-                    DropdownMenu(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .background(
-                                color = MaterialTheme.colorScheme.surface,
-                                RoundedCornerShape(7.dp)
-                            ),
-                        expanded = isDropDownMenuExpanded.value,
-                        onDismissRequest = { isDropDownMenuExpanded.value = false }
-                    ) {
-                        repeat(3) {
-                            if(currentMenu.value != it) {
-                                DropdownMenuItem(onClick = {
-                                    currentMenu.value = it
-                                    isDropDownMenuExpanded.value = false
-                                }) {
-                                    Text(text = menuList[it])
-                                }
-                            }
-                        }
-                    }
                 }
             }
             Column(
