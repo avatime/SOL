@@ -30,7 +30,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.CardBenefitInfoResponseDto
-import com.finance.android.ui.components.BackHeaderBar
+import com.finance.android.ui.components.*
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.CardViewModel
 import java.time.LocalDateTime
@@ -117,6 +117,12 @@ fun CardDetailFragment(
                                 companyLogoPath = it.cardBenefitImage
                             )
                         }
+                        TextButton(onClick = { },
+                            text = "혜택 더보기",
+                            buttonColor = ButtonColor.WHITE,
+                            buttonType = ButtonType.ROUNDED,
+                            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_small))
+                        )
                     }
                 }
 

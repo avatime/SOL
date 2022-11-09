@@ -18,6 +18,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
@@ -34,6 +35,7 @@ private fun Draw(
     modifier: Modifier,
     cardName: String,
     cardImgPath: String,
+    cardFee: String? = null,
     trailing: (@Composable () -> Unit)? = null
 ) {
     Row(
@@ -59,7 +61,12 @@ private fun Draw(
                     .size(40.dp)
                     .padding(end = dimensionResource(R.dimen.padding_small))
             )
-            Text(text = cardName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Column {
+                Text(text = cardName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                if(cardFee != null) {
+                    Text(text = cardFee, fontSize = 12.sp)
+                }
+            }
             Spacer(modifier = modifier.weight(1.0f))
         }
         trailing?.invoke()
@@ -72,6 +79,7 @@ fun CardListItem_Arrow(
     contentPadding: PaddingValues = PaddingValues(),
     cardName: String,
     cardImgPath: String,
+    cardFee: String?,
     onClickItem: () -> Unit
 ) {
     Draw(
@@ -80,6 +88,7 @@ fun CardListItem_Arrow(
             .padding(contentPadding),
         cardName = cardName,
         cardImgPath = cardImgPath,
+        cardFee = cardFee,
         trailing = {
             Icon(
                 painter = painterResource(R.drawable.arrow_forward_ios),
@@ -135,6 +144,7 @@ fun PreviewCardListItem_Arrow() {
     CardListItem_Arrow(
         cardName = "신한카드",
         cardImgPath = "https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png",
+        cardFee = "11월 청구 금액 : 10,000원",
         onClickItem = {}
     )
 }

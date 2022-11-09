@@ -1,10 +1,7 @@
 package com.finance.android.domain.repository
 
 import com.finance.android.domain.dto.request.CardNumberDto
-import com.finance.android.domain.dto.response.CardBenefitInfoResponseDto
-import com.finance.android.domain.dto.response.CardBillResponseDto
-import com.finance.android.domain.dto.response.CardInfoResponseDto
-import com.finance.android.domain.dto.response.CardResponseDto
+import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.service.CardService
 import javax.inject.Inject
 import javax.inject.Singleton
