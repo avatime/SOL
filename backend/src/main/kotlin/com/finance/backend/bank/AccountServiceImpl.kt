@@ -8,6 +8,8 @@ import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
 import com.finance.backend.card.CardRepository
 import com.finance.backend.card.response.CardInfoRes
+import com.finance.backend.card.response.CardRes
+import com.finance.backend.cardPaymentHistory.CardPaymentHistoryRepository
 import com.finance.backend.cardProduct.CardProductRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
@@ -35,6 +37,7 @@ class AccountServiceImpl(
         private val isProductRepository: IsProductRepository,
         private val cardRepository: CardRepository,
         private val cardProductRepository: CardProductRepository,
+        private val cardPaymentHistoryRepository: CardPaymentHistoryRepository,
         private val jwtUtils: JwtUtils
 ) : AccountService {
 
@@ -195,9 +198,14 @@ class AccountServiceImpl(
     override fun getAccountRegistered(token: String): AccountRegisteredRes {
         val accountList = ArrayList<BankAccountRes>()
         val financeList = ArrayList<BankAccountRes>()
-        val cardList = ArrayList<CardInfoRes>()
+        val cardList = ArrayList<CardRes>()
         lateinit var insuranceList : List<MyInsuranceInfoDetailRes>
+        val now = LocalDateTime.now()
+        val year = now.year
+        val month = now.month
 
+        val startDate = LocalDateTime.of(year, month, 1, 0, 0, 0)
+        val endDate = startDate.plusMonths(1).minusSeconds(1)
 
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
@@ -216,9 +224,9 @@ class AccountServiceImpl(
 
             val cardInfoList = cardRepository.findAllByUserIdAndCdReg(userId, true).orEmpty()
             for (card in cardInfoList){
-                println(card.cdPdCode)
                 val cardProduct = cardProductRepository.findByCdPdCode(card.cdPdCode)
-                cardList.add(CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo))
+                val balance = cardPaymentHistoryRepository.getByCdVal(card.cdNo,startDate,endDate)
+                cardList.add(CardRes(balance ,CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo)))
             }
 
             val insuranceInfoList = insuranceRepository.findAllByUserIdAndIsRegAndIsStatus(userId, true, 10)
