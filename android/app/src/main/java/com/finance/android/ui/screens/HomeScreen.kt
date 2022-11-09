@@ -40,6 +40,7 @@ import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
 import com.finance.android.services.WalkService
 import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.LightMainColor
+import com.finance.android.ui.theme.SetStatusBarColor
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.HomeViewModel
@@ -75,12 +76,12 @@ fun HomeScreen(
         }
     }
 
+    SetStatusBarColor(color = MaterialTheme.colorScheme.background)
     Scaffold(
         topBar = {
             TopBar(
                 navController = navController,
                 homeViewModel = homeViewModel
-
             )
         },
         containerColor = MaterialTheme.colorScheme.background
