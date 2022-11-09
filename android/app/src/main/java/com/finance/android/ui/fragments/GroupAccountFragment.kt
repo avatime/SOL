@@ -7,10 +7,11 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.finance.android.ui.screens.groupAccount.GroupAccountDetailScreen
-import com.finance.android.ui.screens.groupAccount.GroupAccountMainScreen
+import com.finance.android.ui.screens.groupAccount.*
+
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.GroupAccountViewModel
+import com.finance.android.viewmodels.RemitViewModel
 
 
 @Composable
@@ -31,13 +32,30 @@ fun GroupAccountFragment(
 
 
         composable(Const.GROUP_ACCOUNT_MAKE_SCREEN){
-            GroupAccountMainScreen(navController = innerNavController, groupAccountViewModel = groupAccountViewModel)
+            GroupAccountMakeScreen(
+                navController = innerNavController,
+                groupAccountViewModel = groupAccountViewModel
+            )
+        }
+
+        composable(Const.GROUP_ACCOUNT_NAME_SCREEN){
+            GroupAccountNameScreen(
+                navController = innerNavController,
+                groupAccountViewModel = groupAccountViewModel
+            )
+        }
+
+        composable(Const.GROUP_ACCOUNT_FRIEND_SCREEN){
+            GroupAccountFriendScreen(groupAccountViewModel = groupAccountViewModel, navController = innerNavController)
+        }
+
+        composable(Const.GROUP_ACCOUNT_DETAIL_SCREEN) {
+            GroupAccountDetailScreen(navController = innerNavController)
 
         }
 
         composable(Const.GROUP_ACCOUNT_DETAIL_SCREEN){
             GroupAccountDetailScreen(navController = innerNavController)
         }
-
     }
 }
