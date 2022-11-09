@@ -31,7 +31,6 @@ fun GroupAccountNameScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(8.dp)
             .background(color = MaterialTheme.colorScheme.surface),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top

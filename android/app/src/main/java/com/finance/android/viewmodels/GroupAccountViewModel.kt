@@ -1,9 +1,12 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
+import com.finance.android.domain.dto.request.MemberRequestDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.GroupAccountRepository
@@ -21,6 +24,24 @@ class GroupAccountViewModel @Inject constructor(
 ) : BaseViewModel(application, baseRepository){
 
     val name = mutableStateOf("")
+
+
+    // 모임 통장 생성
+    fun CreateGroupAccount(
+
+    ){
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run{
+                groupAccountRepository.postMakeGroupAccount(
+                    CreateGroupAccountRequestDto(
+                        name = name.value,
+                        memberList = List<MemberRequestDto>
+                    )
+                )
+            }
+        }
+    }
+
 
     //모임 통장 조회
     private val _groupAccountData = mutableStateOf<Response<MutableList<PublicAccountResponseDto>>>(Response.Loading)
