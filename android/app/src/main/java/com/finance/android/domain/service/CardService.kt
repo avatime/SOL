@@ -24,8 +24,8 @@ interface CardService {
     @GET("${Const.API_PATH}/card/bill/{cd_no}/{year}/{month}")
     suspend fun getCardBill(
         @Path("cd_no") cdNo: String,
-        year: Int,
-        month: Int
+        @Path("year") year: Int,
+        @Path("month") month: Int
     ): CardBillResponseDto
 
     @GET("${Const.API_PATH}/card/benefit/{cd_no}")
