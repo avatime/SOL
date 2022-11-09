@@ -86,16 +86,18 @@ fun showHistoryList(
                     )
                     Text(text = currentMonth.value.year.toString() + "년 " + currentMonth.value.monthValue.toString() + "월", fontWeight = FontWeight.Bold, fontSize = 20.sp)
                     Image(
-                        painter = painterResource(id = R.drawable.ic_next),
+                        painter = painterResource(id = if(YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) R.drawable.ic_next else R.drawable.ic_next_disabled),
                         contentDescription = "",
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .clickable {
-                                currentMonth.value = currentMonth.value.plusMonths(1)
-                                onClick(
-                                    currentMonth.value.year,
-                                    currentMonth.value.monthValue
-                                )
+                                if(YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) {
+                                    currentMonth.value = currentMonth.value.plusMonths(1)
+                                    onClick(
+                                        currentMonth.value.year,
+                                        currentMonth.value.monthValue
+                                    )
+                                }
                             }
                     )
                 }
@@ -135,7 +137,7 @@ fun showHistoryList(
                 for (history in historyList) {
                     when(currentMenu.value) {
                         1 -> {
-                            if(history.value > 0) {
+                            if(history.value > 0 && compareDates(history.date, currentMonth.value)) {
                                 HistoryItem(
                                     date = history.date,
                                     title = history.name,
@@ -146,7 +148,7 @@ fun showHistoryList(
                             }
                         }
                         2 -> {
-                            if(history.value < 0) {
+                            if(history.value < 0 && compareDates(history.date, currentMonth.value)) {
                                 HistoryItem(
                                     date = history.date,
                                     title = history.name,
@@ -157,19 +159,26 @@ fun showHistoryList(
                             }
                         }
                         else -> {
-                            HistoryItem(
-                                date = history.date,
-                                title = history.name,
-                                amount = history.value,
-                                moneyType = moneyType,
-                                type = if(history.value < 0) menuList[2] else menuList[1]
-                            )
+                            if(compareDates(history.date, currentMonth.value)) {
+                                HistoryItem(
+                                    date = history.date,
+                                    title = history.name,
+                                    amount = history.value,
+                                    moneyType = moneyType,
+                                    type = menuList[2]
+                                )
+                            }
                         }
                     }
                 }
             }
         }
     }
+}
+
+@Composable
+private fun compareDates(d1 : LocalDateTime, d2 : YearMonth) : Boolean {
+    return d1.year == d2.year && d1.month == d2.month
 }
 
 @Preview(showBackground = true)
