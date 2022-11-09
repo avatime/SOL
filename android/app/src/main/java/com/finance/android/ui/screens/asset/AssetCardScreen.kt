@@ -30,6 +30,7 @@ import com.finance.android.ui.components.CardListItem_Arrow
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.CardViewModel
 import com.finance.android.utils.Response
+import java.text.DecimalFormat
 
 @Composable
 fun AssetCardScreen(
@@ -48,8 +49,6 @@ fun AssetCardScreen(
     {
         when (val data = cardViewModel.getLoadState()) {
             is Response.Success -> {
-                val cardData = (cardViewModel.cardList.value as Response.Success).data
-                cardData!!.forEach {
                     AssetCardContainer(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -59,12 +58,8 @@ fun AssetCardScreen(
                                 shape = RoundedCornerShape(10)
                             ),
                         navController = navController,
-                        cardData = it
+                        cardData = (cardViewModel.cardList.value as Response.Success).data
                     )
-                }
-                if (cardData.size == 0) {
-                    Text(text = "등록된 자산이 없어요.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-                }
             }
             is Response.Loading -> {}
             else -> {}
@@ -73,71 +68,78 @@ fun AssetCardScreen(
 }
 
 @Composable
-fun AssetCardContainer(
+private fun AssetCardContainer(
     modifier: Modifier,
     navController: NavController,
-    cardData: CardResponseDto
+    cardData: MutableList<CardResponseDto>
 ) {
     Column(
         modifier = modifier
             .padding(dimensionResource(R.dimen.padding_medium))
     )
     {
-        val pathTmp = Uri.encode(cardData.cardInfoRes.cardImgPath)
-        CardListItem_Arrow(
-            cardName = cardData.cardInfoRes.cardName,
-            cardImgPath = cardData.cardInfoRes.cardImgPath,
-            onClickItem = {
-                navController.navigate("${Const.Routes.CARD_DETAIL}/${cardData.cardInfoRes.cardNumber}/${pathTmp}/${cardData.cardInfoRes.cardName}")
-            }
-        )
-        Text(
-            text = "지금 받을 수 있는 혜택",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier
-                .padding(
-                    top = dimensionResource(R.dimen.padding_small),
-                    bottom = dimensionResource(R.dimen.padding_small)
-                )
-        )
-        cardData.cardBenefitInfoList!!.forEach { benefit ->
-            benefitListItem(
-                benefitSummary = benefit.cardBenefitSummary,
-                companyLogoPath = benefit.cardBenefitImage
+        cardData!!.forEach {
+            val pathTmp = Uri.encode(it.cardInfoRes.cardImgPath)
+            CardListItem_Arrow(
+                cardName = it.cardInfoRes.cardName,
+                cardImgPath = it.cardInfoRes.cardImgPath,
+                cardFee = "당월 청구 금액 : "+ DecimalFormat("#,###원").format(it.cardValueAll),
+                onClickItem = {
+                    navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardInfoRes.cardNumber}/${pathTmp}/${it.cardInfoRes.cardName}")
+                }
             )
         }
+
+        if (cardData.size == 0) {
+            Text(text = "등록된 자산이 없어요.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        }
+//        Text(
+//            text = "지금 받을 수 있는 혜택",
+//            fontSize = 24.sp,
+//            fontWeight = FontWeight.Bold,
+//            modifier = Modifier
+//                .padding(
+//                    top = dimensionResource(R.dimen.padding_small),
+//                    bottom = dimensionResource(R.dimen.padding_small)
+//                )
+//        )
+//        cardData.cardBenefitInfoList!!.forEach { benefit ->
+//            benefitListItem(
+//                benefitSummary = benefit.cardBenefitSummary,
+//                companyLogoPath = benefit.cardBenefitImage
+//            )
+//        }
     }
 }
 
-@Composable
-private fun benefitListItem(
-    benefitSummary: String?,
-    companyLogoPath: String
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    )
-    {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data("$companyLogoPath")
-                .crossfade(true)
-                .build(),
-            contentDescription = null,
-            modifier = Modifier
-                .size(45.dp)
-                .padding(end = dimensionResource(R.dimen.padding_medium)),
-            colorFilter = ColorFilter.tint(colorResource(R.color.noActiveColor))
-        )
-
-        Text(
-            text = "$benefitSummary",
-            fontWeight = FontWeight.Bold,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-    }
-}
+//@Composable
+//private fun benefitListItem(
+//    benefitSummary: String?,
+//    companyLogoPath: String
+//) {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth(),
+//        verticalAlignment = Alignment.CenterVertically
+//    )
+//    {
+//        AsyncImage(
+//            model = ImageRequest.Builder(LocalContext.current)
+//                .data("$companyLogoPath")
+//                .crossfade(true)
+//                .build(),
+//            contentDescription = null,
+//            modifier = Modifier
+//                .size(45.dp)
+//                .padding(end = dimensionResource(R.dimen.padding_medium)),
+//            colorFilter = ColorFilter.tint(colorResource(R.color.noActiveColor))
+//        )
+//
+//        Text(
+//            text = "$benefitSummary",
+//            fontWeight = FontWeight.Bold,
+//            maxLines = 1,
+//            overflow = TextOverflow.Ellipsis
+//        )
+//    }
+//}

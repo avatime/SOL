@@ -10,5 +10,5 @@ data class AccountRegisteredResponseDto (
     @SerializedName("finance_list")
     val financeList : MutableList<BankAccountResponseDto>,
     @SerializedName("card_list")
-    val cardList : MutableList<CardInfoResponseDto>
+    val cardList : MutableList<CardResponseDto>
 )
