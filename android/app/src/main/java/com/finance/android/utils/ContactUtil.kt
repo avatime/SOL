@@ -30,7 +30,6 @@ fun Context.isContactExists(
         return (it?.moveToFirst() == true)
     }
 }
-val result: MutableList<ContactDto> = mutableListOf()
 
 @SuppressLint("Range")
 @RequiresPermission(Manifest.permission.READ_CONTACTS)
@@ -41,6 +40,7 @@ fun Context.retrieveAllContacts(
     limit: Int = -1,
     offset: Int = -1
 ): List<ContactDto> {
+    val result: MutableList<ContactDto> = mutableListOf()
 
     contentResolver.query(
         ContactsContract.Contacts.CONTENT_URI,
