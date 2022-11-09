@@ -47,6 +47,7 @@ import com.finance.android.viewmodels.HomeViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import java.text.DecimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -188,12 +189,13 @@ private fun HomeCardContainer(
             Divider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium)))
         }
         mainData.cardList!!.forEach {
-            val pathTmp = Uri.encode(it.cardImgPath)
+            val pathTmp = Uri.encode(it.cardInfoRes.cardImgPath)
             CardListItem_Arrow(
-                cardName = it.cardName,
-                cardImgPath = it.cardImgPath,
+                cardName = it.cardInfoRes.cardName,
+                cardImgPath = it.cardInfoRes.cardImgPath,
+                cardFee = "당월 청구 금액 : "+ DecimalFormat("#,###원").format(it.cardValueAll),
                 onClickItem = {
-                    navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardNumber}/$pathTmp/${it.cardName}")
+                    navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardInfoRes.cardNumber}/$pathTmp/${it.cardInfoRes.cardName}")
                 }
             )
         }
