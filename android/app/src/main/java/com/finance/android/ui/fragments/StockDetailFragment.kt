@@ -21,8 +21,8 @@ import java.text.DecimalFormat
 @Composable
 fun StockDetailFragment (
     financeDetailViewModel: FinanceDetailViewModel = hiltViewModel(),
-    fnName: String,
     onClose: () -> Unit,
+    fnName: String,
     close: Int,
     per: Float
 ) {
