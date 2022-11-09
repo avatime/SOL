@@ -133,4 +133,17 @@ class CardServiceImpl(
         }
         return cardBenefitDetailList
     }
+
+    override fun getCardBenefitThree(cdNo: String): List<CardBenefitInfo> {
+        val cardBenefitInfoList = ArrayList<CardBenefitInfo>()
+        val cdPdCode = cardRepository.findById(cdNo).orElse(null).cdPdCode
+        val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(cdPdCode).orEmpty()
+        for (cardBenefit in cardBenefitList){
+            val cardBenefitImg = cardBenefitImgRepository.findById(cardBenefit.cdBfImg.id).orElse(null)
+            cardBenefitInfoList.add(CardBenefitInfo(cardBenefitImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
+        }
+
+        return cardBenefitInfoList
+    }
+
 }
