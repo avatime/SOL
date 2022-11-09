@@ -27,36 +27,37 @@ import com.google.accompanist.permissions.rememberPermissionState
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun GroupAccountFriendScreen(groupAccountViewModel: GroupAccountViewModel, navController: NavController) {
+fun GroupAccountFriendScreen(groupAccountViewModel: GroupAccountViewModel, navController: NavController, modifier: Modifier) {
 
     val permissionState =
         rememberPermissionState(permission = Manifest.permission.READ_CONTACTS)
 
     when {
         permissionState.status.isGranted -> {
+            ContactFriendListScreen(groupAccountViewModel = groupAccountViewModel, navController = navController, modifier = modifier)
 
         }
         else -> {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize(),
                 //verticalArrangement = Arrangement.Center
             ) {
 
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_remit_contact))
                 val progress by animateLottieCompositionAsState(composition)
-                Spacer(modifier = Modifier.padding(40.dp))
+                Spacer(modifier = modifier.padding(40.dp))
                 LottieAnimation(
                     composition = composition,
 
-                    modifier = Modifier.size(100.dp),
+                    modifier = modifier.size(100.dp),
                     iterations = LottieConstants.IterateForever,
                 )
 
-                Spacer(modifier = Modifier.padding(20.dp))
+                Spacer(modifier = modifier.padding(20.dp))
 
                 Text(text = "연락처를 불러올까요?")
-                Spacer(modifier = Modifier.padding(10.dp))
+                Spacer(modifier = modifier.padding(10.dp))
                 TextButton(
                     onClick = { permissionState.launchPermissionRequest()},
                     text ="불러오기",
