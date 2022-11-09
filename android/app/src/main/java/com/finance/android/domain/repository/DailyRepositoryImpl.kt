@@ -41,4 +41,8 @@ class DailyRepositoryImpl @Inject constructor(
     override suspend fun test() {
         return dailyService.test()
     }
+
+    override suspend fun receiveWalkPoint() {
+        return dailyService.receiveWalkPoint()
+    }
 }

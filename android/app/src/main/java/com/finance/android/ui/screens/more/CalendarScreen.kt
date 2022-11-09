@@ -110,7 +110,11 @@ fun ShowWalkingCalendar(
 //            verticalArrangement = Arrangement.Center,
 //            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = "미션 달성 기록", fontWeight = FontWeight.SemiBold)
+            Text(
+                text = "미션 달성 기록",
+                fontSize = 20.sp,
+                fontWeight = FontWeight.ExtraBold
+            )
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
             Text(
                 text = state.firstVisibleMonth.yearMonth.year.toString() + "년 " + state.firstVisibleMonth.yearMonth.monthValue.toString() + "월",
