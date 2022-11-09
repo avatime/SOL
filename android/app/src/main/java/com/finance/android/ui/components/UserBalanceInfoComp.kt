@@ -33,7 +33,7 @@ fun UserBalanceInfo(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(dimensionResource(id = R.dimen.padding_medium))
+            .padding(top = dimensionResource(id = R.dimen.padding_medium), bottom = dimensionResource(id = R.dimen.padding_medium), start = 10.dp, end = 10.dp)
             .height(200.dp)
             .background(
                 MaterialTheme.colorScheme.primary,
