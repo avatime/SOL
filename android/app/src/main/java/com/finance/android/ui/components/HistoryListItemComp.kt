@@ -140,10 +140,7 @@ fun showHistoryList(
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .clickable {
-                                if (YearMonth
-                                        .from(LocalDateTime.now())
-                                        .isAfter(currentMonth.value)
-                                ) {
+                                if(YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) {
                                     currentMonth.value = currentMonth.value.plusMonths(1)
                                     onClick(
                                         currentMonth.value.year,
