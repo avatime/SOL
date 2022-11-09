@@ -190,7 +190,8 @@ private fun DrawScreen(
                                 insuranceName = item.isPdName,
                                 fee = item.isPdFee,
                                 myName = item.name,
-                                isName = item.isName
+                                isName = item.isName,
+                                onClickItem = {}
                             )
                         }
                     )
