@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import com.finance.android.ui.theme.SetStatusBarColor
 
 @Composable
 fun BackHeaderBar(
@@ -25,6 +26,8 @@ fun BackHeaderBar(
     backgroundColor: Color = MaterialTheme.colorScheme.surface,
     onClickBack: (() -> Unit)? = null
 ) {
+    SetStatusBarColor(color = backgroundColor)
+
     Box(
         modifier = modifier
             .fillMaxWidth()
