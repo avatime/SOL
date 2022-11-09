@@ -6,6 +6,7 @@ import com.finance.backend.card.response.CardBillRes
 import com.finance.backend.card.response.CardInfoRes
 import com.finance.backend.card.response.CardRes
 import com.finance.backend.cardBenefit.response.CardBenefitDetailRes
+import com.finance.backend.cardBenefit.response.CardBenefitInfo
 import com.finance.backend.cardBenefit.response.CardBenefitRes
 
 interface CardService {
@@ -16,4 +17,5 @@ interface CardService {
     fun getCardMonthAll(cdNo: String, year:Int, month: Int): CardBillRes
 //    fun getCardBenefit(token: String):List<CardBenefitRes>
     fun getCardBenefitDetail(cdNo: String): List<CardBenefitDetailRes>
+    fun getCardBenefitThree(cdNo: String): List<CardBenefitInfo>
 }
