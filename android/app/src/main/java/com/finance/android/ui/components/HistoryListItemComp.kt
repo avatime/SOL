@@ -21,31 +21,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import java.text.DecimalFormat
-import java.time.LocalDateTime
+import java.text.SimpleDateFormat
 import java.time.YearMonth
-import java.time.format.DateTimeFormatter
+import java.util.*
 
 // HistoryList 를 사용하기 위한 엔티티
 data class HistoryEntity(
-    val date : LocalDateTime,
+    val date : Date,
     val name : String,
     val value : Int
 )
 
-@Preview
 @Composable
 fun showHistoryList(
-    onClick : (year : Int, month : Int, type : String) -> Unit = { year: Int, month: Int, type : String -> {}},
+    onClick : (year : Int, month : Int) -> Unit = { year: Int, month: Int -> {}},
     type : String = "계좌",
-    historyList : List<HistoryEntity> = emptyList()
+    historyList : List<HistoryEntity>
 ) {
     var currentMonth = remember { mutableStateOf(YearMonth.now()) }
-    var currentMenu = remember { mutableStateOf("모두") }
-    var list = Mu
+    var currentMenu = remember { mutableStateOf(0) }
     var isDropDownMenuExpanded = remember { mutableStateOf(false) }
     val menuList : List<String> = when(type) {
         "포인트" -> listOf("모두", "적립", "출금")
-        else -> listOf("모두", "입금", "출금"
+        else -> listOf("모두", "입금", "출금")
     }
     val moneyType = when(type) {
         "포인트" -> "포인트"
@@ -61,7 +59,7 @@ fun showHistoryList(
             )
     ) {
         Column(
-            modifier = Modifier.padding(10.dp),table
+            modifier = Modifier.padding(10.dp),
             verticalArrangement = Arrangement.Center
         ){
             Row(
@@ -81,8 +79,7 @@ fun showHistoryList(
                                 currentMonth.value = currentMonth.value.minusMonths(1)
                                 onClick(
                                     currentMonth.value.year,
-                                    currentMonth.value.monthValue,
-                                    currentMenu.value
+                                    currentMonth.value.monthValue
                                 )
                             },
                         contentDescription = "",
@@ -97,8 +94,7 @@ fun showHistoryList(
                                 currentMonth.value = currentMonth.value.plusMonths(1)
                                 onClick(
                                     currentMonth.value.year,
-                                    currentMonth.value.monthValue,
-                                    currentMenu.value
+                                    currentMonth.value.monthValue
                                 )
                             }
                     )
@@ -108,7 +104,7 @@ fun showHistoryList(
                         .clickable { isDropDownMenuExpanded.value = true }
                         .padding(10.dp)
                 ) {
-                    Text(text = currentMenu.value + " ▾")
+                    Text(text = menuList[currentMenu.value] + " ▾")
                     DropdownMenu(
                         modifier = Modifier
                             .wrapContentSize()
@@ -120,9 +116,9 @@ fun showHistoryList(
                         onDismissRequest = { isDropDownMenuExpanded.value = false }
                     ) {
                         repeat(3) {
-                            if(currentMenu.value != menuList[it]) {
+                            if(currentMenu.value != it) {
                                 DropdownMenuItem(onClick = {
-                                    currentMenu.value = menuList[it]
+                                    currentMenu.value = it
                                     isDropDownMenuExpanded.value = false
                                 }) {
                                     Text(text = menuList[it])
@@ -136,15 +132,40 @@ fun showHistoryList(
                 modifier = Modifier
                 .verticalScroll(rememberScrollState())
             ) {
-                val list = historyList
-                for (history in list) {
-                    HistoryItem(
-                        date = history.date,
-                        title = history.name,
-                        amount = history.value,
-                        moneyType = moneyType,
-                        type = if(history.value < 0) menuList[2] else menuList[1]
-                    )
+                for (history in historyList) {
+                    when(currentMenu.value) {
+                        1 -> {
+                            if(history.value > 0) {
+                                HistoryItem(
+                                    date = history.date,
+                                    title = history.name,
+                                    amount = history.value,
+                                    moneyType = moneyType,
+                                    type = menuList[1]
+                                )
+                            }
+                        }
+                        2 -> {
+                            if(history.value < 0) {
+                                HistoryItem(
+                                    date = history.date,
+                                    title = history.name,
+                                    amount = history.value,
+                                    moneyType = moneyType,
+                                    type = menuList[2]
+                                )
+                            }
+                        }
+                        else -> {
+                            HistoryItem(
+                                date = history.date,
+                                title = history.name,
+                                amount = history.value,
+                                moneyType = moneyType,
+                                type = if(history.value < 0) menuList[2] else menuList[1]
+                            )
+                        }
+                    }
                 }
             }
         }
@@ -154,13 +175,15 @@ fun showHistoryList(
 @Preview(showBackground = true)
 @Composable
 fun HistoryItem(
-    date : LocalDateTime = LocalDateTime.now(),
+    date : Date = Date(),
     title : String = "사용처",
     amount : Int = 1000000000,
     moneyType : String = "원",
     type : String = "출금"
     ) {
     val dec = DecimalFormat("#,###")
+    val monthDayFormat = SimpleDateFormat("MM.dd")
+    val timeFormat = SimpleDateFormat("HH:mm")
 
     Row(
         modifier = Modifier
@@ -174,13 +197,13 @@ fun HistoryItem(
             Column(
 
             ) {
-                DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString())
+                DateText(text = monthDayFormat.format(date))
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 BasicHistoryText(text = title)
-                GrayHistoryText(date.format(DateTimeFormatter.ofPattern("HH:mm")).toString())
+                GrayHistoryText(timeFormat.format(date))
             }
         }
         Column(horizontalAlignment = Alignment.End) {
@@ -233,13 +256,13 @@ fun test1() {
 @Preview
 @Composable
 fun test2() {
-    val historyList = List(30){i -> HistoryEntity(LocalDateTime.now().minusDays(i.toLong()).minusHours(i.toLong()), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
+    val historyList = MutableList(30){i -> HistoryEntity(Date(2022, 10, 8 + i, 9, 19 - i), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
     showHistoryList(historyList = historyList, type = "포인트")
 }
 
 @Preview
 @Composable
 fun test3() {
-    val historyList = List(30){i -> HistoryEntity(LocalDateTime.now().minusDays(i.toLong()).minusHours(i.toLong()), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
+    val historyList = MutableList(30){ i -> HistoryEntity(Date(2022, 10, 8 + i, 9, 19 - i), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
     showHistoryList(historyList = historyList)
 }
