@@ -12,29 +12,46 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.finance.android.R
+import com.finance.android.domain.dto.response.PointHistoryResponseDto
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.UserBalanceInfo
 import com.finance.android.ui.components.showHistoryList
+import com.finance.android.utils.Response
+import com.finance.android.viewmodels.PointViewModel
 
 @Composable
 fun PointFragment(
-//    attendanceViewModel: AttendanceViewModel = hiltViewModel(),
+    pointViewModel: PointViewModel = hiltViewModel(),
     onClose: () -> Unit = {}
 ) {
-    Screen(onClose)
+    LaunchedEffect(Unit) {
+        pointViewModel.launchPointHistory()
+    }
+
+    when(pointViewModel.getLoadState()) {
+        is Response.Success -> Screen(
+            onClose = onClose,
+            pointHistoryList = (pointViewModel.pointHistoryList.value as Response.Success).data,
+        )
+        is Response.Failure -> Loading("실패", onClose = onClose)
+        else -> Loading(onClose = onClose)
+    }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Screen(
-    onClose: () -> Unit = {}
+    onClose: () -> Unit = {},
+    pointHistoryList : MutableList<PointHistoryResponseDto>
 ) {
     Scaffold(
         topBar = {
@@ -60,7 +77,8 @@ private fun Screen(
                 balance = "100,000 포인트",
                 type = "포인트",
             )
-            showHistoryList(type = "포인트")
+//            test2()
+            showHistoryList(type = "포인트", historyList = List(pointHistoryList.size) {i -> pointHistoryList[i].toEntity()})
         }
     }
 }
@@ -75,7 +93,7 @@ private fun Loading(
     Scaffold(
         topBar = {
             BackHeaderBar(
-                text = "출석체크",
+                text = "포인트",
                 onClickBack = onClose
             )
         }
