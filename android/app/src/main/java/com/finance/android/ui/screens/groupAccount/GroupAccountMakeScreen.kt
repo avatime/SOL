@@ -1,4 +1,6 @@
+
 package com.finance.android.ui.screens.groupAccount
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -24,7 +26,6 @@ import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.theme.Typography
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
-
 import com.finance.android.utils.Const
 
 @Composable
@@ -65,5 +66,6 @@ fun GroupAccountMakeScreen(
             buttonType = ButtonType.ROUNDED,
         )
     }
+
 }
 

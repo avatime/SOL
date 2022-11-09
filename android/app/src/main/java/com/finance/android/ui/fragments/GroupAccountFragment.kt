@@ -25,9 +25,9 @@ import com.finance.android.R
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
-
 import com.finance.android.ui.screens.ContactScreen
 import com.finance.android.ui.screens.groupAccount.GroupAccountMakeScreen
+
 import com.finance.android.ui.screens.groupAccount.GroupAccountDetailScreen
 import com.finance.android.ui.screens.groupAccount.GroupAccountFriendScreen
 import com.finance.android.ui.screens.groupAccount.GroupAccountMainScreen
@@ -65,7 +65,6 @@ fun GroupAccountFragment(
                 )
             }
 
-
             composable(Const.GROUP_ACCOUNT_MAKE_SCREEN){
                 GroupAccountMakeScreen(
                     navController = innerNavController,
@@ -88,9 +87,8 @@ fun GroupAccountFragment(
                 GroupAccountDetailScreen(navController = innerNavController)
 
             }
-            
+
         }
     }
-
 
 }
