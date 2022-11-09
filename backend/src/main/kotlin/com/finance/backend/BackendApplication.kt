@@ -9,14 +9,15 @@ import javax.annotation.PostConstruct
 
 @EnableScheduling
 @SpringBootApplication
-class BackendApplication
-
-@PostConstruct
-fun started() {
-	TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"))
-	println("현재 시각 : " + LocalDateTime.now())
+class BackendApplication{
+	@PostConstruct
+	fun started() {
+		TimeZone.setDefault(TimeZone.getTimeZone("Asia/Seoul"))
+		println("현재 시각 : " + LocalDateTime.now())
+	}
 }
 
 fun main(args: Array<String>) {
 	runApplication<BackendApplication>(*args)
 }
+
