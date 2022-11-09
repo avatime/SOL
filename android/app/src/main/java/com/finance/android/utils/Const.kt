@@ -5,6 +5,8 @@ object Const {
     const val API_PATH = "api/v1"
     const val DATA_PATH = "data/v1"
 
+    const val GOAL_WALK_COUNT = 5000
+
     const val HOME_SCREEN = "home"
     const val PRODUCT_SCREEN = "product"
     const val STOCK_SCREEN = "stock"

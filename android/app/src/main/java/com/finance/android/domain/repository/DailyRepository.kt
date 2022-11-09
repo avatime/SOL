@@ -12,4 +12,5 @@ interface DailyRepository {
     suspend fun getProfileList() : MutableList<DailyProfileResponseDto>
     suspend fun changeProfile(changeProfileRequestDto: ChangeProfileRequestDto)
     suspend fun test()
+    suspend fun receiveWalkPoint()
 }

@@ -37,10 +37,14 @@ import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 import com.finance.android.services.WalkService
 import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.BackHeaderBar
+import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.screens.more.ShowWalkingCalendar
 import com.finance.android.ui.theme.LightMainColor
+import com.finance.android.utils.Const
 import com.finance.android.utils.Response
+import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.WalkViewModel
+import java.text.DecimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,7 +102,11 @@ fun WalkScreen(
             when (walkViewModel.getLoadState()) {
                 is Response.Success -> Screen(
                     walkList = (walkViewModel.walkingList.value as Response.Success).data,
-                    walkCount = walkViewModel.walkCount.value
+                    walkCount = walkViewModel.walkCount.value,
+                    enableReceiveWalkPoint = walkViewModel.enableReceiveWalkPoint.value,
+                    onClickReceiveWalkPoint = {
+                        walkViewModel.receiveWalkPoint()
+                    }
                 )
                 is Response.Failure -> Text("실패")
                 else -> AnimatedLoading()
@@ -110,17 +118,19 @@ fun WalkScreen(
 @Composable
 private fun Screen(
     walkList: MutableList<DailyWalkingResponseDto>,
-    walkCount: Int?
+    walkCount: Int?,
+    enableReceiveWalkPoint: Boolean,
+    onClickReceiveWalkPoint: () -> Unit
 ) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .padding(dimensionResource(R.dimen.padding_medium)),
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(R.dimen.padding_medium))
     ) {
         Row(
             modifier = Modifier
+                .padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
                 .fillMaxWidth()
         ) {
             Column(
@@ -134,7 +144,7 @@ private fun Screen(
                     color = Color.Blue
                 )
                 Text(
-                    text = "목표는 5,000걸음",
+                    text = "목표는 ${DecimalFormat("#,###").format(Const.GOAL_WALK_COUNT)} 걸음",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -156,10 +166,19 @@ private fun Screen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(500.dp)
         ) {
             ShowWalkingCalendar(walkList)
         }
+
+        com.finance.android.ui.components.TextButton(
+            modifier = Modifier.withBottomButton(),
+            onClick = {
+                onClickReceiveWalkPoint()
+            },
+            text = "포인트 적립하기",
+            buttonType = ButtonType.ROUNDED,
+            enabled = enableReceiveWalkPoint
+        )
     }
 }
 
@@ -168,6 +187,7 @@ private fun Screen(
 private fun DrawProgress(walkCount: Int? = 2500) {
     Column(
         modifier = Modifier
+            .padding(horizontal = dimensionResource(id = R.dimen.padding_medium))
             .fillMaxWidth()
     ) {
         walkCount?.let {
@@ -176,7 +196,7 @@ private fun DrawProgress(walkCount: Int? = 2500) {
                     .fillMaxWidth()
             ) {
                 val maxWidth = rememberUpdatedState(maxWidth)
-                val percentage = maxWidth.value * it / 5000
+                val percentage = maxWidth.value * it / Const.GOAL_WALK_COUNT
                 ConstraintLayout(modifier = Modifier.height(120.dp)) {
                     val (count, progress, shoe, ssal) = createRefs()
                     Box(
@@ -226,7 +246,7 @@ private fun DrawProgress(walkCount: Int? = 2500) {
                                 modifier = Modifier
                                     .clip(RoundedCornerShape(10.dp))
                                     .fillMaxSize(),
-                                progress = it.toFloat() / 5000,
+                                progress = it.toFloat() / Const.GOAL_WALK_COUNT,
                                 color = MaterialTheme.colorScheme.primary,
                                 trackColor = LightMainColor
                             )

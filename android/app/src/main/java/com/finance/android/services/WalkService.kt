@@ -109,17 +109,18 @@ class WalkService : Service(), SensorEventListener {
         steps = p0?.values?.get(0)?.toInt() ?: -1
         if (p0 == null) {
             steps = -1
-        } else {
-            val context = this
-            CoroutineScope(Dispatchers.IO + job).launch {
-                WalkStore(context).getCount().collect {
-                    steps = it + 1
-                    WalkStore(context).setCount(steps)
-                }
-            }
+            notificationManager.notify(NOTIFICATION_ID, getNotification())
+            return
         }
 
-        notificationManager.notify(NOTIFICATION_ID, getNotification())
+        val context = this
+        CoroutineScope(Dispatchers.IO + job).launch {
+            WalkStore(context).getCount().collect {
+                steps = it + 1
+                WalkStore(context).setCount(steps)
+                notificationManager.notify(NOTIFICATION_ID, getNotification())
+            }
+        }
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
