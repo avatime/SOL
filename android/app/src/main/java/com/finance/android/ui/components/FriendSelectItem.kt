@@ -62,8 +62,8 @@ fun FriendSelectItem(
                 contentDescription = "연락처 이미지",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .width(50.dp)
-                    .height(50.dp)
+                    .width(60.dp)
+                    .height(60.dp)
                     .clip(CircleShape)
             )
         }

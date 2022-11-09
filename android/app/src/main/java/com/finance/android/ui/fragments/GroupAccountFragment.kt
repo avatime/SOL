@@ -72,7 +72,7 @@ fun GroupAccountFragment(
         }
 
         composable(Const.GROUP_ACCOUNT_DETAIL_SCREEN){
-            GroupAccountDetailScreen(navController = innerNavController)
+            GroupAccountDetailScreen(navController = innerNavController, groupAccountViewModel = groupAccountViewModel)
         }
     }
 }
