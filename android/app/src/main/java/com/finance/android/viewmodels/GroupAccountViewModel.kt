@@ -26,21 +26,21 @@ class GroupAccountViewModel @Inject constructor(
     val name = mutableStateOf("")
 
 
-    // 모임 통장 생성
-    fun CreateGroupAccount(
-
-    ){
-        viewModelScope.launch {
-            this@GroupAccountViewModel.run{
-                groupAccountRepository.postMakeGroupAccount(
-                    CreateGroupAccountRequestDto(
-                        name = name.value,
-                        memberList = List<MemberRequestDto>
-                    )
-                )
-            }
-        }
-    }
+//    // 모임 통장 생성
+//    fun CreateGroupAccount(
+//
+//    ){
+//        viewModelScope.launch {
+//            this@GroupAccountViewModel.run{
+//                groupAccountRepository.postMakeGroupAccount(
+//                    CreateGroupAccountRequestDto(
+//                        name = name.value,
+//                        memberList = List<MemberRequestDto>
+//                    )
+//                )
+//            }
+//        }
+//    }
 
 
     //모임 통장 조회
