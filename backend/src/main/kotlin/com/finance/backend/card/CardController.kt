@@ -53,8 +53,8 @@ class CardController(
         return ResponseEntity.status(200).body(cardService.getCardBenefitDetail(cdNo))
     }
 
-    @GetMapping("/benefit/{cdNo}")
-    fun getCardBenefitDetail3(@PathVariable cdNo: String): ResponseEntity<Any>{
-        return ResponseEntity.status(200).body(cardService.getCardBenefitThree(cdNo))
+    @GetMapping("/benefit/{cdPdCode}")
+    fun getCardBenefitDetail3(@PathVariable cdPdCode: Long): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(cardService.getCardBenefitThree(cdPdCode))
     }
 }
