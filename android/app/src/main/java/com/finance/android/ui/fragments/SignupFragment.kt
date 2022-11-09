@@ -1,13 +1,14 @@
 package com.finance.android.ui.fragments
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.ui.screens.login.*
+import com.finance.android.ui.theme.SetStatusBarColor
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.LoginViewModel
 
@@ -29,8 +30,7 @@ fun SignupFragment(
     val onNextStep = { step = SignupStep.values()[step.id + 1] }
     var inputPasswordType by remember { mutableStateOf(InputPasswordType.LOGIN) }
 
-    Log.i("TEST", "fhfghfh")
-
+    SetStatusBarColor(color = MaterialTheme.colorScheme.surface)
     AnimatedVisibility(
         visible = step == SignupStep.InputUserInfo,
         enter = slideInVertically(
