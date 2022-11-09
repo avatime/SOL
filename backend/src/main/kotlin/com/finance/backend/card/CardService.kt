@@ -17,5 +17,5 @@ interface CardService {
     fun getCardMonthAll(cdNo: String, year:Int, month: Int): CardBillRes
 //    fun getCardBenefit(token: String):List<CardBenefitRes>
     fun getCardBenefitDetail(cdNo: String): List<CardBenefitDetailRes>
-    fun getCardBenefitThree(cdNo: String): List<CardBenefitInfo>
+    fun getCardBenefitThree(cdPdCode: Long): List<CardBenefitInfo>
 }
