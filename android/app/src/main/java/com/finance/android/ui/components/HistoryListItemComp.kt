@@ -21,13 +21,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.time.YearMonth
-import java.util.*
+import java.time.format.DateTimeFormatter
 
 // HistoryList 를 사용하기 위한 엔티티
 data class HistoryEntity(
-    val date : Date,
+    val date : LocalDateTime,
     val name : String,
     val value : Int
 )
@@ -175,15 +175,13 @@ fun showHistoryList(
 @Preview(showBackground = true)
 @Composable
 fun HistoryItem(
-    date : Date = Date(),
+    date : LocalDateTime = LocalDateTime.now(),
     title : String = "사용처",
     amount : Int = 1000000000,
     moneyType : String = "원",
     type : String = "출금"
     ) {
     val dec = DecimalFormat("#,###")
-    val monthDayFormat = SimpleDateFormat("MM.dd")
-    val timeFormat = SimpleDateFormat("HH:mm")
 
     Row(
         modifier = Modifier
@@ -197,13 +195,13 @@ fun HistoryItem(
             Column(
 
             ) {
-                DateText(text = monthDayFormat.format(date))
+                DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString())
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp)
             ) {
                 BasicHistoryText(text = title)
-                GrayHistoryText(timeFormat.format(date))
+                GrayHistoryText(date.format(DateTimeFormatter.ofPattern("HH:mm")).toString())
             }
         }
         Column(horizontalAlignment = Alignment.End) {
@@ -256,13 +254,13 @@ fun test1() {
 @Preview
 @Composable
 fun test2() {
-    val historyList = MutableList(30){i -> HistoryEntity(Date(2022, 10, 8 + i, 9, 19 - i), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
+    val historyList = MutableList(30){i -> HistoryEntity(LocalDateTime.now().minusHours(i.toLong()).plusDays(i.toLong()), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
     showHistoryList(historyList = historyList, type = "포인트")
 }
 
 @Preview
 @Composable
 fun test3() {
-    val historyList = MutableList(30){ i -> HistoryEntity(Date(2022, 10, 8 + i, 9, 19 - i), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
+    val historyList = MutableList(30){ i -> HistoryEntity(LocalDateTime.now().minusHours(i.toLong()).plusDays(i.toLong()), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
     showHistoryList(historyList = historyList)
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.finance.android.R
 import com.finance.android.domain.dto.response.PointHistoryResponseDto
+import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.UserBalanceInfo
 import com.finance.android.ui.components.showHistoryList
@@ -41,6 +42,7 @@ fun PointFragment(
         is Response.Success -> Screen(
             onClose = onClose,
             pointHistoryList = (pointViewModel.pointHistoryList.value as Response.Success).data,
+            userInfo = (pointViewModel.myInfo.value as Response.Success).data
         )
         is Response.Failure -> Loading("실패", onClose = onClose)
         else -> Loading(onClose = onClose)
@@ -51,7 +53,8 @@ fun PointFragment(
 @Composable
 private fun Screen(
     onClose: () -> Unit = {},
-    pointHistoryList : MutableList<PointHistoryResponseDto>
+    pointHistoryList : MutableList<PointHistoryResponseDto>,
+    userInfo : UserProfileResponseDto
 ) {
     Scaffold(
         topBar = {
@@ -74,7 +77,7 @@ private fun Screen(
             UserBalanceInfo(
                 title = "포인트",
                 isAccount = false,
-                balance = "100,000 포인트",
+                balance = userInfo.point.toString() + " 포인트",
                 type = "포인트",
             )
 //            test2()
