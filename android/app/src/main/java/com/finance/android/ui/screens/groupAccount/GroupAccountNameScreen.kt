@@ -31,7 +31,6 @@ fun GroupAccountNameScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(8.dp)
             .background(color = MaterialTheme.colorScheme.surface),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
@@ -57,7 +56,7 @@ fun GroupAccountNameScreen(
         TextInput(
             value = groupAccountViewModel.name.value,
             onValueChange = {
-                if (it.length <= 20){
+                if (1 <= it.length && it.length <= 20){
                     groupAccountViewModel.name.value = it
                 }
             },
