@@ -50,7 +50,7 @@ fun StockScreen(
             is Response.Success -> {
                 StockContainer(
                     navController = navController,
-                    accData = (financeViewModel.financeList.value as Response.Success).data,
+                    accData = (financeViewModel.financeList.value as Response.Success).data
                 )
             }
             is Response.Loading -> {}

@@ -53,6 +53,7 @@ android {
             excludes += 'META-INF/DEPENDENCIES'
         }
     }
+
 }
 
 dependencies {
@@ -105,5 +106,4 @@ dependencies {
     implementation 'com.kizitonwose.calendar:compose:2.0.1'
 
     implementation "com.holix.android:bottomsheetdialog-compose:1.0.3"
-    
 }

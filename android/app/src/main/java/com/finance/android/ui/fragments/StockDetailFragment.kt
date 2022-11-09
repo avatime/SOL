@@ -19,13 +19,14 @@ import java.text.DecimalFormat
 
 
 @Composable
-fun StockDetailFragment(
+fun StockDetailFragment (
     financeDetailViewModel: FinanceDetailViewModel = hiltViewModel(),
     fnName: String,
     onClose: () -> Unit,
     close: Int,
     per: Float
 ) {
+
     Scaffold(
         topBar = {
             BackHeaderBar(text = "주식 상세보기", modifier = Modifier, onClickBack = onClose)
