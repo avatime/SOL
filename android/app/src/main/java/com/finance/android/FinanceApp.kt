@@ -173,7 +173,9 @@ fun FinanceApp() {
                     onClose = { navController.popBackStack() }
                 )
             }
-
+            composable(Const.Routes.GROUPACCOUNT) {
+                GroupAccountFragment(navController = navController)
+            }
         }
     }
 }
