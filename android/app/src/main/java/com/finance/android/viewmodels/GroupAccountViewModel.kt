@@ -5,7 +5,11 @@ import android.app.Application
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
+import com.finance.android.domain.dto.request.GroupIdRequestDto
+import com.finance.android.domain.dto.response.FriendResponseDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.GroupAccountRepository
@@ -18,11 +22,13 @@ import javax.inject.Inject
 class GroupAccountViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
+    savedStateHandle: SavedStateHandle,
     private val groupAccountRepository: GroupAccountRepository
 ) : BaseViewModel(application, baseRepository) {
 
     val name = mutableStateOf("")
-
+//    val paId = savedStateHandle.get<Int>("paId")
+    val paId = 2
 
 //    // 모임 통장 생성
 //    fun CreateGroupAccount(
@@ -46,6 +52,7 @@ class GroupAccountViewModel @Inject constructor(
         mutableStateOf<Response<MutableList<PublicAccountResponseDto>>>(Response.Loading)
     val groupAccountData = _groupAccountData
     fun getGroupAccountData() {
+        println("paId: " + paId)
         viewModelScope.launch {
             this@GroupAccountViewModel.run {
                 groupAccountRepository.getGroupAccount()
@@ -76,4 +83,40 @@ class GroupAccountViewModel @Inject constructor(
     }
 
 
+    fun makeGroupAccount(
+        createGroupAccountRequestDto: CreateGroupAccountRequestDto,
+        onSuccess: () -> Unit
+    ) {
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postMakeGroupAccount(
+                    createGroupAccountRequestDto
+                )
+            }.collect {
+                if (it is Response.Success) {
+                    Log.i("remitAccount", "전번도 갓찬영")
+                    onSuccess()
+                } else if (it is Response.Failure) {
+                    Log.i("remitAccount", "전번도 김챤챤영 ㅡㅡ")
+                }
+            }
+        }
+
+    }
+
+    // 모임 친구 조회
+    private val _groupAccountMemberData =
+        mutableStateOf<Response<MutableList<FriendResponseDto>>>(Response.Loading)
+    val groupAccountMemberData = _groupAccountMemberData
+    fun getGroupAccountMember(paId: Int) {
+
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postGroupMember(GroupIdRequestDto(paId))
+            }.collect {
+                _groupAccountMemberData.value = it
+            }
+        }
+    }
 }
+

@@ -17,6 +17,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
+import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
+import com.finance.android.domain.dto.request.MemberRequestDto
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.FriendSelectItem
@@ -48,6 +50,19 @@ fun ContactFriendListScreen(
     val friendsList =
         list.filterIndexed { idx, _ -> groupAccountViewModel.selectFriendsList!![idx].value }
 
+    for (friend in friendsList) {
+        Log.i("친구 번호", "${friend.phoneNumber}")
+    }
+
+    val name = groupAccountViewModel.name.value
+    val memberList = ArrayList<MemberRequestDto>()
+    for (friend in friendsList) {
+        memberList.add(MemberRequestDto(friend.name, friend.phoneNumber.toString()))
+    }
+
+    val createGroupAccountRequestDto = CreateGroupAccountRequestDto(name, memberList)
+
+
     Column(modifier = modifier.fillMaxSize()) {
         Row(
             modifier = Modifier
@@ -78,7 +93,11 @@ fun ContactFriendListScreen(
         }
 
         TextButton(
-            onClick = { navController.navigate(Const.GROUP_ACCOUNT_COMPLETED) },
+            onClick = {
+                groupAccountViewModel.makeGroupAccount(
+                    createGroupAccountRequestDto,
+                    onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_COMPLETED) })
+            },
             modifier = Modifier
                 .withBottomButton(),
             text = "모임 통장 생성하기",
