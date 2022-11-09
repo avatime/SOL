@@ -25,8 +25,7 @@ fun FinanceApp() {
     FinanceTheme {
         val navController = rememberNavController()
         NavHost(
-            navController = navController,
-            startDestination = Const.Routes.LOGIN
+            navController = navController, startDestination = Const.Routes.LOGIN
         ) {
             composable(Const.Routes.LOGIN) {
                 LoginFragment(navController = navController)
@@ -37,56 +36,44 @@ fun FinanceApp() {
             composable(Const.Routes.MAIN) {
                 MainFragment(navController = navController)
             }
-            composable(
-                route = "${Const.Routes.REMIT}/{accountName}/{accountNumber}/{balance}",
-                arguments = listOf(
-                    navArgument("accountName") { type = NavType.StringType },
+            composable(route = "${Const.Routes.REMIT}/{accountName}/{accountNumber}/{balance}",
+                arguments = listOf(navArgument("accountName") { type = NavType.StringType },
                     navArgument("accountNumber") { type = NavType.StringType },
                     navArgument("balance") { type = NavType.IntType }
                     // TODD 받는계좌번호, 받는계좌은행이름, 금액
-                )
-            ) {
+                )) {
                 RemitFragment(navController = navController)
             }
             composable(
-                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}",
-                arguments = listOf(
+                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}", arguments = listOf(
                     navArgument("acName") { type = NavType.StringType },
                     navArgument("cpName") { type = NavType.StringType },
                     navArgument("acNo") { type = NavType.StringType },
                 )
             ) {
-                AccountDetailFragment(
-                    acName = it.arguments!!.getString("acName")!!,
+                AccountDetailFragment(acName = it.arguments!!.getString("acName")!!,
                     cpName = it.arguments!!.getString("cpName")!!,
                     acNo = it.arguments!!.getString("acNo")!!,
                     navController = navController,
-                    onClose = { navController.popBackStack() }
-                )
+                    onClose = { navController.popBackStack() })
             }
             composable(Const.Routes.ADD_ASSET) {
                 AnimatedVisibility(
                     initiallyVisible = false,
                     visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
-                    AddAssetFragment(
-                        onClose = {
-                            navController.popBackStack()
-                        }
-                    )
+                    AddAssetFragment(onClose = {
+                        navController.popBackStack()
+                    })
                 }
             }
             composable(Const.Routes.ASSET) {
                 AnimatedVisibility(
                     initiallyVisible = false,
                     visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
                     AssetFragment(navController = navController, onClose = {
@@ -98,27 +85,22 @@ fun FinanceApp() {
                 AnimatedVisibility(
                     initiallyVisible = false,
                     visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
-                    AttendanceFragment(
-                        onClose = {
-                            navController.popBackStack()
-                        }
-                    )
+                    AttendanceFragment(onClose = {
+                        navController.popBackStack()
+                    })
                 }
             }
             composable(Const.Routes.POINT) {
                 AnimatedVisibility(
                     initiallyVisible = false,
                     visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
+<<<<<<< HEAD
                     PointFragment(
                         navController = navController,
                         onClose = {
@@ -141,27 +123,32 @@ fun FinanceApp() {
                             navController.popBackStack()
                         }
                     )
+=======
+                    PointFragment(onClose = {
+                        navController.popBackStack()
+                    })
+>>>>>>> 31dc155 (feat: insurance detail 연동 확인)
                 }
             }
             composable(Const.Routes.WALK) {
                 AnimatedVisibility(
                     initiallyVisible = false,
                     visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
-                    WalkFragment(
-                        onClose = {
-                            navController.popBackStack()
-                        }
-                    )
+                    WalkFragment(onClose = {
+                        navController.popBackStack()
+                    })
                 }
             }
             composable(
+<<<<<<< HEAD
                 route = "${Const.Routes.STOCK}/{fnName}",
                 arguments = listOf(
+=======
+                route = "${Const.Routes.STOCK}/{fnName}/{close}/{per}", arguments = listOf(
+>>>>>>> 31dc155 (feat: insurance detail 연동 확인)
                     navArgument("fnName") { type = NavType.StringType },
                 )
             ) {
@@ -171,19 +158,29 @@ fun FinanceApp() {
                     }
                 )
             }
+            composable(
+                route = "${Const.Routes.INSURANCE}/{id}/{name}", arguments = listOf(
+                    navArgument("id") { type = NavType.IntType },
+                    navArgument("name") { type = NavType.StringType }
+                )
+            ) {
+                InsuranceDetailFragment(
+                    id = it.arguments!!.getInt("id"),
+                    name = it.arguments!!.getString("name")!!,
+                    onClose = {
+                        navController.popBackStack()
+                    }
+                )
+            }
             composable(Const.Routes.PEDOMETER) {
                 AnimatedVisibility(
                     initiallyVisible = false,
                     visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
 
-                    PedometerFragment(
-                        onClose = { navController.popBackStack() }
-                    )
+                    PedometerFragment(onClose = { navController.popBackStack() })
                 }
             }
             composable(
@@ -194,13 +191,16 @@ fun FinanceApp() {
                     navArgument("cdName") { type = NavType.StringType },
                 )
             ) {
+<<<<<<< HEAD
                 CardBenefitScreen(
                     cardProductCode = it.arguments!!.getInt("cardProductCode"),
+=======
+                CardDetailScreen(cardProductCode = it.arguments!!.getInt("cardProductCode"),
+>>>>>>> 31dc155 (feat: insurance detail 연동 확인)
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
                     cdName = it.arguments!!.getString("cdName")!!,
                     navController = navController,
-                    onClose = { navController.popBackStack() }
-                )
+                    onClose = { navController.popBackStack() })
             }
             composable(Const.Routes.GROUPACCOUNT) {
                 GroupAccountFragment(navController = navController)

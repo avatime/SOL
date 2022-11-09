@@ -1,6 +1,7 @@
 package com.finance.android.domain.repository
 
 import com.finance.android.domain.dto.request.InsuranceIdRequestDto
+import com.finance.android.domain.dto.response.InsuranceDetailResponseDto
 import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
 import com.finance.android.domain.dto.response.MyInsuranceInfoResponseDto
 import com.finance.android.domain.service.InsuranceService
@@ -21,5 +22,9 @@ class InsuranceRepositoryImpl @Inject constructor(
 
     override suspend fun getMyInsurance(): MyInsuranceInfoResponseDto {
         return insuranceService.getMyInsurance()
+    }
+
+    override suspend fun getInsuranceDetail(id: Int): InsuranceDetailResponseDto {
+        return insuranceService.getInsuranceDetail(id)
     }
 }

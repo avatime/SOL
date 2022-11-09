@@ -208,7 +208,10 @@ private fun HomeCardContainer(
                 insuranceName = it.isPdName,
                 fee = it.isPdFee,
                 myName = it.name,
-                isName = it.isName
+                isName = it.isName,
+                onClickItem = {
+                    navController.navigate("${Const.Routes.INSURANCE}/${it.isId}/${it.isPdName}")
+                }
             )
         }
         if (mainData.financeList.size != 0) {
