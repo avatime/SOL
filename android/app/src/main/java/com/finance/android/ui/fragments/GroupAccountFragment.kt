@@ -25,13 +25,17 @@ import com.finance.android.R
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
-import com.finance.android.ui.screens.group.GroupAccountMakeScreen
-import com.finance.android.ui.screens.group.InputGroupName
+
+import com.finance.android.ui.screens.ContactScreen
+import com.finance.android.ui.screens.groupAccount.GroupAccountMakeScreen
 import com.finance.android.ui.screens.groupAccount.GroupAccountDetailScreen
+import com.finance.android.ui.screens.groupAccount.GroupAccountFriendScreen
 import com.finance.android.ui.screens.groupAccount.GroupAccountMainScreen
+import com.finance.android.ui.screens.groupAccount.GroupAccountNameScreen
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
+import com.finance.android.viewmodels.RemitViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,11 +65,30 @@ fun GroupAccountFragment(
                 )
             }
 
+
+            composable(Const.GROUP_ACCOUNT_MAKE_SCREEN){
+                GroupAccountMakeScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel
+                )
+            }
+
+            composable(Const.GROUP_ACCOUNT_NAME_SCREEN){
+                GroupAccountNameScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel
+                )
+            }
+
+            composable(Const.GROUP_ACCOUNT_FRIEND_SCREEN){
+                GroupAccountFriendScreen(groupAccountViewModel = groupAccountViewModel, navController = innerNavController)
+            }
+
             composable(Const.GROUP_ACCOUNT_DETAIL_SCREEN) {
                 GroupAccountDetailScreen(navController = innerNavController)
 
             }
-
+            
         }
     }
 
