@@ -12,16 +12,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.ui.components.AccountListItem
 import com.finance.android.ui.components.AccountListItem_Arrow
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
-import com.finance.android.viewmodels.FinanceAssetViewModel
 import com.finance.android.viewmodels.FinanceViewModel
 
 @Composable
@@ -44,7 +43,7 @@ fun AssetStockScreen(
                 AssetStockContainer(modifier = Modifier
                     .fillMaxWidth()
                     .padding(dimensionResource(R.dimen.padding_medium))
-                    .background(color = Color.White, shape = RoundedCornerShape(10)),
+                    .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
                     navController = navController,
                     financeData = (financeViewModel.myFinanceList.value as Response.Success).data
                 )

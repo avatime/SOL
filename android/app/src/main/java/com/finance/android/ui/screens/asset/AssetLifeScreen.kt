@@ -50,7 +50,7 @@ fun AssetLifeScreen(
                     .padding(dimensionResource(R.dimen.padding_medium))
                     .background(
                         color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(10)
+                        shape = RoundedCornerShape(10.dp)
                     ),
                     isList = isData.list
                 )
@@ -59,7 +59,7 @@ fun AssetLifeScreen(
                     .padding(dimensionResource(R.dimen.padding_medium))
                     .background(
                         color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(15)
+                        shape = RoundedCornerShape(10.dp)
                     ),
                 value = isData.totalFee)
             }

@@ -47,7 +47,7 @@ fun AssetBankScreen(
                         .padding(dimensionResource(R.dimen.padding_medium))
                         .background(
                             color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(10)
+                            shape = RoundedCornerShape(10.dp)
                         ),
                     navController = navController,
                     accData = (bankViewModel.accountList.value as Response.Success).data

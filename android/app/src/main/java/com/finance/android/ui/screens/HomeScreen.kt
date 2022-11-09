@@ -102,7 +102,7 @@ fun HomeScreen(
                             .padding(dimensionResource(R.dimen.padding_medium))
                             .background(
                                 color = MaterialTheme.colorScheme.surface,
-                                shape = RoundedCornerShape(10)
+                                shape = RoundedCornerShape(10.dp)
                             ),
                         navController = navController,
                         mainData = (homeViewModel.mainData.value as Response.Success).data
@@ -113,7 +113,7 @@ fun HomeScreen(
                             .padding(dimensionResource(R.dimen.padding_medium))
                             .background(
                                 color = MaterialTheme.colorScheme.surface,
-                                shape = RoundedCornerShape(10)
+                                shape = RoundedCornerShape(10.dp)
                             ),
                         navController = navController
                     )
