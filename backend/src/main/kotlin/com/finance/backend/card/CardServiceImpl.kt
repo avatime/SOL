@@ -2,19 +2,16 @@ package com.finance.backend.card
 
 import com.finance.backend.Exceptions.NoCardException
 import com.finance.backend.Exceptions.TokenExpiredException
-import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.card.request.CardInfoReq
 import com.finance.backend.card.response.*
 import com.finance.backend.cardBenefit.CardBenefitRepository
 import com.finance.backend.cardBenefit.response.CardBenefitDetailRes
 import com.finance.backend.cardBenefit.response.CardBenefitInfo
-import com.finance.backend.cardBenefit.response.CardBenefitRes
 import com.finance.backend.cardBenefitImg.CardBenefitImgRepository
 import com.finance.backend.cardPaymentHistory.CardPaymentHistoryRepository
 import com.finance.backend.cardProduct.CardProductRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
-import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -56,8 +53,8 @@ class CardServiceImpl(
         return cardInfoList
     }
 
-    override fun getMyCard(token: String): List<CardMyRes> {
-        val cardInfoList = ArrayList<CardMyRes>()
+    override fun getMyCard(token: String): List<CardRes> {
+        val cardInfoList = ArrayList<CardRes>()
         val c = cardBenefitRepository.findTop3ByCardProductCdPdCode(199)
         val now = LocalDateTime.now()
         val year = now.year
@@ -72,15 +69,9 @@ class CardServiceImpl(
             for (card in cardList){
                 val cardProduct = cardProductRepository.findById(card.cdPdCode).orElse(null)
                 val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo)
-                val cardBenefitInfoList = ArrayList<CardBenefitInfo>()
-
-                val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(card.cdPdCode)
-                for (cardBenefit in cardBenefitList){
-                    cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
-                }
 
                 val balance = cardPaymentHistoryRepository.getByCdVal(card.cdNo,startDate,endDate)
-                cardInfoList.add(CardMyRes(balance, CardRes(cardInfoRes, cardBenefitInfoList)))
+                cardInfoList.add(CardRes(balance, cardInfoRes))
             }
         }
         return cardInfoList
@@ -128,9 +119,8 @@ class CardServiceImpl(
 //        return cardBenefitList
 //    }
 
-    override fun getCardBenefitDetail(cdNo: String): List<CardBenefitDetailRes> {
+    override fun getCardBenefitDetail(cdPdCode: Long): List<CardBenefitDetailRes> {
         val cardBenefitDetailList = ArrayList<CardBenefitDetailRes>()
-        val cdPdCode = cardRepository.findById(cdNo).orElse(null).cdPdCode
         val cardBenefitList = cardBenefitRepository.findAllByCardProductCdPdCode(cdPdCode).orEmpty()
         for (cardBenefit in cardBenefitList){
             val cardBenefitImg = cardBenefitImgRepository.findById(cardBenefit.cdBfImg.id).orElse(null)
