@@ -111,7 +111,7 @@ fun AssetCardContainer(
 }
 
 @Composable
-fun benefitListItem(
+private fun benefitListItem(
     benefitSummary: String?,
     companyLogoPath: String
 ) {
