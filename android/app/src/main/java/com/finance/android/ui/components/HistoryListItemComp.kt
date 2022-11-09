@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
-import com.finance.android.utils.ext.toPx
 import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
@@ -66,7 +65,7 @@ fun showHistoryList(
                 properties = BottomSheetDialogProperties(
                     navigationBarProperties = NavigationBarProperties(),
                     behaviorProperties = BottomSheetBehaviorProperties(
-                        maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
+//                        maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
                     )
                 )
             ) {
@@ -76,21 +75,32 @@ fun showHistoryList(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(start = 16.dp, top = 10.dp, bottom = 16.dp)
                             .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+//                        verticalArrangement = Arrangement.Center,
+//                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            Text(text = "보기 선택", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        }
                         repeat(3) {
                             Row(
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
+                                modifier = Modifier.padding(10.dp).clickable {
+                                    currentMenu.value = it
+                                    showMenuList = false
+                                }
+                            ){
                                 Text(text = menuList[it])
-//                                Image(
-//                                    painter = painterResource(id = R.drawable.ic_check),
-//                                    modifier = Modifier.padding(top = 4.dp),
-//                                    contentDescription = "",
-//                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                if(it == currentMenu.value){
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_check),
+                                        modifier = Modifier
+                                            .padding(end = 16.dp)
+                                            .size(20.dp),
+                                        contentDescription = "",
+                                    )
+                                }
                             }
                         }
                     }
@@ -193,7 +203,7 @@ fun showHistoryList(
                                     title = history.name,
                                     amount = history.value,
                                     moneyType = moneyType,
-                                    type = menuList[2]
+                                    type = if(history.value < 0) menuList[2] else menuList[1]
                                 )
                             }
                         }
