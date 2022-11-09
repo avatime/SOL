@@ -25,10 +25,11 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 @Composable
 fun GroupAccountNameScreen(
     navController: NavController,
-    groupAccountViewModel: GroupAccountViewModel
+    groupAccountViewModel: GroupAccountViewModel,
+    modifier: Modifier
 ){
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
             .background(color = MaterialTheme.colorScheme.surface),
