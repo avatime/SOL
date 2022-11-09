@@ -73,6 +73,7 @@ class WalkService : Service(), SensorEventListener {
                 enableVibration(true)
                 setSound(null, null)
                 importance = NotificationManager.IMPORTANCE_NONE
+                setShowBadge(false)
             }
             val manager = getSystemService(
                 NotificationManager::class.java
