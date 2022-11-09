@@ -64,7 +64,6 @@ class DailyServiceImpl(
             val startDate = LocalDate.of(year, month, 1)
             val endDate = startDate.plusMonths(1)
             val dayList: List<Attendance> = attendanceRepository.findAllByUserAndAttDateBetween(user, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
-            for(d in dayList) println(d.attDate.toString() + " : " + d.user.name)
             return List(startDate.until(endDate, ChronoUnit.DAYS).toInt()) { i -> AttendanceDao(startDate.plusDays(i.toLong()), isAttend(dayList, startDate.plusDays(i.toLong()))) }
         } else throw Exception()
     }
