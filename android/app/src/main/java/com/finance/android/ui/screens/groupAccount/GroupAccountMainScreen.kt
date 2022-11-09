@@ -30,7 +30,8 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 @Composable
 fun GroupAccountMainScreen(
     navController: NavController,
-    groupAccountViewModel: GroupAccountViewModel
+    groupAccountViewModel: GroupAccountViewModel,
+    modifier: Modifier
 ) {
     fun launch() {
         groupAccountViewModel.getGroupAccountData()
@@ -40,7 +41,7 @@ fun GroupAccountMainScreen(
         launch()
     }
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(dimensionResource(R.dimen.padding_medium))
             .background(
@@ -66,7 +67,7 @@ fun GroupAccountMainScreen(
 
     com.finance.android.ui.components.TextButton(
         onClick = { navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN) },
-        modifier = Modifier.withBottomButton().padding(end = 5.dp),
+        modifier = modifier.withBottomButton().padding(end = 5.dp),
         text = "모임 통장 만들러 가기",
         buttonType = ButtonType.ROUNDED
     )

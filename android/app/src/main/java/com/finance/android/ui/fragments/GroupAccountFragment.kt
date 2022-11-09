@@ -30,49 +30,62 @@ fun GroupAccountFragment(
                 onClickBack = { innerNavController.popBackStack() }
             )
         }
-    ) {
-        innerPaddingModifier ->
+    ) { innerPaddingModifier ->
         val modifier = Modifier.padding(top = innerPaddingModifier.calculateTopPadding())
-    }
 
-    NavHost(
-        navController = innerNavController,
-        startDestination = Const.GROUP_ACCOUNT_MAIN_SCREEN
-    ) {
-        composable(Const.GROUP_ACCOUNT_MAIN_SCREEN){
+        NavHost(
+            navController = innerNavController,
+            startDestination = Const.GROUP_ACCOUNT_MAIN_SCREEN
+        ) {
+            composable(Const.GROUP_ACCOUNT_MAIN_SCREEN) {
+                GroupAccountMainScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
 
-            GroupAccountMainScreen( navController = innerNavController, groupAccountViewModel = groupAccountViewModel)
-        }
 
+            composable(Const.GROUP_ACCOUNT_MAKE_SCREEN) {
+                GroupAccountMakeScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
 
-        composable(Const.GROUP_ACCOUNT_MAKE_SCREEN){
-            GroupAccountMakeScreen(
-                navController = innerNavController,
-                groupAccountViewModel = groupAccountViewModel
-            )
-        }
+            composable(Const.GROUP_ACCOUNT_NAME_SCREEN) {
+                GroupAccountNameScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
 
-        composable(Const.GROUP_ACCOUNT_NAME_SCREEN){
-            GroupAccountNameScreen(
-                navController = innerNavController,
-                groupAccountViewModel = groupAccountViewModel
-            )
-        }
+            composable(Const.GROUP_ACCOUNT_FRIEND_SCREEN) {
+                GroupAccountFriendScreen(
+                    groupAccountViewModel = groupAccountViewModel,
+                    navController = innerNavController,
+                    modifier = modifier
+                )
+            }
 
-        composable(Const.GROUP_ACCOUNT_FRIEND_SCREEN){
-            GroupAccountFriendScreen(
-                groupAccountViewModel = groupAccountViewModel,
-                navController = innerNavController
-            )
-        }
+            composable(Const.GROUP_ACCOUNT_DETAIL_SCREEN) {
+                GroupAccountDetailScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
 
-        composable(Const.GROUP_ACCOUNT_DETAIL_SCREEN) {
-            GroupAccountDetailScreen(navController = innerNavController)
+            }
 
-        }
-
-        composable(Const.GROUP_ACCOUNT_DETAIL_SCREEN){
-            GroupAccountDetailScreen(navController = innerNavController, groupAccountViewModel = groupAccountViewModel)
+            composable(Const.GROUP_ACCOUNT_COMPLETED) {
+                GroupAccountOKScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
         }
     }
 }

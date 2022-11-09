@@ -14,12 +14,12 @@ import java.util.NavigableMap
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun GroupAccountDetailScreen(navController: NavController, groupAccountViewModel: GroupAccountViewModel) {
+fun GroupAccountDetailScreen(navController: NavController, groupAccountViewModel: GroupAccountViewModel, modifier: Modifier) {
     Scaffold(topBar = {
         GroupAccountHeaderTabBar(navController = navController, groupAccountViewModel = groupAccountViewModel)
 
     }) {contentPadding->
-        Box(modifier = Modifier.padding(contentPadding)) {
+        Box(modifier = modifier.padding(contentPadding)) {
 
 
         }

@@ -26,6 +26,7 @@ object Const {
     const val GROUP_ACCOUNT_NAME_SCREEN = "group_account_name_screen"
     const val GROUP_ACCOUNT_FRIEND_SCREEN = "group_account_friend"
     const val GROUP_ACCOUNT_DETAIL_SCREEN = "group_account_detail_screen"
+    const val GROUP_ACCOUNT_COMPLETED = "group_account_completed"
 
     object Routes {
         const val LOGIN = "route_login"
