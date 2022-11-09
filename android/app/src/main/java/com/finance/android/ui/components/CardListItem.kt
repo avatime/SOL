@@ -144,7 +144,7 @@ fun PreviewCardListItem_Arrow() {
     CardListItem_Arrow(
         cardName = "신한카드",
         cardImgPath = "https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png",
-        cardFee = "11월 청구 금액 : 10,000원",
+        cardFee = "당월 청구 금액 : 10,000원",
         onClickItem = {}
     )
 }

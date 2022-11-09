@@ -47,13 +47,13 @@ class CardViewModel @Inject constructor(
             }
     }
 
-    // 카드 청구서, 혜택 조회
+    // 카드 혜택 조회
 
-    val cardBill = mutableStateOf<Response<CardBillResponseDto>>(Response.Loading)
+//    val cardBill = mutableStateOf<Response<CardBillResponseDto>>(Response.Loading)
     val cardBenefit = mutableStateOf<Response<MutableList<CardBenefitInfoResponseDto>>>(Response.Loading)
 
-    fun getLoadCardBillandBenefit(): Response<Unit> {
-        val arr = arrayOf(cardBill, cardBenefit)
+    fun getLoadCardBenefit(): Response<Unit> {
+        val arr = arrayOf(cardBenefit)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -64,31 +64,31 @@ class CardViewModel @Inject constructor(
         }
     }
 
-    fun loadCardBill(
-        cdNo: String,
-        year: Int,
-        month: Int
-    ) {
-        viewModelScope.launch {
-            this@CardViewModel.run {
-                cardRepository.getCardBill(
-                    cdNo = cdNo,
-                    year = year,
-                    month = month
-                )
-            }.collect {
-                cardBill.value = it
-            }
-        }
-    }
+//    fun loadCardBill(
+//        cdNo: String,
+//        year: Int,
+//        month: Int
+//    ) {
+//        viewModelScope.launch {
+//            this@CardViewModel.run {
+//                cardRepository.getCardBill(
+//                    cdNo = cdNo,
+//                    year = year,
+//                    month = month
+//                )
+//            }.collect {
+//                cardBill.value = it
+//            }
+//        }
+//    }
 
     fun loadCardBenefit(
-        cdNo: String
+        cardProductCode: Int
     ) {
         viewModelScope.launch {
             this@CardViewModel.run {
                 cardRepository.getCardBenefit(
-                    cdNo = cdNo
+                    cardProductCode = cardProductCode,
                 )
             }.collect {
                 cardBenefit.value = it

@@ -26,7 +26,7 @@ class CardRepositoryImpl @Inject constructor(
         return cardService.getCardBill(cdNo, year, month);
     }
 
-    override suspend fun getCardBenefit(cdNo: String): MutableList<CardBenefitInfoResponseDto> {
-        return cardService.getCardBenefit(cdNo)
+    override suspend fun getCardBenefit(cardProductCode: Int): MutableList<CardBenefitInfoResponseDto> {
+        return cardService.getCardBenefit(cardProductCode)
     }
 }
