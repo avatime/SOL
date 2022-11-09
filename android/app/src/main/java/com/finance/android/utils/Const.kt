@@ -21,6 +21,8 @@ object Const {
     const val REMIT_OK_SCREEN = "remit_ok_screen"
     const val GROUP_ACCOUNT_MAIN_SCREEN = "group_account_main_screen"
     const val GROUP_ACCOUNT_MAKE_SCREEN = "group_account_make_screen"
+    const val GROUP_ACCOUNT_NAME_SCREEN = "group_account_name_screen"
+    const val GROUP_ACCOUNT_FRIEND_SCREEN = "group_account_friend"
     const val GROUP_ACCOUNT_DETAIL_SCREEN = "group_account_detail_screen"
 
 

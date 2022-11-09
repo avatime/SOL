@@ -3,6 +3,7 @@ package com.finance.android.ui.screens.group
 import android.content.res.Resources
 import android.media.Image
 import android.renderscript.ScriptGroup.Input
+import android.util.Log
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.Image
@@ -41,18 +42,14 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 import com.finance.android.viewmodels.MyPageViewModel
 import androidx.compose.material.Scaffold
 import com.finance.android.ui.fragments.GroupAccountFragment
+import com.finance.android.ui.screens.groupAccount.GroupAccountNameScreen
+import com.finance.android.utils.Const
 
 @Composable
 fun GroupAccountMakeScreen(
     navController: NavController,
-    groupAccountViewModel: GroupAccountViewModel,
-    innerNavController: NavController
+    groupAccountViewModel: GroupAccountViewModel
 ){
-    val pageId = remember { mutableStateOf(0) }
-    if(pageId.value==1){
-        InputGroupName(groupAccountViewModel = groupAccountViewModel)
-    }
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,54 +74,17 @@ fun GroupAccountMakeScreen(
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
         Spacer(modifier = Modifier.weight(1f))
         TextButton(
-            onClick = { pageId.value = 1 },
+            onClick = { navController.navigate(Const.GROUP_ACCOUNT_NAME_SCREEN) },
             modifier = Modifier
                 .withBottomButton(),
-
             text = "30초만에 시작하기",
             buttonType = ButtonType.ROUNDED,
         )
-
     }
+
+
 }
 
-@Composable
-fun InputGroupName(
-    groupAccountViewModel: GroupAccountViewModel
-){
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(8.dp)
-            .background(Color.Red),
-        horizontalAlignment = Alignment.Start,
-        verticalArrangement = Arrangement.Top
-    ){
-        Text(
-            text = "모두의 통장 이름을",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-        )
-        Text(
-            text = "입력해주세용",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
-        )
-    }
-    Spacer(modifier = Modifier.size(0.dp, 70.dp))
-    TextInput(
-        value = groupAccountViewModel.name.value,
-        onValueChange = {
-            if (it.length <= 20){
-                groupAccountViewModel.name.value = it
-            }
-        },
-        modifier = Modifier
-            .padding(dimensionResource(id = R.dimen.padding_medium))
-            .fillMaxWidth()
-            .padding(0.dp)
-    )
 
-}
 
 
