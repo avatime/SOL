@@ -15,21 +15,17 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.finance.android.R
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.viewmodels.FinanceDetailViewModel
-import dev.jeziellago.compose.markdowntext.MarkdownText
 import java.text.DecimalFormat
 
 
 @Composable
-fun StockDetailFragment(
+fun StockDetailFragment (
     financeDetailViewModel: FinanceDetailViewModel = hiltViewModel(),
     fnName: String,
     onClose: () -> Unit,
     close: Int,
     per: Float
 ) {
-    val mark = """
-        <a href="https://www.google.com/">${fnName}</a>
-    """.trimIndent()
 
     Scaffold(
         topBar = {
@@ -61,7 +57,6 @@ fun StockDetailFragment(
                     fontSize = 25.sp
                 )
             }
-            MarkdownText(markdown = mark)
         }
     }
 }
