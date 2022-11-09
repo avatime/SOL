@@ -51,26 +51,25 @@ fun GroupAccountMainScreen(
             .defaultMinSize(minHeight = 100.dp)
             .verticalScroll(rememberScrollState())
     ) {
-        when(val response = groupAccountViewModel.groupAccountData.value){
+        when (val response = groupAccountViewModel.groupAccountData.value) {
             is Response.Failure -> Text(text = "실패")
             is Response.Loading -> AnimatedLoading()
             is Response.Success -> {
-                response.data.forEach{
+                response.data.forEach {
                     GroupAccountListItem(paName = it.paName, amount = it.amount)
                 }
             }
         }
 
 
-        com.finance.android.ui.components.TextButton(
-            onClick = {navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN) },
-            modifier = Modifier.withBottomButton(),
-            text = "모임 통장 만들러 가기",
-            buttonType = ButtonType.ROUNDED
-        )
-
-
-
     }
+
+    com.finance.android.ui.components.TextButton(
+        onClick = { navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN) },
+        modifier = Modifier.withBottomButton().padding(end = 5.dp),
+        text = "모임 통장 만들러 가기",
+        buttonType = ButtonType.ROUNDED
+    )
+
 
 }
