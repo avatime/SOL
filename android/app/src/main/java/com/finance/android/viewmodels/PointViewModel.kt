@@ -3,10 +3,9 @@ package com.finance.android.viewmodels
 import android.app.Application
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.PointRepository
-import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
-@HiltViewModel
+//@HiltViewModel
 class PointViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
