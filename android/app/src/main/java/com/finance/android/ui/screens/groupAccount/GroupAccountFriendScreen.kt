@@ -13,6 +13,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
 import com.finance.android.R
+import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 

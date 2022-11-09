@@ -31,6 +31,7 @@ fun GroupAccountMainScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
+
     fun launch() {
         groupAccountViewModel.getGroupAccountData()
     }
@@ -59,7 +60,8 @@ fun GroupAccountMainScreen(
             is Response.Loading -> AnimatedLoading()
             is Response.Success -> {
                 response.data.forEach {
-                    GroupAccountListItem(paName = it.paName, amount = it.amount)
+                    val paId = it.paId
+                    GroupAccountListItem(paName = it.paName, amount = it.amount, onClick = {navController.navigate("${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/${paId}")})
                 }
             }
         }
@@ -74,7 +76,8 @@ fun GroupAccountMainScreen(
         com.finance.android.ui.components.TextButton(
             onClick = { navController.navigate(Const.GROUP_ACCOUNT_DETAIL_SCREEN) },
             modifier = Modifier
-                .withBottomButton().padding(end = 10.dp),
+                .withBottomButton()
+                .padding(end = 10.dp),
             text = "디테일로 가보자잇",
             buttonType = ButtonType.ROUNDED,
         )

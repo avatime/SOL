@@ -29,13 +29,14 @@ import java.text.DecimalFormat
 @Composable
 fun GroupAccountListItem(
     paName: String,
-    amount: Int
+    amount: Int,
+    onClick : (paId : Int) -> Unit
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 10.dp)
         .height(75.dp)
-        .clickable {//
+        .clickable { onClick
         }, verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
@@ -62,8 +63,3 @@ fun GroupAccountListItem(
 
 }
 
-@Preview
-@Composable
-fun previewGroupAccountListItem() {
-    GroupAccountListItem(paName = "모두의 통장", amount = 12334566)
-}
