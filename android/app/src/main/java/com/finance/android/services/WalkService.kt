@@ -110,7 +110,7 @@ class WalkService : Service(), SensorEventListener {
 //            .setContentTitle("SOL# 만보기")
 //            .setContentText(if (steps == -1) "신체활동 권한을 켜주세요" else "$steps 걸음")
             .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.ic_launcher_foreground)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
             .build()
     }
 
