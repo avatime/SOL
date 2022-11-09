@@ -25,8 +25,8 @@ class DailyController(private val dailyService: DailyService) {
     }
 
     @PostMapping("/walk")
-    fun walk(@RequestHeader("access_token") accessToken : String, @RequestBody walkDto: WalkDto) : ResponseEntity<Any?> {
-        return ResponseEntity.status(200).body(dailyService.walk(accessToken, walkDto.walk))
+    fun walk(@RequestHeader("access_token") accessToken : String) : ResponseEntity<Any?> {
+        return ResponseEntity.status(200).body(dailyService.walk(accessToken))
     }
 
     @GetMapping("/walk/{year}/{month}")

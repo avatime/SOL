@@ -71,29 +71,14 @@ class DailyServiceImpl(
     /**
      * walk를 한번에 더하는 방식
      */
-    override fun walk(accessToken: String, walkNum : Int) {
+    override fun walk(accessToken: String) {
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()
                 }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
-            val walk : Walk = walkRepository.findByUserAndWalkDateBetween(user, now().atStartOfDay(), now().atTime(LocalTime.MAX))?: Walk(user)
-            walk.walk(walkNum)
-            walkRepository.save(walk)
+            walkRepository.save(Walk(user))
         } else throw Exception()
     }
-
-    /**
-     * walk 부를때마다 1 더해지는 방식
-     */
-//    override fun walk(accessToken: String) {
-//        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}){
-//            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
-//            val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
-//            val walk : Walk = walkRepository.findByUserAndWalkDateBetween(user, now().atStartOfDay(), now().atTime(LocalTime.MAX))?:Walk(user)
-//            walk.walk(walkNum)
-//            walkRepository.save(walk)
-//        } else throw Exception()
-//    }
 
     override fun getWalk(accessToken: String, year: Int, month: Int)  : List<WalkDao> {
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()
@@ -183,10 +168,9 @@ class DailyServiceImpl(
     fun isSuccess(list : List<Walk>, date : LocalDate) : WalkDao {
         for(listDate in list) {
             if(date.isEqual(listDate.walkDate.toLocalDate())) {
-                return if(listDate.walk >= goal) WalkDao(date, true, listDate.walk)
-                else WalkDao(date, false, listDate.walk)
+                return WalkDao(date, true)
             } else if(date.isBefore(listDate.walkDate.toLocalDate())) break
         }
-        return WalkDao(date, false, 0)
+        return WalkDao(date, false)
     }
 }
