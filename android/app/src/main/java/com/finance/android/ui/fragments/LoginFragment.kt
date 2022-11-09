@@ -8,6 +8,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.finance.android.BuildConfig
 import com.finance.android.datastore.UserStore
 import com.finance.android.ui.screens.login.InputPasswordScreen
 import com.finance.android.ui.screens.login.InputPasswordType
@@ -15,6 +16,7 @@ import com.finance.android.ui.screens.login.SplashScreen
 import com.finance.android.ui.theme.SetStatusBarColor
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.LoginViewModel
+import kotlinx.coroutines.delay
 
 @Composable
 fun LoginFragment(
@@ -27,8 +29,9 @@ fun LoginFragment(
 
     SetStatusBarColor(color = MaterialTheme.colorScheme.surface)
     LaunchedEffect(Unit) {
-        // TODO 배포할 때, delay 풀기
-//        delay(3700)
+        if (!BuildConfig.DEBUG) {
+            delay(3700)
+        }
         refreshToken.collect {
             if (it.isEmpty()) {
                 navController.navigate(Const.Routes.SIGNUP) {
@@ -39,24 +42,25 @@ fun LoginFragment(
                 return@collect
             }
 
-            // TODO 배포할 때, 삭제할 껏 (개발용 자동로그인)
-            password.collect { pass ->
-                if (pass.isEmpty()) {
-                    return@collect
-                }
-                loginViewModel.password.value = pass
-                loginViewModel.login(
-                    onSuccess = {
-                        navController.navigate(Const.Routes.MAIN) {
-                            popUpTo(Const.Routes.LOGIN) {
-                                inclusive = true
+            // 개발용 자동로그인
+            if (BuildConfig.DEBUG) {
+                password.collect { pass ->
+                    if (pass.isEmpty()) {
+                        return@collect
+                    }
+                    loginViewModel.password.value = pass
+                    loginViewModel.login(
+                        onSuccess = {
+                            navController.navigate(Const.Routes.MAIN) {
+                                popUpTo(Const.Routes.LOGIN) {
+                                    inclusive = true
+                                }
                             }
-                        }
-                    },
-                    onErrorPassword = {}
-                )
+                        },
+                        onErrorPassword = {}
+                    )
+                }
             }
-            // TODO 개발용 자동로그인 끝
 
             showInputPassword = true
         }

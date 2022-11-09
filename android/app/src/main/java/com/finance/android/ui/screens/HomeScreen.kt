@@ -315,6 +315,7 @@ private fun TopBar(
         verticalAlignment = Alignment.CenterVertically
     ) {
         val onClick = { navController.navigate(Const.Routes.PEDOMETER) }
+        var flag = false
 
         if (Build.VERSION_CODES.Q <= Build.VERSION.SDK_INT) {
             val parState =
@@ -323,26 +324,28 @@ private fun TopBar(
                 PedometerOffStateButton(
                     onClick = onClick
                 )
-                return@Row
+                flag = true
             }
         }
 
         if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             val manager =
-                LocalContext.current.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE)
+                LocalContext.current.getSystemService(Context.NOTIFICATION_SERVICE)
                     as NotificationManager
-            if (!manager.areNotificationsEnabled()) {
+            if (!manager.areNotificationsEnabled() && !flag) {
                 PedometerOffStateButton(
                     onClick = onClick
                 )
-                return@Row
+                flag = true
             }
         }
 
-        PedometerOnStateButton(
-            onClick = onClick,
-            homeViewModel = homeViewModel
-        )
+        if (!flag) {
+            PedometerOnStateButton(
+                onClick = onClick,
+                homeViewModel = homeViewModel
+            )
+        }
     }
 }
 
