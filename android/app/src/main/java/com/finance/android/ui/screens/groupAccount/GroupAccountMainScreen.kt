@@ -24,6 +24,7 @@ import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.GroupAccountListItem
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
+import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 
 @Composable
@@ -63,6 +64,7 @@ fun GroupAccountMainScreen(
 
         com.finance.android.ui.components.TextButton(
             onClick = {navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN) },
+            modifier = Modifier.withBottomButton(),
             text = "모임 통장 만들러 가기",
             buttonType = ButtonType.ROUNDED
         )

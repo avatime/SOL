@@ -2,6 +2,7 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
 import com.finance.android.domain.repository.BaseRepository
@@ -32,6 +33,13 @@ class GroupAccountViewModel @Inject constructor(
                 _groupAccountData.value = it
             }
         }
+    }
+
+    //모임통장생성시 친구리스트 만들기
+    var isSelect = mutableStateOf(false)
+
+    fun selectFriend () {
+        isSelect.value = !isSelect.value
     }
 
 
