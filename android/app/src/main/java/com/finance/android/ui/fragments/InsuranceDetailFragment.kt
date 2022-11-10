@@ -163,7 +163,7 @@ fun ContentList(
                         Image(
                             modifier = Modifier
                                 .size(24.dp),
-                            painter = painterResource(id = if (expanded.value) R.drawable.down else R.drawable.up),
+                            painter = painterResource(id = if (expanded.value) R.drawable.up else R.drawable.down),
                             contentDescription = null
                         )
                     }
