@@ -12,17 +12,6 @@
         </deviceKey>
       </Target>
     </runningDeviceTargetSelectedWithDropDown>
-    <targetSelectedWithDropDown>
-      <Target>
-        <type value="QUICK_BOOT_TARGET" />
-        <deviceKey>
-          <Key>
-            <type value="VIRTUAL_DEVICE_PATH" />
-            <value value="C:\Users\SSAFY\.android\avd\Pixel_3a_API_33_x86_64.avd" />
-          </Key>
-        </deviceKey>
-      </Target>
-    </targetSelectedWithDropDown>
-    <timeTargetWasSelectedWithDropDown value="2022-11-09T07:02:56.689951700Z" />
+    <timeTargetWasSelectedWithDropDown value="2022-11-10T02:04:28.866210400Z" />
   </component>
 </project>

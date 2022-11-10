@@ -19,7 +19,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
-import com.finance.android.utils.ext.toPx
 import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
@@ -66,7 +65,7 @@ fun showHistoryList(
                 properties = BottomSheetDialogProperties(
                     navigationBarProperties = NavigationBarProperties(),
                     behaviorProperties = BottomSheetBehaviorProperties(
-                        maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
+//                        maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
                     )
                 )
             ) {
@@ -76,21 +75,32 @@ fun showHistoryList(
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(16.dp)
+                            .padding(start = 16.dp, top = 10.dp, bottom = 16.dp)
                             .verticalScroll(rememberScrollState()),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
+//                        verticalArrangement = Arrangement.Center,
+//                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
+                        Column(modifier = Modifier.padding(10.dp)) {
+                            Text(text = "보기 선택", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                        }
                         repeat(3) {
                             Row(
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
+                                modifier = Modifier.padding(10.dp).clickable {
+                                    currentMenu.value = it
+                                    showMenuList = false
+                                }
+                            ){
                                 Text(text = menuList[it])
-//                                Image(
-//                                    painter = painterResource(id = R.drawable.ic_check),
-//                                    modifier = Modifier.padding(top = 4.dp),
-//                                    contentDescription = "",
-//                                )
+                                Spacer(modifier = Modifier.weight(1f))
+                                if(it == currentMenu.value){
+                                    Image(
+                                        painter = painterResource(id = R.drawable.ic_check),
+                                        modifier = Modifier
+                                            .padding(end = 16.dp)
+                                            .size(20.dp),
+                                        contentDescription = "",
+                                    )
+                                }
                             }
                         }
                     }
@@ -140,10 +150,7 @@ fun showHistoryList(
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .clickable {
-                                if (YearMonth
-                                        .from(LocalDateTime.now())
-                                        .isAfter(currentMonth.value)
-                                ) {
+                                if(YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) {
                                     currentMonth.value = currentMonth.value.plusMonths(1)
                                     onClick(
                                         currentMonth.value.year,
@@ -165,6 +172,7 @@ fun showHistoryList(
                 modifier = Modifier
                 .verticalScroll(rememberScrollState())
             ) {
+                var bf : LocalDateTime = historyList[0].date.minusDays(1)
                 for (history in historyList) {
                     when(currentMenu.value) {
                         1 -> {
@@ -174,7 +182,8 @@ fun showHistoryList(
                                     title = history.name,
                                     amount = history.value,
                                     moneyType = moneyType,
-                                    type = menuList[1]
+                                    type = menuList[1],
+                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
                                 )
                             }
                         }
@@ -185,7 +194,8 @@ fun showHistoryList(
                                     title = history.name,
                                     amount = history.value,
                                     moneyType = moneyType,
-                                    type = menuList[2]
+                                    type = menuList[2],
+                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
                                 )
                             }
                         }
@@ -196,11 +206,13 @@ fun showHistoryList(
                                     title = history.name,
                                     amount = history.value,
                                     moneyType = moneyType,
-                                    type = menuList[2]
+                                    type = if(history.value < 0) menuList[2] else menuList[1],
+                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
                                 )
                             }
                         }
                     }
+                    bf = history.date
                 }
             }
         }
@@ -219,7 +231,8 @@ fun HistoryItem(
     title : String = "사용처",
     amount : Int = 1000000000,
     moneyType : String = "원",
-    type : String = "출금"
+    type : String = "출금",
+    showDate : Boolean = true
     ) {
     val dec = DecimalFormat("#,###")
 
@@ -235,7 +248,7 @@ fun HistoryItem(
             Column(
 
             ) {
-                DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString())
+                DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString(), show = showDate)
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -259,12 +272,20 @@ fun BasicHistoryText(
     Text( text = text)
 }
 
+@Preview(showBackground = true)
+@Composable
+fun HistoryItem2(
+) {
+    HistoryItem( showDate = false )
+}
+
 @Preview
 @Composable
 fun DateText(
-    text : String = "10.21"
+    text : String = "10.21",
+    show : Boolean = true
 ) {
-    Text( text = text, fontWeight = FontWeight.SemiBold)
+    Text( text = text, fontWeight = FontWeight.SemiBold, color = if(show) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surface)
 }
 
 @Preview

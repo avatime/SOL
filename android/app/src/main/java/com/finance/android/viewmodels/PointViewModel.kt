@@ -3,6 +3,7 @@ package com.finance.android.viewmodels
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.request.PointExchangeRequestDto
 import com.finance.android.domain.dto.response.PointHistoryResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.domain.repository.BaseRepository
@@ -20,6 +21,7 @@ class PointViewModel @Inject constructor(
     private val pointRepository: PointRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel(application, baseRepository) {
+    val success = mutableStateOf(0)
     val myInfo = mutableStateOf<Response<UserProfileResponseDto>>(Response.Loading)
     val pointHistoryList = mutableStateOf<Response<MutableList<PointHistoryResponseDto>>>(Response.Loading)
 
@@ -30,8 +32,33 @@ class PointViewModel @Inject constructor(
         }
     }
 
+    fun launchPointExchange() {
+        viewModelScope.launch {
+            success.value = 0
+            getUserInfo()
+        }
+    }
+
+    fun exchangePointToCash(pointExchangeRequestDto: PointExchangeRequestDto) {
+        viewModelScope.launch {
+            exchangePoint(pointExchangeRequestDto)
+        }
+    }
+
     fun getLoadState(): Response<Unit> {
         val arr = arrayOf(pointHistoryList, myInfo)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun getLoadStateExchange(): Response<Unit> {
+        val arr = arrayOf(myInfo)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -60,6 +87,18 @@ class PointViewModel @Inject constructor(
                 pointHistoryList.value = it
 //                if(it is Response.Success) {
 //                }
+            }
+    }
+
+    private suspend fun exchangePoint(pointExchangeRequestDto: PointExchangeRequestDto) {
+        this@PointViewModel.run {
+            pointRepository.exchangePointToCash(pointExchangeRequestDto)
+        }
+            .collect {
+                if(it is Response.Success) {
+                    success.value = 1
+//                    launchPointHistory()
+                } else success.value = 2
             }
     }
 }
