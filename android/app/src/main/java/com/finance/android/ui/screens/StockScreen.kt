@@ -13,8 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,9 +61,9 @@ fun StockScreen(
                 modifier = Modifier.verticalScroll(rememberScrollState())
             ) {
                 StockContainer(
-                    accData = stockViewModel.stockList,
+                    accData = stockViewModel.stockList.value,
                     onClickItem = { data ->
-                        navController.navigate("${Const.Routes.STOCK}/${data.fnName}/${data.close}/${data.per}")
+                        navController.navigate("${Const.Routes.STOCK}/${data.fnName}")
                     }
                 )
             }
@@ -77,7 +76,7 @@ fun StockScreen(
                 CustomDialog(
                     dialogType = DialogType.ERROR,
                     dialogActionType = DialogActionType.ONE_BUTTON,
-                    title = "서버 에러가 발생했습니다.\n잠시 후 다시 시도해주세요.",
+                    title = stringResource(id = R.string.msg_server_error),
                     onPositive = { stockViewModel.launch() }
                 )
             }
@@ -89,9 +88,9 @@ fun StockScreen(
 @Composable
 private fun StockContainer(
     onClickItem: (financeResponseDto: FinanceResponseDto) -> Unit = {},
-    accData: SnapshotStateList<FinanceResponseDto> = mutableStateListOf()
+    accData: Array<FinanceResponseDto> = arrayOf()
 ) {
-    if (!accData.isEmpty()) {
+    if (accData.isNotEmpty()) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -169,7 +168,7 @@ private fun DrawListItem(
         Column(horizontalAlignment = Alignment.End) {
             Text(
                 text = "${if (per > 0) "+" else ""}$per%",
-                color = if (per > 0) Color(0xFFFF0000) else Color(0xFF3F51B5),
+                color = if (per > 0) Color.Red else Color.Blue,
                 fontSize = 14.sp
             )
             Text(

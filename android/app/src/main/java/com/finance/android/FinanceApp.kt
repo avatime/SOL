@@ -160,11 +160,9 @@ fun FinanceApp() {
                 }
             }
             composable(
-                route = "${Const.Routes.STOCK}/{fnName}/{close}/{per}",
+                route = "${Const.Routes.STOCK}/{fnName}",
                 arguments = listOf(
                     navArgument("fnName") { type = NavType.StringType },
-                    navArgument("close") { type = NavType.IntType },
-                    navArgument("per") { type = NavType.FloatType },
                 )
             ) {
                 StockDetailFragment(
