@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -47,7 +48,7 @@ fun UserBalanceInfo(
              verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
-                Text(text = title, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
+                Text(text = title, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.SemiBold,  maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if(isAccount) Text(text = "$cpName $acNo", fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.Normal)
             }
 
