@@ -41,6 +41,8 @@ import com.finance.android.viewmodels.PeriodType
 import com.finance.android.viewmodels.StockDetailViewModel
 import java.text.DecimalFormat
 import kotlin.math.abs
+import kotlin.math.max
+import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,15 +70,21 @@ fun StockDetailFragment(
                 .fillMaxSize()
         ) {
             if (stockDetailViewModel.stockDetailList.value.isNotEmpty()) {
-                val last = stockDetailViewModel.stockDetailList.value.last()
-                val lastBefore =
-                    stockDetailViewModel.stockDetailList.value[stockDetailViewModel.stockDetailList.value.lastIndex - 1]
+                val after = stockDetailViewModel.stockDetailList.value.last()
+                val before =
+                    stockDetailViewModel.stockDetailList.value[
+                        max(
+                            0,
+                            stockDetailViewModel.stockDetailList.value.lastIndex - stockDetailViewModel.periodType.value.period
+                        )
+                    ]
+                val percentage = (after.close - before.close).toFloat() / before.close * 100
 
                 Screen(
                     fnName = stockDetailViewModel.fnName,
-                    close = last.close,
-                    per = last.per,
-                    diff = abs(last.close - lastBefore.close),
+                    close = after.close,
+                    per = round(percentage * 100) / 100,
+                    diff = abs(after.close - before.close),
                     stockDetailInfoList = stockDetailViewModel.stockDetailList.value,
                     periodType = stockDetailViewModel.periodType.value,
                     onClickPeriodType = { type -> stockDetailViewModel.onClickPeriod(type) }
@@ -118,7 +126,8 @@ private fun Screen(
             fnName = fnName,
             close = close,
             per = per,
-            diff = diff
+            diff = diff,
+            periodType = periodType
         )
         Spacer(modifier = Modifier.height(30.dp))
         // 그래프 라이브러리에 버그가 있는지 데이터 갱신이 안돼서
@@ -169,7 +178,8 @@ private fun Title(
     fnName: String = "오만전자",
     close: Int = 50000,
     per: Float = 5.5f,
-    diff: Int = 1000
+    diff: Int = 1000,
+    periodType: PeriodType = PeriodType.WEEK
 ) {
     Column(modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))) {
         Text(
@@ -186,7 +196,7 @@ private fun Title(
         Spacer(modifier = Modifier.height(10.dp))
         Row {
             Text(
-                text = "어제보다",
+                text = "${periodType.value} 전보다",
                 color = Disabled
             )
             Spacer(modifier = Modifier.width(10.dp))
