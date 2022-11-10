@@ -46,18 +46,9 @@ import kotlin.math.round
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-<<<<<<< HEAD
 fun StockDetailFragment(
     stockDetailViewModel: StockDetailViewModel = hiltViewModel(),
     onClose: () -> Unit
-=======
-fun StockDetailFragment (
-    financeDetailViewModel: FinanceDetailViewModel = hiltViewModel(),
-    onClose: () -> Unit,
-    fnName: String,
-    close: Int,
-    per: Float
->>>>>>> 31dc155 (feat: insurance detail 연동 확인)
 ) {
     LaunchedEffect(Unit) {
         stockDetailViewModel.launch()
