@@ -16,6 +16,10 @@ import lombok.RequiredArgsConstructor
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Service("UserService")
@@ -28,8 +32,6 @@ class UserServiceImpl (
         private val jwtUtils: JwtUtils
         ) : UserService {
     override fun saveUser(signupDto: SignupDto) : LoginDao {
-        if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) throw DuplicatedUserException()
-        else {
             signupDto.password = passwordEncoder.encode(signupDto.password)
             var user : User? = userRepository.findByPhone(signupDto.phone)
             if(user == null) user = signupDto.toEntity()
@@ -45,15 +47,14 @@ class UserServiceImpl (
             } catch (e : Exception) {
                 throw Exception()
             }
-        }
     }
 
     override fun checkUser(signupDto: SignupCheckDto){
-        if(userRepository.existsByNameAndPhoneAndBirth(signupDto.username, signupDto.phone, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth))) throw DuplicatedUserException()
-        else {
-            var user : User? = userRepository.findByPhone(signupDto.phone)
-            if(user?.type == "회원") throw DuplicatedPhoneNumberException()
-        }
+        var user : User? = userRepository.findByPhone(signupDto.phone) ?: return
+        val formatter = SimpleDateFormat("YYYY-MM-dd")
+        val birth = formatter.parse(signupDto.birth)
+        if(user?.name == signupDto.username && formatter.format(user?.birth) == signupDto.birth) throw DuplicatedUserException()
+        else if(user?.type == "회원") throw DuplicatedPhoneNumberException()
     }
 
     override fun login(loginDto: LoginDto) : LoginDao? {
