@@ -49,12 +49,12 @@ class GroupController (private val groupService : GroupService) {
     }
 
     @PostMapping("/dues/detail")
-    fun getAllDues(@RequestHeader("access_token") accessToken : String, @RequestBody duesReq: DuesReq) : ResponseEntity<Any?>{
+    fun getDueDetails(@RequestHeader("access_token") accessToken : String, @RequestBody duesReq: DuesReq) : ResponseEntity<Any?>{
         return ResponseEntity.status(200).body(groupService.getDueDetails(accessToken, duesReq.duesId))
     }
 
     @PostMapping("/dues/pay")
-    fun getAllDues(@RequestHeader("access_token") accessToken : String, @RequestBody duesPayReq: DuesPayReq) : ResponseEntity<Any?>{
+    fun payDue(@RequestHeader("access_token") accessToken : String, @RequestBody duesPayReq: DuesPayReq) : ResponseEntity<Any?>{
         return ResponseEntity.status(200).body(groupService.payDue(accessToken, duesPayReq))
     }
 
