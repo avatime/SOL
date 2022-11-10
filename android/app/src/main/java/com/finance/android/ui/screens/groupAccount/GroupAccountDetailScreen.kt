@@ -32,10 +32,11 @@ fun GroupAccountDetailScreen(
     modifier: Modifier
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
     ) {
+
         Row(
             modifier = modifier.padding(32.dp)
         ) {
@@ -114,6 +115,7 @@ fun GroupAccountDetailScreen(
                     modifier = modifier
                 )
             }
+
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.finance.android.domain.repository
 
+import com.finance.android.domain.dto.request.CreateDuesRequestDto
 import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.GroupDuesRequestDto
 import com.finance.android.domain.dto.request.GroupIdRequestDto
@@ -47,8 +48,8 @@ class GroupAccountRepositoryImpl @Inject constructor(
         return groupAccountService.postPayDues(remitDuesResponseDto)
     }
 
-    override suspend fun postRegistDues(createGroupAccountRequestDto: CreateGroupAccountRequestDto) {
-        return groupAccountService.postRegistDues(createGroupAccountRequestDto)
+    override suspend fun postRegistDues(createDuesRequestDto: CreateDuesRequestDto) {
+        return groupAccountService.postRegistDues(createDuesRequestDto)
     }
 
     override suspend fun putDeleteDues(groupDuesRequestDto: GroupDuesRequestDto) {
