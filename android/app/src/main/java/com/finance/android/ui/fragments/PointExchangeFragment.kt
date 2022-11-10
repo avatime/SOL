@@ -67,8 +67,6 @@ private fun Screen(
         }
     ) {
         Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .padding(top = it.calculateTopPadding())
                 .fillMaxSize()
@@ -77,9 +75,6 @@ private fun Screen(
                 .padding(dimensionResource(R.dimen.padding_medium))
         ) {
             InputExchangePoint(userInfo.point)
-            Button(onClick = { pointViewModel.success.value = 2 }) {
-                Text(text = "출금")
-            }
         }
     }
 }
