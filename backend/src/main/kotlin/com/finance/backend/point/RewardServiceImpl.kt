@@ -60,9 +60,8 @@ class RewardServiceImpl(
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
-            if(!accountRepository.existsByAcNoAndUser(rewardDto.account ?: user.account ?: throw NullPointerException(), user)) throw AccountNotSubToUserException()
             if(user.point < rewardDto.point) throw InsufficientBalanceException()
-            val account : Account = accountRepository.findByAcNo(rewardDto.account?:user.account!!) ?: throw NoAccountException()
+            val account : Account = accountRepository.findByAcNo(user.account?:throw NoAccountException()) ?: throw NoAccountException()
             account.deposit(rewardDto.point.toLong())
             val tradeHistory : TradeHistory = TradeHistory("포인트 전환", rewardDto.point.toLong(), LocalDateTime.now(), 1, "", null, "", "", account)
             usePoint(user, rewardDto.point, "포인트 전환")
