@@ -139,12 +139,10 @@ fun FinanceApp() {
                 )
             ) {
                 InsuranceDetailFragment(
-                    id = it.arguments!!.getInt("id"),
-                    name = it.arguments!!.getString("name")!!,
-                    onClose = {
-                        navController.popBackStack()
-                    }
-                )
+                    name = it.arguments!!.getString("name")!!
+                ) {
+                    navController.popBackStack()
+                }
             }
             composable(Const.Routes.PEDOMETER) {
                 AnimatedVisibility(
