@@ -21,12 +21,20 @@ class PointViewModel @Inject constructor(
     private val pointRepository: PointRepository,
     private val userRepository: UserRepository
 ) : BaseViewModel(application, baseRepository) {
+    val success = mutableStateOf(0)
     val myInfo = mutableStateOf<Response<UserProfileResponseDto>>(Response.Loading)
     val pointHistoryList = mutableStateOf<Response<MutableList<PointHistoryResponseDto>>>(Response.Loading)
 
     fun launchPointHistory() {
         viewModelScope.launch {
             loadPointHistoryAllList()
+            getUserInfo()
+        }
+    }
+
+    fun launchPointExchange() {
+        viewModelScope.launch {
+            success.value = 0
             getUserInfo()
         }
     }
@@ -39,6 +47,18 @@ class PointViewModel @Inject constructor(
 
     fun getLoadState(): Response<Unit> {
         val arr = arrayOf(pointHistoryList, myInfo)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun getLoadStateExchange(): Response<Unit> {
+        val arr = arrayOf(myInfo)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading

@@ -172,6 +172,7 @@ fun showHistoryList(
                 modifier = Modifier
                 .verticalScroll(rememberScrollState())
             ) {
+                var bf : LocalDateTime = historyList[0].date.minusDays(1)
                 for (history in historyList) {
                     when(currentMenu.value) {
                         1 -> {
@@ -181,7 +182,8 @@ fun showHistoryList(
                                     title = history.name,
                                     amount = history.value,
                                     moneyType = moneyType,
-                                    type = menuList[1]
+                                    type = menuList[1],
+                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
                                 )
                             }
                         }
@@ -192,7 +194,8 @@ fun showHistoryList(
                                     title = history.name,
                                     amount = history.value,
                                     moneyType = moneyType,
-                                    type = menuList[2]
+                                    type = menuList[2],
+                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
                                 )
                             }
                         }
@@ -203,11 +206,13 @@ fun showHistoryList(
                                     title = history.name,
                                     amount = history.value,
                                     moneyType = moneyType,
-                                    type = if(history.value < 0) menuList[2] else menuList[1]
+                                    type = if(history.value < 0) menuList[2] else menuList[1],
+                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
                                 )
                             }
                         }
                     }
+                    bf = history.date
                 }
             }
         }
@@ -226,7 +231,8 @@ fun HistoryItem(
     title : String = "사용처",
     amount : Int = 1000000000,
     moneyType : String = "원",
-    type : String = "출금"
+    type : String = "출금",
+    showDate : Boolean = true
     ) {
     val dec = DecimalFormat("#,###")
 
@@ -242,7 +248,7 @@ fun HistoryItem(
             Column(
 
             ) {
-                DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString())
+                DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString(), show = showDate)
             }
             Column(
                 verticalArrangement = Arrangement.spacedBy(5.dp)
@@ -266,12 +272,20 @@ fun BasicHistoryText(
     Text( text = text)
 }
 
+@Preview(showBackground = true)
+@Composable
+fun HistoryItem2(
+) {
+    HistoryItem( showDate = false )
+}
+
 @Preview
 @Composable
 fun DateText(
-    text : String = "10.21"
+    text : String = "10.21",
+    show : Boolean = true
 ) {
-    Text( text = text, fontWeight = FontWeight.SemiBold)
+    Text( text = text, fontWeight = FontWeight.SemiBold, color = if(show) Color.Black else MaterialTheme.colorScheme.surface)
 }
 
 @Preview
