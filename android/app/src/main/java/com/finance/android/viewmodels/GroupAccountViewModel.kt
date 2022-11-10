@@ -27,32 +27,13 @@ class GroupAccountViewModel @Inject constructor(
 ) : BaseViewModel(application, baseRepository) {
 
     val name = mutableStateOf("")
-//    val paId = savedStateHandle.get<Int>("paId")
-    val paId = 2
-
-//    // 모임 통장 생성
-//    fun CreateGroupAccount(
-//
-//    ){
-//        viewModelScope.launch {
-//            this@GroupAccountViewModel.run{
-//                groupAccountRepository.postMakeGroupAccount(
-//                    CreateGroupAccountRequestDto(
-//                        name = name.value,
-//                        memberList = List<MemberRequestDto>
-//                    )
-//                )
-//            }
-//        }
-//    }
-
+    val paId = mutableStateOf(0)
 
     //모임 통장 조회
     private val _groupAccountData =
         mutableStateOf<Response<MutableList<PublicAccountResponseDto>>>(Response.Loading)
     val groupAccountData = _groupAccountData
     fun getGroupAccountData() {
-        println("paId: " + paId)
         viewModelScope.launch {
             this@GroupAccountViewModel.run {
                 groupAccountRepository.getGroupAccount()
@@ -82,7 +63,7 @@ class GroupAccountViewModel @Inject constructor(
         Log.i("group", "$index")
     }
 
-
+    // 모임 통장 생성
     fun makeGroupAccount(
         createGroupAccountRequestDto: CreateGroupAccountRequestDto,
         onSuccess: () -> Unit
