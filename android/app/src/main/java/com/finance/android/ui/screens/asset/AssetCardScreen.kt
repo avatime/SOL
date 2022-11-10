@@ -1,4 +1,4 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.screens.asset
 
 import android.net.Uri
 import androidx.compose.foundation.background
@@ -91,7 +91,19 @@ private fun AssetCardContainer(
         }
 
         if (cardData.size == 0) {
-            Text(text = "등록된 자산이 없어요.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "등록된 자산이 없어요.",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 80.dp)
+                )
+            }
         }
 //        Text(
 //            text = "지금 받을 수 있는 혜택",

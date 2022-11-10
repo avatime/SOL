@@ -20,10 +20,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
-import com.finance.android.ui.screens.AssetBankScreen
-import com.finance.android.ui.screens.AssetCardScreen
-import com.finance.android.ui.screens.AssetLifeScreen
-import com.finance.android.ui.screens.AssetStockScreen
+import com.finance.android.ui.screens.asset.AssetLifeScreen
+import com.finance.android.ui.screens.asset.AssetStockScreen
+import com.finance.android.ui.screens.asset.*
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Const
 

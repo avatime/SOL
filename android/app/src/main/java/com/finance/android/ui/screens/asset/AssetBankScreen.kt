@@ -1,4 +1,4 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.screens.asset
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -7,6 +7,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
@@ -65,8 +66,10 @@ private fun AssetBankContainer(
     navController: NavController,
     accData: MutableList<BankAccountResponseDto>
 ) {
-    Column(modifier = modifier
-        .padding(dimensionResource(R.dimen.padding_medium)))
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.padding_medium))
+    )
     {
         accData!!.forEach {
             AccountListItem_Arrow(
@@ -79,8 +82,20 @@ private fun AssetBankContainer(
                 }
             )
         }
-        if(accData.size == 0) {
-            Text(text = "등록된 자산이 없어요.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+        if (accData.size == 0) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "등록된 자산이 없어요.",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 80.dp)
+                )
+            }
         }
     }
 }
