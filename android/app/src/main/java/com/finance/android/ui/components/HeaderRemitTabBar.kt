@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.finance.android.ui.screens.AccountScreen
+import com.finance.android.ui.screens.remit.AccountScreen
 import com.finance.android.ui.screens.ContactScreen
 import com.finance.android.ui.screens.remit.RecoScreen
 import com.finance.android.ui.theme.Disabled

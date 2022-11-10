@@ -34,13 +34,11 @@ fun GroupAccountFragment(
         }
     ) { innerPaddingModifier ->
         val modifier = Modifier.padding(top = innerPaddingModifier.calculateTopPadding())
-
         NavHost(
             navController = innerNavController,
             startDestination = Const.GROUP_ACCOUNT_MAIN_SCREEN
         ) {
             composable(Const.GROUP_ACCOUNT_MAIN_SCREEN) {
-
                 GroupAccountMainScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
