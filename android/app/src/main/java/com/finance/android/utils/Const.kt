@@ -27,6 +27,9 @@ object Const {
     const val GROUP_ACCOUNT_FRIEND_SCREEN = "group_account_friend"
     const val GROUP_ACCOUNT_DETAIL_SCREEN = "group_account_detail_screen"
     const val GROUP_ACCOUNT_COMPLETED = "group_account_completed"
+    const val DUES_MAKE_NAME_SCREEN = "dues_make_name_screen"
+    const val DUES_MAKE_MONEY_SCREEN = "dues_make_money_screen"
+    const val DUES_MEMBER_LIST = "dues_member_list"
 
 
     object Routes {

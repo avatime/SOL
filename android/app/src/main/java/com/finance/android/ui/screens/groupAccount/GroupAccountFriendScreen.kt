@@ -24,10 +24,6 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 
 
-
-
-
-
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun GroupAccountFriendScreen(groupAccountViewModel: GroupAccountViewModel, navController: NavController, modifier: Modifier) {
