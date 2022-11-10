@@ -64,7 +64,21 @@ class CardViewModel @Inject constructor(
         }
     }
 
-//    fun loadCardBill(
+    fun loadCardBenefit(
+        cardProductCode: Int
+    ) {
+        viewModelScope.launch {
+            this@CardViewModel.run {
+                cardRepository.getCardBenefit(
+                    cardProductCode = cardProductCode,
+                )
+            }.collect {
+                cardBenefit.value = it
+            }
+        }
+    }
+
+    //    fun loadCardBill(
 //        cdNo: String,
 //        year: Int,
 //        month: Int
@@ -82,16 +96,32 @@ class CardViewModel @Inject constructor(
 //        }
 //    }
 
-    fun loadCardBenefit(
-        cardProductCode: Int
+    // 카드 거래 기록 조회
+
+    val cardHistory = mutableStateOf<Response<MutableList<CardBillDetailResponseDto>>>(Response.Loading)
+
+    fun getLoadCardHistory(): Response<Unit> {
+        val arr = arrayOf(cardHistory)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun loadCardHistory(
+        cdNo: String
     ) {
         viewModelScope.launch {
             this@CardViewModel.run {
-                cardRepository.getCardBenefit(
-                    cardProductCode = cardProductCode,
+                cardRepository.getCardHistory(
+                    cdNo = cdNo,
                 )
             }.collect {
-                cardBenefit.value = it
+                cardHistory.value = it
             }
         }
     }
