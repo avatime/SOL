@@ -3,17 +3,13 @@ package com.finance.android.viewmodels
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.domain.dto.response.BankInfoResponseDto
 import com.finance.android.domain.dto.response.BankTradeResponseDto
-import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,7 +17,7 @@ import javax.inject.Inject
 class BankViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
-    savedStateHandle: SavedStateHandle = SavedStateHandle(),
+    savedStateHandle: SavedStateHandle,
     private val bankRepository: BankRepository
 ) : BaseViewModel(application, baseRepository) {
     val accountList =
