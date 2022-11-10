@@ -29,4 +29,8 @@ class CardRepositoryImpl @Inject constructor(
     override suspend fun getCardBenefit(cardProductCode: Int): MutableList<CardBenefitInfoResponseDto> {
         return cardService.getCardBenefit(cardProductCode)
     }
+
+    override suspend fun getCardHistory(cdNo: String): MutableList<CardBillDetailResponseDto> {
+        return cardService.getCardHistory(cdNo)
+    }
 }

@@ -28,4 +28,7 @@ interface CardService {
     @GET("${Const.API_PATH}/card/benefit/{cd_pd_code}")
     suspend fun getCardBenefit(@Path("cd_pd_code") cardProductCode: Int): MutableList<CardBenefitInfoResponseDto>
 
+    @GET("${Const.API_PATH}/card/bill/detail/{cd_no}")
+    suspend fun getCardHistory(@Path("cd_no") cdNo: String): MutableList<CardBillDetailResponseDto>
+
 }
