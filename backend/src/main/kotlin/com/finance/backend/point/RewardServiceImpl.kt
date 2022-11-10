@@ -1,17 +1,19 @@
 package com.finance.backend.point
 
-import com.finance.backend.Exceptions.AccountNotSubToUserException
-import com.finance.backend.Exceptions.TokenExpiredException
+import com.finance.backend.Exceptions.*
 import com.finance.backend.bank.AccountRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.point.request.RewardDto
 import com.finance.backend.point.response.RewardDao
-import com.finance.backend.Exceptions.InvalidUserException
+import com.finance.backend.bank.Account
+import com.finance.backend.tradeHistory.TradeHistory
+import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.lang.NullPointerException
+import java.time.LocalDateTime
 import java.util.*
 
 @Service("RewardService")
@@ -20,6 +22,7 @@ class RewardServiceImpl(
         private val rewardRepository: RewardRepository,
         private val userRepository: UserRepository,
         private val accountRepository: AccountRepository,
+        private val tradeHistoryRepository: TradeHistoryRepository,
         private val jwtUtils: JwtUtils
 ) : RewardService {
     override fun getAllPoint(accessToken: String): List<RewardDao> {
@@ -58,8 +61,13 @@ class RewardServiceImpl(
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             if(!accountRepository.existsByAcNoAndUser(rewardDto.account ?: user.account ?: throw NullPointerException(), user)) throw AccountNotSubToUserException()
+            if(user.point < rewardDto.point) throw InsufficientBalanceException()
+            val account : Account = accountRepository.findByAcNo(rewardDto.account?:user.account!!) ?: throw NoAccountException()
+            account.deposit(rewardDto.point.toLong())
+            val tradeHistory : TradeHistory = TradeHistory("포인트 전환", rewardDto.point.toLong(), LocalDateTime.now(), 1, "", null, "", "", account)
             usePoint(user, rewardDto.point, "포인트 전환")
-            TODO("입금 해주기")
+            accountRepository.save(account)
+            tradeHistoryRepository.save(tradeHistory)
         } else throw Exception()
     }
 
