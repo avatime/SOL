@@ -10,8 +10,10 @@ import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.request.CreateDuesRequestDto
 import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.GroupIdRequestDto
+import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
+import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.GroupAccountRepository
 import com.finance.android.utils.Response
@@ -26,7 +28,8 @@ class GroupAccountViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     savedStateHandle: SavedStateHandle,
-    private val groupAccountRepository: GroupAccountRepository
+    private val groupAccountRepository: GroupAccountRepository,
+    private val bankRepository: BankRepository
 ) : BaseViewModel(application, baseRepository) {
 
     val name = mutableStateOf("")
@@ -127,6 +130,31 @@ class GroupAccountViewModel @Inject constructor(
                 groupAccountRepository.postGroupMember(GroupIdRequestDto(paId))
             }.collect {
                 _groupAccountMemberData.value = it
+            }
+        }
+    }
+
+    //계좌잔액조회
+    val representAccountBalance = mutableStateOf("")
+    fun getRepresentAccountBalance() {
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run{
+                bankRepository.getRepresentAccountBalance()
+            }.collect{
+                representAccountBalance.value = it.toString()
+            }
+        }
+    }
+
+    //전체 회비 조회
+    private val _duesHistoryData = mutableStateOf<Response<MutableList<DuesResponseDto>>>(Response.Loading)
+    val duesHistoryData = _duesHistoryData
+    fun postDuesHistory(paId: Int) {
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postDuesHistory(GroupIdRequestDto(paId))
+            }.collect {
+               _duesHistoryData.value = it
             }
         }
     }

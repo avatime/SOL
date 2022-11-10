@@ -93,6 +93,14 @@ fun GroupAccountFragment(
                 )
             }
 
+            composable(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) {
+                GroupAccountInputMoneyScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
+
             composable(Const.DUES_MAKE_MONEY_SCREEN) {
                 DuesMakeMoneyScreen(
                     navController = innerNavController,
@@ -108,6 +116,16 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
+
+            composable(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) {
+                GroupAccontVerifyMoneyScreen(
+                    navController = navController,
+                    modifier = modifier,
+                    groupAccountViewModel = groupAccountViewModel
+                )
+            }
+
+
 
         }
     }
