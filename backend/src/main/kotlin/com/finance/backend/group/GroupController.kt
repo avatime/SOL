@@ -68,6 +68,11 @@ class GroupController (private val groupService : GroupService) {
         return ResponseEntity.status(200).body(groupService.disableExistDue(accessToken, dueReq.duesId))
     }
 
+    @PostMapping("/info")
+    fun getPublicAccountInfo(@RequestHeader("access_token") accessToken: String, @RequestBody publicAccountReq: PublicAccountReq) : ResponseEntity<Any?>{
+        return ResponseEntity.status(200).body(groupService.getPublicAccountInfo(accessToken, publicAccountReq.paId))
+    }
+
     @GetMapping("/dues/test/scheduled")
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     fun registPaymentMonthly() {
