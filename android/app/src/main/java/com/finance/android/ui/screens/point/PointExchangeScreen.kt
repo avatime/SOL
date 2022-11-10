@@ -28,8 +28,8 @@ import androidx.compose.ui.unit.sp
 fun InputExchangePoint(
     balance : Int = 1000000
 ) {
-    var getValue by remember { mutableStateOf(true) }
-//    var getValue by remember { mutableStateOf(false) }
+//    var getValue by remember { mutableStateOf(true) }
+    var getValue by remember { mutableStateOf(false) }
     var error = remember { mutableStateOf(false) }
     var isNext by remember { mutableStateOf(false) }
     var pointValue by remember { mutableStateOf("") }
