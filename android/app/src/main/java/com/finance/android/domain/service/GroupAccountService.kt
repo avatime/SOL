@@ -1,5 +1,6 @@
 package com.finance.android.domain.service
 
+import com.finance.android.domain.dto.request.CreateDuesRequestDto
 import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.GroupDuesRequestDto
 import com.finance.android.domain.dto.request.GroupIdRequestDto
@@ -39,7 +40,7 @@ interface GroupAccountService {
     suspend fun postPayDues(@Body remitDuesResponseDto: DuesResponseDto)
 
     @POST("${Const.API_PATH}/public/dues/regist") //회비 생성
-    suspend fun postRegistDues(@Body createGroupAccountRequestDto: CreateGroupAccountRequestDto)
+    suspend fun postRegistDues(@Body createDuesRequestDto: CreateDuesRequestDto)
 
     @PUT("${Const.API_PATH}/public/dues") //회비 비활성화
     suspend fun putDeleteDues(@Body groupDuesRequestDto: GroupDuesRequestDto)

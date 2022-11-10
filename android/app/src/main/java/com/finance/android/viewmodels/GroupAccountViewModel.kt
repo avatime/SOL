@@ -7,6 +7,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.request.CreateDuesRequestDto
 import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.GroupIdRequestDto
 import com.finance.android.domain.dto.response.FriendResponseDto
@@ -15,8 +16,10 @@ import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.GroupAccountRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class GroupAccountViewModel @Inject constructor(
@@ -28,6 +31,9 @@ class GroupAccountViewModel @Inject constructor(
 
     val name = mutableStateOf("")
     val paId = mutableStateOf(0)
+
+    val duesName = mutableStateOf("")
+    val duesBalance = mutableStateOf(1000)
 
     //모임 통장 조회
     private val _groupAccountData =
@@ -89,7 +95,26 @@ class GroupAccountViewModel @Inject constructor(
     }
 
 
-
+    // 회비 생성
+    fun makeGroupDues(
+        createDuesRequestDto: CreateDuesRequestDto,
+        onSuccess: () -> Unit
+    ){
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postRegistDues(
+                    createDuesRequestDto
+                )
+            }.collect{
+                if (it is Response.Success) {
+                    Log.i("remitAccount", "회비도 갓찬영")
+                    onSuccess()
+                } else if (it is Response.Failure) {
+                    Log.i("remitAccount", "회비도 김챤챤영 ㅡㅡ")
+                }
+            }
+        }
+    }
 
     // 모임 친구 조회
     private val _groupAccountMemberData =

@@ -22,7 +22,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
+import com.finance.android.ui.components.ButtonType
+import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.theme.Disabled
+import com.finance.android.utils.Const
+import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 
 @Composable
@@ -32,10 +36,11 @@ fun GroupAccountDetailScreen(
     modifier: Modifier
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
     ) {
+
         Row(
             modifier = modifier.padding(32.dp)
         ) {
@@ -114,7 +119,17 @@ fun GroupAccountDetailScreen(
                     modifier = modifier
                 )
             }
+
         }
+        Spacer(modifier = Modifier.weight(1f))
+        TextButton(
+            onClick = { navController.navigate(Const.DUES_MAKE_NAME_SCREEN) },
+            modifier = Modifier
+                .withBottomButton(),
+            text = "회비 걷기",
+            buttonType = ButtonType.ROUNDED,
+        )
+
     }
 }
 

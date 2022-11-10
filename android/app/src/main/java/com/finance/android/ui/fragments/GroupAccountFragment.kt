@@ -21,22 +21,15 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GroupAccountFragment(
-    navController: NavController,
-    groupAccountViewModel: GroupAccountViewModel = hiltViewModel()
+    navController: NavController, groupAccountViewModel: GroupAccountViewModel = hiltViewModel()
 ) {
     val innerNavController = rememberNavController()
-    Scaffold(
-        topBar = {
-            BackHeaderBar(
-                text = "",
-                onClickBack = { innerNavController.popBackStack() }
-            )
-        }
-    ) { innerPaddingModifier ->
+    Scaffold(topBar = {
+        BackHeaderBar(text = "", onClickBack = { innerNavController.popBackStack() })
+    }) { innerPaddingModifier ->
         val modifier = Modifier.padding(top = innerPaddingModifier.calculateTopPadding())
         NavHost(
-            navController = innerNavController,
-            startDestination = Const.GROUP_ACCOUNT_MAIN_SCREEN
+            navController = innerNavController, startDestination = Const.GROUP_ACCOUNT_MAIN_SCREEN
         ) {
             composable(Const.GROUP_ACCOUNT_MAIN_SCREEN) {
                 GroupAccountMainScreen(
@@ -74,8 +67,7 @@ fun GroupAccountFragment(
             composable(
                 route = "${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/{paId}",
                 arguments = listOf(navArgument(name = "paId") { type = NavType.IntType })
-            )
-            {
+            ) {
                 GroupAccountDetailScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -88,6 +80,31 @@ fun GroupAccountFragment(
                 GroupAccountOKScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
+
+
+            composable(Const.DUES_MAKE_NAME_SCREEN) {
+                DuesMakeNameScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
+
+            composable(Const.DUES_MAKE_MONEY_SCREEN) {
+                DuesMakeMoneyScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
+
+            composable(Const.DUES_MEMBER_LIST) {
+                DuesMemberListScreen(
+                    groupAccountViewModel = groupAccountViewModel,
+                    navController = innerNavController,
                     modifier = modifier
                 )
             }

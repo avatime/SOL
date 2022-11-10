@@ -1,5 +1,6 @@
 package com.finance.android.domain.repository
 
+import com.finance.android.domain.dto.request.CreateDuesRequestDto
 import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.GroupDuesRequestDto
 import com.finance.android.domain.dto.request.GroupIdRequestDto
@@ -18,6 +19,6 @@ interface GroupAccountRepository {
     suspend fun postDuesHistory(@Body groupIdRequestDto: GroupIdRequestDto) : MutableList<DuesResponseDto>
     suspend fun postDuesHistoryDetail(@Body groupDuesRequestDto: GroupDuesRequestDto) : MutableList<DuesResponseDto>
     suspend fun postPayDues(@Body remitDuesResponseDto: DuesResponseDto)
-    suspend fun postRegistDues(@Body createGroupAccountRequestDto: CreateGroupAccountRequestDto)
+    suspend fun postRegistDues(@Body createDuesRequestDto: CreateDuesRequestDto)
     suspend fun putDeleteDues(@Body groupDuesRequestDto: GroupDuesRequestDto)
 }
