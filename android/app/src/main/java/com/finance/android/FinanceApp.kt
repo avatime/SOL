@@ -168,9 +168,6 @@ fun FinanceApp() {
                 )
             ) {
                 StockDetailFragment(
-                    fnName = it.arguments!!.getString("fnName")!!,
-                    close = it.arguments!!.getInt("close"),
-                    per = it.arguments!!.getFloat("per"),
                     onClose = {
                         navController.popBackStack()
                     }
