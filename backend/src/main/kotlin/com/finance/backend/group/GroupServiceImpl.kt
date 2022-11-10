@@ -119,7 +119,9 @@ class GroupServiceImpl (
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }) {
             val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user: User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
-            val account : Account = accountRepository.findByAcNoAndUser(duesPayReq.acNo, user) ?: throw AccountNotSubToUserException()
+//            val account : Account = accountRepository.findByAcNoAndUser(duesPayReq.acNo, user) ?: throw AccountNotSubToUserException()
+            val account : Account = accountRepository.findByAcNo(user.account?:throw NoAccountException()) ?: throw NoAccountException()
+            if(account.balance < duesPayReq.duesVal) throw InsufficientBalanceException()
             val userDuesRelation : UserDuesRelation = userDuesRelationRepository.findByUserAndDuesId(user, duesPayReq.duesId) ?: throw AuthenticationException()
             if(userDuesRelation.dues.status == 99) throw DuesNotExistsException()
             if(duesPayReq.duesVal != userDuesRelation.dues.duesVal) throw WrongAmountException()
