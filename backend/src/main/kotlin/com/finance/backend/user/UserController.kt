@@ -3,6 +3,7 @@ package com.finance.backend.user
 import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.Exceptions.InvalidUserException
 import com.finance.backend.Exceptions.NoProfileException
+import com.finance.backend.auth.request.SignupCheckDto
 import com.finance.backend.user.request.ChangeProfileDto
 import com.finance.backend.user.request.PhoneReq
 import org.springframework.http.ResponseEntity
@@ -23,8 +24,8 @@ class UserController (private val userService: UserService) {
     }
 
     @PostMapping("/check")
-    fun checkPhone(@RequestBody phone : PhoneReq) : ResponseEntity<Any?> {
-        return ResponseEntity.status(200).body(userService.check(phone.phone))
+    fun checkPhone(@RequestBody signupDto: SignupCheckDto) : ResponseEntity<Any?> {
+        return ResponseEntity.status(200).body(userService.checkUser(signupDto))
     }
 
     @GetMapping("/account")
