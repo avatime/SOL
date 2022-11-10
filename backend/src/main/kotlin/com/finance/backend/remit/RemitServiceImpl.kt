@@ -87,12 +87,18 @@ class RemitServiceImpl(
         val send = remitInfoReq.send    // 보내는 사람 이름
         val remitAccount = accountRepository.findById(remitInfoReq.acSend).orElse(null)?: throw NoAccountException()// 송금 하는 계좌 객체
 
+        val realRemitAccount = accountRepository.findById(targetAccount).orElse(null)?: throw NoAccountException()
+        val remitName = userRepository.findById(realRemitAccount.user.id).orElse(null).name
+
+
+        val depositName = userRepository.findById(remitAccount.user.id).orElse(null).name
+        
         if (remitAccount.balance < value){ throw InsufficientBalanceException()} // 잔액 부족시 418 에러
 
         if (remitAccount.acNo == targetAccount){ throw RemitFailedException() } // 보내는 계좌 받는 계좌 같으면 예외 처리
 
         // 출금 거래 내역
-        val tradeRemitHistory = TradeHistory(receive,value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
+        val tradeRemitHistory = TradeHistory(remitName,value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
         // 잔액 변경 저장
         remitAccount.withdraw(value)
@@ -100,7 +106,7 @@ class RemitServiceImpl(
 
         // 입금 거래 내역
         val depositAccount = accountRepository.findById(remitInfoReq.acReceive).orElse(null)?: throw NoAccountException() // 입금 받는 계좌 객체
-        val depositRemitHistory = TradeHistory(send,value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
+        val depositRemitHistory = TradeHistory(depositName,value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, send, receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
         // 잔액 변경 저장
         depositAccount.deposit(value)
