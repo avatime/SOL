@@ -16,7 +16,7 @@ interface BankRepository {
         acNo: String,
         type: Int
     ): MutableList<BankTradeResponseDto>
-    suspend fun getAccountDetail(@Field("ac_no") acNo: String): MutableList<BankDetailResponseDto>
+    suspend fun getAccountDetail(@Field("ac_no") acNo: String): MutableList<BankTradeResponseDto>
     suspend fun getRecentAccount(): MutableList<RecentTradeResponseDto>
     suspend fun checkAccount(@Body checkAccountRequestDto: CheckAccountRequestDto) : CheckAccountResponseDto
     suspend fun getAllBank(): MutableList<BankInfoResponseDto>

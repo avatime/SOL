@@ -38,7 +38,7 @@ class BankRepositoryImpl @Inject constructor(
         return bankService.getAccountSendDetail(acNo, type)
     }
 
-    override suspend fun getAccountDetail(acNo: String): MutableList<BankDetailResponseDto> {
+    override suspend fun getAccountDetail(acNo: String): MutableList<BankTradeResponseDto> {
         return bankService.getAccountDetail(acNo)
     }
 

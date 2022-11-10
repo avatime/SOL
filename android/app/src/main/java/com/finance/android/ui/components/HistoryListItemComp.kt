@@ -37,13 +37,22 @@ data class HistoryEntity(
 
 @Composable
 fun showHistoryList(
+    modifier : Modifier,
     onClick : (year : Int, month : Int) -> Unit = { year: Int, month: Int -> {}},
     type : String = "계좌",
-    historyList : List<HistoryEntity>
+    historyList : List<HistoryEntity>,
+    emptyMessage : String = "거래 내역이 없어요."
 ) {
     val context = LocalContext.current
     var currentMonth = remember { mutableStateOf(YearMonth.now()) }
     var currentMenu = remember { mutableStateOf(0) }
+    var column by remember {
+         mutableStateOf(0)
+    }
+    var bf by remember {
+        mutableStateOf(0
+        )
+    }
     var showMenuList by remember { mutableStateOf(false) }
     val menuList : List<String> = when(type) {
         "포인트" -> listOf("모두", "적립", "출금")
@@ -85,10 +94,13 @@ fun showHistoryList(
                         }
                         repeat(3) {
                             Row(
-                                modifier = Modifier.padding(10.dp).clickable {
-                                    currentMenu.value = it
-                                    showMenuList = false
-                                }
+                                modifier = Modifier
+                                    .padding(10.dp)
+                                    .clickable {
+                                        column = 0
+                                        currentMenu.value = it
+                                        showMenuList = false
+                                    }
                             ){
                                 Text(text = menuList[it])
                                 Spacer(modifier = Modifier.weight(1f))
@@ -110,8 +122,7 @@ fun showHistoryList(
     }
 
     Column(
-        modifier = Modifier
-            .height(700.dp)
+        modifier = modifier
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2)
@@ -135,6 +146,7 @@ fun showHistoryList(
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .clickable {
+                                column = 0
                                 currentMonth.value = currentMonth.value.minusMonths(1)
                                 onClick(
                                     currentMonth.value.year,
@@ -150,7 +162,11 @@ fun showHistoryList(
                         modifier = Modifier
                             .padding(top = 4.dp)
                             .clickable {
-                                if(YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) {
+                                column = 0
+                                if (YearMonth
+                                        .from(LocalDateTime.now())
+                                        .isAfter(currentMonth.value)
+                                ) {
                                     currentMonth.value = currentMonth.value.plusMonths(1)
                                     onClick(
                                         currentMonth.value.year,
@@ -168,51 +184,74 @@ fun showHistoryList(
                     Text(text = menuList[currentMenu.value] + " ▾")
                 }
             }
-            Column(
-                modifier = Modifier
-                .verticalScroll(rememberScrollState())
-            ) {
-                var bf : LocalDateTime = historyList[0].date.minusDays(1)
-                for (history in historyList) {
-                    when(currentMenu.value) {
-                        1 -> {
-                            if(history.value > 0 && compareDates(history.date, currentMonth.value)) {
-                                HistoryItem(
-                                    date = history.date,
-                                    title = history.name,
-                                    amount = history.value,
-                                    moneyType = moneyType,
-                                    type = menuList[1],
-                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
-                                )
+            if(historyList.isEmpty()) {
+                Column(modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally) {
+                    Text(text = emptyMessage, fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color.Gray)
+                }
+
+            }
+            else {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                ) {
+                    bf = findIdx(type = currentMenu.value, historyList = historyList)
+                    for (history in historyList) {
+                        when(currentMenu.value) {
+                            1 -> {
+                                if(history.value > 0 && compareDates(history.date, currentMonth.value)) {
+                                    column++
+                                    HistoryItem(
+                                        date = history.date,
+                                        title = history.name,
+                                        amount = history.value,
+                                        moneyType = moneyType,
+                                        type = menuList[1],
+                                        showDate = bf > history.date.dayOfMonth
+                                    )
+                                    bf = history.date.dayOfMonth
+                                }
+                            }
+                            2 -> {
+                                if(history.value < 0 && compareDates(history.date, currentMonth.value)) {
+                                    column++
+                                    HistoryItem(
+                                        date = history.date,
+                                        title = history.name,
+                                        amount = history.value,
+                                        moneyType = moneyType,
+                                        type = menuList[2],
+                                        showDate = bf > history.date.dayOfMonth
+                                    )
+                                    bf = history.date.dayOfMonth
+                                }
+                            }
+                            else -> {
+                                if(compareDates(history.date, currentMonth.value)) {
+                                    column++
+                                    HistoryItem(
+                                        date = history.date,
+                                        title = history.name,
+                                        amount = history.value,
+                                        moneyType = moneyType,
+                                        type = if(history.value < 0) menuList[2] else menuList[1],
+                                        showDate = bf > history.date.dayOfMonth
+                                    )
+                                    bf = history.date.dayOfMonth
+                                }
                             }
                         }
-                        2 -> {
-                            if(history.value < 0 && compareDates(history.date, currentMonth.value)) {
-                                HistoryItem(
-                                    date = history.date,
-                                    title = history.name,
-                                    amount = history.value,
-                                    moneyType = moneyType,
-                                    type = menuList[2],
-                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
-                                )
-                            }
-                        }
-                        else -> {
-                            if(compareDates(history.date, currentMonth.value)) {
-                                HistoryItem(
-                                    date = history.date,
-                                    title = history.name,
-                                    amount = history.value,
-                                    moneyType = moneyType,
-                                    type = if(history.value < 0) menuList[2] else menuList[1],
-                                    showDate = bf.dayOfMonth < history.date.dayOfMonth
-                                )
-                            }
-                        }
+
                     }
-                    bf = history.date
+                }
+                if(column == 0){
+                    Column(modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally) {
+                        Text(text = emptyMessage, fontWeight = FontWeight.Bold, fontSize = 22.sp, color = Color.Gray)
+                    }
                 }
             }
         }
@@ -264,6 +303,23 @@ fun HistoryItem(
     }
 }
 
+@Composable
+fun findIdx(
+    type : Int,
+    historyList: List<HistoryEntity>
+): Int {
+    when(type) {
+        1 -> for(i in historyList) {
+            if(i.value > 0) return i.date.dayOfMonth + 1
+        }
+        2 -> for(i in historyList) {
+            if(i.value < 0) return i.date.dayOfMonth + 1
+        }
+        else -> return historyList[0].date.dayOfMonth + 1
+    }
+    return historyList[0].date.dayOfMonth + 1
+}
+
 @Preview
 @Composable
 fun BasicHistoryText(
@@ -306,22 +362,22 @@ fun MoneyHistoryText(
     Text( text = sign+text, fontWeight = FontWeight.SemiBold, color = if(minus) Color(0xff3A00FF) else Color(0xffFF0046))
 }
 
-@Preview
-@Composable
-fun test1() {
-    MoneyHistoryText(minus = false)
-}
-
-@Preview
-@Composable
-fun test2() {
-    val historyList = MutableList(30){i -> HistoryEntity(LocalDateTime.now().minusHours(i.toLong()).plusDays(i.toLong()), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
-    showHistoryList(historyList = historyList, type = "포인트")
-}
-
-@Preview
-@Composable
-fun test3() {
-    val historyList = MutableList(30){ i -> HistoryEntity(LocalDateTime.now().minusHours(i.toLong()).plusDays(i.toLong()), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
-    showHistoryList(historyList = historyList)
-}
+//@Preview
+//@Composable
+//fun test1() {
+//    MoneyHistoryText(minus = false)
+//}
+//
+//@Preview
+//@Composable
+//fun test2() {
+//    val historyList = MutableList(30){i -> HistoryEntity(LocalDateTime.now().minusHours(i.toLong()).plusDays(i.toLong()), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
+//    showHistoryList(historyList = historyList, type = "포인트")
+//}
+//
+//@Preview
+//@Composable
+//fun test3() {
+//    val historyList = MutableList(30){ i -> HistoryEntity(LocalDateTime.now().minusHours(i.toLong()).plusDays(i.toLong()), "사용처 $i", if(i % 2 == 0) -100000000 else 100000000)}
+//    showHistoryList(historyList = historyList)
+//}

@@ -28,7 +28,7 @@ interface BankService {
     ): MutableList<BankTradeResponseDto>
 
     @GET("${Const.API_PATH}/bank/all/{ac_no}")
-    suspend fun getAccountDetail(@Path("ac_no") acNo: String): MutableList<BankDetailResponseDto>
+    suspend fun getAccountDetail(@Path("ac_no") acNo: String): MutableList<BankTradeResponseDto>
 
     @GET("${Const.API_PATH}/bank/recent")
     suspend fun getRecentAccount(): MutableList<RecentTradeResponseDto>

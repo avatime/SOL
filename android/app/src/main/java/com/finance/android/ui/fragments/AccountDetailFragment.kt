@@ -17,6 +17,7 @@ import com.finance.android.R
 import com.finance.android.ui.components.AccountCardComp
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.UserBalanceInfo
+import com.finance.android.ui.components.showHistoryList
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.BankViewModel
@@ -33,6 +34,7 @@ fun AccountDetailFragment(
 ) {
     fun launch() {
         bankViewModel.loadAccountBalance(acNo = acNo)
+        bankViewModel.loadAccountHistory(acNo = acNo)
     }
 
     LaunchedEffect(Unit) {
@@ -48,9 +50,10 @@ fun AccountDetailFragment(
         Column(modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)) {
-            when (val data = bankViewModel.getLoadAccountBalance()) {
+            when (val data = bankViewModel.getLoadAccountBalanceandHistory()) {
                 is Response.Success -> {
                     val balance = (bankViewModel.accountBalance.value as Response.Success).data
+                    val accountHistoryList = (bankViewModel.accountHistory.value as Response.Success).data
                     Column(
                         modifier = Modifier
                             .fillMaxHeight()
@@ -70,6 +73,8 @@ fun AccountDetailFragment(
                                 navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
                             }
                         )
+                        showHistoryList(modifier = Modifier.weight(1.0f),
+                            historyList = List(accountHistoryList.size) {i -> accountHistoryList[i].toEntity()})
                     }
                 }
                 is Response.Loading -> {}

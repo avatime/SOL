@@ -88,7 +88,7 @@ private fun Screen(
                 onClick = { navController.navigate(Const.Routes.EXCHANGE) }
             )
 //            test2()
-            showHistoryList(type = "포인트", historyList = List(pointHistoryList.size) {i -> pointHistoryList[i].toEntity()})
+            showHistoryList(emptyMessage = "내역이 없어요.", type = "포인트", historyList = List(pointHistoryList.size) {i -> pointHistoryList[i].toEntity()}, modifier = Modifier.weight(1.0f))
         }
     }
 }
