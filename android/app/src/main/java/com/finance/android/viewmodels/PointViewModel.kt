@@ -3,6 +3,7 @@ package com.finance.android.viewmodels
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.request.PointExchangeRequestDto
 import com.finance.android.domain.dto.response.PointHistoryResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.domain.repository.BaseRepository
@@ -27,6 +28,12 @@ class PointViewModel @Inject constructor(
         viewModelScope.launch {
             loadPointHistoryAllList()
             getUserInfo()
+        }
+    }
+
+    fun exchangePointToCash(pointExchangeRequestDto: PointExchangeRequestDto) {
+        viewModelScope.launch {
+            exchangePoint(pointExchangeRequestDto)
         }
     }
 
@@ -60,6 +67,17 @@ class PointViewModel @Inject constructor(
                 pointHistoryList.value = it
 //                if(it is Response.Success) {
 //                }
+            }
+    }
+
+    private suspend fun exchangePoint(pointExchangeRequestDto: PointExchangeRequestDto) {
+        this@PointViewModel.run {
+            pointRepository.exchangePointToCash(pointExchangeRequestDto)
+        }
+            .collect {
+                if(it is Response.Success) {
+                    launchPointHistory()
+                }
             }
     }
 }
