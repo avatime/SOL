@@ -241,4 +241,12 @@ class AccountServiceImpl(
     override fun getAccountBalance(acNo: String): Long {
         return accountRepository.findByAcNo(acNo)!!.balance
     }
+
+    override fun getMyAccountBalance(accessToken : String): Long {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()}) {
+            val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
+            return accountRepository.findByAcNo(user.account ?: throw NoAccountException())!!.balance
+        } else throw Exception()
+    }
 }

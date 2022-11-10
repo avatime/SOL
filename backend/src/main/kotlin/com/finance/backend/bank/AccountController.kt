@@ -83,4 +83,9 @@ class AccountController(val accountService: AccountService) {
     fun getAccountBalance(@PathVariable acNo : String): ResponseEntity<Any> {
         return ResponseEntity.status(200).body(accountService.getAccountBalance(acNo))
     }
+
+    @GetMapping("/my")
+    fun getMyAccountBalance(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any> {
+        return ResponseEntity.status(200).body(accountService.getMyAccountBalance(accessToken))
+    }
 }
