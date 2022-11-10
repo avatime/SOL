@@ -30,6 +30,7 @@ import com.finance.android.ui.components.showHistoryList
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.PointViewModel
+import java.text.DecimalFormat
 
 @Composable
 fun PointFragment(
@@ -82,7 +83,7 @@ private fun Screen(
             UserBalanceInfo(
                 title = "포인트",
                 isAccount = false,
-                balance = userInfo.point.toString() + " 포인트",
+                balance = DecimalFormat("#,###포인트").format(userInfo.point),
                 type = "포인트",
                 onClick = { navController.navigate(Const.Routes.EXCHANGE) }
             )

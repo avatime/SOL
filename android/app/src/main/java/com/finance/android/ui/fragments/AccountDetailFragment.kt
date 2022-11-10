@@ -16,9 +16,11 @@ import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.ui.components.AccountCardComp
 import com.finance.android.ui.components.BackHeaderBar
+import com.finance.android.ui.components.UserBalanceInfo
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.BankViewModel
+import java.text.DecimalFormat
 
 @Composable
 fun AccountDetailFragment(
@@ -27,7 +29,7 @@ fun AccountDetailFragment(
     acName: String,
     cpName: String,
     acNo: String,
-    bankViewModel: BankViewModel = hiltViewModel()
+    bankViewModel: BankViewModel = hiltViewModel(),
 ) {
     fun launch() {
         bankViewModel.loadAccountBalance(acNo = acNo)
@@ -43,34 +45,38 @@ fun AccountDetailFragment(
         },
 
         ) { innerPaddingModifier ->
-        when (val data = bankViewModel.getLoadAccountBalance()) {
-            is Response.Success -> {
-                val balance = (bankViewModel.accountBalance.value as Response.Success).data
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(innerPaddingModifier)
-                        .verticalScroll(rememberScrollState())
-                        .background(color = MaterialTheme.colorScheme.background)
-                ) {
-                    AccountCardComp(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                        .background(
-                            color = MaterialTheme.colorScheme.primary, shape = RoundedCornerShape(15)
-                        ),
-                        acName = acName,
-                        cpName = cpName,
-                        acNo = acNo,
-                        balance = balance,
-                        onClickButton = {
-                            navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
-                        })
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)) {
+            when (val data = bankViewModel.getLoadAccountBalance()) {
+                is Response.Success -> {
+                    val balance = (bankViewModel.accountBalance.value as Response.Success).data
+                    Column(
+                        modifier = Modifier
+                            .fillMaxHeight()
+                            .padding(
+                                top = innerPaddingModifier.calculateTopPadding(),
+                                start = dimensionResource(R.dimen.padding_small),
+                                end = dimensionResource(R.dimen.padding_small)
+                            )
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        UserBalanceInfo(
+                            title = acName,
+                            cpName = cpName,
+                            acNo = acNo,
+                            balance = DecimalFormat("#,###원").format(balance) ?: "0원",
+                            onClick = {
+                                navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
+                            }
+                        )
+                    }
                 }
+                is Response.Loading -> {}
+                else -> {}
             }
-            is Response.Loading -> {}
-            else -> {}
         }
+
     }
 
 }
