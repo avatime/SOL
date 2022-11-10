@@ -22,7 +22,8 @@ fun UserBalanceInfo(
     title : String = "신한 주거래 S20",
     isAccount : Boolean = true,
     type : String = "계좌",
-    account: String = "신한은행 1234567890",
+    cpName: String? = "신한은행",
+    acNo: String? = "1234567890",
     balance : String = "100,000,000원",
     onClick: () -> Unit = {}
 ) {
@@ -34,20 +35,20 @@ fun UserBalanceInfo(
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = dimensionResource(id = R.dimen.padding_medium), bottom = dimensionResource(id = R.dimen.padding_medium), start = 10.dp, end = 10.dp)
-            .height(200.dp)
+            .height(160.dp)
             .background(
                 MaterialTheme.colorScheme.primary,
                 RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2),
             ),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
          Column(
-            modifier = Modifier.padding(start = 23.dp, end = 23.dp, bottom = 23.dp).fillMaxWidth().fillMaxHeight(),
+            modifier = Modifier.padding(start = 23.dp, end = 23.dp).fillMaxWidth().fillMaxHeight(),
              verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 Text(text = title, fontSize = 20.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
-                if(isAccount) Text(text = account, fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.Normal)
+                if(isAccount) Text(text = "$cpName $acNo", fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.Normal)
             }
 
             Row(
