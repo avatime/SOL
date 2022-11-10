@@ -1,12 +1,9 @@
 package com.finance.android.ui.screens
 
 
-import android.icu.number.IntegerWidth
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-
-
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
@@ -21,7 +18,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.utils.Const
-
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.RemitViewModel
 
@@ -89,13 +85,26 @@ fun InputMoneyScreen(
 
 
                 ) {
-                    Text(text = "${moneyValue}원 보낼까요?", fontSize = 30.sp, softWrap = true, maxLines = 1)
+                    Text(
+                        text = "${moneyValue}원 보낼까요?",
+                        fontSize = 30.sp,
+                        softWrap = true,
+                        maxLines = 1
+                    )
                 }
 
 
             } else {
                 TextField(
-                    value = moneyValue, onValueChange = { it -> moneyValue = it },
+                    value = moneyValue,
+                    onValueChange = {
+
+                        if (error.value && moneyValue < it) {
+                            return@TextField
+                        }
+
+                        moneyValue = if (it.isEmpty()) "" else it.toInt().toString()
+                    },
                     modifier = Modifier
                         .padding(start = 16.dp)
                         .fillMaxWidth(),
@@ -185,7 +194,7 @@ fun InputMoneyScreen(
 
                     com.finance.android.ui.components.TextButton(
                         onClick = {
-                            if(!remitViewModel.requestRemit.value && Integer.parseInt(moneyValue)>0){
+                            if (!remitViewModel.requestRemit.value && Integer.parseInt(moneyValue) > 0) {
                                 remitViewModel.remitFromAccount(
                                     value = Integer.parseInt(moneyValue),
                                     receive = "",
@@ -195,8 +204,9 @@ fun InputMoneyScreen(
                                         remitViewModel.moneyValue.value = moneyValue
                                     }
                                 )
-                            }else if(Integer.parseInt(moneyValue)>0){
-                                remitViewModel.remitFromPhone(value = Integer.parseInt(moneyValue), receive = "",
+                            } else if (Integer.parseInt(moneyValue) > 0) {
+                                remitViewModel.remitFromPhone(value = Integer.parseInt(moneyValue),
+                                    receive = "",
                                     send = "",
                                     onSuccess = {
                                         navController.navigate(Const.REMIT_OK_SCREEN)
