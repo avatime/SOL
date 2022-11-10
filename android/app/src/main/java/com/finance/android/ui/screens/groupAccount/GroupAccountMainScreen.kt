@@ -80,8 +80,9 @@ fun GroupAccountMainScreen(
                         }
                     }
                 }
-            }
-        }
+            } //when
+        }//column
+
 
         TextButton(
             onClick = { navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN) },
@@ -90,10 +91,10 @@ fun GroupAccountMainScreen(
             buttonType = ButtonType.ROUNDED
         )
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
+    }//column
 
-
-    }
 }
+
 
 
 
