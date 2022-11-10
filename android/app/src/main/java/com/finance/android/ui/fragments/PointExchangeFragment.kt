@@ -1,27 +1,31 @@
 package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.airbnb.lottie.LottieProperty
+import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.BackHeaderBar
+import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.screens.point.InputExchangePoint
 import com.finance.android.utils.Response
+import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.PointViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -62,7 +66,8 @@ private fun Screen(
         topBar = {
             BackHeaderBar(
                 text = "포인트",
-                onClickBack = onClose
+                onClickBack = onClose,
+                backgroundColor = MaterialTheme.colorScheme.background
             )
         }
     ) {
@@ -70,11 +75,13 @@ private fun Screen(
             modifier = Modifier
                 .padding(top = it.calculateTopPadding())
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
                 .background(color = MaterialTheme.colorScheme.background)
-                .padding(dimensionResource(R.dimen.padding_medium))
+//                .padding(start = dimensionResource(R.dimen.padding_medium))
         ) {
-            InputExchangePoint(userInfo.point)
+            InputExchangePoint(
+                balance = userInfo.point,
+                pointViewModel = pointViewModel
+            )
         }
     }
 }
@@ -85,32 +92,55 @@ private fun SuccessScreen(
     pointViewModel: PointViewModel,
     onClose: () -> Unit = {},
 ) {
-    Scaffold(
-        topBar = {
-            BackHeaderBar(
-                text = "포인트",
-                onClickBack = onClose
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_done))
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = LottieConstants.IterateForever
+    )
+    val dynamicProperties = rememberLottieDynamicProperties(
+        rememberLottieDynamicProperty(
+            property = LottieProperty.COLOR,
+            value = MaterialTheme.colorScheme.primary.toArgb(),
+            keyPath = arrayOf(
+                "**"
             )
-        }
-    ) {
-        Column(
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .padding(top = it.calculateTopPadding())
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(color = MaterialTheme.colorScheme.background)
-                .padding(dimensionResource(R.dimen.padding_medium))
-        ) {
-            Text(text = if(pointViewModel.success.value == 1) "성공" else "실패")
-            Button(onClick = {
-                if(pointViewModel.success.value == 1) onClose
-                else pointViewModel.success.value = 0
-            }) {
-                Text(text = "확인")
-            }
-        }
+        ),
+        rememberLottieDynamicProperty(
+            property = LottieProperty.STROKE_COLOR,
+            value = MaterialTheme.colorScheme.primary.toArgb(),
+            keyPath = arrayOf(
+                "**"
+            )
+        )
+    )
+    Column(  modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.surface),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.padding(20.dp))
+        LottieAnimation(
+            composition,
+            progress = { progress },
+            modifier = Modifier.size(100.dp),
+            dynamicProperties = dynamicProperties
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+
+        androidx.compose.material.Text(
+            text = "${pointViewModel.exchangedPoint.value} 포인트",
+            fontSize = 25.sp,
+        )
+        androidx.compose.material.Text(text = "전환완료", fontSize = 25.sp)
+        Spacer(modifier = Modifier.padding(10.dp))
+        com.finance.android.ui.components.TextButton(
+            onClick = {
+                onClose
+            },
+            text = "완료",
+            modifier = Modifier.withBottomButton(),
+            buttonType = ButtonType.ROUNDED,
+
+            )
     }
 }
 
