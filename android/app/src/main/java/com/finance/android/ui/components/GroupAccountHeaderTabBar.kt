@@ -8,14 +8,19 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.finance.android.R
 import com.finance.android.ui.screens.groupAccount.GroupAccountDuesScreen
 import com.finance.android.ui.screens.groupAccount.GroupAccountMemberScreen
 import com.finance.android.ui.screens.groupAccount.GroupAccountTradeDetailScreen
 
 import com.finance.android.ui.theme.Disabled
+import com.finance.android.utils.Const
+import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 
 
@@ -26,6 +31,7 @@ fun GroupAccountHeaderTabBar(
     groupAccountViewModel: GroupAccountViewModel
 ) {
     var selectedIndex by remember { mutableStateOf(0) }
+    val innerNavController = rememberNavController()
 
     val list = listOf("회비", "입출금", "친구")
     Column(modifier = modifier.fillMaxSize()) {
@@ -47,6 +53,7 @@ fun GroupAccountHeaderTabBar(
             }
 
         ) {
+
             list.forEachIndexed { index, text ->
                 val selected = selectedIndex == index
                 Tab(
@@ -57,6 +64,26 @@ fun GroupAccountHeaderTabBar(
                     selectedContentColor = Color.Black,
                     unselectedContentColor = Disabled,
                     )
+                }
+
+            when (selectedIndex){
+                0 -> GroupAccountDuesScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+                1 -> GroupAccountTradeDetailScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+                2 -> GroupAccountMemberScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
+
             }
         }
 
@@ -64,7 +91,7 @@ fun GroupAccountHeaderTabBar(
     }
 
 
-}
+
 
 
 

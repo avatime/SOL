@@ -75,7 +75,7 @@ fun GroupAccountFragment(
 
             composable(
                 route = "${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/{paId}",
-                arguments = listOf(navArgument(name = "paId") {type = NavType.IntType})
+                arguments = listOf(navArgument(name = "paId") { type = NavType.IntType })
             )
             {
                 GroupAccountDetailScreen(
@@ -93,6 +93,7 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
+
         }
     }
 }
