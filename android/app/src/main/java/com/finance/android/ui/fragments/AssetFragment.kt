@@ -6,22 +6,11 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.FabPosition
-import androidx.compose.material.IconButton
 import androidx.compose.material.Scaffold
-import androidx.compose.material.TopAppBar
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.FloatingActionButton
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
-import com.finance.android.R
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.HeaderAssetTabBar
 
@@ -31,7 +20,6 @@ fun AssetFragment(navController: NavController, onClose: () -> Unit) {
         topBar = {
             BackHeaderBar(text = "자산", modifier = Modifier, onClickBack = onClose)
         },
-
     ) { innerPaddingModifier ->
         Box(modifier = Modifier
             .fillMaxHeight()

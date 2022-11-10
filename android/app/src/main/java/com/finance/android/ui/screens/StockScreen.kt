@@ -7,7 +7,9 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -18,7 +20,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,82 +31,116 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.FinanceResponseDto
+import com.finance.android.ui.components.AnimatedLoading
+import com.finance.android.ui.components.CustomDialog
+import com.finance.android.ui.components.DialogActionType
+import com.finance.android.ui.components.DialogType
 import com.finance.android.utils.Const
-import com.finance.android.utils.Response
-import com.finance.android.viewmodels.FinanceViewModel
+import com.finance.android.viewmodels.StockViewModel
 import java.text.DecimalFormat
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun StockScreen(
     navController: NavController,
-    financeViewModel: FinanceViewModel = hiltViewModel()
+    stockViewModel: StockViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        financeViewModel.Load()
+        stockViewModel.launch()
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState())
-            .background(color = MaterialTheme.colorScheme.background)
+
+    Scaffold(
+        containerColor = MaterialTheme.colorScheme.background
     ) {
-        when (val data = financeViewModel.getLoadState()) {
-            is Response.Success -> {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = it.calculateTopPadding())
+        ) {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
                 StockContainer(
-                    navController = navController,
-                    accData = (financeViewModel.financeList.value as Response.Success).data
+                    accData = stockViewModel.stockList.value,
+                    onClickItem = { data ->
+                        navController.navigate("${Const.Routes.STOCK}/${data.fnName}")
+                    }
                 )
             }
-            is Response.Loading -> {}
-            else -> {}
+
+            if (stockViewModel.loading.value) {
+                AnimatedLoading()
+            }
+
+            if (stockViewModel.error.value != null) {
+                CustomDialog(
+                    dialogType = DialogType.ERROR,
+                    dialogActionType = DialogActionType.ONE_BUTTON,
+                    title = stringResource(id = R.string.msg_server_error),
+                    onPositive = { stockViewModel.launch() }
+                )
+            }
         }
     }
 }
 
-
+@Preview
 @Composable
-fun StockContainer(
-    navController: NavController,
-    accData: Array<FinanceResponseDto>
+private fun StockContainer(
+    onClickItem: (financeResponseDto: FinanceResponseDto) -> Unit = {},
+    accData: Array<FinanceResponseDto> = arrayOf()
 ) {
-    Column(
-        modifier = Modifier.fillMaxWidth()
-            .padding(dimensionResource(R.dimen.padding_medium))
-            .background(
-                color = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(10.dp)
+    if (accData.isNotEmpty()) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(dimensionResource(R.dimen.padding_medium))
+                .background(
+                    color = MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(10.dp)
+                )
+                .padding(dimensionResource(id = R.dimen.padding_medium) / 2)
+        ) {
+            Text(
+                modifier = Modifier.padding(dimensionResource(R.dimen.padding_small)),
+                text = "주식",
+                fontWeight = FontWeight.Bold,
+                fontSize = 20.sp
             )
-            .padding(dimensionResource(R.dimen.padding_medium))
-    ) {
-        accData.forEach {
-            DrawListItem(
-                fnName = it.fnName,
-                fnLogo = it.fnLogo,
-                close = it.close,
-                per = it.per,
-                onClickItem = {
-                    navController.navigate("${Const.Routes.STOCK}/${it.fnName}/${it.close}/${it.per}")
-                }
-            )
+            Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_small)))
+            accData.forEach {
+                DrawListItem(
+                    fnName = it.fnName,
+                    fnLogo = it.fnLogo,
+                    close = it.close,
+                    per = it.per,
+                    onClickItem = { onClickItem(it) }
+                )
+            }
         }
     }
 }
 
+@Preview
 @Composable
-fun DrawListItem(
-    fnName: String,
-    fnLogo: String,
-    close: Int,
-    per: Double,
-    onClickItem: () -> Unit
+private fun DrawListItem(
+    fnName: String = "삼성전자",
+    fnLogo: String = "",
+    close: Int = 80000,
+    per: Double = 10.0,
+    onClickItem: () -> Unit = {}
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .clip(RoundedCornerShape(10.dp))
             .clickable {
-                       onClickItem()
-            },
+                onClickItem()
+            }
+            .padding(
+                vertical = 8.dp,
+                horizontal = dimensionResource(id = R.dimen.padding_medium) / 2
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(
@@ -114,16 +152,14 @@ fun DrawListItem(
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(40.dp)
-                .clip(CircleShape),
+                .clip(CircleShape)
         )
         Spacer(
             modifier = Modifier
                 .weight(.05f)
         )
         Text(
-            text = fnName,
-            fontWeight = FontWeight.Bold,
-            fontSize = 25.sp
+            text = fnName
         )
         Spacer(
             modifier = Modifier
@@ -131,13 +167,12 @@ fun DrawListItem(
         )
         Column(horizontalAlignment = Alignment.End) {
             Text(
-                text = "$per%",
-                color = if (per > 0) Color(0xFFFF0000) else Color(0xFF3F51B5),
-                fontSize = 19.sp
+                text = "${if (per > 0) "+" else ""}$per%",
+                color = if (per > 0) Color.Red else Color.Blue,
+                fontSize = 14.sp
             )
             Text(
-                text = DecimalFormat("#,###원").format(close),
-                fontSize = 15.sp
+                text = DecimalFormat("#,###원").format(close)
             )
         }
     }
