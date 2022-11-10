@@ -209,7 +209,7 @@ private fun HomeCardContainer(
                 myName = it.name,
                 isName = it.isName,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.INSURANCE}/${it.isId}/${it.isPdName}")
+                    navController.navigate("${Const.Routes.INSURANCE}/${it.isPdId}/${it.isPdName}")
                 }
             )
         }

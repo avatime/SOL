@@ -2,7 +2,6 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.InsuranceDetailResponseDto
 import com.finance.android.domain.repository.BaseRepository
@@ -16,12 +15,11 @@ import javax.inject.Inject
 class InsuranceDetailViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
-    savedStateHandle: SavedStateHandle,
     private val insuranceRepository: InsuranceRepository
 ) : BaseViewModel(application, baseRepository) {
-    val id = savedStateHandle.get<Int>("id")!!
+
     val insuranceDetail = mutableStateOf<Response<InsuranceDetailResponseDto>>(Response.Loading)
-    fun Load() {
+    fun load(id: Int) {
         viewModelScope.launch {
             loadInsuranceDetail(id)
         }
