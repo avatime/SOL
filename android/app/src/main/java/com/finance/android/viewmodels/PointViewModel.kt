@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.request.PointExchangeRequestDto
 import com.finance.android.domain.dto.response.PointHistoryResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
+import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.PointRepository
 import com.finance.android.domain.repository.UserRepository
@@ -19,7 +20,8 @@ class PointViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     private val pointRepository: PointRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val bankRepository: BankRepository
 ) : BaseViewModel(application, baseRepository) {
     val success = mutableStateOf(0)
     val myInfo = mutableStateOf<Response<UserProfileResponseDto>>(Response.Loading)
