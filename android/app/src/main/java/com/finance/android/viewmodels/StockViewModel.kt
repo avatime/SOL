@@ -1,7 +1,7 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.domain.repository.BaseRepository
@@ -17,7 +17,7 @@ class StockViewModel @Inject constructor(
     baseRepository: BaseRepository,
     private val stockRepository: StockRepository
 ) : BaseViewModel(application, baseRepository) {
-    val stockList = mutableStateListOf<FinanceResponseDto>()
+    val stockList = mutableStateOf<Array<FinanceResponseDto>>(arrayOf())
 
     fun launch() {
         viewModelScope.launch {
@@ -31,8 +31,7 @@ class StockViewModel @Inject constructor(
         }
             .collect {
                 if (it is Response.Success) {
-                    stockList.clear()
-                    stockList.addAll(it.data)
+                    stockList.value = it.data
                 }
             }
     }
