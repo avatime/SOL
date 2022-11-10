@@ -133,12 +133,13 @@ fun FinanceApp() {
                 )
             }
             composable(
-                route = "${Const.Routes.INSURANCE}/{id}/{name}", arguments = listOf(
-                    navArgument("id") { type = NavType.IntType },
+                route = "${Const.Routes.INSURANCE}/{isId}/{name}", arguments = listOf(
+                    navArgument("isId") { type = NavType.IntType },
                     navArgument("name") { type = NavType.StringType }
                 )
             ) {
                 InsuranceDetailFragment(
+                    isId = it.arguments!!.getInt("isId"),
                     name = it.arguments!!.getString("name")!!
                 ) {
                     navController.popBackStack()
