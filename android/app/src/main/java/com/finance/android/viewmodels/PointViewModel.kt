@@ -96,8 +96,9 @@ class PointViewModel @Inject constructor(
         }
             .collect {
                 if(it is Response.Success) {
-                    launchPointHistory()
-                }
+                    success.value = 1
+//                    launchPointHistory()
+                } else success.value = 2
             }
     }
 }
