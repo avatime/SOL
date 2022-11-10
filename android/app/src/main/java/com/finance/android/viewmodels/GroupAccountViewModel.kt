@@ -32,6 +32,9 @@ class GroupAccountViewModel @Inject constructor(
     val name = mutableStateOf("")
     val paId = mutableStateOf(0)
 
+    val duesName = mutableStateOf("")
+    val duesBalance = mutableStateOf(1000)
+
     //모임 통장 조회
     private val _groupAccountData =
         mutableStateOf<Response<MutableList<PublicAccountResponseDto>>>(Response.Loading)
@@ -92,8 +95,6 @@ class GroupAccountViewModel @Inject constructor(
     }
 
 
-
-
     // 회비 생성
     fun makeGroupDues(
         createDuesRequestDto: CreateDuesRequestDto,
@@ -106,10 +107,10 @@ class GroupAccountViewModel @Inject constructor(
                 )
             }.collect{
                 if (it is Response.Success) {
-                    Log.i("remitAccount", "전번도 갓찬영")
+                    Log.i("remitAccount", "회비도 갓찬영")
                     onSuccess()
                 } else if (it is Response.Failure) {
-                    Log.i("remitAccount", "전번도 김챤챤영 ㅡㅡ")
+                    Log.i("remitAccount", "회비도 김챤챤영 ㅡㅡ")
                 }
             }
         }
