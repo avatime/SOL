@@ -51,4 +51,7 @@ interface BankService {
     @GET("${Const.API_PATH}/bank/balance/{ac_no}")
     suspend fun getAccountBalance(@Path("ac_no")acNo: String): Int
 
+    @GET("${Const.API_PATH}/bank/my")
+    suspend fun getRepresentAccountBalance() : String
+
 }

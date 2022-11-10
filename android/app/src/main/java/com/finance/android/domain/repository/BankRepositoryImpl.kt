@@ -69,4 +69,8 @@ class BankRepositoryImpl @Inject constructor(
     override suspend fun getAccountBalance(acNo: String): Int {
         return bankService.getAccountBalance(acNo)
     }
+
+    override suspend fun getRepresentAccountBalance(): String {
+        return bankService.getRepresentAccountBalance()
+    }
 }
