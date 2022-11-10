@@ -20,6 +20,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.finance.android.R
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.BackHeaderBar
+import com.finance.android.ui.screens.point.InputExchangePoint
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.PointViewModel
 
@@ -75,6 +76,7 @@ private fun Screen(
                 .background(color = MaterialTheme.colorScheme.background)
                 .padding(dimensionResource(R.dimen.padding_medium))
         ) {
+            InputExchangePoint(userInfo.point)
             Button(onClick = { pointViewModel.success.value = 2 }) {
                 Text(text = "출금")
             }
