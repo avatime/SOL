@@ -285,7 +285,7 @@ fun DateText(
     text : String = "10.21",
     show : Boolean = true
 ) {
-    Text( text = text, fontWeight = FontWeight.SemiBold, color = if(show) Color.Black else MaterialTheme.colorScheme.surface)
+    Text( text = text, fontWeight = FontWeight.SemiBold, color = if(show) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.surface)
 }
 
 @Preview
