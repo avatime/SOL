@@ -1,4 +1,4 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.screens.asset
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -54,14 +54,16 @@ fun AssetLifeScreen(
                     ),
                     isList = isData.list
                 )
-                AssetLifeContainer2(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.padding_medium))
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(10.dp)
-                    ),
-                value = isData.totalFee)
+                if(isData.totalFee != 0) {
+                    AssetLifeContainer2(modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                        value = isData.totalFee)
+                }
             }
         }
         is Response.Loading -> {}
@@ -86,7 +88,19 @@ private fun AssetLifeContainer(
             )
         }
         if(isList.size == 0) {
-            Text(text = "등록된 자산이 없어요.", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "등록된 자산이 없어요.",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 80.dp)
+                )
+            }
         }
     }
 }

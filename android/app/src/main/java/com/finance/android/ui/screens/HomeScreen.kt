@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
 import com.finance.android.services.WalkService
@@ -225,7 +226,19 @@ private fun HomeCardContainer(
             )
         }
         if (totalSize == 0) {
-            Text(text = "자산 등록이 필요해요!", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    text = "자산 등록이 필요해요!",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 22.sp,
+                    color = Color.Gray,
+                    modifier = Modifier.padding(vertical = 80.dp)
+                )
+            }
         }
     }
 }
@@ -243,7 +256,7 @@ private fun HomeCardContainer2(modifier: Modifier, navController: NavController)
                 fontSize = 20.sp
             )
             Spacer(modifier = Modifier.weight(1.0f))
-            IconButton(onClick = { /*TODO*/ }, modifier = Modifier.size(30.dp)) {
+            IconButton(onClick = { navController.navigate(Const.Routes.POINT) }, modifier = Modifier.size(30.dp)) {
                 Image(
                     painter = painterResource(R.drawable.arrow_forward_ios),
                     contentDescription = null,
@@ -274,7 +287,7 @@ private fun HomeCardContainer2(modifier: Modifier, navController: NavController)
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 TextButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate(Const.Routes.PEDOMETER) },
                     text = "만보기",
                     modifier = Modifier
                         .height(40.dp)
@@ -285,7 +298,7 @@ private fun HomeCardContainer2(modifier: Modifier, navController: NavController)
                 )
                 Spacer(modifier = Modifier.weight(1.0f))
                 TextButton(
-                    onClick = { /*TODO*/ },
+                    onClick = { navController.navigate(Const.Routes.ATTENDANCE) },
                     text = "출석체크",
                     modifier = Modifier
                         .height(40.dp)
