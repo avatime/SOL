@@ -14,10 +14,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
+import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.GroupAccountHeaderTabBar
+import com.finance.android.ui.components.TextButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 import java.util.NavigableMap
 import com.finance.android.ui.theme.Typography
+import com.finance.android.utils.Const
+import com.finance.android.utils.ext.withBottomButton
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -50,15 +54,16 @@ fun GroupAccountDetailScreen(
 
         Scaffold(topBar = {
             GroupAccountHeaderTabBar(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .background(color = MaterialTheme.colorScheme.surface)
                 ,
                 navController = navController,
                 groupAccountViewModel = groupAccountViewModel
             )
-        }) {contentPadding->
-            Box(modifier = modifier.padding(contentPadding)) {
+        })
+        {contentPadding->
+            Box(modifier = modifier.padding(top = contentPadding.calculateTopPadding())) {
 
             }
         }

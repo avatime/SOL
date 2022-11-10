@@ -28,6 +28,7 @@ object Const {
     const val GROUP_ACCOUNT_DETAIL_SCREEN = "group_account_detail_screen"
     const val GROUP_ACCOUNT_COMPLETED = "group_account_completed"
 
+
     object Routes {
         const val LOGIN = "route_login"
         const val SIGNUP = "route_signup"
