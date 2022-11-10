@@ -15,10 +15,10 @@ class RewardController(private val pointService: RewardService, private val user
     fun getPoints(@RequestHeader("access_token") accessToken : String, @PathVariable filter: String) : ResponseEntity<Any?> {
         return try{
             when (filter) {
-                "all" -> ResponseEntity.status(200).body(pointService.getAllPoint(accessToken))
-                "in" -> ResponseEntity.status(200).body(pointService.getAccumulatedPoint(accessToken))
-                "out" -> ResponseEntity.status(200).body(pointService.getUsedPoint(accessToken))
-                else -> ResponseEntity.status(200).body(pointService.getAllPoint(accessToken))
+                "all" -> ResponseEntity.status(200).body(pointService.getAllPoint(accessToken).reversed())
+                "in" -> ResponseEntity.status(200).body(pointService.getAccumulatedPoint(accessToken).reversed())
+                "out" -> ResponseEntity.status(200).body(pointService.getUsedPoint(accessToken).reversed())
+                else -> ResponseEntity.status(200).body(pointService.getAllPoint(accessToken).reversed())
             }
         } catch (e : TokenExpiredException) {
             ResponseEntity.status(403).body("Token Expired")
