@@ -92,7 +92,7 @@ class RemitServiceImpl(
 
 
         val depositName = userRepository.findById(remitAccount.user.id).orElse(null).name
-        
+
         if (remitAccount.balance < value){ throw InsufficientBalanceException()} // 잔액 부족시 418 에러
 
         if (remitAccount.acNo == targetAccount){ throw RemitFailedException() } // 보내는 계좌 받는 계좌 같으면 예외 처리
