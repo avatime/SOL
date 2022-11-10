@@ -45,5 +45,6 @@ object Const {
         const val POINT = "route_point"
         const val CARD_DETAIL = "route_cardDetail"
         const val EXCHANGE = "route_pointExchange"
+        const val CARD_BENEFIT = "route_cardBenefit"
     }
 }

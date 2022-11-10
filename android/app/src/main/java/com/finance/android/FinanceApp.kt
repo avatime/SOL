@@ -13,6 +13,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.finance.android.ui.fragments.*
 import com.finance.android.ui.screens.AttendanceFragment
+import com.finance.android.ui.screens.CardBenefitScreen
 import com.finance.android.ui.screens.WalkFragment
 import com.finance.android.ui.theme.FinanceTheme
 import com.finance.android.utils.Const
@@ -191,14 +192,14 @@ fun FinanceApp() {
                 }
             }
             composable(
-                route = "${Const.Routes.CARD_DETAIL}/{cardProductCode}/{cdImgPath}/{cdName}",
+                route = "${Const.Routes.CARD_BENEFIT}/{cardProductCode}/{cdImgPath}/{cdName}",
                 arguments = listOf(
                     navArgument("cardProductCode") { type = NavType.IntType },
                     navArgument("cdImgPath") { type = NavType.StringType },
                     navArgument("cdName") { type = NavType.StringType },
                 )
             ) {
-                CardDetailScreen(
+                CardBenefitScreen(
                     cardProductCode = it.arguments!!.getInt("cardProductCode"),
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
                     cdName = it.arguments!!.getString("cdName")!!,
