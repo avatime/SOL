@@ -136,8 +136,7 @@ private fun HomeCardContainer(
         mainData.accountList.size + mainData.cardList.size + mainData.financeList.size + mainData.insuranceList.size
 
     Column(
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.padding_medium))
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_medium))
     ) {
         Row(
             modifier = Modifier
@@ -194,7 +193,7 @@ private fun HomeCardContainer(
             CardListItem_Arrow(
                 cardName = it.cardInfoRes.cardName,
                 cardImgPath = it.cardInfoRes.cardImgPath,
-                cardFee = "당월 청구 금액 : "+ DecimalFormat("#,###원").format(it.cardValueAll),
+                cardFee = "당월 청구 금액 : " + DecimalFormat("#,###원").format(it.cardValueAll),
                 onClickItem = {
                     navController.navigate("${Const.Routes.CARD_DETAIL}/117/$pathTmp/${it.cardInfoRes.cardName}")
                 }
@@ -215,7 +214,9 @@ private fun HomeCardContainer(
             )
         }
         if (mainData.financeList.size != 0) {
-            Divider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium)))
+            Divider(
+                modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium))
+            )
         }
         mainData.financeList!!.forEach {
             AccountListItem_Arrow(
@@ -249,8 +250,7 @@ private fun HomeCardContainer(
 @Composable
 private fun HomeCardContainer2(modifier: Modifier, navController: NavController) {
     Column(
-        modifier = modifier
-            .padding(dimensionResource(R.dimen.padding_medium))
+        modifier = modifier.padding(dimensionResource(R.dimen.padding_medium))
     ) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
@@ -346,8 +346,7 @@ private fun TopBar(
 
         if (Build.VERSION_CODES.N <= Build.VERSION.SDK_INT) {
             val manager =
-                LocalContext.current.getSystemService(Context.NOTIFICATION_SERVICE)
-                    as NotificationManager
+                LocalContext.current.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             if (!manager.areNotificationsEnabled() && !flag) {
                 PedometerOffStateButton(
                     onClick = onClick
