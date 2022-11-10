@@ -14,10 +14,18 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 fun GroupAccountTradeDetailScreen(
     navController: NavController,
     groupAccountViewModel: GroupAccountViewModel,
-    modifier: Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(modifier = modifier.fillMaxSize().background(Color.White)) {
         Text(text="임시싯시")
+        Text(text="임시싯시")
+        Text(text="임시싯시")
+        Text(text="임시싯시")
+        Text(text="임시싯시")
+        Text(text="임시싯시")
+        Text(text="임시싯시")
+
+
     }
 
 }

@@ -3,29 +3,25 @@ package com.finance.android.ui.screens.groupAccount
 import android.Manifest
 import android.content.pm.PackageManager
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.MemberRequestDto
-import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.FriendSelectItem
 import com.finance.android.ui.components.SelectedFriendItem
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
-import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.utils.retrieveAllContacts
 import com.finance.android.viewmodels.GroupAccountViewModel
@@ -63,17 +59,30 @@ fun ContactFriendListScreen(
     val createGroupAccountRequestDto = CreateGroupAccountRequestDto(name, memberList)
 
 
-    Column(modifier = modifier.fillMaxSize()) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .horizontalScroll(rememberScrollState())
-        ) {
-            friendsList.forEach {
-                SelectedFriendItem(img = it.avatar, name = it.name)
-            }
 
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
+        if (friendsList.isNotEmpty()) {
+            LazyRow(modifier = Modifier.height(130.dp).fillMaxWidth()) {
+                items(count = friendsList.size, key = { it }, itemContent = {
+                    val item = friendsList[it]
+                    Log.i("gg", "${item.contactId}")
+                    SelectedFriendItem(
+                        img = item.avatar,
+                        name = item.name,
+                        onClick = {
+                            val index = list.indexOfFirst { data -> data.contactId == item.contactId }
+                            groupAccountViewModel.onClickDeleteFriend(index)
+                        })
+
+
+                })
+            }
         }
+
 
         LazyColumn(
             modifier = Modifier

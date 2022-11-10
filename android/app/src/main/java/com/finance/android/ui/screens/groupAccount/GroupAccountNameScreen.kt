@@ -46,7 +46,7 @@ fun GroupAccountNameScreen(
                     fontWeight = FontWeight.Bold,
                 )
                 Text(
-                    text = "입력해주세용",
+                    text = "입력해주세요",
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -56,7 +56,7 @@ fun GroupAccountNameScreen(
         TextInput(
             value = groupAccountViewModel.name.value,
             onValueChange = {
-                if (1 <= it.length && it.length <= 20){
+                if (it.length in 1..20){
                     groupAccountViewModel.name.value = it
                 }
             },
