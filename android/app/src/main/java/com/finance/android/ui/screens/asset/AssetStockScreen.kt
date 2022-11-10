@@ -68,7 +68,7 @@ fun AssetStockContainer(modifier: Modifier,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}")
                 }
             )
         }
