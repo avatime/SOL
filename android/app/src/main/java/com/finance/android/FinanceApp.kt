@@ -100,7 +100,6 @@ fun FinanceApp() {
                     enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
-<<<<<<< HEAD
                     PointFragment(
                         navController = navController,
                         onClose = {
@@ -123,11 +122,6 @@ fun FinanceApp() {
                             navController.popBackStack()
                         }
                     )
-=======
-                    PointFragment(onClose = {
-                        navController.popBackStack()
-                    })
->>>>>>> 31dc155 (feat: insurance detail 연동 확인)
                 }
             }
             composable(Const.Routes.WALK) {
@@ -143,12 +137,8 @@ fun FinanceApp() {
                 }
             }
             composable(
-<<<<<<< HEAD
                 route = "${Const.Routes.STOCK}/{fnName}",
                 arguments = listOf(
-=======
-                route = "${Const.Routes.STOCK}/{fnName}/{close}/{per}", arguments = listOf(
->>>>>>> 31dc155 (feat: insurance detail 연동 확인)
                     navArgument("fnName") { type = NavType.StringType },
                 )
             ) {
@@ -190,12 +180,8 @@ fun FinanceApp() {
                     navArgument("cdName") { type = NavType.StringType },
                 )
             ) {
-<<<<<<< HEAD
                 CardBenefitScreen(
                     cardProductCode = it.arguments!!.getInt("cardProductCode"),
-=======
-                CardDetailScreen(cardProductCode = it.arguments!!.getInt("cardProductCode"),
->>>>>>> 31dc155 (feat: insurance detail 연동 확인)
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
                     cdName = it.arguments!!.getString("cdName")!!,
                     navController = navController,
