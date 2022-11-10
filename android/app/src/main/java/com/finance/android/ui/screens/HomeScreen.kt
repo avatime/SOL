@@ -48,6 +48,7 @@ import com.finance.android.viewmodels.HomeViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
+import java.net.URLEncoder
 import java.text.DecimalFormat
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -178,7 +179,7 @@ private fun HomeCardContainer(
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}")
                 },
                 onClickRemit = {
                     navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.acNo}/${it.balance}")
@@ -225,7 +226,7 @@ private fun HomeCardContainer(
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}")
                 }
             )
         }
