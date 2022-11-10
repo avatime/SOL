@@ -106,14 +106,11 @@ class AccountServiceImpl(
     override fun getAccountDetail(acNo: String): List<BankTradeRes> {
         var bankTradeList = ArrayList<BankTradeRes>()
         val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
-        val corporation = corporationRepository.findByCpCode(account.acCpCode)?: throw NoCorporationException()
-        val bankAccountRes = BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg)
-        val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNo(account.acNo).orEmpty()
+        val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNoOrderByTdDtDesc(account.acNo).orEmpty()
+
         for (trade in tradeHistoryList){
             var balance = trade.tdVal
-            if (trade.tdType == 2){
-               balance *= -1
-            }
+            if (trade.tdType == 2){ balance *= -1 }
 
             bankTradeList.add(BankTradeRes(trade.tdDt, balance, trade.tdCn, trade.tdType))
         }

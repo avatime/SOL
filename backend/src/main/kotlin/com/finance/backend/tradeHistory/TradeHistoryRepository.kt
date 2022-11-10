@@ -13,7 +13,7 @@ import java.util.Date
 import java.util.UUID
 
 interface TradeHistoryRepository: JpaRepository<TradeHistory, Long> {
-    fun findAllByAccountAcNo(acNo: String): List<TradeHistory>?
+    fun findAllByAccountAcNoOrderByTdDtDesc(acNo: String): List<TradeHistory>?
     fun findAllByAccountAcNoAndTdTypeAndTdDtBetween(acNo: String, tdType: Int, start : LocalDateTime, end : LocalDateTime): List<TradeHistory>?
     fun findAllDistinctByAccountAcNoOrderByTdDtDesc(acNo: String): List<TradeHistory>
     fun findAllByAccountAcNoAndTdTypeOrderByTdDtDesc(acNo: String, type: Int): List<TradeHistory>?
