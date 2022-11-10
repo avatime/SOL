@@ -19,6 +19,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
+import com.finance.android.ui.theme.MinusColor
+import com.finance.android.ui.theme.PlusColor
 import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
@@ -359,7 +361,7 @@ fun MoneyHistoryText(
     minus : Boolean = true
 ) {
     val sign : String = if(minus) "" else "+"
-    Text( text = sign+text, fontWeight = FontWeight.SemiBold, color = if(minus) Color(0xff3A00FF) else Color(0xffFF0046))
+    Text( text = sign+text, fontWeight = FontWeight.SemiBold, color = if(minus) MinusColor else PlusColor)
 }
 
 //@Preview
