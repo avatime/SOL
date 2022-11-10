@@ -67,7 +67,7 @@ fun GroupAccountMakeScreen(
                 .withBottomButton(),
             text = "30초만에 시작하기",
             buttonType = ButtonType.ROUNDED,
-            )
+        )
     }
 
 }
