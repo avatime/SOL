@@ -1,10 +1,7 @@
 package com.finance.android.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -23,50 +20,59 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
+import com.finance.android.viewmodels.GroupAccountViewModel
 
 @Composable
-fun SelectedFriendItem(img : String, name : String) {
-    Column() {
-        Column(horizontalAlignment = Alignment.End,) {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Filled.Close, contentDescription ="" )
+fun SelectedFriendItem(
+    img: String,
+    name: String,
+    onClick: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .width(100.dp)
+            .height(120.dp),
+        horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
+    ) {
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .height(20.dp)) {
+            Spacer(modifier = Modifier.weight(0.8f))
+            IconButton(onClick = { onClick() }) {
+                Icon(Icons.Filled.Close, contentDescription = "")
             }
         }
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-            if (img == "null") {
-                Image(
-                    painter = painterResource(id = R.drawable.ic_contact_avatar),
-                    contentDescription = "",
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp)
-                )
-            } else {
 
-                AsyncImage(
-                    model = ImageRequest.Builder(LocalContext.current)
-                        .data(img)
-                        .crossfade(true)
-                        .build(),
-                    contentDescription = "연락처 이미지",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .width(60.dp)
-                        .height(60.dp)
-                        .clip(CircleShape)
-                )
-            }
-            Text(text=name)
-
-
+        if (img == "null") {
+            Image(
+                painter = painterResource(id = R.drawable.ic_contact_avatar),
+                contentDescription = "",
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(60.dp)
+            )
+        } else {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(img)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "연락처 이미지",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .width(60.dp)
+                    .height(60.dp)
+                    .clip(CircleShape)
+            )
         }
 
-
+        Text(text = name)
     }
 }
 
 @Preview
 @Composable
 fun PreviewSelectedItem() {
-    SelectedFriendItem(img = "", name = "채윤선")
+    SelectedFriendItem(img = "", name = "채윤선", onClick = {})
+
 }

@@ -4,11 +4,13 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 
 
 import android.Manifest
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.airbnb.lottie.compose.*
@@ -41,7 +43,7 @@ fun GroupAccountFriendScreen(groupAccountViewModel: GroupAccountViewModel, navCo
         else -> {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = modifier.fillMaxSize(),
+                modifier = modifier.fillMaxSize().background(Color.White),
                 //verticalArrangement = Arrangement.Center
             ) {
 

@@ -29,10 +29,10 @@ fun GroupAccountMemberScreen(
     LaunchedEffect(Unit) {
         launch()
     }
-    Column(modifier = modifier.fillMaxSize().background(Color.White)) {
+    Column(modifier = modifier.background(Color.White)) {
         when (val response = groupAccountViewModel.groupAccountMemberData.value) {
             is Response.Failure -> Text(text = "실패")
-            is Response.Loading -> AnimatedLoading(text = "가져오고 있어용")
+            is Response.Loading -> AnimatedLoading(text = "가져오고 있어요")
             is Response.Success -> {
                 LazyColumn {
                     items(count = response.data.size, key = { it }, itemContent = {
@@ -48,6 +48,5 @@ fun GroupAccountMemberScreen(
             }
         }
     }
-
 
 }

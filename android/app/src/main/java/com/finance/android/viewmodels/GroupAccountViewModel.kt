@@ -84,6 +84,12 @@ class GroupAccountViewModel @Inject constructor(
         }
 
     }
+    fun onClickDeleteFriend(index: Int){
+        selectFriendsList!![index].value = false
+    }
+
+
+
 
     // 모임 친구 조회
     private val _groupAccountMemberData =
@@ -100,4 +106,5 @@ class GroupAccountViewModel @Inject constructor(
         }
     }
 }
+
 
