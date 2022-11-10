@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.BankInfoResponseDto
+import com.finance.android.domain.dto.response.BankTradeResponseDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
@@ -44,8 +45,6 @@ class BankViewModel @Inject constructor(
         }
     }
 
-    // 계좌 잔액 불러오기
-
     private suspend fun loadMyAccountList() {
         this@BankViewModel.run {
             bankRepository.getMyAccount()
@@ -55,10 +54,13 @@ class BankViewModel @Inject constructor(
             }
     }
 
-    val accountBalance = mutableStateOf<Response<Int>>(Response.Loading)
+    // 계좌 잔액, 거래 내역 불러오기
 
-    fun getLoadAccountBalance(): Response<Unit> {
-        val arr = arrayOf(accountBalance)
+    val accountBalance = mutableStateOf<Response<Int>>(Response.Loading)
+    val accountHistory = mutableStateOf<Response<MutableList<BankTradeResponseDto>>>(Response.Loading)
+
+    fun getLoadAccountBalanceandHistory(): Response<Unit> {
+        val arr = arrayOf(accountBalance, accountHistory)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -79,6 +81,20 @@ class BankViewModel @Inject constructor(
                 )
             }.collect {
                 accountBalance.value = it
+            }
+        }
+    }
+
+    fun loadAccountHistory(
+        acNo: String
+    ) {
+        viewModelScope.launch {
+            this@BankViewModel.run {
+                bankRepository.getAccountDetail(
+                    acNo = acNo
+                )
+            }.collect {
+                accountHistory.value = it
             }
         }
     }

@@ -35,7 +35,7 @@ fun AssetFragment(navController: NavController, onClose: () -> Unit) {
     ) { innerPaddingModifier ->
         Box(modifier = Modifier
             .fillMaxHeight()
-            .padding(innerPaddingModifier)
+            .padding(top = innerPaddingModifier.calculateTopPadding())
             .verticalScroll(rememberScrollState())
             .background(color = MaterialTheme.colorScheme.background))
         {
