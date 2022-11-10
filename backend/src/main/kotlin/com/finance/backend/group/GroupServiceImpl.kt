@@ -162,6 +162,15 @@ class GroupServiceImpl (
         } else throw Exception()
     }
 
+    override fun getPublicAccountInfo(accessToken: String, publicAccountId: Long): PublicAccountRes {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }) {
+            val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user: User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
+            val publicAccount : PublicAccount = publicAccountRepository.findById(publicAccountId).orElseGet(null) ?: throw NoSuchElementException()
+            return publicAccount.toEntity()
+        } else throw Exception()
+    }
+
     fun registPaymentMonthly() {
         TODO("정기적으로 생성하는 코드 만들어야함")
     }

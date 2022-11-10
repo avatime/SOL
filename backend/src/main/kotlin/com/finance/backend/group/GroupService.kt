@@ -16,4 +16,5 @@ interface GroupService {
     fun payDue(accessToken: String, duesPayReq: DuesPayReq)
     fun createDue(accessToken: String, registDueReq: RegistDueReq)
     fun disableExistDue(accessToken: String, dueId: Long)
+    fun getPublicAccountInfo(accessToken: String, publicAccountId: Long) : PublicAccountRes
 }
