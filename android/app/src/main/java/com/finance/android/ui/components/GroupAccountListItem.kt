@@ -30,13 +30,13 @@ import java.text.DecimalFormat
 fun GroupAccountListItem(
     paName: String,
     amount: Int,
-    onClick : (paId : Int) -> Unit
+    onClick : () -> Unit
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
         .padding(horizontal = 10.dp)
         .height(75.dp)
-        .clickable { onClick
+        .clickable { onClick()
         }, verticalAlignment = Alignment.CenterVertically
     ) {
         AsyncImage(

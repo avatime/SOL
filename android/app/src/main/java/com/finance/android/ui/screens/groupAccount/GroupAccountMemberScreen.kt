@@ -15,8 +15,9 @@ fun GroupAccountMemberScreen(
     navController: NavController,
     groupAccountViewModel: GroupAccountViewModel
 ) {
+
     fun launch() {
-        groupAccountViewModel.getGroupAccountMember(groupAccountViewModel.paId)
+        groupAccountViewModel.getGroupAccountMember(groupAccountViewModel.paId.value)
     }
 
     LaunchedEffect(Unit) {
