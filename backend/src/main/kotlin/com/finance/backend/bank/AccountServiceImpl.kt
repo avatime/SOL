@@ -103,17 +103,22 @@ class AccountServiceImpl(
         }
     }
 
-    override fun getAccountDetail(acNo: String): BankDetailRes {
-        var accountDetailList = ArrayList<BankTradeRes>()
+    override fun getAccountDetail(acNo: String): List<BankTradeRes> {
+        var bankTradeList = ArrayList<BankTradeRes>()
         val account = accountRepository.findById(acNo).orElse(null) ?: throw NoAccountException()
         val corporation = corporationRepository.findByCpCode(account.acCpCode)?: throw NoCorporationException()
         val bankAccountRes = BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg)
         val tradeHistoryList = tradeHistoryRepository.findAllByAccountAcNo(account.acNo).orEmpty()
         for (trade in tradeHistoryList){
-            accountDetailList.add(BankTradeRes(trade.tdDt, trade.tdVal, trade.tdCn, trade.tdType))
+            var balance = trade.tdVal
+            if (trade.tdType == 2){
+               balance *= -1
+            }
+
+            bankTradeList.add(BankTradeRes(trade.tdDt, balance, trade.tdCn, trade.tdType))
         }
-        val bankDetailRes = BankDetailRes(bankAccountRes, accountDetailList)
-        return bankDetailRes
+
+        return bankTradeList
     }
 
     override fun getAccountDetailType(acNo: String, type: Int): List<BankTradeRes> {

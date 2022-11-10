@@ -12,7 +12,7 @@ interface AccountService {
     fun registerAccount(acNoList: List<AccountInfoReq>)
     fun registerRemitAccount(acNo: String)
     fun registerBookmarkAccount(acNo: String, token: String)
-    fun getAccountDetail(acNo: String): BankDetailRes
+    fun getAccountDetail(acNo: String): List<BankTradeRes>
     fun getAccountDetailType(acNo: String, type: Int): List<BankTradeRes>
     fun getRecentTrade(token: String): List<RecentMyTradeRes>
     fun getUserName(acNo: String, cpCode: Long): UserRes
