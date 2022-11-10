@@ -33,9 +33,9 @@ class CardController(
         return ResponseEntity.status(200).body(cardService.getMyCard(accessToken))
     }
 
-    @GetMapping("/bill/detail/{cdNo}/{year}/{month}")
-    fun getCardMonthInfo(@PathVariable cdNo: String, @PathVariable year: Int, @PathVariable month:Int): ResponseEntity<Any>{
-        return ResponseEntity.status(200).body(cardService.getCardMonthInfo(cdNo, year, month))
+    @GetMapping("/bill/detail/{cdNo}")
+    fun getCardMonthInfo(@PathVariable cdNo: String): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(cardService.getCardMonthInfo(cdNo))
     }
 
     @GetMapping("/bill/{cdNo}/{year}/{month}")
