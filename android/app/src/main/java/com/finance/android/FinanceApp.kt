@@ -119,6 +119,23 @@ fun FinanceApp() {
                     exit = slideOutVertically()
                 ) {
                     PointFragment(
+                        navController = navController,
+                        onClose = {
+                            navController.popBackStack()
+                        }
+                    )
+                }
+            }
+            composable(Const.Routes.EXCHANGE) {
+                AnimatedVisibility(
+                    initiallyVisible = false,
+                    visible = true,
+                    enter = slideInVertically(
+                        initialOffsetY = { it / 2 }
+                    ),
+                    exit = slideOutVertically()
+                ) {
+                    PointExchangeFragment(
                         onClose = {
                             navController.popBackStack()
                         }

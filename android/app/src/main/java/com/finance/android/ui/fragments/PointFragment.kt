@@ -20,18 +20,21 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.PointHistoryResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.UserBalanceInfo
 import com.finance.android.ui.components.showHistoryList
+import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.PointViewModel
 
 @Composable
 fun PointFragment(
     pointViewModel: PointViewModel = hiltViewModel(),
+    navController: NavController,
     onClose: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
@@ -41,6 +44,7 @@ fun PointFragment(
     when(pointViewModel.getLoadState()) {
         is Response.Success -> Screen(
             onClose = onClose,
+            navController = navController,
             pointHistoryList = (pointViewModel.pointHistoryList.value as Response.Success).data,
             userInfo = (pointViewModel.myInfo.value as Response.Success).data
         )
@@ -53,6 +57,7 @@ fun PointFragment(
 @Composable
 private fun Screen(
     onClose: () -> Unit = {},
+    navController: NavController,
     pointHistoryList : MutableList<PointHistoryResponseDto>,
     userInfo : UserProfileResponseDto
 ) {
@@ -79,6 +84,7 @@ private fun Screen(
                 isAccount = false,
                 balance = userInfo.point.toString() + " 포인트",
                 type = "포인트",
+                onClick = { navController.navigate(Const.Routes.EXCHANGE) }
             )
 //            test2()
             showHistoryList(type = "포인트", historyList = List(pointHistoryList.size) {i -> pointHistoryList[i].toEntity()})
