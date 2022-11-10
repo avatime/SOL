@@ -14,5 +14,7 @@ data class InsuranceInfoResponseDto(
     @SerializedName("is_name")
     val isName: String, //피보험
     @SerializedName("is_reg")
-    val isRegister: Boolean // 어플 등록 여부
+    val isRegister: Boolean, // 어플 등록 여부
+    @SerializedName("is_pd_id")
+    val isPdId: Int, // 보험 아이디
 )

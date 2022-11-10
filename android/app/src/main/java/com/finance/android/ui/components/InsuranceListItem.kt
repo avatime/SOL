@@ -136,10 +136,14 @@ fun InsuranceListItem_Normal(
     fee: Int,
     myName: String,
     isName: String,
+    onClickItem: () -> Unit
 ) {
     Draw(
         modifier = modifier
-            .padding(contentPadding),
+            .padding(contentPadding)
+            .clickable {
+                onClickItem()
+            },
         insuranceName = insuranceName,
         fee = fee,
         myName = myName,

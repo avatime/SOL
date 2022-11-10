@@ -41,6 +41,7 @@ object Const {
         const val ACC_DETAIL = "route_accountDetail"
         const val WALK = "route_walk"
         const val STOCK = "route_stock"
+        const val INSURANCE = "route_insurance"
         const val PEDOMETER = "route_pedometer"
         const val GROUPACCOUNT = "route_groupAccount"
         const val POINT = "route_point"

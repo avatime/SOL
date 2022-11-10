@@ -1,7 +1,10 @@
 package com.finance.android.ui.screens.asset
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -9,7 +12,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -18,12 +20,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
-import com.finance.android.ui.components.InsuranceListItem
 import com.finance.android.ui.components.InsuranceListItem_Normal
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.InsuranceViewModel
 import java.text.DecimalFormat
-import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -84,7 +84,8 @@ private fun AssetLifeContainer(
                 insuranceName = it.isPdName,
                 fee = it.isPdFee,
                 myName = it.name,
-                isName = it.isName
+                isName = it.isName,
+                onClickItem = {}
             )
         }
         if(isList.size == 0) {
