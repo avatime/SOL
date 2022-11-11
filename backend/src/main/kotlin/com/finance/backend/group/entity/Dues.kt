@@ -46,5 +46,5 @@ class Dues(
     var publicAccount : PublicAccount = publicAccount
 
     fun disable() {this.status = 99}
-    fun toEntity(paid: Boolean, num:Int, total: Int, user : String) : DuesRes = DuesRes(paid, this.duesName, this.createdAt, this.duesDue, this.duesVal, num, total, user)
+    fun toEntity(paid: Boolean, num:Int, total: Int, user : String) : DuesRes = DuesRes(paid, this.duesName, this.createdAt, this.duesDue, this.duesVal, num, total, user, this.id)
 }
