@@ -4,6 +4,7 @@ import com.finance.backend.Exceptions.TokenExpiredException
 import com.finance.backend.Exceptions.InvalidUserException
 import com.finance.backend.Exceptions.NoProfileException
 import com.finance.backend.auth.request.SignupCheckDto
+import com.finance.backend.user.request.AccountReq
 import com.finance.backend.user.request.ChangeProfileDto
 import com.finance.backend.user.request.PhoneReq
 import org.springframework.http.ResponseEntity
@@ -31,5 +32,10 @@ class UserController (private val userService: UserService) {
     @GetMapping("/account")
     fun checkAccount(@RequestHeader("access_token") accessToken : String) : ResponseEntity<Any>{
         return ResponseEntity.status(200).body(userService.checkAccount(accessToken))
+    }
+
+    @PutMapping("/account")
+    fun putAccount(@RequestHeader("access_token") accessToken: String, @RequestBody accountReq: AccountReq) : ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(userService.putAccount(accessToken, accountReq.acNo))
     }
 }

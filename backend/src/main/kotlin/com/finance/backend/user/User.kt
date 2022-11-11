@@ -98,4 +98,8 @@ class User(
     }
 
     fun toLoginEntity() : LoginDao = LoginDao(this.name, this.id, this.accessToken, this.refreshToken)
+
+    fun changeAccount(acNo: String){
+        this.account = acNo
+    }
 }
