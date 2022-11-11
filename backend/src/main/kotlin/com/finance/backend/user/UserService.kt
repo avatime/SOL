@@ -18,4 +18,5 @@ interface UserService {
     fun changeProfile(token: String, id : Long)
     fun check(phone : String) : Boolean
     fun checkAccount(token : String) : Boolean
+    fun putAccount(token : String, acNo: String)
 }
