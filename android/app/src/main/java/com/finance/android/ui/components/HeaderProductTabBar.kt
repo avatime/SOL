@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.CardRecommendResponseDto
-import com.finance.android.ui.screens.CardProductScreen
+import com.finance.android.ui.screens.CardProductCheckScreen
+import com.finance.android.ui.screens.CardProductCreditScreen
 import com.finance.android.ui.screens.asset.AssetLifeScreen
 import com.finance.android.ui.screens.asset.AssetStockScreen
 import com.finance.android.ui.screens.asset.*
@@ -39,7 +40,7 @@ fun HeaderProductTabBar(
 ) {
     var selectedIndex by remember { mutableStateOf(0) }
 
-    val list = listOf("카드", "보험")
+    val list = listOf("신용카드", "체크카드")
     Column(modifier = modifier.fillMaxSize()) {
         Row(
             modifier = modifier
@@ -91,10 +92,10 @@ fun HeaderProductTabBar(
 
         when (selectedIndex) {
             0 -> {
-                CardProductScreen(navController = navController, cardRecommendList = cardRecommendList)
+                CardProductCreditScreen(navController = navController, creditCardList = cardRecommendList.creditCardList)
             }
             1 -> {
-                AssetCardScreen(navController)
+                CardProductCheckScreen(navController = navController, checkCardList = cardRecommendList.checkCardList)
             }
         }
     }
