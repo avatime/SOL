@@ -40,7 +40,7 @@ fun UserBalanceInfo(
     cpName: String? = "신한은행",
     acNo: String? = "1234567890",
     balance: String = "100,000,000원",
-    cpLogo: String = "",
+    cpLogo: String? = null,
     onClick: () -> Unit = {}
 ) {
     val bgColor = remember { mutableStateOf(Color.Transparent) }
@@ -52,13 +52,16 @@ fun UserBalanceInfo(
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
-            if (Build.VERSION_CODES.P <= Build.VERSION.SDK_INT) {
+            if (cpLogo != null && Build.VERSION_CODES.P <= Build.VERSION.SDK_INT) {
                 val bitmap = BitmapUtil.getBitmapFromURL(cpLogo)
                 bitmap?.let {
                     val palette = Palette.from(bitmap).generate()
                     bgColor.value = Color(palette.vibrantSwatch?.rgb ?: MainColor.toArgb())
                     textColor.value = Color(palette.vibrantSwatch?.titleTextColor ?: Color.White.toArgb())
                 }
+            } else {
+                bgColor.value = MainColor
+                textColor.value = Color.White
             }
         }
     }
