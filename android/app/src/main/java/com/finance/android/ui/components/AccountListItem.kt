@@ -14,7 +14,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -140,9 +139,11 @@ fun AccountListItem_Remit(
     onClickRemit: () -> Unit
 ) {
     Draw(
-        modifier = modifier.clickable {
-            onClickItem()
-        },
+//        modifier = modifier.clickable {
+//            onClickItem()
+//        },
+        modifier = modifier.clip(RoundedCornerShape(10.dp))
+            .clickable { onClickItem() },
         accountNumber = accountNumber,
         balance = balance,
         accountName = accountName,
