@@ -1,5 +1,6 @@
 package com.finance.android.ui.components
 
+import android.widget.Space
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -31,15 +32,12 @@ fun CardDetailComp(
             .padding(18.dp)
     ) {
         Text(text = cdName,
-            color = MaterialTheme.colorScheme.surface,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
         Text(
-            text = "$cdNo",
-            color = MaterialTheme.colorScheme.surface,
+            text = cdNo,
             fontSize = 12.sp,
-            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_small))
         )
         Row(
             modifier = Modifier.padding(
@@ -51,7 +49,6 @@ fun CardDetailComp(
                 text = DecimalFormat("#,###원").format(balance),
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
-                color = MaterialTheme.colorScheme.surface
             )
             Spacer(modifier = Modifier.weight(1.0f))
             AsyncImage(
@@ -61,8 +58,7 @@ fun CardDetailComp(
                     .build(),
                 contentDescription = "cardImage",
                 modifier = modifier
-                    .size(60.dp)
-                    .padding(end = dimensionResource(R.dimen.padding_small))
+                    .size(120.dp)
             )
         }
     }
