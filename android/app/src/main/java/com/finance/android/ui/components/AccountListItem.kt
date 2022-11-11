@@ -37,9 +37,10 @@ fun AccountListItem(onClickRemit: () -> Unit = {}) {
 @Composable
 private fun Draw(
     modifier: Modifier,
-    accountNumber: String?,
+    accountNumber: String,
     balance: Int,
     accountName: String,
+    companyName: String = "",
     companyLogoPath: String,
     trailing: (@Composable () -> Unit)? = null
 ) {
@@ -70,7 +71,7 @@ private fun Draw(
             ) {
                 Text(text = accountName, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 14.sp)
                 Text(text = DecimalFormat("#,###원").format(balance), fontWeight = FontWeight.Bold)
-                accountNumber?.let {
+                formatAccount(companyName, accountNumber)?.let {
                     Text(text = it, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 12.sp)
                 }
             }
@@ -142,7 +143,7 @@ fun AccountListItem_Remit(
     Draw(
         modifier = modifier.clip(RoundedCornerShape(10.dp))
             .clickable { onClickItem() },
-        accountNumber = formatAccount(companyName = companyName, accountNumber = accountNumber),
+        accountNumber = accountNumber,
         balance = balance,
         accountName = accountName,
         companyLogoPath = companyLogoPath,
@@ -159,22 +160,24 @@ fun AccountListItem_Remit(
 
 @Composable
 fun formatAccount(companyName: String, accountNumber: String) : String {
+    var formatNum = StringBuffer(accountNumber)
     when(companyName) {
-        "신한" -> return accountNumber.format("")
-        "NH농협" -> return accountNumber.format("")
-        "하나" -> return accountNumber.format("")
-        "우리" -> return accountNumber.format("")
-        "국민" -> return if(accountNumber.length == 12) accountNumber.format("###-##-####-###") else accountNumber.format("######-##-######")
-        "우체국" -> return accountNumber.format("")
-        "카카오뱅크" -> return accountNumber.format("")
-        "케이뱅크" -> return accountNumber.format("")
-        "토스뱅크" -> return accountNumber.format("")
-        "새마을금고" -> return accountNumber.format("")
-        "씨티" -> return accountNumber.format("")
-        "광주" -> return accountNumber.format("")
-        "대구" -> return accountNumber.format("")
+        "신한" -> return if(accountNumber.length == 11) formatNum.insert(5, "-").insert(3, "-").toString() else formatNum.insert(6, "-").insert(3, "-").toString()
+        "기업" -> return formatNum.insert(11, "-").insert(9, "-").insert(3,"-").toString()
+        "NH농협" -> return formatNum.insert(11, "-").insert(7, "-").insert(3, "-").toString()
+        "하나" -> return formatNum.insert(9, "-").insert(3, "-").toString()
+        "우리" -> return formatNum.insert(7, "-").insert(4, "-").toString()
+        "국민" -> return if(accountNumber.length == 12) formatNum.insert(9, "-").insert(5, "-").insert(3, "-").toString() else formatNum.insert(8, "-").insert(6, "-").toString()
+        "우체국" -> return formatNum.insert(8, "-").insert(6, "-").toString()
+        "카카오뱅크" -> return formatNum.insert(6, "-").insert(4, "-").toString()
+        "케이뱅크" -> return formatNum.insert(6, "-").insert(3, "-").toString()
+        "토스뱅크" -> return formatNum.insert(4, "-").toString()
+        "새마을금고" -> return formatNum.insert(6, "-").insert(4, "-").toString()
+        "씨티" -> return formatNum.insert(9, "-").insert(3, "-").toString()
+        "광주" -> return formatNum.insert(6, "-").insert(3, "-").toString()
+        "대구" -> return formatNum.insert(11, "-").insert(5, "-").insert(3,"-").toString()
     }
-    return accountNumber
+    return formatNum.insert(9, "-").insert(3, "-").toString()
 }
 
 @Composable
