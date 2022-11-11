@@ -122,13 +122,7 @@ fun GroupAccountDetailScreen(
 
         }
         Spacer(modifier = Modifier.weight(1f))
-        TextButton(
-            onClick = { navController.navigate(Const.DUES_MAKE_NAME_SCREEN) },
-            modifier = Modifier
-                .withBottomButton(),
-            text = "회비 걷기",
-            buttonType = ButtonType.ROUNDED,
-        )
+
 
     }
 }

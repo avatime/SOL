@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.request.CreateDuesRequestDto
 import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.GroupIdRequestDto
+import com.finance.android.domain.dto.request.RemitDuesRequestDto
 import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
@@ -35,6 +36,8 @@ class GroupAccountViewModel @Inject constructor(
 
     val name = mutableStateOf("")
     val paId = mutableStateOf(0)
+    val duesVal = mutableStateOf(0)
+    val duesId = mutableStateOf(0)
 
     val duesName = mutableStateOf("")
     val duesBalance = mutableStateOf(1000)
@@ -173,6 +176,20 @@ class GroupAccountViewModel @Inject constructor(
         }
     }
 
+    //회비입금금
+    fun postPayDues(remitDuesRequestDto: RemitDuesRequestDto, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postPayDues(remitDuesRequestDto)
+            }.collect{
+                if (it is Response.Success) {
+                    Log.i("group", "회비 성공")
+                    onSuccess()
+                } else if (it is Response.Failure) {
+                    Log.i("group", "회비 불성공")
+                }
+            }
+        }
+    }
 }
-
 

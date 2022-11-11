@@ -8,7 +8,7 @@ data class RemitDuesRequestDto(
 
     @SerializedName("dues_val")
     val duesVal : Int,
-
-    @SerializedName("ac_no")
-    val acNo : String
+//
+//    @SerializedName("ac_no")
+//    val acNo : String
 )

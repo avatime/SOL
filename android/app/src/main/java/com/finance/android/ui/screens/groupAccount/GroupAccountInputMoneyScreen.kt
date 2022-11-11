@@ -34,22 +34,26 @@ fun GroupAccountInputMoneyScreen(
     modifier: Modifier
 ) {
     LaunchedEffect(Unit) {
-        groupAccountViewModel.getRepresentAccountBalance()
+        groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
     }
 
     val placeholderText = remember {
         mutableStateOf("")
     }
     val duesValue = remember {
-        mutableStateOf("")
+        mutableStateOf("${groupAccountViewModel.duesVal.value}")
     }
     val error = remember { mutableStateOf(false) }
+
+    //계좌잔액
+    val balance = remember {
+        mutableStateOf(groupAccountViewModel.representAccountBalance.value)
+    }
 
     if (duesValue.value.isEmpty()) {
         placeholderText.value = "얼마를 보낼까요?"
     }
     Column(modifier = modifier.fillMaxSize()) {
-
         TextField(
             value = duesValue.value, onValueChange = { duesValue.value = it },
             modifier = Modifier
@@ -74,10 +78,7 @@ fun GroupAccountInputMoneyScreen(
                 ),
             textStyle = TextStyle().copy(fontSize = 40.sp),
             isError = error.value,
-
-
             )
-
         TextButton(
             onClick = { navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) },
             text = "다음",

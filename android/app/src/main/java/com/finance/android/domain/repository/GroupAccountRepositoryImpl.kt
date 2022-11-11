@@ -1,9 +1,6 @@
 package com.finance.android.domain.repository
 
-import com.finance.android.domain.dto.request.CreateDuesRequestDto
-import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
-import com.finance.android.domain.dto.request.GroupDuesRequestDto
-import com.finance.android.domain.dto.request.GroupIdRequestDto
+import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
@@ -44,9 +41,10 @@ class GroupAccountRepositoryImpl @Inject constructor(
         return groupAccountService.postDuesHistoryDetail(groupDuesRequestDto)
     }
 
-    override suspend fun postPayDues(remitDuesResponseDto: DuesResponseDto) {
-        return groupAccountService.postPayDues(remitDuesResponseDto)
+    override suspend fun postPayDues(remitDuesRequestDto: RemitDuesRequestDto) {
+        return groupAccountService.postPayDues(remitDuesRequestDto)
     }
+
 
     override suspend fun postRegistDues(createDuesRequestDto: CreateDuesRequestDto) {
         return groupAccountService.postRegistDues(createDuesRequestDto)
@@ -54,5 +52,9 @@ class GroupAccountRepositoryImpl @Inject constructor(
 
     override suspend fun putDeleteDues(groupDuesRequestDto: GroupDuesRequestDto) {
         return groupAccountService.putDeleteDues(groupDuesRequestDto)
+    }
+
+    override suspend fun postGroupAccountInfo(groupIdRequestDto: GroupIdRequestDto): MutableList<PublicAccountResponseDto> {
+        return groupAccountService.postGroupAccountInfo(groupIdRequestDto)
     }
 }

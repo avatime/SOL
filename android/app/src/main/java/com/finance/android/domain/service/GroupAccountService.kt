@@ -1,9 +1,6 @@
 package com.finance.android.domain.service
 
-import com.finance.android.domain.dto.request.CreateDuesRequestDto
-import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
-import com.finance.android.domain.dto.request.GroupDuesRequestDto
-import com.finance.android.domain.dto.request.GroupIdRequestDto
+import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
@@ -37,11 +34,14 @@ interface GroupAccountService {
     suspend fun postDuesHistoryDetail(@Body groupDuesRequestDto: GroupDuesRequestDto) : MutableList<DuesResponseDto>
 
     @POST("${Const.API_PATH}/public/dues/pay") // 회비 입금
-    suspend fun postPayDues(@Body remitDuesResponseDto: DuesResponseDto)
+    suspend fun postPayDues(@Body remitDuesRequestDto: RemitDuesRequestDto)
 
     @POST("${Const.API_PATH}/public/dues/regist") //회비 생성
     suspend fun postRegistDues(@Body createDuesRequestDto: CreateDuesRequestDto)
 
     @PUT("${Const.API_PATH}/public/dues") //회비 비활성화
     suspend fun putDeleteDues(@Body groupDuesRequestDto: GroupDuesRequestDto)
+
+    @POST("${Const.API_PATH}/public/info") //회비 정보
+    suspend fun postGroupAccountInfo(@Body groupIdRequestDto: GroupIdRequestDto) : MutableList<PublicAccountResponseDto>
 }
