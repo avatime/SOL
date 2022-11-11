@@ -18,6 +18,7 @@ import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.UserBalanceInfo
+import com.finance.android.ui.components.formatAccount
 import com.finance.android.ui.components.showHistoryList
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
@@ -69,7 +70,7 @@ fun AccountDetailFragment(
                         UserBalanceInfo(
                             title = acName,
                             cpName = cpName,
-                            acNo = acNo,
+                            acNo = formatAccount(cpName, acNo),
                             balance = DecimalFormat("#,###원").format(balance) ?: "0원",
                             cpLogo = cpLogo,
                             onClick = {
