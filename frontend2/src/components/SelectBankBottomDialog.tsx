@@ -60,8 +60,8 @@ export default function SelectBankBottomDialog({ open, onClose, onClickBankItem 
           width: "100vw",
           margin: 0,
           height: "70vh",
-          borderTopLeftRadius: "20px",
-          borderTopRightRadius: "20px",
+          borderTopLeftRadius: "15px",
+          borderTopRightRadius: "15px",
           overflow: "hidden",
         },
       }}
