@@ -13,5 +13,6 @@ data class PublicTradeRes(
         @JsonProperty("user_name")
         val userName : String,
         @JsonProperty("td_type")
-        val tdType : String
+        val tdType : String,
+        val type : String
 )
