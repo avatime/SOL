@@ -121,7 +121,7 @@ fun AccountListItem_Check(
         trailing = {
             Icon(
                 Icons.Filled.CheckCircle,
-                contentDescription = "checkd",
+                contentDescription = "checked",
                 tint = if (checked) MaterialTheme.colorScheme.primary else Disabled
             )
         }
@@ -139,9 +139,6 @@ fun AccountListItem_Remit(
     onClickRemit: () -> Unit
 ) {
     Draw(
-//        modifier = modifier.clickable {
-//            onClickItem()
-//        },
         modifier = modifier.clip(RoundedCornerShape(10.dp))
             .clickable { onClickItem() },
         accountNumber = accountNumber,
