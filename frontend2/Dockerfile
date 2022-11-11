@@ -4,4 +4,4 @@ COPY package*.json ./
 RUN npm i -y
 COPY . .
 RUN npm run build
-CMD [ "npm", "run", "start"]
+CMD [ "serve", "-s", "build"]
