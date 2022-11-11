@@ -3,6 +3,7 @@ package com.finance.android.ui.components
 import android.util.DisplayMetrics
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -10,6 +11,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
@@ -19,6 +21,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
+import com.finance.android.ui.theme.MinusColor
+import com.finance.android.ui.theme.PlusColor
 import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
@@ -95,14 +99,14 @@ fun showHistoryList(
                         repeat(3) {
                             Row(
                                 modifier = Modifier
-                                    .padding(10.dp)
+                                    .clip(RoundedCornerShape(10.dp))
                                     .clickable {
                                         column = 0
                                         currentMenu.value = it
                                         showMenuList = false
                                     }
                             ){
-                                Text(text = menuList[it])
+                                Column(modifier = Modifier.padding(10.dp)){ Text(text = menuList[it]) }
                                 Spacer(modifier = Modifier.weight(1f))
                                 if(it == currentMenu.value){
                                     Image(
@@ -141,43 +145,48 @@ fun showHistoryList(
                     modifier = Modifier.padding(10.dp, top = 20.dp, bottom = 20.dp),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
                 ){
-                    Image(
-                        painter = painterResource(id = R.drawable.ic_back),
-                        modifier = Modifier
-                            .padding(top = 4.dp)
-                            .clickable {
-                                column = 0
-                                currentMonth.value = currentMonth.value.minusMonths(1)
-                                onClick(
-                                    currentMonth.value.year,
-                                    currentMonth.value.monthValue
-                                )
-                            },
-                        contentDescription = "",
-                    )
-                    Text(text = currentMonth.value.year.toString() + "년 " + currentMonth.value.monthValue.toString() + "월", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                    Image(
-                        painter = painterResource(id = if(YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) R.drawable.ic_next else R.drawable.ic_next_disabled),
-                        contentDescription = "",
-                        modifier = Modifier
-                            .padding(top = 4.dp)
-                            .clickable {
-                                column = 0
-                                if (YearMonth
-                                        .from(LocalDateTime.now())
-                                        .isAfter(currentMonth.value)
-                                ) {
-                                    currentMonth.value = currentMonth.value.plusMonths(1)
+                    Column(modifier = Modifier.padding(top = 4.dp)) {
+                        Image(
+                            painter = painterResource(id = R.drawable.ic_back),
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .clickable {
+                                    column = 0
+                                    currentMonth.value = currentMonth.value.minusMonths(1)
                                     onClick(
                                         currentMonth.value.year,
                                         currentMonth.value.monthValue
                                     )
+                                },
+                            contentDescription = "",
+                        )
+                    }
+                    Text(text = currentMonth.value.year.toString() + "년 " + currentMonth.value.monthValue.toString() + "월", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                    Column(modifier = Modifier.padding(top = 4.dp)) {
+                        Image(
+                            painter = painterResource(id = if(YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) R.drawable.ic_next else R.drawable.ic_next_disabled),
+                            contentDescription = "",
+                            modifier = Modifier
+                                .clip(CircleShape)
+                                .clickable (enabled = YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) {
+                                    column = 0
+                                    if (YearMonth
+                                            .from(LocalDateTime.now())
+                                            .isAfter(currentMonth.value)
+                                    ) {
+                                        currentMonth.value = currentMonth.value.plusMonths(1)
+                                        onClick(
+                                            currentMonth.value.year,
+                                            currentMonth.value.monthValue
+                                        )
+                                    }
                                 }
-                            }
-                    )
+                        )
+                    }
                 }
                 Column(
                     modifier = Modifier
+                        .clip(shape = RoundedCornerShape(10.dp))
                         .clickable { showMenuList = true }
                         .padding(10.dp)
                 ) {
@@ -359,7 +368,7 @@ fun MoneyHistoryText(
     minus : Boolean = true
 ) {
     val sign : String = if(minus) "" else "+"
-    Text( text = sign+text, fontWeight = FontWeight.SemiBold, color = if(minus) Color(0xff3A00FF) else Color(0xffFF0046))
+    Text( text = sign+text, fontWeight = FontWeight.SemiBold, color = if(minus) MinusColor else PlusColor)
 }
 
 //@Preview

@@ -19,9 +19,10 @@ class PointViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     private val pointRepository: PointRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : BaseViewModel(application, baseRepository) {
     val success = mutableStateOf(0)
+    val exchangedPoint = mutableStateOf(0)
     val myInfo = mutableStateOf<Response<UserProfileResponseDto>>(Response.Loading)
     val pointHistoryList = mutableStateOf<Response<MutableList<PointHistoryResponseDto>>>(Response.Loading)
 
@@ -34,7 +35,7 @@ class PointViewModel @Inject constructor(
 
     fun launchPointExchange() {
         viewModelScope.launch {
-            success.value = 0
+            success.value = 1
             getUserInfo()
         }
     }
@@ -97,6 +98,7 @@ class PointViewModel @Inject constructor(
             .collect {
                 if(it is Response.Success) {
                     success.value = 1
+                    exchangedPoint.value = pointExchangeRequestDto.point
 //                    launchPointHistory()
                 } else success.value = 2
             }

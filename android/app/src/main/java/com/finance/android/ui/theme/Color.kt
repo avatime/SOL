@@ -24,3 +24,5 @@ val ErrorLight = Color(0xFFEF5350)
 val ErrorDark = Color(0xFFC62828)
 
 val LightMainColor = Color(0x330046FF)
+val PlusColor = Color(0xffFF0046)
+val MinusColor = Color(0xff3A00FF)
