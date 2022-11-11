@@ -134,6 +134,7 @@ fun AccountListItem_Remit(
     accountNumber: String,
     balance: Int,
     accountName: String,
+    companyName : String = "",
     companyLogoPath: String,
     onClickItem: () -> Unit,
     onClickRemit: () -> Unit
@@ -141,7 +142,7 @@ fun AccountListItem_Remit(
     Draw(
         modifier = modifier.clip(RoundedCornerShape(10.dp))
             .clickable { onClickItem() },
-        accountNumber = accountNumber,
+        accountNumber = formatAccount(companyName = companyName, accountNumber = accountNumber),
         balance = balance,
         accountName = accountName,
         companyLogoPath = companyLogoPath,
@@ -154,6 +155,26 @@ fun AccountListItem_Remit(
             )
         }
     )
+}
+
+@Composable
+fun formatAccount(companyName: String, accountNumber: String) : String {
+    when(companyName) {
+        "신한" -> return accountNumber.format("")
+        "NH농협" -> return accountNumber.format("")
+        "하나" -> return accountNumber.format("")
+        "우리" -> return accountNumber.format("")
+        "국민" -> return if(accountNumber.length == 12) accountNumber.format("###-##-####-###") else accountNumber.format("######-##-######")
+        "우체국" -> return accountNumber.format("")
+        "카카오뱅크" -> return accountNumber.format("")
+        "케이뱅크" -> return accountNumber.format("")
+        "토스뱅크" -> return accountNumber.format("")
+        "새마을금고" -> return accountNumber.format("")
+        "씨티" -> return accountNumber.format("")
+        "광주" -> return accountNumber.format("")
+        "대구" -> return accountNumber.format("")
+    }
+    return accountNumber
 }
 
 @Composable
@@ -232,6 +253,7 @@ private fun PreviewAccountListItem_Remit(onClickRemit: () -> Unit = {}) {
         accountNumber = "accountNumber",
         balance = 10000,
         accountName = "accountName",
+        companyName = "company",
         companyLogoPath = "https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png",
         onClickItem = {},
         onClickRemit = onClickRemit
