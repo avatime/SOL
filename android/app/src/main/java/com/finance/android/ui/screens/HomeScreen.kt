@@ -195,7 +195,7 @@ private fun HomeCardContainer(
                 cardImgPath = it.cardInfoRes.cardImgPath,
                 cardFee = "당월 청구 금액 : " + DecimalFormat("#,###원").format(it.cardValueAll),
                 onClickItem = {
-                    navController.navigate("${Const.Routes.CARD_DETAIL}/117/$pathTmp/${it.cardInfoRes.cardName}")
+                    navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardInfoRes.cardName}/${it.cardInfoRes.cardNumber}/$pathTmp/${it.cardValueAll}")
                 }
             )
         }

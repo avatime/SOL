@@ -191,6 +191,23 @@ fun FinanceApp() {
             composable(Const.Routes.GROUPACCOUNT) {
                 GroupAccountFragment(navController = navController)
             }
+            composable(
+                route = "${Const.Routes.CARD_DETAIL}/{cdName}/{cdNo}/{cdImgPath}/{balance}",
+                arguments = listOf(
+                    navArgument("cdName") { type = NavType.StringType },
+                    navArgument("cdNo") { type = NavType.StringType },
+                    navArgument("cdImgPath") { type = NavType.StringType },
+                    navArgument("balance") { type = NavType.IntType },
+                )
+            ) {
+                CardDetailFragment(
+                    cdName = it.arguments!!.getString("cdName")!!,
+                    cdNo = it.arguments!!.getString("cdNo")!!,
+                    cdImgPath = it.arguments!!.getString("cdImgPath")!!,
+                    balance = it.arguments!!.getInt("balance"),
+                    navController = navController,
+                    onClose = { navController.popBackStack() })
+            }
         }
     }
 }
