@@ -163,7 +163,7 @@ class GroupAccountViewModel @Inject constructor(
     // 입출금 내역 조회
     private val _duesTradeHistoryData = mutableStateOf<Response<MutableList<PublicTradeResponseDto>>>(Response.Loading)
     val duesTradeHistoryData = _duesTradeHistoryData
-    fun postDuesTradeHistory(paId: Int){
+    fun getDuesTradeHistory(paId: Int){
         viewModelScope.launch {
             this@GroupAccountViewModel.run {
                 groupAccountRepository.postTradeHistory(GroupIdRequestDto(paId))
