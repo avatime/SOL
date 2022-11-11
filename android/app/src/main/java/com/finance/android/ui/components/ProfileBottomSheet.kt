@@ -2,15 +2,15 @@ package com.finance.android.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.finance.android.R
 import com.finance.android.domain.dto.response.DailyProfileResponseDto
 
 
@@ -63,7 +63,7 @@ fun RowOfGrid(rowList: List<DailyProfileResponseDto>, columnWidth: Dp, onClickIm
                 contentDescription = item.name,
                 modifier = Modifier
                     .size(80.dp)
-                    .padding(end = dimensionResource(R.dimen.padding_small))
+                    .clip(CircleShape)
                     .clickable { onClickImage(item.id) }
             )
             if(index != 2) Spacer(modifier = Modifier.padding(20.dp))
