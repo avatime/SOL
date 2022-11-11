@@ -61,14 +61,15 @@ fun AssetStockContainer(modifier: Modifier,
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium)))
     {
-        financeData!!.forEach {
+        financeData.forEach {
             AccountListItem_Arrow(
                 accountNumber = it.acNo,
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
+                acMain = it.acMain,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}/${it.acName}")
                 }
             )
         }

@@ -102,6 +102,7 @@ private fun Screen(
                                 balance = item.balance,
                                 accountName = item.acName,
                                 companyLogoPath = item.cpLogo,
+                                acMain = item.acMain,
                                 selected = checkAccountIndex == idx,
                                 onClickItem = { onClickAccountItem(idx) }
                             )
