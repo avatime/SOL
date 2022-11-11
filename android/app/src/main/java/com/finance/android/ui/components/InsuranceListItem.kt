@@ -141,9 +141,6 @@ fun InsuranceListItem_Normal(
     Draw(
         modifier = modifier
             .padding(contentPadding)
-//            .clickable {
-//                onClickItem()
-//            },
             .clip(RoundedCornerShape(10.dp))
             .clickable { onClickItem() },
         insuranceName = insuranceName,
