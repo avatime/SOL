@@ -8,6 +8,7 @@ import com.finance.backend.cardBenefit.response.CardBenefitRes
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
 import com.finance.backend.corporation.response.BankInfoRes
+import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.collections.ArrayList
@@ -16,6 +17,7 @@ import kotlin.collections.ArrayList
 class FinanceServiceImpl(
         val corporationRepository: CorporationRepository,
         val accountRepository: AccountRepository,
+        val userRepository: UserRepository,
         val jwtUtils: JwtUtils
 ) : FinanceService {
 
@@ -23,10 +25,15 @@ class FinanceServiceImpl(
         val bankAccountList = ArrayList<BankAccountRes>()
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val userMainAccount = userRepository.findById(userId).orElse(null).account
             val accountList = accountRepository.findByUserIdAndAcType(userId, 2).orEmpty()
             for(account in accountList){
                 val corporation = corporationRepository.findById(account.acCpCode).get()
-                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg))
+                var acMain = 0
+                if(account.acNo == userMainAccount){
+                    acMain = 1
+                }
+                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain))
             }
         }
         return bankAccountList
@@ -36,10 +43,15 @@ class FinanceServiceImpl(
         val bankAccountList = ArrayList<BankAccountRes>()
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val userMainAccount = userRepository.findById(userId).orElse(null).account
             val accountList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 2, true).orEmpty()
             for(account in accountList){
                 val corporation = corporationRepository.findById(account.acCpCode).get()
-                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg))
+                var acMain = 0
+                if(account.acNo == userMainAccount){
+                    acMain = 1
+                }
+                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain))
             }
         }
         return bankAccountList
