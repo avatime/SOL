@@ -43,11 +43,6 @@ class CardController(
         return ResponseEntity.status(200).body(cardService.getCardMonthAll(cdNo, year, month))
     }
 
-//    @GetMapping
-//    fun getCardBenefit(@RequestHeader("access_token") accessToken : String): ResponseEntity<Any>{
-//        return ResponseEntity.status(200).body(cardService.getCardBenefit(accessToken))
-//    }
-
     @GetMapping("/{cdPdCode}")
     fun getCardBenefitDetail(@PathVariable cdPdCode: Long): ResponseEntity<Any>{
         return ResponseEntity.status(200).body(cardService.getCardBenefitDetail(cdPdCode))
@@ -56,5 +51,10 @@ class CardController(
     @GetMapping("/benefit/{cdPdCode}")
     fun getCardBenefitDetail3(@PathVariable cdPdCode: Long): ResponseEntity<Any>{
         return ResponseEntity.status(200).body(cardService.getCardBenefitThree(cdPdCode))
+    }
+
+    @GetMapping("/recommend")
+    fun getCardRecommend():ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(cardService.getCardRecommend())
     }
 }

@@ -101,23 +101,6 @@ class CardServiceImpl(
         return cardBillRes
     }
 
-//    override fun getCardBenefit(token: String): List<CardBenefitRes> {
-//        val cardBenefitList = ArrayList<CardBenefitRes>()
-//        if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException() }) {
-//            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
-//            val cardList = cardRepository.findAllByUserId(userId)
-//            for (card in cardList){
-//                val cardProduct = cardProductRepository.findById(card.cdPdCode).get()
-//                val cardBenefitList = cardBenefitRepository.findAllByCardProductCdPdCode(card.cdPdCode)
-//                val cardBenefitImg = cardBenefitImgRepository.findById(cardBenefit.cdBfImg.id).get()
-//                val corporation = corporationRepository.findById(cardProduct.cdPdCode).get()
-//                val cardBenefitRes = CardBenefitRes(corporation.cpName, cardBenefit.cdBfName, cardBenefit.cdBfSum, cardBenefitImg.cdBfImg)
-//                cardBenefitList.add(cardBenefitRes)
-//            }
-//        }
-//        return cardBenefitList
-//    }
-
     override fun getCardBenefitDetail(cdPdCode: Long): List<CardBenefitDetailRes> {
         val cardBenefitDetailList = ArrayList<CardBenefitDetailRes>()
         val cardBenefitList = cardBenefitRepository.findAllByCardProductCdPdCode(cdPdCode).orEmpty()
@@ -139,4 +122,35 @@ class CardServiceImpl(
         return cardBenefitInfoList
     }
 
+    override fun getCardRecommend(): CardRecommendRes {
+        val creditInfoList = ArrayList<CardRecommendInfoRes>()
+        val checkInfoList = ArrayList<CardRecommendInfoRes>()
+        val creditList = mutableSetOf<Int>()
+        while (creditList.size < 10){ creditList.add((1..99).random())}
+        val checkList = mutableSetOf<Int>()
+        while (checkList.size < 10){ checkList.add((100..199).random())}
+
+        for (credit in creditList){
+            val cardProduct = cardProductRepository.findByCdPdCode(credit.toLong())
+            val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(credit.toLong())!!
+            val cardBenefitInfoList = ArrayList<CardBenefitInfo>()
+            for (cardBenefit in cardBenefitList){
+                cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
+            }
+
+            creditInfoList.add(CardRecommendInfoRes(cardProduct.cdPdCode, cardProduct.cdName, cardProduct.cdImg, cardBenefitInfoList))
+        }
+
+        for (check in checkList){
+            val cardProduct = cardProductRepository.findByCdPdCode(check.toLong())
+            val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(check.toLong())!!
+            val cardBenefitInfoList = ArrayList<CardBenefitInfo>()
+            for (cardBenefit in cardBenefitList){
+                cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
+            }
+            checkInfoList.add(CardRecommendInfoRes(cardProduct.cdPdCode, cardProduct.cdName, cardProduct.cdImg, cardBenefitInfoList))
+        }
+
+        return CardRecommendRes(creditInfoList, checkInfoList)
+    }
 }
