@@ -60,6 +60,7 @@ fun showHistoryList(
     var showMenuList by remember { mutableStateOf(false) }
     val menuList : List<String> = when(type) {
         "포인트" -> listOf("모두", "적립", "출금")
+        "카드" -> listOf("일시불", "일시불", "일시불")
         else -> listOf("모두", "입금", "출금")
     }
     val moneyType = when(type) {
@@ -67,55 +68,57 @@ fun showHistoryList(
         else -> "원"
     }
 
-    if(showMenuList) {
-        val outMetrics = DisplayMetrics()
+    if(type != "카드") {
+        if(showMenuList) {
+            val outMetrics = DisplayMetrics()
 
-        BoxWithConstraints(modifier = Modifier.background(color = Color.Blue)) {
-            BottomSheetDialog(
-                onDismissRequest = {
-                    showMenuList = false
-                },
-                properties = BottomSheetDialogProperties(
-                    navigationBarProperties = NavigationBarProperties(),
-                    behaviorProperties = BottomSheetBehaviorProperties(
+            BoxWithConstraints(modifier = Modifier.background(color = Color.Blue)) {
+                BottomSheetDialog(
+                    onDismissRequest = {
+                        showMenuList = false
+                    },
+                    properties = BottomSheetDialogProperties(
+                        navigationBarProperties = NavigationBarProperties(),
+                        behaviorProperties = BottomSheetBehaviorProperties(
 //                        maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
+                        )
                     )
-                )
-            ) {
-                Surface (
-                    shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                 ) {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(start = 16.dp, top = 10.dp, bottom = 16.dp)
-                            .verticalScroll(rememberScrollState()),
+                    Surface (
+                        shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(start = 16.dp, top = 10.dp, bottom = 16.dp)
+                                .verticalScroll(rememberScrollState()),
 //                        verticalArrangement = Arrangement.Center,
 //                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Column(modifier = Modifier.padding(10.dp)) {
-                            Text(text = "보기 선택", fontWeight = FontWeight.Bold, fontSize = 20.sp)
-                        }
-                        repeat(3) {
-                            Row(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .clickable {
-                                        column = 0
-                                        currentMenu.value = it
-                                        showMenuList = false
+                        ) {
+                            Column(modifier = Modifier.padding(10.dp)) {
+                                Text(text = "보기 선택", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                            }
+                            repeat(3) {
+                                Row(
+                                    modifier = Modifier
+                                        .clip(RoundedCornerShape(10.dp))
+                                        .clickable {
+                                            column = 0
+                                            currentMenu.value = it
+                                            showMenuList = false
+                                        }
+                                ){
+                                    Column(modifier = Modifier.padding(10.dp)){ Text(text = menuList[it]) }
+                                    Spacer(modifier = Modifier.weight(1f))
+                                    if(it == currentMenu.value){
+                                        Image(
+                                            painter = painterResource(id = R.drawable.ic_check),
+                                            modifier = Modifier
+                                                .padding(end = 16.dp)
+                                                .size(20.dp),
+                                            contentDescription = "",
+                                        )
                                     }
-                            ){
-                                Column(modifier = Modifier.padding(10.dp)){ Text(text = menuList[it]) }
-                                Spacer(modifier = Modifier.weight(1f))
-                                if(it == currentMenu.value){
-                                    Image(
-                                        painter = painterResource(id = R.drawable.ic_check),
-                                        modifier = Modifier
-                                            .padding(end = 16.dp)
-                                            .size(20.dp),
-                                        contentDescription = "",
-                                    )
                                 }
                             }
                         }
@@ -184,15 +187,18 @@ fun showHistoryList(
                         )
                     }
                 }
-                Column(
-                    modifier = Modifier
-                        .clip(shape = RoundedCornerShape(10.dp))
-                        .clickable { showMenuList = true }
-                        .padding(10.dp)
-                ) {
-                    Text(text = menuList[currentMenu.value] + " ▾")
+                if(type != "카드") {
+                    Column(
+                        modifier = Modifier
+                            .clip(shape = RoundedCornerShape(10.dp))
+                            .clickable { showMenuList = true }
+                            .padding(10.dp)
+                    ) {
+                        Text(text = menuList[currentMenu.value] + " ▾")
+                    }
                 }
             }
+
             if(historyList.isEmpty()) {
                 Column(modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
