@@ -1,9 +1,0 @@
-diff a/android/app/src/main/java/com/finance/android/ui/components/HistoryListItemComp.kt b/android/app/src/main/java/com/finance/android/ui/components/HistoryListItemComp.kt	(rejected hunks)
-@@ -197,7 +197,6 @@
-             Column(
- 
-             ) {
--                DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString())
-                 DateText(text = monthDayFormat.format(date))
-             }
-             Column(

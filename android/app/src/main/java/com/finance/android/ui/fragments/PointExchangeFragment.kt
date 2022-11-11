@@ -46,8 +46,8 @@ fun PointExchangeFragment(
                 pointViewModel = pointViewModel,
                 userInfo = (pointViewModel.myInfo.value as Response.Success).data
                 )
-                1 -> SuccessScreen(pointViewModel, onClose = onClose)
-                else -> SuccessScreen(pointViewModel, onClose = onClose)
+                1 -> SuccessScreen(false, pointViewModel, onClose = onClose)
+                else -> SuccessScreen(false, pointViewModel, onClose = onClose)
             }
         }
         is Response.Failure -> Loading("실패", onClose = onClose)
@@ -89,10 +89,12 @@ private fun Screen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SuccessScreen(
+    status : Boolean = true,
     pointViewModel: PointViewModel,
     onClose: () -> Unit = {},
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_done))
+    val failureComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_failed))
     val progress by animateLottieCompositionAsState(
         composition,
         iterations = LottieConstants.IterateForever
@@ -119,7 +121,7 @@ private fun SuccessScreen(
         horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.padding(20.dp))
         LottieAnimation(
-            composition,
+            composition = if(status) composition else failureComposition,
             progress = { progress },
             modifier = Modifier.size(100.dp),
             dynamicProperties = dynamicProperties

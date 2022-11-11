@@ -116,7 +116,7 @@ private fun Screen(
                 onClick = { onClickIsAttend() },
                 modifier = Modifier.withBottomButton(),
                 enabled = !isAttend,
-                text = if(!isAttend) "절대 누르지 마시오" else "출석완료",
+                text = if(!isAttend) "출석하고 50 포인트 받기" else "출석완료",
                 buttonType = ButtonType.ROUNDED
             )
         }

@@ -35,7 +35,7 @@ class PointViewModel @Inject constructor(
 
     fun launchPointExchange() {
         viewModelScope.launch {
-            success.value = 0
+            success.value = 1
             getUserInfo()
         }
     }

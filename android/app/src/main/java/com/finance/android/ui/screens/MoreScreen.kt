@@ -34,7 +34,6 @@ import com.finance.android.ui.components.showProfileList
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.toPx
-import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.MyPageViewModel
 import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
@@ -126,7 +125,7 @@ fun Screen(
                         ) {
                             Text(text = "프로필 이미지", style = MaterialTheme.typography.headlineMedium)
                         }
-                        Column {
+                        Column() {
                             showProfileList(profileList, onClickImage = {
                                 onClick(it)
                                 println("프로필 이미지 변경 $it")
@@ -161,14 +160,14 @@ fun Screen(
                 contentDescription = userInfo.profileName,
                 modifier = Modifier
                     .size(60.dp)
-                    .padding(end = dimensionResource(R.dimen.padding_small))
                     .clip(CircleShape)
                     .clickable { showProfileList = !showProfileList }
+                    .padding(2.dp)
             )
 
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(start = 10.dp)
+                modifier = Modifier.padding(start = 16.dp)
             ) {
                 Text(text = userInfo.username, fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 20.sp))
             }
@@ -243,18 +242,27 @@ fun MoreMenuItem(
     text : String
 ){
     Column(
-//        modifier = Modifier.background(Color.Blue),
+        modifier = Modifier,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
             modifier = Modifier
-                .withBottomButton()
+                .fillMaxWidth()
+                .padding(dimensionResource(id = R.dimen.padding_small))
+                .height(60.dp)
                 .clip(RoundedCornerShape(10.dp))
+                .background(
+                    MaterialTheme.colorScheme.surface,
+                    shape = RoundedCornerShape(dimensionResource(R.dimen.calendar_default))
+                )
                 .clickable { onClickMenu() },
             verticalAlignment = Alignment.CenterVertically
         ) {
             Box(
-                modifier = Modifier.size(50.dp).clip(CircleShape).background(color),
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape)
+                    .background(color),
                 contentAlignment = Alignment.Center
             ) {
                 Image(

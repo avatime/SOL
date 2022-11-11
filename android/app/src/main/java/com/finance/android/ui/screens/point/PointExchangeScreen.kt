@@ -81,10 +81,11 @@ fun InputExchangePoint(
             TextField(
                 value = pointValue,
                 onValueChange = {
-
+                    if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
                     if (error.value && pointValue < it) {
                         return@TextField
-                    } else if (pointValue == it) return@TextField
+                    }
+                    else if (pointValue == it) return@TextField
 
                     pointValue = if (it.isEmpty()) "" else it.toInt().toString()
                 },
@@ -128,13 +129,12 @@ fun InputExchangePoint(
                     ),
                     modifier = Modifier.padding(start = 30.dp),
                     enabled = !error.value
-
                 ) {
                     Text(text = "잔액 ${balance}포인트(클릭시 입력)", fontSize = 20.sp)
                 }
             }
 
-            if (pointValue.isNotEmpty()) {
+            if (pointValue.isNotEmpty() && pointValue != "0") {
                 Spacer(modifier = Modifier.weight(1.0f))
 
                 com.finance.android.ui.components.TextButton(
@@ -142,6 +142,7 @@ fun InputExchangePoint(
                     text = "다음",
                     modifier = Modifier.withBottomButton(),
                     buttonType = ButtonType.ROUNDED,
+                    enabled = !error.value
                 )
             }
         }
