@@ -19,6 +19,7 @@ import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
 import com.finance.android.ui.components.InsuranceListItem_Normal
+import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.InsuranceViewModel
 import java.text.DecimalFormat
@@ -50,7 +51,8 @@ fun AssetLifeScreen(
                         color = MaterialTheme.colorScheme.surface,
                         shape = RoundedCornerShape(10.dp)
                     ),
-                    isList = isData.list
+                    isList = isData.list,
+                    navController = navController
                 )
                 if(isData.totalFee != 0) {
                     AssetLifeContainer2(modifier = Modifier
@@ -72,7 +74,8 @@ fun AssetLifeScreen(
 @Composable
 private fun AssetLifeContainer(
     modifier: Modifier,
-    isList: MutableList<InsuranceInfoResponseDto>
+    isList: MutableList<InsuranceInfoResponseDto>,
+    navController: NavController
     ) {
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium)))
@@ -83,7 +86,9 @@ private fun AssetLifeContainer(
                 fee = it.isPdFee,
                 myName = it.name,
                 isName = it.isName,
-                onClickItem = {}
+                onClickItem = {
+                    navController.navigate("${Const.Routes.INSURANCE}/${it.isPdId}/${it.isPdName}")
+                }
             )
         }
         if(isList.size == 0) {

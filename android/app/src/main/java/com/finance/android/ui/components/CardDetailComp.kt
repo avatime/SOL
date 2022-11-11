@@ -18,6 +18,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
 import java.text.DecimalFormat
+import java.time.YearMonth
 
 @Composable
 fun CardDetailComp(
@@ -44,7 +45,7 @@ fun CardDetailComp(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column() {
-                Text(text = "당월 청구 금액", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                Text(text = "${YearMonth.now().monthValue}월 청구 금액", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                 Text(
                     text = DecimalFormat("#,###원").format(balance),
                     fontWeight = FontWeight.Bold,

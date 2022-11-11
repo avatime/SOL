@@ -225,7 +225,7 @@ private fun HomeCardContainer(
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}")
                 }
             )
         }
