@@ -116,7 +116,7 @@ class CardServiceImpl(
         val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(cdPdCode)
         for (cardBenefit in cardBenefitList){
             val cardBenefitImg = cardBenefitImgRepository.findById(cardBenefit.cdBfImg.id).orElse(null)
-            cardBenefitInfoList.add(CardBenefitInfo(cardBenefitImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
+            if(cardBenefit.cdBfName != "유의사항") cardBenefitInfoList.add(CardBenefitInfo(cardBenefitImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
         }
 
         return cardBenefitInfoList
