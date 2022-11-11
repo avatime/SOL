@@ -363,6 +363,7 @@ private fun Account(
                     accountName = item.acName,
                     companyLogoPath = item.cpLogo,
                     checked = checked,
+                    acMain = item.acMain,
                     onClickItem = { onClickAccountItem(it) }
                 )
             }
@@ -425,6 +426,7 @@ private fun Stock(
                     accountName = item.acName,
                     companyLogoPath = item.cpLogo,
                     checked = checked,
+                    acMain = item.acMain,
                     onClickItem = { onClickStockAccountItem(it) }
                 )
             }

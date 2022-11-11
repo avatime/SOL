@@ -74,8 +74,9 @@ fun AccountDetailFragment(
                             acNo = formatAccount(cpName, acNo),
                             balance = DecimalFormat("#,###원").format(balance) ?: "0원",
                             cpLogo = cpLogo,
+                            acMain = acMain,
                             onClick = {
-                                navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
+                                navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}/${acMain}")
                             }
                         )
                         showHistoryList(modifier = Modifier.weight(1.0f),
