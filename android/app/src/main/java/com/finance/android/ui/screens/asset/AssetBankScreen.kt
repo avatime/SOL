@@ -1,5 +1,6 @@
 package com.finance.android.ui.screens.asset
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,6 +23,7 @@ import com.finance.android.ui.components.AccountListItem_Arrow
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.BankViewModel
+import java.net.URLEncoder
 
 @Composable
 fun AssetBankScreen(
@@ -70,15 +72,15 @@ private fun AssetBankContainer(
     )
     {
         accData!!.forEach {
+            var pathTmp = Uri.encode(it.cpLogo)
             AccountListItem_Arrow(
                 accountNumber = it.acNo,
                 balance = it.balance,
                 accountName = it.acName,
-                companyLogoPath = it.cpLogo,
-                onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}")
-                }
-            )
+                companyLogoPath = it.cpLogo
+            ) {
+                navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}")
+            }
         }
         if (accData.size == 0) {
             Column(
