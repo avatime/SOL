@@ -1,5 +1,6 @@
 package com.finance.android.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -52,18 +53,39 @@ private fun Draw(
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(companyLogoPath)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "accImage",
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
                 modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape),
+                    .size(24.dp)
+                    .align(Alignment.TopCenter),
+                painter = painterResource(R.drawable.crown),
+                contentDescription = null
             )
+            Box {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(companyLogoPath)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "accImage",
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                )
+            }
+//            AsyncImage(
+//                model = ImageRequest.Builder(LocalContext.current)
+//                    .data(companyLogoPath)
+//                    .crossfade(true)
+//                    .build(),
+//                contentDescription = "accImage",
+//                modifier = Modifier
+//                    .size(40.dp)
+//                    .clip(CircleShape)
+//            )
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp)
@@ -86,7 +108,7 @@ fun AccountListItem_Normal(
     accountNumber: String,
     balance: Int,
     accountName: String,
-    companyLogoPath: String,
+    companyLogoPath: String
 ) {
     Draw(
         modifier = modifier
@@ -94,7 +116,7 @@ fun AccountListItem_Normal(
         accountNumber = accountNumber,
         balance = balance,
         accountName = accountName,
-        companyLogoPath = companyLogoPath,
+        companyLogoPath = companyLogoPath
     )
 }
 
@@ -194,9 +216,11 @@ fun AccountListItem_Arrow(
     onClickItem: () -> Unit
 ) {
     Draw(
-        modifier = modifier.clickable {
-            onClickItem()
-        },
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .clickable {
+                onClickItem()
+            },
         accountNumber = accountNumber,
         balance = balance,
         accountName = accountName,
