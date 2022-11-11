@@ -40,11 +40,6 @@ fun CardBenefitScreen(
     cdImgPath: String,
     cdName: String,
 ) {
-    val current = LocalDateTime.now()
-    val formattedM = current.format(DateTimeFormatter.ofPattern("M"))
-    val formattedY = current.format(DateTimeFormatter.ofPattern(("YYYY")))
-    val month = formattedM.toInt()
-    val year = formattedY.toInt()
 
     fun launch() {
         cardViewModel.loadCardBenefit(cardProductCode)
@@ -119,12 +114,8 @@ fun CardBenefitScreen(
                     }
                 }
 
-                is Response.Loading -> {
-                    Text(text = "로딩중")
-                }
-                else -> {
-                    Text(text = "실패")
-                }
+                is Response.Loading -> {}
+                else -> {}
             }
 
         }

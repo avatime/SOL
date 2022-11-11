@@ -124,34 +124,3 @@ private fun AssetCardContainer(
     }
 }
 
-//@Composable
-//private fun benefitListItem(
-//    benefitSummary: String?,
-//    companyLogoPath: String
-//) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth(),
-//        verticalAlignment = Alignment.CenterVertically
-//    )
-//    {
-//        AsyncImage(
-//            model = ImageRequest.Builder(LocalContext.current)
-//                .data("$companyLogoPath")
-//                .crossfade(true)
-//                .build(),
-//            contentDescription = null,
-//            modifier = Modifier
-//                .size(45.dp)
-//                .padding(end = dimensionResource(R.dimen.padding_medium)),
-//            colorFilter = ColorFilter.tint(colorResource(R.color.noActiveColor))
-//        )
-//
-//        Text(
-//            text = "$benefitSummary",
-//            fontWeight = FontWeight.Bold,
-//            maxLines = 1,
-//            overflow = TextOverflow.Ellipsis
-//        )
-//    }
-//}
