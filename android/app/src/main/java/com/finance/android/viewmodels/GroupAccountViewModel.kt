@@ -13,6 +13,7 @@ import com.finance.android.domain.dto.request.GroupIdRequestDto
 import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
+import com.finance.android.domain.dto.response.PublicTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.GroupAccountRepository
@@ -158,6 +159,20 @@ class GroupAccountViewModel @Inject constructor(
             }
         }
     }
+
+    // 입출금 내역 조회
+    private val _duesTradeHistoryData = mutableStateOf<Response<MutableList<PublicTradeResponseDto>>>(Response.Loading)
+    val duesTradeHistoryData = _duesTradeHistoryData
+    fun getDuesTradeHistory(paId: Int){
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postTradeHistory(GroupIdRequestDto(paId))
+            }.collect {
+                _duesTradeHistoryData.value = it
+            }
+        }
+    }
+
 }
 
 
