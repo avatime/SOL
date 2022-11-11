@@ -17,6 +17,7 @@ import com.finance.android.domain.dto.request.PointExchangeRequestDto
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.PointViewModel
+import java.util.regex.Pattern
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -81,6 +82,7 @@ fun InputExchangePoint(
             TextField(
                 value = pointValue,
                 onValueChange = {
+                    if(!Pattern.matches("^[0-9]*$", it)) return@TextField
                     if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
                     if (error.value && pointValue < it) {
                         return@TextField

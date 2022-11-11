@@ -13,17 +13,20 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
+import com.finance.android.ui.theme.Error
 import com.finance.android.ui.theme.MainColor
 import com.finance.android.ui.theme.White
 import com.finance.android.utils.ext.withBottomButton
 
 enum class ButtonColor {
     PRIMARY,
+    ERROR,
     WHITE;
 
     fun getBackgroundColor(): Color {
         return when (this) {
             PRIMARY -> MainColor
+            ERROR -> Error
             WHITE -> White
         }
     }
@@ -31,6 +34,7 @@ enum class ButtonColor {
     fun getTextColor(): Color {
         return when (this) {
             PRIMARY -> White
+            ERROR -> White
             WHITE -> MainColor
         }
     }
@@ -56,7 +60,8 @@ fun TextButton(
     buttonColor: ButtonColor = ButtonColor.PRIMARY,
     buttonType: ButtonType,
     enabled: Boolean = true,
-    fontSize: TextUnit = dimensionResource(id = R.dimen.font_size_btn_bottom_text).value.sp
+    fontSize: TextUnit = dimensionResource(id = R.dimen.font_size_btn_bottom_text).value.sp,
+    border : Boolean = true
 ) {
     if (buttonColor == ButtonColor.PRIMARY) {
         Button(
@@ -82,7 +87,7 @@ fun TextButton(
                 containerColor = buttonColor.getBackgroundColor(),
                 contentColor = buttonColor.getTextColor()
             ),
-            border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+            border = BorderStroke(1.dp, if(border) MaterialTheme.colorScheme.primary else buttonColor.getBackgroundColor()),
             shape = buttonType.getShape() ?: ButtonDefaults.shape,
             enabled = enabled
         ) {
