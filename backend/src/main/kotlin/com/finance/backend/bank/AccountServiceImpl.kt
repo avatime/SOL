@@ -21,8 +21,10 @@ import com.finance.backend.insurance.response.MyInsuranceInfoRes
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
+import com.finance.backend.util.AccountSortComparator
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime
+import java.util.Collections
 import java.util.NoSuchElementException
 import java.util.UUID
 
@@ -43,15 +45,23 @@ class AccountServiceImpl(
 
     override fun getAccount(token: String): List<BankAccountRes> {
         var bankAccountList = ArrayList<BankAccountRes>()
+
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val userMainAccount = userRepository.findById(userId).orElse(null).account
             val accountList = accountRepository.findByUserIdAndAcType(userId, 1).orEmpty()
+
             for (ac in accountList){
                 val corporation = corporationRepository.findById(ac.acCpCode).get()
-                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg))
+                var acMain = 0
+                if(ac.acNo == userMainAccount){
+                    acMain = 1
+                }
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg, acMain))
             }
         }
+        Collections.sort(bankAccountList, AccountSortComparator())
         return bankAccountList
     }
 
@@ -60,10 +70,15 @@ class AccountServiceImpl(
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()
                 }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
+            val userMainAccount = userRepository.findById(userId).orElse(null).account
             val accountList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 1, true,).orEmpty()
             for (ac in accountList){
                 val corporation = corporationRepository.findById(ac.acCpCode).orElse(null)
-                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg))
+                var acMain = 0
+                if(ac.acNo == userMainAccount){
+                    acMain = 1
+                }
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg, acMain))
             }
         }
         return bankAccountList
@@ -212,18 +227,26 @@ class AccountServiceImpl(
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val accountInfoList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 1, true).orEmpty()
-
+            val userMainAccount = userRepository.findById(userId).orElse(null).account
             for (account in accountInfoList){
                 val corporation = corporationRepository.findById(account.acCpCode).get()
-                accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg))
+                var acMain = 0
+                if(account.acNo == userMainAccount){
+                    acMain = 1
+                }
+                accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain))
             }
-
+            Collections.sort(accountList, AccountSortComparator().reversed())
             val financeInfoList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 2, true).orEmpty()
             for (finance in financeInfoList){
                 val corporation = corporationRepository.findById(finance.acCpCode).get()
-                financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo, finance.acReg))
+                var acMain = 0
+                if(finance.acNo == userMainAccount){
+                    acMain = 1
+                }
+                financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo, finance.acReg, acMain))
             }
-
+            Collections.sort(financeList, AccountSortComparator().reversed())
             val cardInfoList = cardRepository.findAllByUserIdAndCdReg(userId, true).orEmpty()
             for (card in cardInfoList){
                 val cardProduct = cardProductRepository.findByCdPdCode(card.cdPdCode)

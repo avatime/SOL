@@ -73,9 +73,6 @@ class AccountController(val accountService: AccountService) {
     @GetMapping("/register")
     fun getBankRegister(@RequestHeader("access_token") accessToken : String):ResponseEntity<Any>{
         val response = accountService.getAccountRegistered(accessToken)
-        println(response.accountList)
-        println(response.financeList)
-        println(response.insuranceList)
         return ResponseEntity.status(200).body(response)
     }
 
