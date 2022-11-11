@@ -2,8 +2,10 @@ package com.finance.android.ui.screens.login
 
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -20,7 +22,8 @@ import com.finance.android.R
 @Composable
 fun SplashScreen() {
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .background(MaterialTheme.colorScheme.surface),
         contentAlignment = Alignment.Center
     ) {
         val context = LocalContext.current
@@ -37,10 +40,11 @@ fun SplashScreen() {
             painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(context).data(data = R.drawable.finance_splash).apply(block = {
                     size(Size.ORIGINAL)
-                }).repeatCount(0).build(), imageLoader = imageLoader
+                }).repeatCount(0).build(),
+                imageLoader = imageLoader
             ),
             contentDescription = null,
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize()
         )
     }
 }
