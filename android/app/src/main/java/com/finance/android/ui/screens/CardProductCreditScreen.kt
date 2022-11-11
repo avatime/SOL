@@ -27,24 +27,11 @@ import com.finance.android.ui.components.CardListItem_Arrow
 import com.finance.android.utils.Const
 
 @Composable
-fun CardProductScreen(
+fun CardProductCreditScreen(
     navController: NavController,
-    cardRecommendList: CardRecommendResponseDto
+    creditCardList: MutableList<CardRecommendInfoResponseDto>
 ) {
-    cardRecommendList.creditCardList!!.forEach {
-        CardProductContainer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_medium))
-                .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(10)
-                ),
-            navController = navController,
-            cardData = it
-        )
-    }
-    cardRecommendList.checkCardList!!.forEach {
+    creditCardList!!.forEach {
         CardProductContainer(
             modifier = Modifier
                 .fillMaxWidth()
