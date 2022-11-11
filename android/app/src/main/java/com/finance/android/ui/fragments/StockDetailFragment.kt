@@ -9,10 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -29,6 +26,7 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
+import com.anychart.chart.common.dataentry.BoxDataEntry
 import com.anychart.chart.common.dataentry.ValueDataEntry
 import com.anychart.data.Mapping
 import com.anychart.enums.MarkerType
@@ -37,6 +35,7 @@ import com.finance.android.domain.dto.response.FinanceDetailResponseDto
 import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.DarkBlueGrey
 import com.finance.android.ui.theme.Disabled
+import com.finance.android.viewmodels.GraphType
 import com.finance.android.viewmodels.PeriodType
 import com.finance.android.viewmodels.StockDetailViewModel
 import java.text.DecimalFormat
@@ -87,7 +86,9 @@ fun StockDetailFragment(
                     diff = abs(after.close - before.close),
                     stockDetailInfoList = stockDetailViewModel.stockDetailList.value,
                     periodType = stockDetailViewModel.periodType.value,
-                    onClickPeriodType = { type -> stockDetailViewModel.onClickPeriod(type) }
+                    onClickPeriodType = { type -> stockDetailViewModel.onClickPeriod(type) },
+                    graphType = stockDetailViewModel.graphType.value,
+                    onClickGraphType = { stockDetailViewModel.onClickGraphType() }
                 )
             }
 
@@ -115,7 +116,9 @@ private fun Screen(
     diff: Int,
     stockDetailInfoList: Array<FinanceDetailResponseDto>,
     periodType: PeriodType,
-    onClickPeriodType: (periodType: PeriodType) -> Unit
+    onClickPeriodType: (periodType: PeriodType) -> Unit,
+    graphType: GraphType,
+    onClickGraphType: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -136,38 +139,47 @@ private fun Screen(
             PeriodType.WEEK -> DrawGraph(
                 stockDetailInfoList = stockDetailInfoList,
                 per = per,
-                periodType = periodType
+                periodType = periodType,
+                graphType = graphType
             )
             PeriodType.MONTH -> DrawGraph(
                 stockDetailInfoList = stockDetailInfoList,
                 per = per,
-                periodType = periodType
+                periodType = periodType,
+                graphType = graphType
             )
             PeriodType.THREE_MONTH -> DrawGraph(
                 stockDetailInfoList = stockDetailInfoList,
                 per = per,
-                periodType = periodType
+                periodType = periodType,
+                graphType = graphType
             )
             PeriodType.HALF_YEAR -> DrawGraph(
                 stockDetailInfoList = stockDetailInfoList,
                 per = per,
-                periodType = periodType
+                periodType = periodType,
+                graphType = graphType
             )
             PeriodType.YEAR -> DrawGraph(
                 stockDetailInfoList = stockDetailInfoList,
                 per = per,
-                periodType = periodType
+                periodType = periodType,
+                graphType = graphType
             )
             PeriodType.TWO_YEAR -> DrawGraph(
                 stockDetailInfoList = stockDetailInfoList,
                 per = per,
-                periodType = periodType
+                periodType = periodType,
+                graphType = graphType
             )
         }
         Spacer(modifier = Modifier.height(10.dp))
         Controller(
             periodType = periodType,
-            onClickPeriodType = onClickPeriodType
+            onClickPeriodType = onClickPeriodType,
+            graphType = graphType,
+            onClickGraphType = onClickGraphType,
+            color = if (per > 0) Color.Red else Color.Blue
         )
     }
 }
@@ -217,7 +229,8 @@ private fun Title(
 private fun DrawGraph(
     stockDetailInfoList: Array<FinanceDetailResponseDto>,
     periodType: PeriodType,
-    per: Float
+    per: Float,
+    graphType: GraphType
 ) {
     AndroidView(
         modifier = Modifier
@@ -227,18 +240,31 @@ private fun DrawGraph(
             LayoutInflater.from(it).inflate(R.layout.stock_graph, null, false)
         },
         update = {
-            setupChartView(
-                view = it,
-                stockDetailInfoList = stockDetailInfoList.takeLast(periodType.period)
-                    .toTypedArray(),
-                periodType = periodType,
-                per = per
-            )
+            when (graphType) {
+                GraphType.LINE -> {
+                    updateLineChart(
+                        view = it,
+                        stockDetailInfoList = stockDetailInfoList.takeLast(periodType.period)
+                            .toTypedArray(),
+                        periodType = periodType,
+                        per = per
+                    )
+                }
+                GraphType.CANDLE -> {
+                    updateCandleChart(
+                        view = it,
+                        stockDetailInfoList = stockDetailInfoList.takeLast(periodType.period)
+                            .toTypedArray(),
+                        periodType = periodType,
+                        per = per
+                    )
+                }
+            }
         }
     )
 }
 
-private fun setupChartView(
+private fun updateLineChart(
     view: View,
     stockDetailInfoList: Array<FinanceDetailResponseDto>,
     periodType: PeriodType,
@@ -303,11 +329,79 @@ private fun setupChartView(
     anyChartView.setChart(cartesian)
 }
 
+private fun updateCandleChart(
+    view: View,
+    stockDetailInfoList: Array<FinanceDetailResponseDto>,
+    periodType: PeriodType,
+    per: Float
+) {
+    val anyChartView = view.findViewById<AnyChartView>(R.id.any_chart_view)
+
+    val cartesian = AnyChart.box().apply {
+        animation(true)
+        legend(false)
+        labels(true)
+        xAxis(false)
+        yAxis(false)
+    }
+
+    val max = stockDetailInfoList.maxOfOrNull { data -> data.close } ?: 0
+    val min = stockDetailInfoList.minOfOrNull { data -> data.close } ?: 0
+    var flagMax = false
+    var flagMin = false
+
+    val seriesData =
+        stockDetailInfoList
+            .map { data ->
+                val tooltip = DecimalFormat("#,###원").format(data.close)
+                CustomValueEntry(
+                    x = data.fnDate,
+                    value = data.close,
+                    tooltip = tooltip,
+                    label = if (data.close == max && !flagMax) {
+                        flagMax = true
+                        "최고 $tooltip"
+                    } else if (data.close == min && !flagMin) {
+                        flagMin = true
+                        "최저 $tooltip"
+                    } else ""
+                )
+            }
+
+    val set = com.anychart.data.Set.instantiate()
+    set.data(seriesData)
+    val series1Mapping: Mapping =
+        set.mapAs("{ x: 'x', value: 'value', tooltip: 'tooltip', label: 'label' }")
+
+    val series = cartesian.line(series1Mapping)
+    series.stroke("${periodType.stroke} ${if (0 < per) "red" else "blue"}")
+    series.hovered().markers().enabled(true)
+    series.hovered().markers()
+        .type(MarkerType.CIRCLE)
+        .fill(if (0 < per) "red" else "blue", 1)
+        .size(0.5)
+
+    series.tooltip()
+        .format("{%tooltip}")
+
+    series.labels()
+        .format("{%label}")
+        .fontColor(if (0 < per) "red" else "blue")
+
+    series.tooltip().background()
+        .corners(5)
+
+    anyChartView.setChart(cartesian)
+}
+
 @Preview
 @Composable
 private fun Controller(
     periodType: PeriodType = PeriodType.WEEK,
-    onClickPeriodType: (periodType: PeriodType) -> Unit = { }
+    onClickPeriodType: (periodType: PeriodType) -> Unit = { },
+    graphType: GraphType = GraphType.LINE,
+    onClickGraphType: () -> Unit = { },
+    color: Color = Color.Red
 ) {
     Row(
         modifier = Modifier
@@ -342,19 +436,26 @@ private fun Controller(
                 }
             }
         }
-        Spacer(modifier = Modifier.width(10.dp))
-        Row(
-            modifier = Modifier
-                .fillMaxHeight()
-                .clip(RoundedCornerShape(10.dp))
-                .background(MaterialTheme.colorScheme.background)
-                .padding(
-                    horizontal = dimensionResource(id = R.dimen.padding_medium),
-                    vertical = 5.dp
-                )
-        ) {
-            Text("얍")
-        }
+//        Spacer(modifier = Modifier.width(10.dp))
+//        Row(
+//            modifier = Modifier
+//                .fillMaxHeight()
+//                .clip(RoundedCornerShape(10.dp))
+//                .background(MaterialTheme.colorScheme.background)
+//                .clickable { onClickGraphType() }
+//                .padding(
+//                    horizontal = dimensionResource(id = R.dimen.padding_medium),
+//                    vertical = 5.dp
+//                ),
+//            verticalAlignment = Alignment.CenterVertically
+//        ) {
+//            Icon(
+//                modifier = Modifier.size(24.dp),
+//                painter = painterResource(id = if (graphType == GraphType.CANDLE) R.drawable.ic_graph_line else R.drawable.ic_graph_candle),
+//                contentDescription = null,
+//                tint = color
+//            )
+//        }
     }
 }
 
@@ -364,6 +465,21 @@ private class CustomValueEntry(
     tooltip: String,
     label: String
 ) : ValueDataEntry(x, value) {
+    init {
+        setValue("tooltip", tooltip)
+        setValue("label", label)
+    }
+}
+
+private class CustomCandleEntry(
+    x: String,
+    open: Int,
+    close: Int,
+    low: Int,
+    high: Int,
+    tooltip: String,
+    label: String
+) : BoxDataEntry(x, low, open, open, close, high) {
     init {
         setValue("tooltip", tooltip)
         setValue("label", label)

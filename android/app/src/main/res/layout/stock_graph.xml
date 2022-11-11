@@ -6,4 +6,11 @@
         android:id="@+id/any_chart_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
+
+    <View
+        android:layout_width="300dp"
+        android:layout_height="20dp"
+        android:background="@color/white"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

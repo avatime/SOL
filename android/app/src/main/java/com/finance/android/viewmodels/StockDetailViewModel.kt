@@ -23,6 +23,7 @@ class StockDetailViewModel @Inject constructor(
 
     val stockDetailList = mutableStateOf<Array<FinanceDetailResponseDto>>(emptyArray())
     val periodType = mutableStateOf(PeriodType.WEEK)
+    val graphType = mutableStateOf(GraphType.LINE)
 
     fun launch() {
         viewModelScope.launch {
@@ -32,6 +33,11 @@ class StockDetailViewModel @Inject constructor(
 
     fun onClickPeriod(periodType: PeriodType) {
         this.periodType.value = periodType
+    }
+
+    fun onClickGraphType() {
+        this.graphType.value =
+            if (graphType.value == GraphType.LINE) GraphType.CANDLE else GraphType.LINE
     }
 
     private suspend fun loadFinanceDetailList() {
@@ -57,4 +63,9 @@ enum class PeriodType(
     HALF_YEAR("6달", 180, 4),
     YEAR("1년", 360, 3),
     TWO_YEAR("2년", 100000, 2);
+}
+
+enum class GraphType {
+    LINE,
+    CANDLE
 }
