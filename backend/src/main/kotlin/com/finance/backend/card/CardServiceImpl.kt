@@ -135,7 +135,7 @@ class CardServiceImpl(
             val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(credit.toLong())!!
             val cardBenefitInfoList = ArrayList<CardBenefitInfo>()
             for (cardBenefit in cardBenefitList){
-                cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
+                if(cardBenefit.cdBfName != "유의사항") cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
             }
 
             creditInfoList.add(CardRecommendInfoRes(cardProduct.cdPdCode, cardProduct.cdName, cardProduct.cdImg, cardBenefitInfoList))
@@ -146,7 +146,7 @@ class CardServiceImpl(
             val cardBenefitList = cardBenefitRepository.findTop3ByCardProductCdPdCode(check.toLong())!!
             val cardBenefitInfoList = ArrayList<CardBenefitInfo>()
             for (cardBenefit in cardBenefitList){
-                cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
+                if(cardBenefit.cdBfName != "유의사항") cardBenefitInfoList.add(CardBenefitInfo(cardBenefit.cdBfImg.cdBfImg, cardBenefit.cdBfSum, cardBenefit.cdBfName))
             }
             checkInfoList.add(CardRecommendInfoRes(cardProduct.cdPdCode, cardProduct.cdName, cardProduct.cdImg, cardBenefitInfoList))
         }
