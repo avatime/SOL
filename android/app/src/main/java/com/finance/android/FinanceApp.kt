@@ -115,9 +115,7 @@ fun FinanceApp() {
                 AnimatedVisibility(
                     initiallyVisible = false,
                     visible = true,
-                    enter = slideInVertically(
-                        initialOffsetY = { it / 2 }
-                    ),
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
                     PointExchangeFragment(
