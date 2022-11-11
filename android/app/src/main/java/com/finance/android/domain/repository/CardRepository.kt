@@ -10,4 +10,5 @@ interface CardRepository {
     suspend fun getCardBill(cdNo: String, year: Int, month: Int): CardBillResponseDto
     suspend fun getCardBenefit(cardProductCode: Int): MutableList<CardBenefitInfoResponseDto>
     suspend fun getCardHistory(cdNo: String): MutableList<CardBillDetailResponseDto>
+    suspend fun getCardRecommend(): CardRecommendResponseDto
 }

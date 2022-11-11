@@ -78,24 +78,6 @@ class CardViewModel @Inject constructor(
         }
     }
 
-    //    fun loadCardBill(
-//        cdNo: String,
-//        year: Int,
-//        month: Int
-//    ) {
-//        viewModelScope.launch {
-//            this@CardViewModel.run {
-//                cardRepository.getCardBill(
-//                    cdNo = cdNo,
-//                    year = year,
-//                    month = month
-//                )
-//            }.collect {
-//                cardBill.value = it
-//            }
-//        }
-//    }
-
     // 카드 거래 기록 조회
 
     val cardHistory = mutableStateOf<Response<MutableList<CardBillDetailResponseDto>>>(Response.Loading)
@@ -122,6 +104,32 @@ class CardViewModel @Inject constructor(
                 )
             }.collect {
                 cardHistory.value = it
+            }
+        }
+    }
+
+    // 카드 추천 (신용카드 10, 체크카드 10)
+
+    val cardRecommendList = mutableStateOf<Response<CardRecommendResponseDto>>(Response.Loading)
+
+    fun getLoadCardReccommend(): Response<Unit> {
+        val arr = arrayOf(cardRecommendList)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun loadCardRecommend() {
+        viewModelScope.launch {
+            this@CardViewModel.run {
+                cardRepository.getCardRecommend()
+            }.collect {
+                cardRecommendList.value = it
             }
         }
     }
