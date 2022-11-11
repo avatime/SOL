@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName
 data class DuesResponseDto(
     @SerializedName("paid")
     val paid : Boolean,//유저 지불 여부
+    @SerializedName("dues_id")
+    val duesId : Int, //회비 아이디
     @SerializedName("dues_name")
     val duesName : String, //회비 이름
     @SerializedName("created_at")

@@ -47,6 +47,7 @@ fun GroupAccountMainScreen(
                 .fillMaxWidth()
                 .padding(top = dimensionResource(R.dimen.padding_medium))
                 .verticalScroll(rememberScrollState())
+                .weight(1f)
                 .background(
                     color = MaterialTheme.colorScheme.surface,
                     shape = RoundedCornerShape(10)
@@ -58,6 +59,8 @@ fun GroupAccountMainScreen(
                 is Response.Failure -> Text(text = "실패")
                 is Response.Loading -> AnimatedLoading()
                 is Response.Success -> {
+                    Log.i("group","모두의통장들${response.data}" )
+
                     if (response.data.isEmpty()) {
                         Column(
                             modifier = Modifier

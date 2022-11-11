@@ -66,10 +66,15 @@ fun GroupAccountMemberListItem(img: String, name: String, type: String?) {
                     .height(60.dp)
             )
             Spacer(modifier = Modifier.padding(10.dp))
-            Column(verticalArrangement = Arrangement.Center) {
-                Text(text = name, fontSize = 16.sp, modifier = Modifier.padding(bottom = 1.dp))
-                Text(text = "비회원", color = Color(R.color.noActiveColor))
+            Row() {
+                Column(verticalArrangement = Arrangement.Center) {
+                    Text(text = name, fontSize = 16.sp, modifier = Modifier.padding(bottom = 1.dp))
+                    Text(text = "비회원", color = Color(R.color.noActiveColor))
+                }
+                Spacer(modifier = Modifier.weight(1f))
+                TextButton(onClick = { /*TODO*/ }, text = "초대", buttonType = ButtonType.ROUNDED )
             }
+          
 
         }
 

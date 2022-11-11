@@ -19,7 +19,7 @@ import com.finance.android.R
 import java.text.DecimalFormat
 
 @Composable
-fun DuesItem(name: String, dueDate: String, totalUser: Int, paidUser: Int, duesVal: Int) {
+fun DuesItem(name: String, dueDate: String, totalUser: Int, paidUser: Int, duesVal: Int, onClick : ()-> Unit) {
 
     val progress: Float = paidUser.toFloat() / totalUser.toFloat()
     val text = remember {
@@ -29,13 +29,20 @@ fun DuesItem(name: String, dueDate: String, totalUser: Int, paidUser: Int, duesV
         text.value = "완료"
     }
 
-    Column(verticalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()) {
+    Column(
+        verticalArrangement = Arrangement.Center, modifier = Modifier
+            .fillMaxWidth()
+            .padding(20.dp)
+    ) {
 
         Row() {
             Column() {
                 Text(text = name, fontSize = 18.sp)
                 Spacer(modifier = Modifier.padding(3.dp))
-                Row() {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(text = dueDate, color = Color(R.color.noActiveColor))
                     Spacer(modifier = Modifier.padding(3.dp))
                     Text(
@@ -44,21 +51,26 @@ fun DuesItem(name: String, dueDate: String, totalUser: Int, paidUser: Int, duesV
                     )
                 }
             }
-            Spacer(modifier = Modifier.weight(1f))
-            TextButton(onClick = { /*TODO*/ }, text = "회비 내기", buttonType = ButtonType.CIRCULAR)
+
 
         }
-        Spacer(modifier = Modifier.padding(5.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
         LinearProgressIndicator(
             progress = progress,
             color = MaterialTheme.colorScheme.primary, modifier = Modifier.fillMaxWidth()
         )
         Spacer(modifier = Modifier.padding(5.dp))
-        Row() {
-            Text(text = "${paidUser}/${totalUser} 완료")
-            Spacer(modifier = Modifier.padding(3.dp))
-            Text(text = "${DecimalFormat("#,###").format(duesVal * paidUser)}원")
+
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Row() {
+                Text(text = "${paidUser}/${totalUser} 완료")
+                Spacer(modifier = Modifier.padding(3.dp))
+                Text(text = "${DecimalFormat("#,###").format(duesVal * paidUser)}원")
+            }
+            Spacer(modifier = Modifier.weight(1f))
+            TextButton(onClick = { onClick() }, text = "회비 내기", buttonType = ButtonType.CIRCULAR)
         }
+
     }
 }
 
@@ -70,6 +82,7 @@ fun previewDuesItem() {
         dueDate = "2022년 3월 9일",
         totalUser = 6,
         paidUser = 2,
-        duesVal = 10000
+        duesVal = 10000,
+        onClick = {}
     )
 }
