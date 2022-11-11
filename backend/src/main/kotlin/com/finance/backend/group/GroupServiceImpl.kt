@@ -148,7 +148,7 @@ class GroupServiceImpl (
             val memberList = publicAccountMemberRepository.findAllByPublicAccountId(registDueReq.paId).orEmpty()
 
             for(member in memberList) {
-                userDuesRelationRepository.save(UserDuesRelation(dues, user))
+                userDuesRelationRepository.save(UserDuesRelation(dues, member.user))
             }
         }
     }
