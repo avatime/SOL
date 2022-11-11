@@ -3,6 +3,8 @@ package com.finance.android.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,13 +21,13 @@ import com.finance.android.R
 import java.text.DecimalFormat
 
 @Composable
-fun DuesItem(name: String, dueDate: String, totalUser: Int, paidUser: Int, duesVal: Int, onClick : ()-> Unit) {
+fun DuesItem(paid : Boolean, name: String, dueDate: String, totalUser: Int, paidUser: Int, duesVal: Int, onClick : ()-> Unit) {
 
     val progress: Float = paidUser.toFloat() / totalUser.toFloat()
     val text = remember {
         mutableStateOf("회비내기")
     }
-    if (totalUser == paidUser) {
+    if (paid) {
         text.value = "완료"
     }
 
@@ -68,21 +70,21 @@ fun DuesItem(name: String, dueDate: String, totalUser: Int, paidUser: Int, duesV
                 Text(text = "${DecimalFormat("#,###").format(duesVal * paidUser)}원")
             }
             Spacer(modifier = Modifier.weight(1f))
-            TextButton(onClick = { onClick() }, text = "회비 내기", buttonType = ButtonType.CIRCULAR)
+            TextButton(onClick = { onClick() }, text = text.value, buttonType = ButtonType.ROUNDED, enabled = !paid)
         }
 
     }
 }
 
-@Preview
-@Composable
-fun previewDuesItem() {
-    DuesItem(
-        name = "돈내라내라내라",
-        dueDate = "2022년 3월 9일",
-        totalUser = 6,
-        paidUser = 2,
-        duesVal = 10000,
-        onClick = {}
-    )
-}
+//@Preview
+//@Composable
+//fun previewDuesItem() {
+//    DuesItem(
+//        name = "돈내라내라내라",
+//        dueDate = "2022년 3월 9일",
+//        totalUser = 6,
+//        paidUser = 2,
+//        duesVal = 10000,
+//        onClick = {}
+//    )
+//}

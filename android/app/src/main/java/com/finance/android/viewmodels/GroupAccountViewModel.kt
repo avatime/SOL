@@ -20,7 +20,6 @@ import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.GroupAccountRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -163,6 +162,7 @@ class GroupAccountViewModel @Inject constructor(
         }
     }
 
+
     // 입출금 내역 조회
     private val _duesTradeHistoryData = mutableStateOf<Response<MutableList<PublicTradeResponseDto>>>(Response.Loading)
     val duesTradeHistoryData = _duesTradeHistoryData
@@ -175,6 +175,7 @@ class GroupAccountViewModel @Inject constructor(
             }
         }
     }
+
 
     //회비입금금
     fun postPayDues(remitDuesRequestDto: RemitDuesRequestDto, onSuccess: () -> Unit) {

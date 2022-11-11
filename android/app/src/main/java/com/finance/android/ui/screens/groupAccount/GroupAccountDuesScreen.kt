@@ -20,6 +20,7 @@ import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.DuesItem
 import com.finance.android.ui.components.TextButton
+
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
@@ -56,6 +57,7 @@ fun GroupAccountDuesScreen(
                 is Response.Success -> {
                     response.data.forEach {
                         DuesItem(
+                            paid = it.paid,
                             name = it.duesName,
                             dueDate = it.dueData,
                             totalUser = it.totalUSer,

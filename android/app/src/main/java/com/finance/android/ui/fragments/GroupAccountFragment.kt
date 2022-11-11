@@ -122,7 +122,7 @@ fun GroupAccountFragment(
 
             composable(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) {
                 GroupAccontVerifyMoneyScreen(
-                    navController = navController,
+                    navController = innerNavController,
                     modifier = modifier,
                     groupAccountViewModel = groupAccountViewModel
                 )
