@@ -32,6 +32,7 @@ fun AccountDetailFragment(
     cpName: String,
     acNo: String,
     cpLogo: String,
+    acMain: Int,
     bankViewModel: BankViewModel = hiltViewModel(),
 ) {
     fun launch() {
