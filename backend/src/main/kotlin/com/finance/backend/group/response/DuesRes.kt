@@ -25,5 +25,8 @@ data class DuesRes(
         @JsonProperty("total_user")
         val totalUser : Int,
 
-        val creator : String
+        val creator : String,
+
+        @JsonProperty("dues_id")
+        val duesId : Long
 )
