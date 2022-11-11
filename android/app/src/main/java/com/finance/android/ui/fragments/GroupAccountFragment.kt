@@ -93,7 +93,10 @@ fun GroupAccountFragment(
                 )
             }
 
-            composable(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) {
+            composable(
+                "${Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN}/{duesVal}",
+                arguments = listOf(navArgument(name = "duesVal") { type = NavType.IntType })
+            ) {
                 GroupAccountInputMoneyScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -119,12 +122,11 @@ fun GroupAccountFragment(
 
             composable(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) {
                 GroupAccontVerifyMoneyScreen(
-                    navController = navController,
+                    navController = innerNavController,
                     modifier = modifier,
                     groupAccountViewModel = groupAccountViewModel
                 )
             }
-
 
 
         }

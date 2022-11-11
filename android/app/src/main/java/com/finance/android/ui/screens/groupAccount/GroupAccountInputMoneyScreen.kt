@@ -1,10 +1,12 @@
 package com.finance.android.ui.screens.groupAccount
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -20,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.airbnb.lottie.parser.IntegerParser
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
@@ -34,24 +37,59 @@ fun GroupAccountInputMoneyScreen(
     modifier: Modifier
 ) {
     LaunchedEffect(Unit) {
-        groupAccountViewModel.getRepresentAccountBalance()
+        groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
     }
 
     val placeholderText = remember {
         mutableStateOf("")
     }
     val duesValue = remember {
-        mutableStateOf("")
+        mutableStateOf("${groupAccountViewModel.duesVal.value}")
     }
-    val error = remember { mutableStateOf(false) }
+
+    //계좌잔액
+    val balance = remember {
+        mutableStateOf(groupAccountViewModel.representAccountBalance.value)
+    }
+
+    var isValid = remember {
+        mutableStateOf(true)
+    }
 
     if (duesValue.value.isEmpty()) {
         placeholderText.value = "얼마를 보낼까요?"
     }
-    Column(modifier = modifier.fillMaxSize()) {
 
+    if (duesValue.value.isEmpty()
+        || balance.value.isEmpty()
+        || Integer.parseInt(duesValue.value) > Integer.parseInt(
+            balance.value
+        )
+    ) {
+        isValid.value = false
+    }
+
+    if (!isValid.value) {
+        Text(
+            text = "잔액이 ${balance}원이에요.",
+            color = MaterialTheme.colors.error,
+            style = MaterialTheme.typography.caption,
+            modifier = Modifier.padding(start = 30.dp)
+        )
+    }
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(Color.White)
+    ) {
         TextField(
-            value = duesValue.value, onValueChange = { duesValue.value = it },
+            value = duesValue.value,
+
+            onValueChange = {
+                duesValue.value = it
+
+
+            },
             modifier = Modifier
                 .padding(start = 16.dp)
                 .fillMaxWidth(),
@@ -73,11 +111,8 @@ fun GroupAccountInputMoneyScreen(
                     cursorColor = Color.Transparent,
                 ),
             textStyle = TextStyle().copy(fontSize = 40.sp),
-            isError = error.value,
-
-
-            )
-
+            isError = !isValid.value,
+        )
         TextButton(
             onClick = { navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) },
             text = "다음",
