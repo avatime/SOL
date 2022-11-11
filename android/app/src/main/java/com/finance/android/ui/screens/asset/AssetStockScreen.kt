@@ -21,7 +21,6 @@ import com.finance.android.ui.components.AccountListItem_Arrow
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.FinanceViewModel
-import java.net.URLEncoder
 
 @Composable
 fun AssetStockScreen(
@@ -62,14 +61,15 @@ fun AssetStockContainer(modifier: Modifier,
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium)))
     {
-        financeData!!.forEach {
+        financeData.forEach {
             AccountListItem_Arrow(
                 accountNumber = it.acNo,
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
+                acMain = it.acMain,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}/${it.acName}")
                 }
             )
         }

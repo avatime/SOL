@@ -139,7 +139,8 @@ private fun DrawScreen(
                                 accountNumber = item.acNo,
                                 balance = item.balance,
                                 accountName = item.acName,
-                                companyLogoPath = item.cpLogo
+                                companyLogoPath = item.cpLogo,
+                                acMain = item.acMain
                             )
                         }
                     )
@@ -173,7 +174,8 @@ private fun DrawScreen(
                                 accountNumber = item.acNo,
                                 balance = item.balance,
                                 accountName = item.acName,
-                                companyLogoPath = item.cpLogo
+                                companyLogoPath = item.cpLogo,
+                                acMain = item.acMain
                             )
                         }
                     )
