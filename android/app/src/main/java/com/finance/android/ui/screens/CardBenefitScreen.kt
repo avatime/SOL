@@ -104,7 +104,7 @@ fun CardBenefitScreen(
                         Divider(modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_medium),
                             bottom = dimensionResource(R.dimen.padding_small)))
                         benefitList!!.forEach {
-                            benefitSummaryListItem(
+                            BenefitSummaryListItem(
                                 benefitSummary = it.cardBenefitSummary,
                                 benefitName = it.cardBenefitName,
                                 companyLogoPath = it.cardBenefitImage
@@ -133,7 +133,7 @@ fun CardBenefitScreen(
 }
 
 @Composable
-private fun benefitSummaryListItem(
+private fun BenefitSummaryListItem(
     benefitSummary: String?,
     benefitName: String,
     companyLogoPath: String
@@ -147,7 +147,7 @@ private fun benefitSummaryListItem(
     {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
-                .data("$companyLogoPath")
+                .data(companyLogoPath)
                 .crossfade(true)
                 .build(),
             contentDescription = null,
@@ -159,7 +159,7 @@ private fun benefitSummaryListItem(
         Column(modifier = Modifier
             .padding(end = dimensionResource(R.dimen.padding_medium))
         ) {
-            Text(text = "$benefitName",
+            Text(text = benefitName,
                 fontWeight = FontWeight.Bold,
                 fontSize = 18.sp,
             )
