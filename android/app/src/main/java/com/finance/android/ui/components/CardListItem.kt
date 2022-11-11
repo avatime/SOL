@@ -79,7 +79,7 @@ fun CardListItem_Arrow(
     contentPadding: PaddingValues = PaddingValues(),
     cardName: String,
     cardImgPath: String,
-    cardFee: String?,
+    cardFee: String? = null,
     onClickItem: () -> Unit
 ) {
     Draw(

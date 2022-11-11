@@ -9,10 +9,6 @@ data class CardRecommendInfoResponseDto (
     val cardName: String,
     @SerializedName("cd_img") // 카드 이미지
     val cardImage: String,
-    @SerializedName("cd_bf_img") // 카드 혜택 이미지
-    val cardBenefitImage: String,
-    @SerializedName("cd_bf_sum") // 카드 혜택 요약
-    val cardBenefitSummary: String,
-    @SerializedName("cd_bf_name") // 카드 혜택 이름
-    val cardBenefitName: String,
+    @SerializedName("card_benefit_info_list") // 카드 혜택 리스트
+    val cardBenefitInfoList: MutableList<CardBenefitInfoResponseDto>
 )
