@@ -115,21 +115,22 @@ fun UserBalanceInfo(
                             Canvas(
                                 modifier = Modifier
                                     .size(27.dp)
+                                    .clip(CircleShape)
                                     .clickable { null }
                             ) {
                                 drawCircle(
                                     color = Color.White
                                 )
                             }
-                            Image(
-                                modifier = Modifier
-                                    .size(20.dp)
-                                    .align(Alignment.Center)
-                                    .clip(CircleShape),
-                                painter = painterResource (R.drawable.crown),
-                                colorFilter = ColorFilter.tint(Color.Red),
-                                contentDescription = null
-                            )
+                            if (acMain == 1) {
+                                Image(
+                                    modifier = Modifier
+                                        .size(20.dp)
+                                        .align(Alignment.Center),
+                                    painter = painterResource (R.drawable.crown),
+                                    contentDescription = null
+                                )
+                            }
                         }
                 }
                 if (isAccount) Text(
