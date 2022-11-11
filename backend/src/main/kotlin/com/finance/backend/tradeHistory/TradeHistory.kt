@@ -55,5 +55,5 @@ class TradeHistory(
     @JoinColumn(name = "ac_no")
     val account: Account = account
 
-    fun toEntity() : PublicTradeRes = PublicTradeRes(this.tdDt, this.tdVal, this.tdTg, this.tdSed, if(this.tdType == 1) "출금" else "입금")
+    fun toEntity(userType: String) : PublicTradeRes = PublicTradeRes(this.tdDt, this.tdVal, this.tdTg, this.tdSed, if(this.tdType == 1) "출금" else "입금", userType)
 }

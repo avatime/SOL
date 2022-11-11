@@ -11,4 +11,5 @@ interface PublicAccountMemberRepository : JpaRepository<PublicAccountMember, Lon
     fun existsByUserAndPublicAccountAndType(user: User, publicAccount: PublicAccount, type : String) : Boolean
     fun existsByUserAndPublicAccountId(user: User, publicAccountId: Long) : Boolean
     fun findAllByPublicAccountId(publicAccountId: Long) : List<PublicAccountMember>?
+    fun findByUserAndPublicAccountId(user: User, publicAccountId: Long) : PublicAccountMember?
 }
