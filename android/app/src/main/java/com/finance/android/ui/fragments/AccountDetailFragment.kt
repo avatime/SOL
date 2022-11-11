@@ -76,7 +76,7 @@ fun AccountDetailFragment(
                             cpLogo = cpLogo,
                             acMain = acMain,
                             onClick = {
-                                navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}/${acMain}")
+                                navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
                             }
                         )
                         showHistoryList(modifier = Modifier.weight(1.0f),
