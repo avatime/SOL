@@ -61,7 +61,7 @@ class AccountServiceImpl(
                 bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg, acMain))
             }
         }
-        Collections.sort(bankAccountList, AccountSortComparator())
+
         return bankAccountList
     }
 
@@ -81,6 +81,7 @@ class AccountServiceImpl(
                 bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg, acMain))
             }
         }
+        Collections.sort(bankAccountList, AccountSortComparator().reversed())
         return bankAccountList
     }
 
