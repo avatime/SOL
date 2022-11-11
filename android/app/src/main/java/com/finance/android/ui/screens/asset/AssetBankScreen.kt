@@ -18,12 +18,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.ui.components.AccountListItem
 import com.finance.android.ui.components.AccountListItem_Arrow
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.BankViewModel
-import com.finance.android.viewmodels.HomeViewModel
 
 @Composable
 fun AssetBankScreen(
@@ -78,7 +76,7 @@ private fun AssetBankContainer(
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}")
                 }
             )
         }

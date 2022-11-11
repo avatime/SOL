@@ -1,9 +1,11 @@
 package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme
@@ -29,6 +31,7 @@ fun AccountDetailFragment(
     acName: String,
     cpName: String,
     acNo: String,
+    cpLogo: String,
     bankViewModel: BankViewModel = hiltViewModel(),
 ) {
     fun launch() {
@@ -68,6 +71,7 @@ fun AccountDetailFragment(
                             cpName = cpName,
                             acNo = acNo,
                             balance = DecimalFormat("#,###원").format(balance) ?: "0원",
+                            cpLogo = cpLogo,
                             onClick = {
                                 navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
                             }
