@@ -32,6 +32,7 @@ fun CardDetailComp(
             .padding(18.dp)
     ) {
         Text(text = cdName,
+            fontSize = 17.sp,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis
         )
@@ -40,16 +41,16 @@ fun CardDetailComp(
             fontSize = 12.sp,
         )
         Row(
-            modifier = Modifier.padding(
-                top = dimensionResource(R.dimen.padding_medium),
-            ),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
-                text = DecimalFormat("#,###원").format(balance),
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
-            )
+            Column() {
+                Text(text = "당월 청구 금액", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
+                Text(
+                    text = DecimalFormat("#,###원").format(balance),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 26.sp,
+                )
+            }
             Spacer(modifier = Modifier.weight(1.0f))
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
@@ -58,7 +59,7 @@ fun CardDetailComp(
                     .build(),
                 contentDescription = "cardImage",
                 modifier = modifier
-                    .size(120.dp)
+                    .size(130.dp)
             )
         }
     }
