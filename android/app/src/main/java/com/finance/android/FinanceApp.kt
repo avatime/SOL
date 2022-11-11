@@ -121,7 +121,7 @@ fun FinanceApp() {
                     PointExchangeFragment(
                         onClose = {
                             navController.popBackStack()
-                        }
+                        }, navController = navController
                     )
                 }
             }

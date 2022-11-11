@@ -17,11 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.BackHeaderBar
+import com.finance.android.ui.components.ButtonColor
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.screens.point.InputExchangePoint
 import com.finance.android.utils.Response
@@ -32,6 +34,7 @@ import com.finance.android.viewmodels.PointViewModel
 @Composable
 fun PointExchangeFragment(
     pointViewModel: PointViewModel = hiltViewModel(),
+    navController: NavController,
     onClose: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
@@ -46,8 +49,8 @@ fun PointExchangeFragment(
                 pointViewModel = pointViewModel,
                 userInfo = (pointViewModel.myInfo.value as Response.Success).data
                 )
-                1 -> SuccessScreen(false, pointViewModel, onClose = onClose)
-                else -> SuccessScreen(false, pointViewModel, onClose = onClose)
+                1 -> SuccessScreen(pointViewModel, onClose = onClose)
+                else -> FailureScreen(pointViewModel, onClose = onClose)
             }
         }
         is Response.Failure -> Loading("실패", onClose = onClose)
@@ -89,12 +92,10 @@ private fun Screen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SuccessScreen(
-    status : Boolean = true,
     pointViewModel: PointViewModel,
     onClose: () -> Unit = {},
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_done))
-    val failureComposition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_failed))
     val progress by animateLottieCompositionAsState(
         composition,
         iterations = LottieConstants.IterateForever
@@ -121,7 +122,7 @@ private fun SuccessScreen(
         horizontalAlignment = Alignment.CenterHorizontally) {
         Spacer(modifier = Modifier.padding(20.dp))
         LottieAnimation(
-            composition = if(status) composition else failureComposition,
+            composition = composition,
             progress = { progress },
             modifier = Modifier.size(100.dp),
             dynamicProperties = dynamicProperties
@@ -135,9 +136,7 @@ private fun SuccessScreen(
         androidx.compose.material.Text(text = "전환완료", fontSize = 25.sp)
         Spacer(modifier = Modifier.padding(10.dp))
         com.finance.android.ui.components.TextButton(
-            onClick = {
-                onClose
-            },
+            onClick = onClose,
             text = "완료",
             modifier = Modifier.withBottomButton(),
             buttonType = ButtonType.ROUNDED,
@@ -145,6 +144,46 @@ private fun SuccessScreen(
             )
     }
 }
+
+@Composable
+private fun FailureScreen(
+    pointViewModel: PointViewModel,
+    onClose: () -> Unit,
+) {
+    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_failed))
+    val progress by animateLottieCompositionAsState(
+        composition,
+        iterations = LottieConstants.IterateForever
+    )
+    Column(  modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.surface),
+        horizontalAlignment = Alignment.CenterHorizontally) {
+        Spacer(modifier = Modifier.padding(20.dp))
+        LottieAnimation(
+            composition = composition,
+            progress = { progress },
+            modifier = Modifier.size(100.dp),
+        )
+        Spacer(modifier = Modifier.padding(10.dp))
+
+        androidx.compose.material.Text(
+            text = "포인트 전환 실패",
+            fontSize = 25.sp,
+        )
+        androidx.compose.material.Text(text = "문제가 계속될시 문의주세요", fontSize = 25.sp)
+        Spacer(modifier = Modifier.padding(10.dp))
+        com.finance.android.ui.components.TextButton(
+            onClick = onClose,
+            buttonColor = ButtonColor.ERROR,
+            text = "확인",
+            modifier = Modifier.withBottomButton(),
+            buttonType = ButtonType.ROUNDED,
+            border = false
+            )
+    }
+}
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Preview

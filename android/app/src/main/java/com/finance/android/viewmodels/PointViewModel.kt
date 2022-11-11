@@ -35,7 +35,7 @@ class PointViewModel @Inject constructor(
 
     fun launchPointExchange() {
         viewModelScope.launch {
-            success.value = 1
+            success.value = 0
             getUserInfo()
         }
     }
@@ -100,7 +100,7 @@ class PointViewModel @Inject constructor(
                     success.value = 1
                     exchangedPoint.value = pointExchangeRequestDto.point
 //                    launchPointHistory()
-                } else success.value = 2
+                } else if(it is Response.Failure) success.value = 2
             }
     }
 }
