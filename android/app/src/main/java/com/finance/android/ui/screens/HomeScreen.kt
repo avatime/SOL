@@ -35,7 +35,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
 import com.finance.android.services.WalkService

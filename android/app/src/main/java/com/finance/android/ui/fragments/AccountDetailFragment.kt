@@ -3,7 +3,6 @@ package com.finance.android.ui.fragments
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme
@@ -14,7 +13,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.R
-import com.finance.android.ui.components.AccountCardComp
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.UserBalanceInfo
 import com.finance.android.ui.components.showHistoryList

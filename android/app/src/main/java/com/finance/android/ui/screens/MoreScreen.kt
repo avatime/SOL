@@ -162,6 +162,7 @@ fun Screen(
                 modifier = Modifier
                     .size(60.dp)
                     .padding(end = dimensionResource(R.dimen.padding_small))
+                    .clip(CircleShape)
                     .clickable { showProfileList = !showProfileList }
             )
 
@@ -248,6 +249,7 @@ fun MoreMenuItem(
         Row(
             modifier = Modifier
                 .withBottomButton()
+                .clip(RoundedCornerShape(10.dp))
                 .clickable { onClickMenu() },
             verticalAlignment = Alignment.CenterVertically
         ) {
