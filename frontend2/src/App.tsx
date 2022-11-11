@@ -20,8 +20,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/send" element={<SendPage />} />
-          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/remit/a" element={<SendPage />} />
+          <Route path="/remit" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

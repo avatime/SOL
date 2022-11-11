@@ -26,6 +26,8 @@ function SendPage() {
   const value = 1000000;
   //
 
+  // decodeURIComponent(window.atob("JUVCJUE2JUFDJUVDJUEzJUJDJUVDJTk3JTg5JTJGJUVBJUI4JUIwJUVDJTk3JTg1JTJGMTg5NzM4NDA2NDU2OTElMkY1NQ=="))
+
   const [openBottomDialog, setOpenBottomDialog] = useState(false);
   const [bankInfo, setBankInfo] = useState<BankInfoRes | null>(null);
   const [acReceive, setAcReceive] = useState("");
