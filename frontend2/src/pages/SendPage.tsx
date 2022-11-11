@@ -1,10 +1,27 @@
-import { Box, Button, Stack, Typography } from "@mui/material";
+import {
+  Backdrop,
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  Modal,
+  Slide,
+  Stack,
+  Typography,
+} from "@mui/material";
+import { TransitionProps } from "@mui/material/transitions";
+import React from "react";
+import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import SelectBankBottomDialog from "../components/SelectBankBottomDialog";
 
 function SendPage() {
   const [searchParams] = useSearchParams();
 
-  const senderName = "'보내는 사람 이름'"
+  const senderName = "'보내는 사람 이름'";
   // api 쓸 때, 써야할 녀석들
   const acName = "";
   const acTag = "";
@@ -12,6 +29,8 @@ function SendPage() {
   const acReceive = "";
   const value = 1000000;
   //
+
+  const [openBottomDialog, setOpenBottomDialog] = useState(false);
 
   return (
     <Box p={2} display="flex" flexDirection="column" height="100vh">
@@ -22,15 +41,21 @@ function SendPage() {
         </Typography>
       </Stack>
       <Typography mt={2} variant="subtitle1" component="h6" color="primary">
-        {senderName}님이<br/>{value.toLocaleString()}원을 보냈어요.
+        {senderName}님이
+        <br />
+        {value.toLocaleString()}원을 보냈어요.
       </Typography>
       <Typography mt={2} variant="h4" component="h4" fontWeight="bold">
         어디로 받을까요?
       </Typography>
-      <Box flex="1"/>
-      <Button variant="contained" size="large">
+      <Box flex="1" />
+      <Button variant="contained" size="large" onClick={() => setOpenBottomDialog(true)}>
         입금 받기
       </Button>
+      <SelectBankBottomDialog
+        open={openBottomDialog}
+        onClose={() => setOpenBottomDialog(false)}
+      />
     </Box>
   );
 }
