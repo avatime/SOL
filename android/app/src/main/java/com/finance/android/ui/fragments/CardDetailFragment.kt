@@ -56,8 +56,10 @@ fun CardDetailFragment(
             .padding(top = innerPaddingModifier.calculateTopPadding())
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)) {
+            var cdSecret = cdNo.substring(0 until 4) + "-****-****-" + cdNo.substring(12 until 16)
             when (val data = cardViewModel.getLoadCardHistory()) {
                 is Response.Success -> {
+                    val cardHistoryList = (cardViewModel.cardHistory.value as Response.Success).data
                     Column(
                         modifier = Modifier
                             .fillMaxSize()
@@ -69,14 +71,17 @@ fun CardDetailFragment(
                             .verticalScroll(rememberScrollState())
                     ) {
                         CardDetailComp(
-                            modifier = Modifier.background(color = MaterialTheme.colorScheme.surface),
+                            modifier = Modifier,
                             cdName = cdName,
                             cdImgPath = cdImgPath,
-                            cdNo = cdNo,
+                            cdNo = cdSecret,
                             balance = balance
                         )
-//                        showHistoryList(modifier = Modifier.weight(1.0f),
-//                            historyList = List(accountHistoryList.size) {i -> accountHistoryList[i].toEntity()})
+                        showHistoryList(modifier = Modifier.weight(1.0f),
+                            historyList = List(cardHistoryList.size) {i -> cardHistoryList[i].toEntity()},
+                            emptyMessage = "사용 내역이 없어요.",
+                            type = "카드"
+                        )
                     }
                 }
                 is Response.Loading -> {
