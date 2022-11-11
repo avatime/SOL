@@ -126,9 +126,9 @@ class CardServiceImpl(
         val creditInfoList = ArrayList<CardRecommendInfoRes>()
         val checkInfoList = ArrayList<CardRecommendInfoRes>()
         val creditList = mutableSetOf<Int>()
-        while (creditList.size < 10){ creditList.add((1..99).random())}
+        while (creditList.size < 15){ creditList.add((1..99).random())}
         val checkList = mutableSetOf<Int>()
-        while (checkList.size < 10){ checkList.add((100..199).random())}
+        while (checkList.size < 15){ checkList.add((100..199).random())}
 
         for (credit in creditList){
             val cardProduct = cardProductRepository.findByCdPdCode(credit.toLong())
