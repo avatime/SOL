@@ -168,7 +168,7 @@ fun showHistoryList(
                             contentDescription = "",
                             modifier = Modifier
                                 .clip(CircleShape)
-                                .clickable {
+                                .clickable (enabled = YearMonth.from(LocalDateTime.now()).isAfter(currentMonth.value)) {
                                     column = 0
                                     if (YearMonth
                                             .from(LocalDateTime.now())
