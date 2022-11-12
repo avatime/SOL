@@ -137,6 +137,19 @@ class GroupAccountViewModel @Inject constructor(
         }
     }
 
+    // 회비 정보
+    private val _groupAccountInfo = mutableStateOf<Response<PublicAccountResponseDto>>(Response.Loading)
+    val groupAccountInfo = _groupAccountInfo
+    fun postGroupAccountInfo(paId: Int){
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postGroupAccountInfo(GroupIdRequestDto(paId))
+            }.collect {
+                _groupAccountInfo.value = it
+            }
+        }
+    }
+
     //계좌잔액조회
     val representAccountBalance = mutableStateOf("")
     fun getRepresentAccountBalance() {
@@ -192,5 +205,7 @@ class GroupAccountViewModel @Inject constructor(
             }
         }
     }
+
+
 }
 

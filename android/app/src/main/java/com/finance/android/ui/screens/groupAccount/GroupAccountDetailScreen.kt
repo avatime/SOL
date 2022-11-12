@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -22,23 +23,29 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
+import com.finance.android.domain.dto.request.GroupIdRequestDto
+import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Const
+import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun GroupAccountDetailScreen(
     navController: NavController,
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier,
-    paId : Int,
-    paName : String,
-    amount : Int
 ) {
-    fun lunch(){
+    fun launch(){
+        groupAccountViewModel.postGroupAccountInfo(groupAccountViewModel.paId.value)
+    }
+
+    LaunchedEffect(Unit) {
+        launch()
     }
 
     Column(
@@ -49,18 +56,28 @@ fun GroupAccountDetailScreen(
 
         Row(
             modifier = modifier.padding(32.dp)
+
         ) {
             Column() {
-                Text(
-                    text = paName,
-                    fontSize = 20.sp
-                )
-                Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_small)))
-                Text(
-                    text = amount.toString(),
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold
-                )
+                when (val response = groupAccountViewModel.groupAccountInfo.value) {
+                    is Response.Failure -> {
+                        androidx.compose.material.Text(text = "실패")
+                    }
+                    is Response.Loading -> AnimatedLoading(text = "")
+                    is Response.Success -> {
+                        Text(
+                            text = response.data.paName,
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_small)))
+                        Text(
+                            text = response.data.amount.toString(),
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+
             }
         }
         val list = listOf("회비", "입출금", "친구")
@@ -90,7 +107,14 @@ fun GroupAccountDetailScreen(
                     Tab(
                         selected = selected,
                         onClick = { selectedIndex.value = index },
-                        text = { androidx.compose.material.Text(text = text, fontSize = 16.sp, softWrap = false, maxLines = 1 ) },
+                        text = {
+                            androidx.compose.material.Text(
+                                text = text,
+                                fontSize = 16.sp,
+                                softWrap = false,
+                                maxLines = 1
+                            )
+                        },
                         modifier = Modifier.width(80.dp),
                         selectedContentColor = Color.Black,
                         unselectedContentColor = Disabled,

@@ -65,20 +65,15 @@ fun GroupAccountFragment(
             }
 
             composable(
-                route = "${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/{paId}/{paName}/{amount}",
+                route = "${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/{paId}",
                 arguments = listOf(
                     navArgument(name = "paId") { type = NavType.IntType },
-                    navArgument(name = "paName") { type = NavType.StringType},
-                    navArgument(name = "amount") { type = NavType.IntType}
                 )
             ) {
                 GroupAccountDetailScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
                     modifier = modifier,
-                    paId = it.arguments!!.getInt("paId"),
-                    paName = it.arguments!!.getString("paName")!!,
-                    amount = it.arguments!!.getInt("amount")
                 )
 
             }
