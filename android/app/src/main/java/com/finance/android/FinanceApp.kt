@@ -58,7 +58,6 @@ fun FinanceApp() {
                     cpName = it.arguments!!.getString("cpName")!!,
                     acNo = it.arguments!!.getString("acNo")!!,
                     cpLogo = it.arguments!!.getString("cpLogo")!!,
-                    acMain = it.arguments!!.getInt("acMain"),
                     navController = navController,
                     onClose = { navController.popBackStack() })
             }

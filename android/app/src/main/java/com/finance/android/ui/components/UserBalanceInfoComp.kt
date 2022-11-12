@@ -18,7 +18,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -28,7 +27,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.palette.graphics.Palette
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.finance.android.R
 import com.finance.android.ui.theme.MainColor
 import com.finance.android.utils.BitmapUtil
@@ -45,11 +43,13 @@ fun UserBalanceInfo(
     acNo: String? = "1234567890",
     balance: String = "100,000,000원",
     cpLogo: String? = null,
-    acMain: Int? = 2,
+    acMain: Int? = null,
+    onClickCrown : (acNo : String) -> Unit = {},
     onClick: () -> Unit = {}
 ) {
     val bgColor = remember { mutableStateOf(Color.Transparent) }
     val textColor = remember { mutableStateOf(Color.Unspecified) }
+    val changeAc = remember { mutableStateOf(false) }
 
     val animatedColor = animateColorAsState(bgColor.value, animationSpec = tween(1000))
     val animatedTextColor =
@@ -113,22 +113,41 @@ fun UserBalanceInfo(
                     if (acMain == 0 || acMain == 1)
                         Box(modifier = Modifier.size(27.dp)) {
                             Canvas(
-                                modifier = Modifier
+                                modifier = if (acMain == 1) Modifier
+                                    .size(27.dp)
+                                else Modifier
                                     .size(27.dp)
                                     .clip(CircleShape)
-                                    .clickable { null }
+                                    .clickable {
+                                        changeAc.value = true
+                                    }
                             ) {
                                 drawCircle(
                                     color = Color.White
                                 )
                             }
-                            if (acMain == 1) {
-                                Image(
-                                    modifier = Modifier
-                                        .size(20.dp)
-                                        .align(Alignment.Center),
-                                    painter = painterResource (R.drawable.crown),
-                                    contentDescription = null
+                            Image(
+                                modifier = Modifier
+                                    .size(20.dp)
+                                    .align(Alignment.Center),
+                                painter = painterResource (if (acMain == 1) R.drawable.crown else R.drawable.empty_crown),
+                                contentDescription = null
+                            )
+                            if (changeAc.value) {
+                                CustomDialog(
+                                    dialogType = DialogType.INFO,
+                                    dialogActionType = DialogActionType.TWO_BUTTON,
+                                    title = "대표계좌를 변경합니다",
+                                    subTitle = "다시 한번 확인해주세요",
+                                    onPositive = {
+                                        changeAc.value = false
+                                        onClickCrown(acNo!!)
+                                    },
+                                    onNegative = {
+                                        changeAc.value = false
+                                    },
+                                    positiveText = "확인",
+                                    negativeText = "취소"
                                 )
                             }
                         }
