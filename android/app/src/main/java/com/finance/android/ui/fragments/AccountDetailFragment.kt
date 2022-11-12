@@ -1,10 +1,7 @@
 package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Scaffold
@@ -18,7 +15,6 @@ import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.UserBalanceInfo
-import com.finance.android.ui.components.formatAccount
 import com.finance.android.ui.components.showHistoryList
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
@@ -33,7 +29,6 @@ fun AccountDetailFragment(
     cpName: String,
     acNo: String,
     cpLogo: String,
-    acMain: Int,
     bankViewModel: BankViewModel = hiltViewModel(),
 ) {
     fun launch() {
@@ -58,29 +53,34 @@ fun AccountDetailFragment(
                 is Response.Success -> {
                     val balance = (bankViewModel.accountBalance.value as Response.Success).data
                     val accountHistoryList = (bankViewModel.accountHistory.value as Response.Success).data
-                    Column(
-                        modifier = Modifier
-                            .fillMaxHeight()
-                            .padding(
-                                top = innerPaddingModifier.calculateTopPadding(),
-                                start = dimensionResource(R.dimen.padding_small),
-                                end = dimensionResource(R.dimen.padding_small)
+                    Box {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxHeight()
+                                .padding(
+                                    top = innerPaddingModifier.calculateTopPadding(),
+                                    start = dimensionResource(R.dimen.padding_small),
+                                    end = dimensionResource(R.dimen.padding_small)
+                                )
+                                .verticalScroll(rememberScrollState())
+                        ) {
+                            UserBalanceInfo(
+                                title = acName,
+                                cpName = cpName,
+                                acNo = acNo,
+                                balance = DecimalFormat("#,###원").format(balance) ?: "0원",
+                                cpLogo = cpLogo,
+                                acMain = bankViewModel.acMain.value,
+                                onClickCrown = {
+                                    bankViewModel.setRepAccount(acNo)
+                                },
+                                onClick = {
+                                    navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
+                                }
                             )
-                            .verticalScroll(rememberScrollState())
-                    ) {
-                        UserBalanceInfo(
-                            title = acName,
-                            cpName = cpName,
-                            acNo = formatAccount(cpName, acNo),
-                            balance = DecimalFormat("#,###원").format(balance) ?: "0원",
-                            cpLogo = cpLogo,
-                            acMain = acMain,
-                            onClick = {
-                                navController.navigate("${Const.Routes.REMIT}/${cpName}/${acNo}/${balance}")
-                            }
-                        )
-                        showHistoryList(modifier = Modifier.weight(1.0f),
-                            historyList = List(accountHistoryList.size) {i -> accountHistoryList[i].toEntity()})
+                            showHistoryList(modifier = Modifier.weight(1.0f),
+                                historyList = List(accountHistoryList.size) {i -> accountHistoryList[i].toEntity()})
+                        }
                     }
                 }
                 is Response.Loading -> {}

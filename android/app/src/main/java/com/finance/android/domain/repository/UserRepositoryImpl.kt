@@ -55,4 +55,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserProfile(): UserProfileResponseDto {
         return userService.getUserProfile()
     }
+
+    override suspend fun changeRepAccount(mainAccountDto: MainAccountDto) {
+        return userService.changeRepAccount(mainAccountDto)
+    }
 }

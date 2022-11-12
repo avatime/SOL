@@ -7,6 +7,7 @@ import com.finance.android.utils.Const
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
+import retrofit2.http.PUT
 
 interface UserService {
 
@@ -27,6 +28,9 @@ interface UserService {
 
     @GET("${Const.API_PATH}/user/account")
     suspend fun checkRepAccount(): Boolean
+
+    @PUT("${Const.API_PATH}/user/account")
+    suspend fun changeRepAccount(@Body mainAccountDto: MainAccountDto)
 
     @GET("${Const.API_PATH}/user")
     suspend fun getUserProfile() : UserProfileResponseDto
