@@ -177,7 +177,7 @@ class GroupAccountViewModel @Inject constructor(
     }
 
 
-    //회비입금금
+    //회비입금
     fun postPayDues(remitDuesRequestDto: RemitDuesRequestDto, onSuccess: () -> Unit) {
         viewModelScope.launch {
             this@GroupAccountViewModel.run {

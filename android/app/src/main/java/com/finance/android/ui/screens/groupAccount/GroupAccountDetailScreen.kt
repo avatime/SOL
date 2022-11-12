@@ -33,8 +33,14 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 fun GroupAccountDetailScreen(
     navController: NavController,
     groupAccountViewModel: GroupAccountViewModel,
-    modifier: Modifier
+    modifier: Modifier,
+    paId : Int,
+    paName : String,
+    amount : Int
 ) {
+    fun lunch(){
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,12 +52,12 @@ fun GroupAccountDetailScreen(
         ) {
             Column() {
                 Text(
-                    text = "모두의 통장 이름",
+                    text = paName,
                     fontSize = 20.sp
                 )
                 Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_small)))
                 Text(
-                    text = "금액",
+                    text = amount.toString(),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
@@ -84,7 +90,7 @@ fun GroupAccountDetailScreen(
                     Tab(
                         selected = selected,
                         onClick = { selectedIndex.value = index },
-                        text = { androidx.compose.material.Text(text = text, fontSize = 18.sp) },
+                        text = { androidx.compose.material.Text(text = text, fontSize = 16.sp, softWrap = false, maxLines = 1 ) },
                         modifier = Modifier.width(80.dp),
                         selectedContentColor = Color.Black,
                         unselectedContentColor = Disabled,
