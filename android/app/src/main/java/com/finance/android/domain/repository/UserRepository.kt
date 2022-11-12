@@ -15,4 +15,5 @@ interface UserRepository {
     suspend fun createAsset(createAssetRequestDto: CreateAssetRequestDto)
     suspend fun checkRepAccount(): Boolean
     suspend fun getUserProfile() : UserProfileResponseDto
+    suspend fun changeRepAccount(mainAccountDto: MainAccountDto)
 }
