@@ -39,7 +39,6 @@ fun GroupAccountMainScreen(
     fun launch() {
         groupAccountViewModel.getGroupAccountData()
     }
-
     LaunchedEffect(Unit) {
         launch()
     }
@@ -85,6 +84,7 @@ fun GroupAccountMainScreen(
                                         navController.navigate("${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/${paId}")
                                         groupAccountViewModel.paId.value = paId
                                     })
+
                             })
                         }
 
