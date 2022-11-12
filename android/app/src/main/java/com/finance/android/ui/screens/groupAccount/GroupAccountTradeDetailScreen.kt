@@ -39,17 +39,24 @@ fun GroupAccountTradeDetailScreen(
             .background(Color.White)
     ) {
 
-
         when (val response = groupAccountViewModel.duesTradeHistoryData.value) {
 
             is Response.Failure -> Text(text = "실패")
             is Response.Loading -> AnimatedLoading(text = "조그만 기다려주세요!")
             is Response.Success -> {
-                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    showHistoryList(modifier = Modifier.weight(1.0f),
+                showHistoryList(modifier = Modifier.weight(1.0f),
+                    historyList = List(response.data.size) { i -> response.data[i].toEntity() })
 
-                        historyList = List(response.data.size) { i -> response.data[i].toEntity() })
-                }
+
+
+
+
+
+
+
+
+
+
 
 
             }
@@ -57,24 +64,24 @@ fun GroupAccountTradeDetailScreen(
         }//end of when
 
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier.weight(1f)
-        ) {
-            Spacer(modifier = Modifier.weight(0.3f))
-            TextButton(
-                onClick = { navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) },
-                text = "입금",
-                buttonType = ButtonType.ROUNDED
-            )
-            Spacer(modifier = Modifier.weight(0.3f))
-            TextButton(
-                onClick = { navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) },
-                text = "출금",
-                buttonType = ButtonType.ROUNDED
-            )
-            Spacer(modifier = Modifier.weight(0.3f))
-        }//end of Row
+//        Row(
+//            verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.Center,
+//            modifier = Modifier.weight(1f)
+//        ) {
+//            Spacer(modifier = Modifier.weight(0.3f))
+//            TextButton(
+//                onClick = { navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) },
+//                text = "입금",
+//                buttonType = ButtonType.ROUNDED
+//            )
+//            Spacer(modifier = Modifier.weight(0.3f))
+//            TextButton(
+//                onClick = { navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) },
+//                text = "출금",
+//                buttonType = ButtonType.ROUNDED
+//            )
+//            Spacer(modifier = Modifier.weight(0.3f))
+//        }//end of Row
     }//end of column
 }
