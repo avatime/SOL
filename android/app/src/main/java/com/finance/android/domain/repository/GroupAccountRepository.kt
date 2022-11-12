@@ -1,5 +1,6 @@
 package com.finance.android.domain.repository
 
+import androidx.compose.runtime.MutableState
 import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
@@ -20,5 +21,5 @@ interface GroupAccountRepository {
     suspend fun postPayDues(@Body remitDuesRequestDto: RemitDuesRequestDto)
     suspend fun postRegistDues(@Body createDuesRequestDto: CreateDuesRequestDto)
     suspend fun putDeleteDues(@Body groupDuesRequestDto: GroupDuesRequestDto)
-    suspend fun postGroupAccountInfo(@Body groupIdRequestDto: GroupIdRequestDto) : MutableList<PublicAccountResponseDto>
+    suspend fun postGroupAccountInfo(@Body groupIdRequestDto: GroupIdRequestDto) : PublicAccountResponseDto
 }
