@@ -4,10 +4,12 @@ import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.finance.android.domain.dto.request.MainAccountDto
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.domain.dto.response.BankTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
+import com.finance.android.domain.repository.UserRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -18,8 +20,11 @@ class BankViewModel @Inject constructor(
     application: Application,
     baseRepository: BaseRepository,
     savedStateHandle: SavedStateHandle,
-    private val bankRepository: BankRepository
+    private val bankRepository: BankRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel(application, baseRepository) {
+
+    val acMain = mutableStateOf(savedStateHandle.get<Int>("acMain"))
     val accountList =
         mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
 
@@ -91,6 +96,20 @@ class BankViewModel @Inject constructor(
                 )
             }.collect {
                 accountHistory.value = it
+            }
+        }
+    }
+
+    fun setRepAccount(acNo: String) {
+        println(acNo)
+        viewModelScope.launch {
+            this@BankViewModel.run {
+                val mainAccountDto = MainAccountDto(acNo)
+                userRepository.changeRepAccount(
+                    mainAccountDto
+                )
+            }.collect {
+                acMain.value = 1
             }
         }
     }

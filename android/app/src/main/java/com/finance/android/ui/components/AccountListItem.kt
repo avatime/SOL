@@ -1,5 +1,6 @@
 package com.finance.android.ui.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -42,6 +43,7 @@ private fun Draw(
     accountName: String,
     companyName: String = "",
     companyLogoPath: String,
+    acMain: Int,
     trailing: (@Composable () -> Unit)? = null
 ) {
     Row(
@@ -53,18 +55,32 @@ private fun Draw(
             ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically) {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(companyLogoPath)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "accImage",
-                modifier = Modifier
-                    .size(40.dp)
-                    .clip(CircleShape),
-            )
+        Row(
+            modifier = Modifier.weight(1f),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box (modifier = Modifier.size(width = 40.dp, height =53.dp)) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(companyLogoPath)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "accImage",
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(40.dp)
+                        .clip(CircleShape)
+                )
+                if (acMain == 1) {
+                    Image(
+                        modifier = Modifier
+                            .size(20.dp)
+                            .align(Alignment.TopCenter),
+                        painter = painterResource(R.drawable.crown),
+                        contentDescription = null
+                    )
+                }
+            }
             Column(
                 modifier = Modifier
                     .padding(start = 8.dp)
@@ -88,6 +104,7 @@ fun AccountListItem_Normal(
     balance: Int,
     accountName: String,
     companyLogoPath: String,
+    acMain: Int
 ) {
     Draw(
         modifier = modifier
@@ -96,6 +113,7 @@ fun AccountListItem_Normal(
         balance = balance,
         accountName = accountName,
         companyLogoPath = companyLogoPath,
+        acMain = acMain
     )
 }
 
@@ -108,6 +126,7 @@ fun AccountListItem_Check(
     accountName: String,
     companyLogoPath: String,
     checked: Boolean,
+    acMain: Int,
     onClickItem: () -> Unit
 ) {
     Draw(
@@ -119,6 +138,7 @@ fun AccountListItem_Check(
         balance = balance,
         accountName = accountName,
         companyLogoPath = companyLogoPath,
+        acMain = acMain,
         trailing = {
             Icon(
                 Icons.Filled.CheckCircle,
@@ -137,6 +157,7 @@ fun AccountListItem_Remit(
     accountName: String,
     companyName : String = "",
     companyLogoPath: String,
+    acMain: Int,
     onClickItem: () -> Unit,
     onClickRemit: () -> Unit
 ) {
@@ -147,6 +168,7 @@ fun AccountListItem_Remit(
         balance = balance,
         accountName = accountName,
         companyLogoPath = companyLogoPath,
+        acMain = acMain,
         trailing = {
             TextButton(
                 onClick = { onClickRemit() },
@@ -189,6 +211,7 @@ fun AccountListItem_Select(
     accountName: String,
     companyLogoPath: String,
     selected: Boolean,
+    acMain: Int,
     onClickItem: () -> Unit
 ) {
     Draw(
@@ -204,7 +227,8 @@ fun AccountListItem_Select(
         accountNumber = accountNumber,
         balance = balance,
         accountName = accountName,
-        companyLogoPath = companyLogoPath
+        companyLogoPath = companyLogoPath,
+        acMain = acMain
     )
 }
 
@@ -215,16 +239,20 @@ fun AccountListItem_Arrow(
     balance: Int,
     accountName: String,
     companyLogoPath: String,
+    acMain: Int,
     onClickItem: () -> Unit
 ) {
     Draw(
-        modifier = modifier.clickable {
-            onClickItem()
-        },
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .clickable {
+                onClickItem()
+            },
         accountNumber = accountNumber,
         balance = balance,
         accountName = accountName,
         companyLogoPath = companyLogoPath,
+        acMain = acMain,
         trailing = {
             Icon(
                 painter = painterResource(R.drawable.arrow_forward_ios),
@@ -244,6 +272,7 @@ private fun PreviewAccountListItem_Check() {
         accountName = "accountName",
         companyLogoPath = "companyLogoPath",
         checked = true,
+        acMain = 1,
         onClickItem = {}
     )
 }
@@ -258,6 +287,7 @@ private fun PreviewAccountListItem_Remit(onClickRemit: () -> Unit = {}) {
         accountName = "accountName",
         companyName = "company",
         companyLogoPath = "https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png",
+        acMain = 1,
         onClickItem = {},
         onClickRemit = onClickRemit
     )
@@ -272,6 +302,7 @@ private fun PreviewAccountListItem_Select() {
         accountName = "accountName",
         companyLogoPath = "123",
         selected = true,
+        acMain = 1,
         onClickItem = {}
     )
 }
@@ -284,6 +315,7 @@ private fun PreviewAccountListItem_Arrow() {
         balance = 10000,
         accountName = "accountName",
         companyLogoPath = "123",
+        acMain = 1,
         onClickItem = {}
     )
 }

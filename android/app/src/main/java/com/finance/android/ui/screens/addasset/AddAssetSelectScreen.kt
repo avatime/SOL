@@ -363,6 +363,7 @@ private fun Account(
                     accountName = item.acName,
                     companyLogoPath = item.cpLogo,
                     checked = checked,
+                    acMain = item.acMain,
                     onClickItem = { onClickAccountItem(it) }
                 )
             }
@@ -425,6 +426,7 @@ private fun Stock(
                     accountName = item.acName,
                     companyLogoPath = item.cpLogo,
                     checked = checked,
+                    acMain = item.acMain,
                     onClickItem = { onClickStockAccountItem(it) }
                 )
             }
@@ -500,7 +502,8 @@ private fun PreviewAccount() {
                 balance = 10000,
                 cpName = "cpName",
                 cpLogo = "cpLogo",
-                isRegister = false
+                isRegister = false,
+                acMain = 1
             )
         },
         accountCheckList = Array(5) {
@@ -542,7 +545,8 @@ private fun PreviewStock() {
                 balance = 10000,
                 cpName = "cpName",
                 cpLogo = "cpLogo",
-                isRegister = false
+                isRegister = false,
+                acMain = 1
             )
         },
         stockAccountCheckList = Array(5) {
