@@ -12,10 +12,7 @@ import com.finance.backend.group.repository.DuesRepository
 import com.finance.backend.group.repository.PublicAccountMemberRepository
 import com.finance.backend.group.repository.PublicAccountRepository
 import com.finance.backend.group.repository.UserDuesRelationRepository
-import com.finance.backend.group.request.DuesPayReq
-import com.finance.backend.group.request.MemberInfoReq
-import com.finance.backend.group.request.RegistDueReq
-import com.finance.backend.group.request.RegistPublicAccountReq
+import com.finance.backend.group.request.*
 import com.finance.backend.group.response.*
 import com.finance.backend.profile.ProfileRepository
 import com.finance.backend.tradeHistory.TradeHistory
@@ -177,6 +174,34 @@ class GroupServiceImpl (
             val publicAccount : PublicAccount = publicAccountRepository.findById(publicAccountId).orElseGet(null) ?: throw NoSuchElementException()
             return publicAccount.toEntity()
         } else throw Exception()
+    }
+
+    override fun getMoney(accessToken: String, publicAccountWithdrawReq: PublicAccountWithdrawReq) {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }) {
+            val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user: User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
+            val state : PublicAccountMember = publicAccountMemberRepository.findByUserAndPublicAccountId(user, publicAccountWithdrawReq.publicAccountId)?: throw AuthenticationException()
+            if(state.type != "관리자") throw AuthenticationException()
+            if(publicAccountWithdrawReq.value > state.publicAccount.paVal) throw InsufficientBalanceException()
+            val account : Account = accountRepository.findByAcNo(user.account ?: throw NoAccountException()) ?: throw NoAccountException()
+            val id = publicAccountWithdrawReq.publicAccountId
+            val tradeHistory : TradeHistory = TradeHistory(
+                    state.publicAccount.paName,
+                    publicAccountWithdrawReq.value,
+                    LocalDateTime.now(),
+                    1,
+                    state.publicAccount.paName,
+                    "모임통장 $id",
+                    user.name,
+                    state.publicAccount.paName,
+                    account
+            )
+            state.publicAccount.addPaVal(-1 * publicAccountWithdrawReq.value)
+            account.deposit(publicAccountWithdrawReq.value)
+            publicAccountRepository.save(state.publicAccount)
+            accountRepository.save(account)
+            tradeHistoryRepository.save(tradeHistory)
+        }
     }
 
     fun registPaymentMonthly() {
