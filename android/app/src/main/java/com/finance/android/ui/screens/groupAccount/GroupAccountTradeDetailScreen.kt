@@ -47,41 +47,8 @@ fun GroupAccountTradeDetailScreen(
                 showHistoryList(modifier = Modifier.weight(1.0f),
                     historyList = List(response.data.size) { i -> response.data[i].toEntity() })
 
-
-
-
-
-
-
-
-
-
-
-
-
             }
 
         }//end of when
-
-
-//        Row(
-//            verticalAlignment = Alignment.CenterVertically,
-//            horizontalArrangement = Arrangement.Center,
-//            modifier = Modifier.weight(1f)
-//        ) {
-//            Spacer(modifier = Modifier.weight(0.3f))
-//            TextButton(
-//                onClick = { navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) },
-//                text = "입금",
-//                buttonType = ButtonType.ROUNDED
-//            )
-//            Spacer(modifier = Modifier.weight(0.3f))
-//            TextButton(
-//                onClick = { navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) },
-//                text = "출금",
-//                buttonType = ButtonType.ROUNDED
-//            )
-//            Spacer(modifier = Modifier.weight(0.3f))
-//        }//end of Row
     }//end of column
 }

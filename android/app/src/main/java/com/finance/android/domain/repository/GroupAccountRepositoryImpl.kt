@@ -1,5 +1,6 @@
 package com.finance.android.domain.repository
 
+import androidx.compose.runtime.MutableState
 import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
@@ -54,7 +55,7 @@ class GroupAccountRepositoryImpl @Inject constructor(
         return groupAccountService.putDeleteDues(groupDuesRequestDto)
     }
 
-    override suspend fun postGroupAccountInfo(groupIdRequestDto: GroupIdRequestDto): MutableList<PublicAccountResponseDto> {
+    override suspend fun postGroupAccountInfo(groupIdRequestDto: GroupIdRequestDto): PublicAccountResponseDto {
         return groupAccountService.postGroupAccountInfo(groupIdRequestDto)
     }
 }
