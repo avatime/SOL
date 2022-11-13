@@ -5,4 +5,4 @@ RUN npm i -y
 COPY . .
 
 EXPOSE 3000
-CMD [ "npm", "-s", "build"]
+CMD [ "npm", "start"]
