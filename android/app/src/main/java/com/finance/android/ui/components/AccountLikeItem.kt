@@ -77,6 +77,7 @@ fun AccountLikeItem(
                 text = name, fontSize = dimensionResource(R.dimen.account_like_name).value.sp,
                 overflow = TextOverflow.Ellipsis,
                 softWrap = false,
+                maxLines = 1
 
             )
             Spacer(modifier = Modifier.padding(3.dp))
@@ -84,14 +85,18 @@ fun AccountLikeItem(
                 Text(
                     text = cpName,
                     fontSize = dimensionResource(R.dimen.account_like_account_number).value.sp,
-                    color = Color(R.color.noActiveColor)
+                    color = Color(R.color.noActiveColor),
+                    softWrap = false,
+                    maxLines = 1
 
                 )
                 Spacer(modifier = Modifier.padding(1.dp))
                 Text(
                     text = accountNumber,
                     fontSize = dimensionResource(R.dimen.account_like_account_number).value.sp,
-                    color = Color(R.color.noActiveColor)
+                    color = Color(R.color.noActiveColor),
+                    softWrap = false,
+                    maxLines = 1
                 )
 
             }

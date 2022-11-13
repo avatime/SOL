@@ -97,7 +97,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                                     .clip(CircleShape)
                             )
                             Spacer(modifier = Modifier.padding(5.dp))
-                            Text(text = "${remitViewModel.selectedReceiveBank.value!!.cpName}은행")
+                            Text(text = "${remitViewModel.selectedReceiveBank.value!!.cpName}")
                         }
                     }
 

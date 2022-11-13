@@ -58,8 +58,8 @@ fun HeaderRemitTabBar(
 
                     selected = selected,
                     onClick = { selectedIndex = index },
-                    text = { Text(text = text, fontSize = 18.sp) },
-                    modifier = Modifier.width(80.dp),
+                    text = { Text(text = text, fontSize = 18.sp, softWrap = false, maxLines = 1) },
+                    modifier = Modifier.width(90.dp),
                     selectedContentColor = Color.Black,
                     unselectedContentColor = Disabled,
 

@@ -44,7 +44,7 @@ fun CompanyItem(
                 .clip(CircleShape)
         )
         Spacer(modifier = Modifier.padding(5.dp))
-        Text(text = "${cpName}은행" , softWrap = true, maxLines = 1, )
+        Text(text = cpName, softWrap = true, maxLines = 1, )
     }
 }
 
