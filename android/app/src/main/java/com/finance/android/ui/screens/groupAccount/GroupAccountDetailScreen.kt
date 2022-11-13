@@ -22,7 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
-import com.finance.android.domain.dto.request.GroupIdRequestDto
 import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
@@ -37,6 +36,7 @@ fun GroupAccountDetailScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier,
 ) {
+
     fun launch() {
         groupAccountViewModel.postGroupAccountInfo(groupAccountViewModel.paId.value)
     }
@@ -50,30 +50,26 @@ fun GroupAccountDetailScreen(
             .fillMaxSize()
             .background(color = MaterialTheme.colorScheme.surface)
     ) {
-        Column() {
-            when (val response = groupAccountViewModel.groupAccountInfo.value) {
-                is Response.Failure -> {
-                    androidx.compose.material.Text(text = "실패")
-                }
-                is Response.Loading -> AnimatedLoading(text = "")
-                is Response.Success -> {
-                    Text(
-                        text = response.data.paName,
-                        fontSize = 20.sp,
-                        modifier = Modifier.padding(start = 25.dp)
-                    )
-                    Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_small)))
-                    Text(
-                        text = response.data.amount.toString(),
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.padding(start = 25.dp)
-                    )
-                }
+        when (val response = groupAccountViewModel.groupAccountInfo.value) {
+            is Response.Failure -> {
+                androidx.compose.material.Text(text = "실패")
             }
-
+            is Response.Loading -> AnimatedLoading(text = "")
+            is Response.Success -> {
+                Text(
+                    text = response.data.paName,
+                    fontSize = 20.sp,
+                    modifier = Modifier.padding(start = 25.dp)
+                )
+                Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_small)))
+                Text(
+                    text = response.data.amount.toString(),
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(start = 25.dp)
+                )
+            }
         }
-
         Spacer(modifier = Modifier.padding(10.dp))
         Row(
             modifier = modifier.padding(32.dp), verticalAlignment = Alignment.CenterVertically,
