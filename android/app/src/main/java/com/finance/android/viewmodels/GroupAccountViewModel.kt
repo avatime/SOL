@@ -41,6 +41,8 @@ class GroupAccountViewModel @Inject constructor(
     val duesName = mutableStateOf("")
     val duesBalance = mutableStateOf(1000)
 
+    val isBackToMain = mutableStateOf(false)
+
     //모임 통장 조회
     private val _groupAccountData =
         mutableStateOf<Response<MutableList<PublicAccountResponseDto>>>(Response.Loading)

@@ -25,22 +25,25 @@ fun GroupAccountFragment(
 ) {
     val innerNavController = rememberNavController()
     Scaffold(topBar = {
-        BackHeaderBar(text = "", onClickBack = { innerNavController.popBackStack() })
+        BackHeaderBar(text = "", onClickBack = {
+            if (!groupAccountViewModel.isBackToMain.value) innerNavController.popBackStack() else
+                navController.popBackStack()
+        })
     }) { innerPaddingModifier ->
         val modifier = Modifier.padding(top = innerPaddingModifier.calculateTopPadding())
         NavHost(
             navController = innerNavController, startDestination = Const.GROUP_ACCOUNT_MAIN_SCREEN
         ) {
             composable(Const.GROUP_ACCOUNT_MAIN_SCREEN) {
+                groupAccountViewModel.isBackToMain.value = true
                 GroupAccountMainScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
                     modifier = modifier
                 )
             }
-
-
             composable(Const.GROUP_ACCOUNT_MAKE_SCREEN) {
+                groupAccountViewModel.isBackToMain.value = false
                 GroupAccountMakeScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -49,6 +52,7 @@ fun GroupAccountFragment(
             }
 
             composable(Const.GROUP_ACCOUNT_NAME_SCREEN) {
+                groupAccountViewModel.isBackToMain.value = false
                 GroupAccountNameScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -57,6 +61,7 @@ fun GroupAccountFragment(
             }
 
             composable(Const.GROUP_ACCOUNT_FRIEND_SCREEN) {
+                groupAccountViewModel.isBackToMain.value = false
                 GroupAccountFriendScreen(
                     groupAccountViewModel = groupAccountViewModel,
                     navController = innerNavController,
@@ -70,6 +75,7 @@ fun GroupAccountFragment(
                     navArgument(name = "paId") { type = NavType.IntType },
                 )
             ) {
+                groupAccountViewModel.isBackToMain.value = false
                 GroupAccountDetailScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -79,6 +85,7 @@ fun GroupAccountFragment(
             }
 
             composable(Const.GROUP_ACCOUNT_COMPLETED) {
+                groupAccountViewModel.isBackToMain.value = false
                 GroupAccountOKScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -88,6 +95,7 @@ fun GroupAccountFragment(
 
 
             composable(Const.DUES_MAKE_NAME_SCREEN) {
+                groupAccountViewModel.isBackToMain.value = false
                 DuesMakeNameScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -99,6 +107,7 @@ fun GroupAccountFragment(
                 "${Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN}/{duesVal}",
                 arguments = listOf(navArgument(name = "duesVal") { type = NavType.IntType })
             ) {
+                groupAccountViewModel.isBackToMain.value = false
                 GroupAccountInputMoneyScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -107,6 +116,7 @@ fun GroupAccountFragment(
             }
 
             composable(Const.DUES_MAKE_MONEY_SCREEN) {
+                groupAccountViewModel.isBackToMain.value = false
                 DuesMakeMoneyScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -115,6 +125,7 @@ fun GroupAccountFragment(
             }
 
             composable(Const.DUES_MEMBER_LIST) {
+                groupAccountViewModel.isBackToMain.value = false
                 DuesMemberListScreen(
                     groupAccountViewModel = groupAccountViewModel,
                     navController = innerNavController,
@@ -123,6 +134,7 @@ fun GroupAccountFragment(
             }
 
             composable(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) {
+                groupAccountViewModel.isBackToMain.value = false
                 GroupAccontVerifyMoneyScreen(
                     navController = innerNavController,
                     modifier = modifier,
