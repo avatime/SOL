@@ -1,10 +1,14 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
+import android.content.Intent
+import android.net.Uri
+import android.util.Base64
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
+import com.finance.android.datastore.UserStore
 import com.finance.android.domain.dto.request.AccountNumberDto
 import com.finance.android.domain.dto.request.CheckAccountRequestDto
 import com.finance.android.domain.dto.request.RemitInfoRequestDto
@@ -15,9 +19,11 @@ import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.RemitRepository
+import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,6 +55,16 @@ class RemitViewModel @Inject constructor(
                 .collect {
                     _recommendedAccountData.value = it
                 }
+        }
+    }
+
+    //송금 내 계좌 조회
+    private val _recentMyAccountData =
+        mutableStateOf<Response<MutableList<RecentMyTradeResponseDto>>>(Response.Loading)
+    val recentMyAccountData = _recentMyAccountData
+
+    fun getRecentMyAccountData() {
+        viewModelScope.launch {
             this@RemitViewModel.run {
                 bankRepository.getRecentMyAccount()
             }.collect {
@@ -68,11 +84,6 @@ class RemitViewModel @Inject constructor(
             Response.Success(Unit)
         }
     }
-
-    //송금 내 계좌 조회
-    private val _recentMyAccountData =
-        mutableStateOf<Response<MutableList<RecentMyTradeResponseDto>>>(Response.Loading)
-    val recentMyAccountData = _recentMyAccountData
 
     //모든 은행 기업 조회
     private val _allBankData =
@@ -172,6 +183,19 @@ class RemitViewModel @Inject constructor(
         onSuccess: () -> Unit
     ) {
         viewModelScope.launch {
+            UserStore(getApplication()).getValue(UserStore.KEY_USER_NAME).collect {
+                val link = "${Const.WEB_API}remit/${encodeValue("$it/$accountName/$accountNumber/$value")}"
+
+                val smsUri = Uri.parse("sms:${phoneNum.value.replace("-", "")}");
+                val sendIntent = Intent(Intent.ACTION_SENDTO, smsUri).apply {
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    putExtra("sms_body", link)
+                }
+                getApplication<Application>().startActivity(sendIntent)
+            }
+        }
+
+        viewModelScope.launch {
             this@RemitViewModel.run {
                 remitRepository.postRemitToPhone(
                     RemitPhoneRequestDto(
@@ -192,6 +216,10 @@ class RemitViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun encodeValue(value: String): String {
+        return Base64.encodeToString(URLEncoder.encode(value, "UTF-8").toByteArray(), Base64.DEFAULT)
     }
 
     //북마크
