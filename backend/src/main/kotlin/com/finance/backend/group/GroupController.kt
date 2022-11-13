@@ -73,7 +73,7 @@ class GroupController (private val groupService : GroupService) {
         return ResponseEntity.status(200).body(groupService.getPublicAccountInfo(accessToken, publicAccountReq.paId))
     }
 
-    @PostMapping("/out")
+    @PostMapping("/withdraw")
     fun publicAccountDuesOut(@RequestHeader("access_token") accessToken: String, publicAccountWithdrawReq: PublicAccountWithdrawReq) : ResponseEntity<Any?> {
         return ResponseEntity.status(200).body(groupService.getMoney(accessToken, publicAccountWithdrawReq))
     }
