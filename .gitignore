@@ -49,5 +49,6 @@ application.properties
 application.yml
 
 frontend/
+frontend2/
 android/
 fastapi/

@@ -1,6 +1,7 @@
 package com.finance.backend.group
 
 import com.finance.backend.group.request.DuesPayReq
+import com.finance.backend.group.request.PublicAccountWithdrawReq
 import com.finance.backend.group.request.RegistDueReq
 import com.finance.backend.group.request.RegistPublicAccountReq
 import com.finance.backend.group.response.*
@@ -17,4 +18,5 @@ interface GroupService {
     fun createDue(accessToken: String, registDueReq: RegistDueReq)
     fun disableExistDue(accessToken: String, dueId: Long)
     fun getPublicAccountInfo(accessToken: String, publicAccountId: Long) : PublicAccountRes
+    fun getMoney(accessToken: String, publicAccountWithdraw: PublicAccountWithdrawReq)
 }
