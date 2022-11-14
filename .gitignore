@@ -16,5 +16,5 @@ local.properties
 
 backend/
 frontend/
-frontend2/
 fastapi/
+frontend2/
