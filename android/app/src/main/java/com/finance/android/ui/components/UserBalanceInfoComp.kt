@@ -49,12 +49,12 @@ fun UserBalanceInfo(
     onClick: () -> Unit = {}
 ) {
     val bgColor = remember { mutableStateOf(Color.Transparent) }
-    val textColor = remember { mutableStateOf(Color.Unspecified) }
+    val textColor = remember { mutableStateOf(Color.Transparent) }
     val changeAc = remember { mutableStateOf(false) }
 
-    val animatedColor = animateColorAsState(bgColor.value, animationSpec = tween(1000))
+    val animatedColor = animateColorAsState(bgColor.value, animationSpec = tween(500))
     val animatedTextColor =
-        animateColorAsState(textColor.value, animationSpec = tween(1000))
+        animateColorAsState(textColor.value, animationSpec = tween(500))
 
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
