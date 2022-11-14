@@ -6,7 +6,9 @@ import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
 import com.finance.android.domain.dto.response.PublicTradeResponseDto
+import com.finance.android.utils.Const
 import retrofit2.http.Body
+import retrofit2.http.POST
 
 interface GroupAccountRepository {
 
@@ -22,4 +24,6 @@ interface GroupAccountRepository {
     suspend fun postRegistDues(@Body createDuesRequestDto: CreateDuesRequestDto)
     suspend fun putDeleteDues(@Body groupDuesRequestDto: GroupDuesRequestDto)
     suspend fun postGroupAccountInfo(@Body groupIdRequestDto: GroupIdRequestDto) : PublicAccountResponseDto
+    suspend fun postWithdrawDues(@Body groupWithdrawDuesRequestDto: GroupWithdrawDuesRequestDto)
+    suspend fun postDeposit(@Body groupDepositRequestDto: GroupDepositRequestDto)
 }

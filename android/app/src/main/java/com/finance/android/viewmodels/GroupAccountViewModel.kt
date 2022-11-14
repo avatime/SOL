@@ -7,10 +7,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.finance.android.domain.dto.request.CreateDuesRequestDto
-import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
-import com.finance.android.domain.dto.request.GroupIdRequestDto
-import com.finance.android.domain.dto.request.RemitDuesRequestDto
+import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.DuesResponseDto
 import com.finance.android.domain.dto.response.FriendResponseDto
 import com.finance.android.domain.dto.response.PublicAccountResponseDto
@@ -42,6 +39,9 @@ class GroupAccountViewModel @Inject constructor(
     val duesBalance = mutableStateOf(1000)
 
     val isBackToMain = mutableStateOf(false)
+
+    //1-> 회비입금 2-> 돈 입금 3-> 돈출금
+    val screenType = mutableStateOf(0)
 
     //모임 통장 조회
     private val _groupAccountData =
@@ -89,16 +89,17 @@ class GroupAccountViewModel @Inject constructor(
                 )
             }.collect {
                 if (it is Response.Success) {
-                    Log.i("remitAccount", "전번도 갓찬영")
+                    Log.i("group", "모임통장 생성")
                     onSuccess()
                 } else if (it is Response.Failure) {
-                    Log.i("remitAccount", "전번도 김챤챤영 ㅡㅡ")
+                    Log.i("group", "모임통장 생성 실패")
                 }
             }
         }
 
     }
-    fun onClickDeleteFriend(index: Int){
+
+    fun onClickDeleteFriend(index: Int) {
         selectFriendsList!![index].value = false
     }
 
@@ -107,18 +108,18 @@ class GroupAccountViewModel @Inject constructor(
     fun makeGroupDues(
         createDuesRequestDto: CreateDuesRequestDto,
         onSuccess: () -> Unit
-    ){
+    ) {
         viewModelScope.launch {
             this@GroupAccountViewModel.run {
                 groupAccountRepository.postRegistDues(
                     createDuesRequestDto
                 )
-            }.collect{
+            }.collect {
                 if (it is Response.Success) {
-                    Log.i("remitAccount", "회비도 갓찬영")
+                    Log.i("group", "회비도 갓찬영")
                     onSuccess()
                 } else if (it is Response.Failure) {
-                    Log.i("remitAccount", "회비도 김챤챤영 ㅡㅡ")
+                    Log.i("group", "회비도 김챤챤영 ㅡㅡ")
                 }
             }
         }
@@ -140,9 +141,10 @@ class GroupAccountViewModel @Inject constructor(
     }
 
     // 회비 정보
-    private val _groupAccountInfo = mutableStateOf<Response<PublicAccountResponseDto>>(Response.Loading)
+    private val _groupAccountInfo =
+        mutableStateOf<Response<PublicAccountResponseDto>>(Response.Loading)
     val groupAccountInfo = _groupAccountInfo
-    fun postGroupAccountInfo(paId: Int){
+    fun postGroupAccountInfo(paId: Int) {
         viewModelScope.launch {
             this@GroupAccountViewModel.run {
                 groupAccountRepository.postGroupAccountInfo(GroupIdRequestDto(paId))
@@ -156,32 +158,34 @@ class GroupAccountViewModel @Inject constructor(
     val representAccountBalance = mutableStateOf("")
     fun getRepresentAccountBalance() {
         viewModelScope.launch {
-            this@GroupAccountViewModel.run{
+            this@GroupAccountViewModel.run {
                 bankRepository.getRepresentAccountBalance()
-            }.collect{
+            }.collect {
                 representAccountBalance.value = it.toString()
             }
         }
     }
 
     //전체 회비 조회
-    private val _duesHistoryData = mutableStateOf<Response<MutableList<DuesResponseDto>>>(Response.Loading)
+    private val _duesHistoryData =
+        mutableStateOf<Response<MutableList<DuesResponseDto>>>(Response.Loading)
     val duesHistoryData = _duesHistoryData
     fun postDuesHistory(paId: Int) {
         viewModelScope.launch {
             this@GroupAccountViewModel.run {
                 groupAccountRepository.postDuesHistory(GroupIdRequestDto(paId))
             }.collect {
-               _duesHistoryData.value = it
+                _duesHistoryData.value = it
             }
         }
     }
 
 
     // 입출금 내역 조회
-    private val _duesTradeHistoryData = mutableStateOf<Response<MutableList<PublicTradeResponseDto>>>(Response.Loading)
+    private val _duesTradeHistoryData =
+        mutableStateOf<Response<MutableList<PublicTradeResponseDto>>>(Response.Loading)
     val duesTradeHistoryData = _duesTradeHistoryData
-    fun getDuesTradeHistory(paId: Int){
+    fun getDuesTradeHistory(paId: Int) {
         viewModelScope.launch {
             this@GroupAccountViewModel.run {
                 groupAccountRepository.postTradeHistory(GroupIdRequestDto(paId))
@@ -197,7 +201,7 @@ class GroupAccountViewModel @Inject constructor(
         viewModelScope.launch {
             this@GroupAccountViewModel.run {
                 groupAccountRepository.postPayDues(remitDuesRequestDto)
-            }.collect{
+            }.collect {
                 if (it is Response.Success) {
                     Log.i("group", "회비 성공")
                     onSuccess()
@@ -208,6 +212,41 @@ class GroupAccountViewModel @Inject constructor(
         }
     }
 
+    //걍 입금
+    fun postDeposit(groupDepositRequestDto: GroupDepositRequestDto, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postDeposit(groupDepositRequestDto)
+            }.collect{
+                if (it is Response.Success) {
+                    Log.i("group", "돈 입금성공")
+                    onSuccess()
+                } else if (it is Response.Failure) {
+                    Log.i("group", "돈 입금성공XXXXX")
+                }
+            }
+        }
+    }
 
+    //돈 출금
+    fun postWithdraw(groupWithdrawDuesRequestDto: GroupWithdrawDuesRequestDto, onSuccess: () -> Unit){
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+                groupAccountRepository.postWithdrawDues(groupWithdrawDuesRequestDto)
+            }.collect{
+                if (it is Response.Success) {
+                    Log.i("group", "돈 출금성공")
+                    onSuccess()
+                } else if (it is Response.Failure) {
+                    Log.i("group", "돈 출금성공XXXXX")
+                }
+            }
+        }
+    }
 }
+
+
+
+
+
 

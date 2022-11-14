@@ -1,5 +1,6 @@
 package com.finance.android.ui.screens.groupAccount
 
+import android.icu.number.IntegerWidth
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -27,6 +28,8 @@ import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
+import java.lang.Integer.parseInt
+
 
 @Composable
 fun GroupAccountInputMoneyScreen(
@@ -44,7 +47,6 @@ fun GroupAccountInputMoneyScreen(
     val duesValue = remember {
         mutableStateOf("${groupAccountViewModel.duesVal.value}")
     }
-
     //계좌잔액
     val balance = remember {
         mutableStateOf(groupAccountViewModel.representAccountBalance.value)
@@ -53,14 +55,12 @@ fun GroupAccountInputMoneyScreen(
     val isValid = remember {
         mutableStateOf(true)
     }
-
     if (duesValue.value.isEmpty()) {
         placeholderText.value = "얼마를 보낼까요?"
     }
-
     if (duesValue.value.isEmpty()
         || balance.value.isEmpty()
-        || Integer.parseInt(duesValue.value) > Integer.parseInt(
+        || parseInt(duesValue.value) > parseInt(
             balance.value
         )
     ) {
@@ -109,10 +109,11 @@ fun GroupAccountInputMoneyScreen(
                     cursorColor = Color.Transparent,
                 ),
             textStyle = TextStyle().copy(fontSize = 40.sp),
-            isError = !isValid.value,
+            isError = isValid.value,
         )
         TextButton(
-            onClick = { navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) },
+            onClick = { navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN)
+                      groupAccountViewModel.duesVal.value = Integer.parseInt(duesValue.value)},
             text = "다음",
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton()

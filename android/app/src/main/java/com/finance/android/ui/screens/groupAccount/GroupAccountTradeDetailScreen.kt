@@ -27,7 +27,7 @@ fun GroupAccountTradeDetailScreen(
         launch()
     }
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
