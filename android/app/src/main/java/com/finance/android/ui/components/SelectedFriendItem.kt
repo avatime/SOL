@@ -68,10 +68,3 @@ fun SelectedFriendItem(
         Text(text = name)
     }
 }
-
-@Preview
-@Composable
-fun PreviewSelectedItem() {
-    SelectedFriendItem(img = "", name = "채윤선", onClick = {})
-
-}
