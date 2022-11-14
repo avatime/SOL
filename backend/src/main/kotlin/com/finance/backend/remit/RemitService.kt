@@ -4,6 +4,7 @@ import com.finance.backend.bank.response.RecentTradeRes
 import com.finance.backend.remit.request.RemitInfoReq
 import com.finance.backend.remit.request.RemitNonMemberReq
 import com.finance.backend.remit.request.RemitPhoneReq
+import com.finance.backend.remit.response.RemitTokenRes
 
 interface RemitService {
     fun getRecommendationAccount(token: String): List<RecentTradeRes>
@@ -11,6 +12,6 @@ interface RemitService {
     fun postRemitPhone(remitPhoneReq: RemitPhoneReq)
     fun putBookmark(acNo: String, token: String)
     fun postRemitPhoneNonMember(remitNonMemberReq: RemitNonMemberReq)
-    fun getRemitPhoneNonMember(tokenId : Long) : Map<String, Boolean>
+    fun getRemitPhoneNonMember(tokenId : Long) : RemitTokenRes
 
 }

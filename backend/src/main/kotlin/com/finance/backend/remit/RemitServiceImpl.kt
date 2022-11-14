@@ -12,6 +12,7 @@ import com.finance.backend.corporation.CorporationRepository
 import com.finance.backend.remit.request.RemitInfoReq
 import com.finance.backend.remit.request.RemitNonMemberReq
 import com.finance.backend.remit.request.RemitPhoneReq
+import com.finance.backend.remit.response.RemitTokenRes
 import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
@@ -159,7 +160,7 @@ class RemitServiceImpl(
         }
         // 비회원이면
         else {
-            val remitAvailable = RemitAvailable(true)
+            val remitAvailable = RemitAvailable(true, remitPhoneReq.acSend, remitPhoneReq.value)
             remitAvailableRepository.save(remitAvailable)
             throw NonMemberException(remitAvailable.tokenId.toString())
         }
@@ -210,8 +211,9 @@ class RemitServiceImpl(
         remitAvailableRepository.save(remitAvailable)
     }
 
-    override fun getRemitPhoneNonMember(tokenId: Long): Map<String, Boolean> {
+    override fun getRemitPhoneNonMember(tokenId: Long): RemitTokenRes {
         val remitAvailable = remitAvailableRepository.findById(tokenId).orElse(null)?:throw NoPhoneTokenException()
-        return mutableMapOf<String, Boolean>().apply { put("token", remitAvailable.token) }
+        val account : Account = accountRepository.findByAcNo(remitAvailable.account) ?: throw NoAccountException()
+        return remitAvailable.toEntity(account)
     }
 }
