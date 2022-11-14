@@ -77,30 +77,32 @@ private fun Recent(
                 Column(
                     modifier = Modifier.animateContentSize()
                 ) {
-                    Row(
-                        modifier = Modifier
-                            .clip(RoundedCornerShape(10.dp))
-                            .clickable { expanded.value = !expanded.value }
-                            .padding(vertical = 15.dp)
-                    ) {
-                        Text(
-                            text = "내 계좌",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 16.sp,
-                            modifier = Modifier.padding(start = 10.dp)
-                        )
-                        Spacer(modifier = Modifier.weight(1f))
-                        Text(
-                            modifier = Modifier.padding(end = 10.dp),
-                            text = if (expanded.value) "${response.data.size}개" else "+${response.data.size}개",
-                            color = Color.Gray
-                        )
-                        Image(
+                    if (response.data.size > 1) {
+                        Row(
                             modifier = Modifier
-                                .size(24.dp),
-                            painter = painterResource(id = if (expanded.value) R.drawable.up else R.drawable.down),
-                            contentDescription = null
-                        )
+                                .clip(RoundedCornerShape(10.dp))
+                                .clickable { expanded.value = !expanded.value }
+                                .padding(vertical = 15.dp)
+                        ) {
+                            Text(
+                                text = "내 계좌",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(start = 10.dp)
+                            )
+                            Spacer(modifier = Modifier.weight(1f))
+                            Text(
+                                modifier = Modifier.padding(end = 10.dp),
+                                text = if (expanded.value) "${response.data.size - 1}개" else "+${response.data.size - 1}개",
+                                color = Color.Gray
+                            )
+                            Image(
+                                modifier = Modifier
+                                    .size(24.dp),
+                                painter = painterResource(id = if (expanded.value) R.drawable.up else R.drawable.down),
+                                contentDescription = null
+                            )
+                        }
                     }
                     Spacer(modifier = Modifier.padding(8.dp))
 
