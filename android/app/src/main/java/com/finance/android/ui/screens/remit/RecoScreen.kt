@@ -81,10 +81,7 @@ private fun Recent(
                         modifier = Modifier
                             .clip(RoundedCornerShape(10.dp))
                             .clickable { expanded.value = !expanded.value }
-                            .padding(
-                                horizontal = 15.dp,
-                                vertical = 15.dp
-                            )
+                            .padding(vertical = 15.dp)
                     ) {
                         Text(
                             text = "내 계좌",
