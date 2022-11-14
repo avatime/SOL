@@ -9,14 +9,14 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
+import androidx.compose.animation.*
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,8 +35,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
+import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.services.WalkService
 import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.LightMainColor
@@ -49,7 +51,9 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import java.net.URLEncoder
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
+@ExperimentalAnimationApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -100,7 +104,7 @@ fun HomeScreen(
                     HomeCardContainer(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(dimensionResource(R.dimen.padding_medium))
+                            .padding(dimensionResource(R.dimen.padding_medium), top = 0.dp)
                             .background(
                                 color = MaterialTheme.colorScheme.surface,
                                 shape = RoundedCornerShape(10.dp)
@@ -318,6 +322,7 @@ private fun HomeCardContainer2(modifier: Modifier, navController: NavController)
     }
 }
 
+@ExperimentalAnimationApi
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun TopBar(
@@ -327,8 +332,8 @@ private fun TopBar(
     Row(
         modifier = Modifier
             .padding(
+                vertical = 10.dp,
                 horizontal = dimensionResource(id = R.dimen.padding_medium).value.dp,
-                vertical = 10.dp
             )
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -363,6 +368,22 @@ private fun TopBar(
                 onClick = onClick,
                 homeViewModel = homeViewModel
             )
+        }
+        
+        Spacer(modifier = Modifier.padding(20.dp))
+
+        Column (
+            modifier = Modifier
+                .clip(RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .clickable {
+                    onClick()
+                },
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            if(homeViewModel.getStockLoadState() == Response.Success(Unit)) animate_num(homeViewModel)
         }
     }
 }
@@ -465,6 +486,101 @@ private fun PedometerOnStateButton(
             Spacer(modifier = Modifier.width(7.dp))
             Text(
                 text = "$it 걸음"
+            )
+        }
+    }
+}
+
+@ExperimentalAnimationApi
+@Composable
+fun animate_num(homeViewModel: HomeViewModel = hiltViewModel()) {
+    var state by remember { mutableStateOf(0) }
+    var count by remember { mutableStateOf(0) }
+    val transition = rememberInfiniteTransition()
+    val value by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = { it.roundToInt().toFloat() }),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+    if(state != value.toInt()) {
+        state = value.toInt()
+        if(state == 0) count++
+    }
+
+    AnimatedContent(
+        targetState = count,
+        transitionSpec = {
+            // Compare the incoming number with the previous number.
+            if (targetState > initialState) {
+                // If the target number is larger, it slides up and fades in
+                // while the initial (smaller) number slides up and fades out.
+                slideInVertically { height -> height } + fadeIn() with
+                        slideOutVertically { height -> -height } + fadeOut()
+            } else {
+                // If the target number is smaller, it slides down and fades in
+                // while the initial number slides down and fades out.
+                slideInVertically { height -> -height } + fadeIn() with
+                        slideOutVertically { height -> height } + fadeOut()
+            }.using(
+                // Disable clipping since the faded slide-in/out should
+                // be displayed out of bounds.
+                SizeTransform(clip = false)
+            )
+        }
+    ) { targetCount ->
+        minibar(idx = targetCount, stockList = (homeViewModel.stockList.value as Response.Success).data)
+    }
+}
+
+@Composable
+fun minibar(
+    idx : Int = 0,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    stockList : MutableList<FinanceResponseDto>,
+) {
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable {
+                onClick()
+            }
+            .padding(10.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        val stock = stockList[idx % stockList.size]
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier.size(24.dp)
+            ) {
+                AsyncImage(modifier = Modifier.clip(CircleShape).background(color = Color.White), model = stock.fnLogo, contentDescription = stock.fnName)
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Text(
+                text = stock.fnName, fontSize = if(stock.fnName.length > 7) 12.sp else 16.sp
+            )
+        }
+//        Spacer(modifier = Modifier.width(7.dp))
+        Spacer(modifier = Modifier.weight(1.0f))
+        val per = stock.per
+        val color = if (per > 0) Color.Red else Color.Blue
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.End){
+            Text(
+                text = DecimalFormat("#,###원").format(stock.close),
+                color = color,
+                fontSize = 12.sp
+            )
+            Text(
+                text = "${if (per > 0) "+" else ""}$per%",
+                color = color,
+                fontSize = 9.sp
             )
         }
     }
