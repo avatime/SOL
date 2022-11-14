@@ -42,7 +42,7 @@ class RemitController(val remitService: RemitService, val kafka: KafkaProducer) 
     }
 
     @PostMapping("/phone/nonmember")
-    fun postRemitNonMember(remitNonMemberReq: RemitNonMemberReq): ResponseEntity<Any>{
+    fun postRemitNonMember(@RequestBody remitNonMemberReq: RemitNonMemberReq): ResponseEntity<Any>{
         println("postRemitNomMember")
         kafka.noMemberMessage(remitNonMemberReq)
         return try{
