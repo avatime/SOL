@@ -29,6 +29,7 @@ import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.GroupAccountViewModel
+import java.text.DecimalFormat
 
 @Composable
 fun GroupAccountDetailScreen(
@@ -71,7 +72,7 @@ fun GroupAccountDetailScreen(
                 )
                 Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_small)))
                 Text(
-                    text = response.data.amount.toString(),
+                    text = DecimalFormat("#,###원").format(response.data.amount),
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = 25.dp)
@@ -90,6 +91,7 @@ fun GroupAccountDetailScreen(
                 onClick = {
                     navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN)
                     groupAccountViewModel.screenType.value = 2
+                    groupAccountViewModel.duesVal.value=0
                 },
                 text = "       입   금       ",
                 buttonType = ButtonType.ROUNDED

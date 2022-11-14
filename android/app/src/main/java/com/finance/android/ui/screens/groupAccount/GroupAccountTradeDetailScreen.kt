@@ -26,6 +26,7 @@ fun GroupAccountTradeDetailScreen(
     LaunchedEffect(Unit) {
         launch()
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()

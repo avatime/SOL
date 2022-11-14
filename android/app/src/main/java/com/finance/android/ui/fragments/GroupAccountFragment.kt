@@ -80,7 +80,8 @@ fun GroupAccountFragment(
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountOKScreen(
                     navController = innerNavController,
-                    modifier = modifier
+                    modifier = modifier,
+                    groupAccountViewModel = groupAccountViewModel
                 )
             }
             composable(Const.DUES_MAKE_NAME_SCREEN) {
@@ -135,6 +136,16 @@ fun GroupAccountFragment(
                     navController = innerNavController,
                     modifier = modifier,
                     groupAccountViewModel = groupAccountViewModel,
+                )
+            }
+
+            composable(
+                Const.DUES_DATE_PICK_SCREEN,
+            ) {
+                DuesDataPickScreen(
+                    navController = innerNavController,
+                    modifier = modifier,
+                    groupAccountViewModel = groupAccountViewModel
                 )
             }
 

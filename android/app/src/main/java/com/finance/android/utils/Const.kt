@@ -29,6 +29,7 @@ object Const {
     const val GROUP_ACCOUNT_COMPLETED = "group_account_completed"
     const val DUES_MAKE_NAME_SCREEN = "dues_make_name_screen"
     const val DUES_MAKE_MONEY_SCREEN = "dues_make_money_screen"
+    const val DUES_DATE_PICK_SCREEN = "dues_date_pick_screen"
     const val DUES_MEMBER_LIST = "dues_member_list"
     const val GROUP_ACCOUNT_INPUT_MONEY_SCREEN = "group_account_input_money_screen"
     const val GROUP_ACCOUNT_VERIFY_MONEY_SCREEN = "group_account_verify_money_screen"
