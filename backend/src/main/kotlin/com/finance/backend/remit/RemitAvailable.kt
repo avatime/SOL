@@ -19,7 +19,7 @@ class RemitAvailable(
     @Column(nullable = false)
     var token = token
 
-    fun check(){ this.token = !this.token }
+    fun check(){ this.token = false }
 
     fun toEntity() : RemitAvailableRes = RemitAvailableRes(this.tokenId, this.token)
 }
