@@ -9,4 +9,6 @@ data class PublicAccountResponseDto(
     val paName : String,// 모임명
     @SerializedName("amount")
     val amount : Int, //금액
+    @SerializedName("type")
+    val type : String, //직책
 )

@@ -49,7 +49,6 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
-
             composable(Const.GROUP_ACCOUNT_NAME_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountNameScreen(
@@ -58,7 +57,6 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
-
             composable(Const.GROUP_ACCOUNT_FRIEND_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountFriendScreen(
@@ -67,12 +65,8 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
-
             composable(
-                route = "${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/{paId}",
-                arguments = listOf(
-                    navArgument(name = "paId") { type = NavType.IntType },
-                )
+                route = Const.GROUP_ACCOUNT_DETAIL_SCREEN,
             ) {
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountDetailScreen(
@@ -82,7 +76,6 @@ fun GroupAccountFragment(
                 )
 
             }
-
             composable(Const.GROUP_ACCOUNT_COMPLETED) {
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountOKScreen(
@@ -90,8 +83,6 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
-
-
             composable(Const.DUES_MAKE_NAME_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
                 DuesMakeNameScreen(
@@ -100,11 +91,18 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
-
             composable(
                 "${Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN}/{duesVal}",
                 arguments = listOf(navArgument(name = "duesVal") { type = NavType.IntType })
             ) {
+                groupAccountViewModel.isBackToMain.value = false
+                GroupAccountInputMoneyScreen(
+                    navController = innerNavController,
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
+            composable(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountInputMoneyScreen(
                     navController = innerNavController,
@@ -121,7 +119,6 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
-
             composable(Const.DUES_MEMBER_LIST) {
                 groupAccountViewModel.isBackToMain.value = false
                 DuesMemberListScreen(
@@ -130,13 +127,14 @@ fun GroupAccountFragment(
                     modifier = modifier
                 )
             }
-
-            composable(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) {
+            composable(
+                Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN,
+            ) {
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountVerifyMoneyScreen(
                     navController = innerNavController,
                     modifier = modifier,
-                    groupAccountViewModel = groupAccountViewModel
+                    groupAccountViewModel = groupAccountViewModel,
                 )
             }
 

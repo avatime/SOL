@@ -60,6 +60,7 @@ fun GroupAccountDuesScreen(
                                 navController.navigate("${Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN}/${it.duesVal}")
                                 groupAccountViewModel.duesVal.value = it.duesVal
                                 groupAccountViewModel.duesId.value = it.duesId
+                                groupAccountViewModel.screenType.value = 1
                             }
                         )
                     }

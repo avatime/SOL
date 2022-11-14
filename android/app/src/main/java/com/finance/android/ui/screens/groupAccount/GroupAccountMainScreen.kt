@@ -81,8 +81,9 @@ fun GroupAccountMainScreen(
                                     paName = item.paName,
                                     amount = item.amount,
                                     onClick = {
-                                        navController.navigate("${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/${paId}")
+                                        navController.navigate(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
                                         groupAccountViewModel.paId.value = paId
+                                        Log.i("group", "모통 paId $paId")
                                     })
 
                             })

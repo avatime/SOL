@@ -45,6 +45,10 @@ fun GroupAccountDetailScreen(
         launch()
     }
 
+    val isAvalibale = remember {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -56,6 +60,10 @@ fun GroupAccountDetailScreen(
             }
             is Response.Loading -> AnimatedLoading(text = "")
             is Response.Success -> {
+                Log.i("group", "직책 ${response.data.type}")
+                if (response.data.type == "관리자") {
+                    isAvalibale.value = true
+                }
                 Text(
                     text = response.data.paName,
                     fontSize = 20.sp,
@@ -72,22 +80,29 @@ fun GroupAccountDetailScreen(
         }
         Spacer(modifier = Modifier.padding(10.dp))
         Row(
-            modifier = modifier.padding(32.dp), verticalAlignment = Alignment.CenterVertically,
+            verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
 
             ) {
 
             Spacer(modifier = Modifier.weight(0.1f))
             TextButton(
-                onClick = { navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) },
+                onClick = {
+                    navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN)
+                    groupAccountViewModel.screenType.value = 2
+                },
                 text = "       입   금       ",
                 buttonType = ButtonType.ROUNDED
             )
             Spacer(modifier = Modifier.weight(0.1f))
             TextButton(
-                onClick = { navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) },
+                onClick = {
+                    navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN)
+                    groupAccountViewModel.screenType.value = 3
+                },
                 text = "      출   금       ",
-                buttonType = ButtonType.ROUNDED
+                buttonType = ButtonType.ROUNDED,
+                enabled = isAvalibale.value
             )
             Spacer(modifier = Modifier.weight(0.1f))
 
@@ -158,10 +173,12 @@ fun GroupAccountDetailScreen(
                         groupAccountViewModel = groupAccountViewModel
                     )
                 }
+                
 
-            }//end of when
         }
+
     }
+}
 
 
 

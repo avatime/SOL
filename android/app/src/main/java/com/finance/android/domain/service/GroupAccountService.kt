@@ -45,4 +45,10 @@ interface GroupAccountService {
 
     @POST("${Const.API_PATH}/public/info") //회비 정보
     suspend fun postGroupAccountInfo(@Body groupIdRequestDto: GroupIdRequestDto) : PublicAccountResponseDto
+
+    @POST("${Const.API_PATH}/public/withdraw") //회비 출금
+    suspend fun postWithdrawDues(@Body groupWithdrawDuesRequestDto: GroupWithdrawDuesRequestDto)
+
+    @POST("${Const.API_PATH}/public/deposit") //돈 입금
+    suspend fun postDeposit(@Body groupDepositRequestDto: GroupDepositRequestDto)
 }
