@@ -103,6 +103,7 @@ fun UserBalanceInfo(
             Column(verticalArrangement = Arrangement.spacedBy(5.dp)) {
                 Row(modifier = Modifier.fillMaxWidth()) {
                     Text(
+                        modifier = Modifier.weight(1f),
                         text = title,
                         fontSize = 20.sp,
                         color = animatedTextColor.value,
@@ -110,7 +111,6 @@ fun UserBalanceInfo(
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier.weight(1f))
                     if (acType == 1)
                         Box(modifier = Modifier.size(27.dp)) {
                             Canvas(
