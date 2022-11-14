@@ -131,24 +131,21 @@ fun ContentList(
             val expandable = 1 < text.size
 
             Column(
-                modifier =
-                if (expandable) Modifier
+                modifier = Modifier
                     .padding(
                         vertical = dimensionResource(R.dimen.padding_medium) / 2,
                         horizontal = 15.dp / 2
                     ).animateContentSize()
-                else Modifier
-                    .padding(
-                        vertical = dimensionResource(R.dimen.padding_medium) / 2,
-                        horizontal = 15.dp
-                    )
             ) {
                 Row(
-                    modifier = Modifier
+                    modifier =
+                    if (expandable) Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp / 2)
                         .clip(RoundedCornerShape(5.dp))
-                        .clickable { expanded.value = !expanded.value },
+                        .clickable { expanded.value = !expanded.value }
+                    else Modifier
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
