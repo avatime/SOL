@@ -9,7 +9,8 @@ class BankAccountRes(
         cpName: String,
         cpLogo: String,
         acReg: Boolean,
-        acMain: Int
+        acMain: Int,
+        acType: Int
 ) {
 
         @JsonProperty("ac_no")
@@ -31,4 +32,7 @@ class BankAccountRes(
 
         @JsonProperty("ac_main")
         val acMain = acMain
+
+        @JsonProperty("ac_type")
+        val acType = acType
 }
