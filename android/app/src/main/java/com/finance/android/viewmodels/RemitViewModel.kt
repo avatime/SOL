@@ -49,15 +49,6 @@ class RemitViewModel @Inject constructor(
                 .collect {
                     _recommendedAccountData.value = it
                 }
-        }
-    }
-    //송금 내 계좌 조회
-    private val _recentMyAccountData =
-        mutableStateOf<Response<MutableList<RecentMyTradeResponseDto>>>(Response.Loading)
-    val recentMyAccountData = _recentMyAccountData
-
-    fun getRecentMyAccountData() {
-        viewModelScope.launch {
             this@RemitViewModel.run {
                 bankRepository.getRecentMyAccount()
             }.collect {
@@ -65,6 +56,33 @@ class RemitViewModel @Inject constructor(
             }
         }
     }
+
+    fun getLoadRecommendation(): Response<Unit> {
+        val arr = arrayOf(_recommendedAccountData, _recentMyAccountData)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    //송금 내 계좌 조회
+    private val _recentMyAccountData =
+        mutableStateOf<Response<MutableList<RecentMyTradeResponseDto>>>(Response.Loading)
+    val recentMyAccountData = _recentMyAccountData
+
+//    fun getRecentMyAccountData() {
+//        viewModelScope.launch {
+//            this@RemitViewModel.run {
+//                bankRepository.getRecentMyAccount()
+//            }.collect {
+//                _recentMyAccountData.value = it
+//            }
+//        }
+//    }
 
 
     //모든 은행 기업 조회
