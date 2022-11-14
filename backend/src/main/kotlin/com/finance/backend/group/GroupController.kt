@@ -78,6 +78,10 @@ class GroupController (private val groupService : GroupService) {
         return ResponseEntity.status(200).body(groupService.getMoney(accessToken, publicAccountWithdrawReq))
     }
 
+    @PostMapping("/deposit")
+    fun publicAccountDuesOut(@RequestHeader("access_token") accessToken: String, publicAccountDepositReq: PublicAccountDepositReq) : ResponseEntity<Any?> {
+        return ResponseEntity.status(200).body(groupService.putMoney(accessToken, publicAccountDepositReq))
+    }
     @GetMapping("/dues/test/scheduled")
     @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Seoul")
     fun registPaymentMonthly() {

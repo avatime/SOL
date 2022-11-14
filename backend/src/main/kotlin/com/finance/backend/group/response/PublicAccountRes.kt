@@ -8,5 +8,6 @@ data class PublicAccountRes(
         val paId : Long,
         @JsonProperty("pa_name")
         val paName : String,
-        val amount: Long
+        val amount: Long,
+        val type : String
 )
