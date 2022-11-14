@@ -210,8 +210,8 @@ class RemitServiceImpl(
         remitAvailableRepository.save(remitAvailable)
     }
 
-    override fun getRemitPhoneNonMember(tokenId: Long): Boolean {
+    override fun getRemitPhoneNonMember(tokenId: Long): Map<String, Boolean> {
         val remitAvailable = remitAvailableRepository.findById(tokenId).orElse(null)?:throw NoPhoneTokenException()
-        return remitAvailable.token
+        return mutableMapOf<String, Boolean>().apply { put("token", remitAvailable.token) }
     }
 }
