@@ -74,17 +74,6 @@ class RemitViewModel @Inject constructor(
         mutableStateOf<Response<MutableList<RecentMyTradeResponseDto>>>(Response.Loading)
     val recentMyAccountData = _recentMyAccountData
 
-//    fun getRecentMyAccountData() {
-//        viewModelScope.launch {
-//            this@RemitViewModel.run {
-//                bankRepository.getRecentMyAccount()
-//            }.collect {
-//                _recentMyAccountData.value = it
-//            }
-//        }
-//    }
-
-
     //모든 은행 기업 조회
     private val _allBankData =
         mutableStateOf<Response<MutableList<BankInfoResponseDto>>>(Response.Loading)
