@@ -63,7 +63,7 @@ export default class ApiClient implements BankApi {
     await this.axiosInstance.request({
       method: "POST",
       url: `${API_PATH}/remit/phone/nonmember`,
-      data: data,
+      data: JSON.stringify(data),
     }).catch((e) => console.log(e))
   }
 
