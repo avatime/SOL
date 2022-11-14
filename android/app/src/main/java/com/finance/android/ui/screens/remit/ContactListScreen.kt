@@ -1,25 +1,35 @@
 package com.finance.android.ui.screens.remit
 
-
 import android.Manifest
 import android.content.pm.PackageManager
-import android.util.Log
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
+import androidx.paging.LoadState
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ContactItem
-import com.finance.android.utils.retrieveAllContacts
+import com.finance.android.utils.ContactSource
 import com.finance.android.viewmodels.RemitViewModel
 
-
 @Composable
-fun ContactListScreen(remitViewModel: RemitViewModel, navController: NavController) {
+fun ContactListScreen(
+    modifier: Modifier = Modifier.background(Color.White),
+    remitViewModel: RemitViewModel,
+    navController: NavController
+) {
     remitViewModel.requestRemit.value = true
     if (ActivityCompat.checkSelfPermission(
             LocalContext.current,
@@ -29,29 +39,35 @@ fun ContactListScreen(remitViewModel: RemitViewModel, navController: NavControll
         return
     }
 
-
-    val list = LocalContext.current.retrieveAllContacts()
-    Log.i("TEST", list.toString())
-    Box(Modifier.fillMaxSize()) {
-
-        Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-            Spacer(modifier = Modifier.padding(10.dp))
-
-            list.forEach{
-                 ContactItem(
-                     name = it.name,
-                     number = it.phoneNumber[0],
-                     avatar = it.avatar,
-                     remitViewModel = remitViewModel,
-                     navController= navController
-                 ) }
-
+    val context = LocalContext.current
+    val list = remember {
+        Pager(PagingConfig(pageSize = 30)) {
+            ContactSource(context)
+        }.flow
+    }
+    val lazyMovieItems = list.collectAsLazyPagingItems()
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 10.dp)
+    ) {
+        LazyColumn {
+            items(count = lazyMovieItems.itemCount) { idx ->
+                val item = lazyMovieItems[idx]
+                item?.let {
+                    ContactItem(
+                        name = it.name,
+                        number = it.phoneNumber,
+                        avatar = it.avatar,
+                        remitViewModel = remitViewModel,
+                        navController = navController
+                    )
+                }
+            }
         }
 
-
+        if (lazyMovieItems.loadState.refresh is LoadState.Loading) {
+            AnimatedLoading()
+        }
     }
-
-
 }
-
-

@@ -7,7 +7,11 @@ import android.content.Context
 import android.net.Uri
 import android.provider.ContactsContract
 import androidx.annotation.RequiresPermission
+import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.finance.android.domain.dto.response.ContactDto
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 /**
  * @author aminography
@@ -37,8 +41,8 @@ fun Context.isContactExists(
 fun Context.retrieveAllContacts(
     searchPattern: String = "",
     retrieveAvatar: Boolean = true,
-    limit: Int = -1,
-    offset: Int = -1
+    page: Int = 1,
+    limit: Int = 30
 ): List<ContactDto> {
     val result: MutableList<ContactDto> = mutableListOf()
 
@@ -47,18 +51,13 @@ fun Context.retrieveAllContacts(
         CONTACT_PROJECTION,
         if (searchPattern.isNotBlank()) "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} LIKE '%?%'" else null,
         if (searchPattern.isNotBlank()) arrayOf(searchPattern) else null,
-        if (limit > 0 && offset > -1) "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} ASC LIMIT $limit OFFSET $offset"
-        else ContactsContract.Contacts.DISPLAY_NAME_PRIMARY + " ASC"
+        "${ContactsContract.Contacts.DISPLAY_NAME_PRIMARY} ASC LIMIT $limit OFFSET ${(page - 1) * limit - 1}"
     )?.use {
         if (it.moveToFirst()) {
             do {
                 val contactId = it.getLong(it.getColumnIndex(CONTACT_PROJECTION[0]))
                 val name = it.getString(it.getColumnIndex(CONTACT_PROJECTION[2])) ?: ""
-                val hasPhoneNumber = it.getString(it.getColumnIndex(CONTACT_PROJECTION[3])).toInt()
-                val phoneNumber: List<String> = if (hasPhoneNumber > 0) {
-                    retrievePhoneNumber(contactId)
-                } else mutableListOf()
-
+                val phoneNumber = retrievePhoneNumber(contactId) ?: continue
                 val avatar = if (retrieveAvatar) retrieveAvatar(contactId) else null
                 result.add(ContactDto(contactId, name, phoneNumber, avatar.toString()))
             } while (it.moveToNext())
@@ -68,22 +67,20 @@ fun Context.retrieveAllContacts(
 }
 
 @SuppressLint("Range")
-private fun Context.retrievePhoneNumber(contactId: Long): List<String> {
-    val result: MutableList<String> = mutableListOf()
-    contentResolver.query(
+private fun Context.retrievePhoneNumber(contactId: Long): String? {
+    return contentResolver.query(
         ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
         null,
         "${ContactsContract.CommonDataKinds.Phone.CONTACT_ID} =?",
         arrayOf(contactId.toString()),
         null
     )?.use {
-        if (it.moveToFirst()) {
-            do {
-                result.add(it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)))
-            } while (it.moveToNext())
+        return if (it.moveToFirst()) {
+            it.getString(it.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER))
+        } else {
+            null
         }
     }
-    return result
 }
 
 private fun Context.retrieveAvatar(contactId: Long): Uri? {
@@ -114,3 +111,38 @@ private val CONTACT_PROJECTION = arrayOf(
     ContactsContract.Contacts.DISPLAY_NAME_PRIMARY,
     ContactsContract.Contacts.HAS_PHONE_NUMBER
 )
+
+class ContactSource(
+    private val context: Context,
+    private val searchPattern: String = "",
+    private val retrieveAvatar: Boolean = true,
+    private val pageSize: Int = 30
+) : PagingSource<Int, ContactDto>() {
+
+    @RequiresPermission(value = "android.permission.READ_CONTACTS")
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, ContactDto> {
+        return try {
+            val nextPage = params.key ?: 1
+            withContext(Dispatchers.IO) {
+                val response = context.retrieveAllContacts(
+                    searchPattern = searchPattern,
+                    retrieveAvatar = retrieveAvatar,
+                    limit = pageSize,
+                    page = nextPage
+                )
+
+                return@withContext LoadResult.Page(
+                    data = response,
+                    prevKey = if (nextPage == 1) null else nextPage - 1,
+                    nextKey = nextPage + 1
+                )
+            }
+        } catch (e: Exception) {
+            LoadResult.Error(e)
+        }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, ContactDto>): Int? {
+        return state.anchorPosition
+    }
+}
