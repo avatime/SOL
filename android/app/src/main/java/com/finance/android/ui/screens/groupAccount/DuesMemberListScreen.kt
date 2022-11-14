@@ -108,7 +108,7 @@ fun DuesMemberListScreen(
                     checked = groupAccountViewModel.selectFriendsList!![it].value,
                     img = item.avatar,
                     name = item.name,
-                    phone = item.phoneNumber[0],
+                    phone = item.phoneNumber,
                     onClickItem = { groupAccountViewModel.onClickFriend(it) })
             }
             )
