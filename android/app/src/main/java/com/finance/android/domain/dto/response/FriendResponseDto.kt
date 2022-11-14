@@ -3,6 +3,7 @@ package com.finance.android.domain.dto.response
 import com.google.gson.annotations.SerializedName
 
 data class FriendResponseDto(
+    var id: Int? = null,
     @SerializedName("user_name")
     val userName : String, //친구 이름
     @SerializedName("type")

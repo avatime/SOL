@@ -31,7 +31,9 @@ class GroupAccountRepositoryImpl @Inject constructor(
     }
 
     override suspend fun postGroupMember(groupIdRequestDto: GroupIdRequestDto): MutableList<FriendResponseDto> {
-        return groupAccountService.postGroupMember(groupIdRequestDto)
+        return groupAccountService.postGroupMember(groupIdRequestDto).apply {
+            forEachIndexed { index, friendResponseDto -> friendResponseDto.id = index  }
+        }
     }
 
     override suspend fun postDuesHistory(groupIdRequestDto: GroupIdRequestDto): MutableList<DuesResponseDto> {
