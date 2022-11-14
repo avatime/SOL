@@ -24,7 +24,7 @@ export default function SuccessPage({ money }: Props) {
         {money.toLocaleString()}원
       </Typography>
       <Typography variant="h6">송금 완료</Typography>
-      <Box flex="1" />
+      <Box m={4} />
       <Button fullWidth variant="contained" size="large" onClick={onClickButton}> 
         확인
       </Button>
