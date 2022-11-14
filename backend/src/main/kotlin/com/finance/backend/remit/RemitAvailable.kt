@@ -1,10 +1,14 @@
 package com.finance.backend.remit
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.finance.backend.remit.response.RemitAvailableRes
 import javax.persistence.*
 
 @Entity(name = "remit_available")
-class RemitAvailable {
+class RemitAvailable(
+        token : Boolean
+)
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(updatable = false, nullable = false, columnDefinition = "INT UNSIGNED")
@@ -13,5 +17,9 @@ class RemitAvailable {
         protected set
 
     @Column(nullable = false)
-    var token : Boolean = true
+    var token = token
+
+    fun check(){ this.token = !this.token }
+
+    fun toEntity() : RemitAvailableRes = RemitAvailableRes(this.tokenId, this.token)
 }

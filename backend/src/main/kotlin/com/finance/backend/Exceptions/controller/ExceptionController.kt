@@ -1,6 +1,8 @@
 package com.finance.backend.Exceptions.controller
 
 import com.finance.backend.Exceptions.*
+import com.finance.backend.remit.RemitAvailable
+import com.finance.backend.remit.RemitAvailableRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.kafka.listener.ListenerExecutionFailedException
 import org.springframework.web.bind.MissingRequestHeaderException
@@ -9,7 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler
 import javax.naming.AuthenticationException
 
 @ControllerAdvice
-class ExceptionController {
+class ExceptionController(
+        val remitAvailableRepository: RemitAvailableRepository
+) {
 
     @ExceptionHandler(InsufficientBalanceException::class)
     fun handleInsufficient(e : Exception) : ResponseEntity<String> {
@@ -104,6 +108,17 @@ class ExceptionController {
     @ExceptionHandler(ListenerExecutionFailedException::class)
     fun handleListenerExecutionFailedException(e : Exception){
         println("에러 메세지: " + e.message)
+    }
+
+    @ExceptionHandler(NonMemberException::class)
+    fun handleNonMemberEXCEPTION(e : Exception) : ResponseEntity<Any>{
+        val remitAvailable = RemitAvailable(true)
+        remitAvailableRepository.save(remitAvailable)
+        return ResponseEntity.status(405).body(remitAvailable.toEntity())
+    }
+    @ExceptionHandler(NoPhoneTokenException::class)
+    fun handleNoPhoneTokenException(e : Exception) : ResponseEntity<String>{
+        return ResponseEntity.status(404).body("Cannot Found")
     }
 
     @ExceptionHandler(Exception::class)
