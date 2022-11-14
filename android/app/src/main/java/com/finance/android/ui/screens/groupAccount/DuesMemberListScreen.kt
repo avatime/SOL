@@ -18,7 +18,6 @@ import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.finance.android.domain.dto.request.CreateDuesRequestDto
-import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.MemberRequestDto
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.FriendSelectItem
@@ -53,12 +52,11 @@ fun DuesMemberListScreen(
         Log.i("친구 번호", "${friend.phoneNumber}")
     }
 
-    val name = groupAccountViewModel.name.value
+    groupAccountViewModel.name.value
     val memberList = ArrayList<MemberRequestDto>()
     for (friend in friendsList) {
         memberList.add(MemberRequestDto(friend.name, friend.phoneNumber.toString()))
     }
-
 
     val createDuesRequestDto = CreateDuesRequestDto(
         groupAccountViewModel.duesName.value,

@@ -37,7 +37,7 @@ fun AddAssetResultScreen(
     addAssetViewModel: AddAssetViewModel,
     onClickNext: () -> Unit
 ) {
-    when (val state = addAssetViewModel.getRegisterState()) {
+    when (addAssetViewModel.getRegisterState()) {
         is Response.Success -> DrawScreen(
             modifier = modifier,
             accountList = (addAssetViewModel.accountList.value as Response.Success).data
@@ -50,14 +50,12 @@ fun AddAssetResultScreen(
                 .filterIndexed { idx, _ -> addAssetViewModel.insuranceCheckList[idx].value },
             onClickNext = onClickNext
         )
-        else -> DrawLoading(state = state)
+        else -> DrawLoading()
     }
 }
 
 @Composable
-private fun DrawLoading(
-    state: Response<Unit>
-) {
+private fun DrawLoading() {
     AnimatedLoading(text = stringResource(id = R.string.msg_wait_register_asset))
 }
 
@@ -231,7 +229,7 @@ private fun StickyHeader(text: String) {
 @Preview
 @Composable
 private fun PreviewLoading() {
-    DrawLoading(state = Response.Loading)
+    DrawLoading()
 }
 
 @Preview

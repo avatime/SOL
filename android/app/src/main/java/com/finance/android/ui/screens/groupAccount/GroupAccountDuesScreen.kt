@@ -2,25 +2,19 @@ package com.finance.android.ui.screens.groupAccount
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ModifierInfo
-import androidx.compose.ui.res.dimensionResource
 import androidx.navigation.NavController
-import com.finance.android.R
 import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.DuesItem
 import com.finance.android.ui.components.TextButton
-
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
@@ -29,8 +23,7 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 @Composable
 fun GroupAccountDuesScreen(
     navController: NavController,
-    groupAccountViewModel: GroupAccountViewModel,
-    modifier: Modifier
+    groupAccountViewModel: GroupAccountViewModel
 ) {
     fun launch() {
         Log.i("group", "회비 조회 paId : ${groupAccountViewModel.paId.value}")

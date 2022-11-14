@@ -20,20 +20,19 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
-import com.finance.android.ui.components.*
+import com.finance.android.ui.components.BackHeaderBar
+import com.finance.android.ui.components.ButtonColor
+import com.finance.android.ui.components.ButtonType
+import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.CardViewModel
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 
 fun CardBenefitScreen(
-    navController: NavController,
     onClose: () -> Unit,
     cardViewModel: CardViewModel = hiltViewModel(),
     cardProductCode: Int,
@@ -58,7 +57,7 @@ fun CardBenefitScreen(
                 .fillMaxSize()
                 .padding(top = innerPaddingModifier.calculateTopPadding())
         ) {
-            when (val data = cardViewModel.getLoadCardBenefit()) {
+            when (cardViewModel.getLoadCardBenefit()) {
                 is Response.Success -> {
                     Column(
                         modifier = Modifier
@@ -98,7 +97,7 @@ fun CardBenefitScreen(
                         Text(text = "주요 혜택", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                         Divider(modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_medium),
                             bottom = dimensionResource(R.dimen.padding_small)))
-                        benefitList!!.forEach {
+                        benefitList.forEach {
                             BenefitSummaryListItem(
                                 benefitSummary = it.cardBenefitSummary,
                                 benefitName = it.cardBenefitName,

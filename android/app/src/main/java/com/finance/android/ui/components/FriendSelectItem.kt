@@ -1,7 +1,6 @@
 package com.finance.android.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.IconButton
@@ -11,7 +10,6 @@ import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,7 +69,7 @@ fun FriendSelectItem(
         Spacer(modifier = Modifier.padding(15.dp))
 
 
-        Column() {
+        Column {
             Text(text = name, fontSize = dimensionResource(R.dimen.account_like_name).value.sp)
             Spacer(modifier = Modifier.padding(3.dp))
             Text(
@@ -100,7 +98,7 @@ fun FriendSelectItem(
 
 @Preview
 @Composable
-fun PreviwFriendSelectItem() {
+fun PreviewFriendSelectItem() {
     FriendSelectItem(checked = true, img = "", name = "채윤선", phone = "01049016695" ) {
 
     }

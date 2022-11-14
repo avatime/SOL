@@ -36,7 +36,7 @@ fun DuesMakeNameScreen(
         Row(
             modifier = Modifier.padding(32.dp)
         ) {
-            Column() {
+            Column {
                 Text(
                     text = "회비 이름을 입력하세요",
                     style = Typography.headlineLarge
@@ -47,7 +47,7 @@ fun DuesMakeNameScreen(
         TextInput(
             value = groupAccountViewModel.duesName.value,
             onValueChange = {
-                if (1 <= it.length && it.length <= 20){
+                if (it.length in 1..20){
                     groupAccountViewModel.duesName.value = it
                 }
             },

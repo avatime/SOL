@@ -12,9 +12,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.finance.android.ui.fragments.*
-import com.finance.android.ui.screens.AttendanceFragment
+import com.finance.android.ui.fragments.AttendanceFragment
 import com.finance.android.ui.screens.CardBenefitScreen
-import com.finance.android.ui.screens.WalkFragment
+import com.finance.android.ui.fragments.WalkFragment
 import com.finance.android.ui.theme.FinanceTheme
 import com.finance.android.utils.Const
 import dagger.hilt.android.HiltAndroidApp
@@ -121,11 +121,9 @@ fun FinanceApp() {
                     enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
-                    PointExchangeFragment(
-                        onClose = {
-                            navController.popBackStack()
-                        }, navController = navController
-                    )
+                    PointExchangeFragment {
+                        navController.popBackStack()
+                    }
                 }
             }
             composable(Const.Routes.WALK) {
@@ -185,11 +183,11 @@ fun FinanceApp() {
                 )
             ) {
                 CardBenefitScreen(
+                    onClose = { navController.popBackStack() },
                     cardProductCode = it.arguments!!.getInt("cardProductCode"),
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
-                    cdName = it.arguments!!.getString("cdName")!!,
-                    navController = navController,
-                    onClose = { navController.popBackStack() })
+                    cdName = it.arguments!!.getString("cdName")!!
+                )
             }
             composable(Const.Routes.GROUPACCOUNT) {
                 GroupAccountFragment(navController = navController)
@@ -204,12 +202,12 @@ fun FinanceApp() {
                 )
             ) {
                 CardDetailFragment(
+                    onClose = { navController.popBackStack() },
                     cdName = it.arguments!!.getString("cdName")!!,
                     cdNo = it.arguments!!.getString("cdNo")!!,
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
-                    balance = it.arguments!!.getInt("balance"),
-                    navController = navController,
-                    onClose = { navController.popBackStack() })
+                    balance = it.arguments!!.getInt("balance")
+                )
             }
         }
     }

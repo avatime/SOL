@@ -1,22 +1,17 @@
 package com.finance.android.ui.components
 
-import android.widget.Space
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.text.font.FontLoadingStrategy.Companion.Async
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.finance.android.R
 import java.text.DecimalFormat
 import java.time.YearMonth
 
@@ -44,7 +39,7 @@ fun CardDetailComp(
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column() {
+            Column {
                 Text(text = "${YearMonth.now().monthValue}월 청구 금액", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
                 Text(
                     text = DecimalFormat("#,###원").format(balance),

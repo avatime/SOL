@@ -46,7 +46,6 @@ fun GroupAccountFragment(
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountMakeScreen(
                     navController = innerNavController,
-                    groupAccountViewModel = groupAccountViewModel,
                     modifier = modifier
                 )
             }
@@ -88,7 +87,6 @@ fun GroupAccountFragment(
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountOKScreen(
                     navController = innerNavController,
-                    groupAccountViewModel = groupAccountViewModel,
                     modifier = modifier
                 )
             }
@@ -135,7 +133,7 @@ fun GroupAccountFragment(
 
             composable(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
-                GroupAccontVerifyMoneyScreen(
+                GroupAccountVerifyMoneyScreen(
                     navController = innerNavController,
                     modifier = modifier,
                     groupAccountViewModel = groupAccountViewModel

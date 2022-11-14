@@ -21,61 +21,65 @@ import com.finance.android.R
 @Composable
 fun GroupAccountMemberListItem(img: String, name: String, type: String?) {
     Row(modifier = Modifier.padding(5.dp), verticalAlignment = Alignment.CenterVertically) {
-        if (type == "") {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(img)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "연락처 이미지",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(60.dp)
-                    .clip(CircleShape)
-            )
-            Spacer(modifier = Modifier.padding(10.dp))
-            Column(verticalArrangement = Arrangement.Center) {
-                Text(text = name, fontSize = 16.sp,modifier = Modifier.padding(bottom = 1.dp))
-                Text(text = "")
-            }
-        } else if (type == "관리자") {
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(img)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "연락처 이미지",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(60.dp)
-                    .clip(CircleShape)
-            )
-            Spacer(modifier = Modifier.padding(10.dp))
-            Column(verticalArrangement = Arrangement.Center) {
-                Text(text = name, fontSize = 16.sp,modifier = Modifier.padding(bottom = 1.dp))
-                Text(text = "관리자", color = Color(R.color.noActiveColor))
-            }
-        } else {
-            Image(
-                painter = painterResource(id = R.drawable.ic_contact_avatar),
-                contentDescription = "",
-                modifier = Modifier
-                    .width(60.dp)
-                    .height(60.dp)
-            )
-            Spacer(modifier = Modifier.padding(10.dp))
-            Row() {
+        when (type) {
+            "" -> {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(img)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "연락처 이미지",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.padding(10.dp))
                 Column(verticalArrangement = Arrangement.Center) {
-                    Text(text = name, fontSize = 16.sp, modifier = Modifier.padding(bottom = 1.dp))
-                    Text(text = "비회원", color = Color(R.color.noActiveColor))
+                    Text(text = name, fontSize = 16.sp,modifier = Modifier.padding(bottom = 1.dp))
+                    Text(text = "")
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                TextButton(onClick = { /*TODO*/ }, text = "초대", buttonType = ButtonType.ROUNDED )
             }
-          
+            "관리자" -> {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(img)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "연락처 이미지",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                        .clip(CircleShape)
+                )
+                Spacer(modifier = Modifier.padding(10.dp))
+                Column(verticalArrangement = Arrangement.Center) {
+                    Text(text = name, fontSize = 16.sp,modifier = Modifier.padding(bottom = 1.dp))
+                    Text(text = "관리자", color = Color(R.color.noActiveColor))
+                }
+            }
+            else -> {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_contact_avatar),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(60.dp)
+                        .height(60.dp)
+                )
+                Spacer(modifier = Modifier.padding(10.dp))
+                Row {
+                    Column(verticalArrangement = Arrangement.Center) {
+                        Text(text = name, fontSize = 16.sp, modifier = Modifier.padding(bottom = 1.dp))
+                        Text(text = "비회원", color = Color(R.color.noActiveColor))
+                    }
+                    Spacer(modifier = Modifier.weight(1f))
+                    TextButton(onClick = {}, text = "초대", buttonType = ButtonType.ROUNDED )
+                }
 
+
+            }
         }
 
     }

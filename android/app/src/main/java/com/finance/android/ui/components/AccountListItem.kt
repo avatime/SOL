@@ -87,9 +87,7 @@ private fun Draw(
             ) {
                 Text(text = accountName, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 14.sp)
                 Text(text = DecimalFormat("#,###원").format(balance), fontWeight = FontWeight.Bold)
-                formatAccount(companyName, accountNumber)?.let {
-                    Text(text = it, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 12.sp)
-                }
+                Text(text = formatAccount(companyName = companyName, accountNumber = accountNumber), maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 12.sp)
             }
         }
         trailing?.invoke()
@@ -155,7 +153,6 @@ fun AccountListItem_Remit(
     accountNumber: String,
     balance: Int,
     accountName: String,
-    companyName : String = "",
     companyLogoPath: String,
     acMain: Int,
     onClickItem: () -> Unit,
@@ -182,7 +179,7 @@ fun AccountListItem_Remit(
 
 @Composable
 fun formatAccount(companyName: String, accountNumber: String) : String {
-    var formatNum = StringBuffer(accountNumber)
+    val formatNum = StringBuffer(accountNumber)
     when(companyName) {
         "신한" -> return if(accountNumber.length == 11) formatNum.insert(5, "-").insert(3, "-").toString() else formatNum.insert(6, "-").insert(3, "-").toString()
         "기업" -> return formatNum.insert(11, "-").insert(9, "-").insert(3,"-").toString()
@@ -285,7 +282,6 @@ private fun PreviewAccountListItem_Remit(onClickRemit: () -> Unit = {}) {
         accountNumber = "accountNumber",
         balance = 10000,
         accountName = "accountName",
-        companyName = "company",
         companyLogoPath = "https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png",
         acMain = 1,
         onClickItem = {},
