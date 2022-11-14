@@ -2,30 +2,19 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.BankAccountResponseDto
-import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.domain.repository.BaseRepository
-import com.finance.android.domain.repository.StockRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class FinanceAssetViewModel @Inject constructor(
     application: Application,
-    baseRepository: BaseRepository,
-    private val stockRepository: StockRepository
+    baseRepository: BaseRepository
 ) : BaseViewModel(application, baseRepository){
-    val financeList = mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
-
-    fun myFinanceLoad() {
-        viewModelScope.launch {
-            loadMyFinanceList()
-        }
-    }
+    private val financeList = mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
 
     fun getLoadState(): Response<Unit> {
         val arr = arrayOf(financeList)
@@ -38,14 +27,4 @@ class FinanceAssetViewModel @Inject constructor(
             Response.Success(Unit)
         }
     }
-
-    private suspend fun loadMyFinanceList() {
-        this@FinanceAssetViewModel.run {
-            stockRepository.getMyFinanceList()
-        }
-            .collect {
-                financeList.value = it
-            }
-    }
-
 }

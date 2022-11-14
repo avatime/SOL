@@ -27,13 +27,9 @@ fun RecoScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
-    fun launch() {
-       remitViewModel.getRecommendedAccountData()
-        remitViewModel.getRecentMyAccountData()
-    }
-
     LaunchedEffect(Unit) {
-        launch()
+        remitViewModel.getRecommendedAccountData()
+        remitViewModel.getRecentMyAccountData()
     }
 
     Box(
@@ -58,10 +54,7 @@ private fun Recent(
     recentMyAccountData: MutableState<Response<MutableList<RecentMyTradeResponseDto>>>,
     remitViewModel: RemitViewModel,
     navController: NavController
-
-
 ) {
-
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
         Spacer(modifier = Modifier.padding(8.dp))
         Text(
@@ -71,7 +64,6 @@ private fun Recent(
             modifier = Modifier.padding(start = 10.dp)
         )
         Spacer(modifier = Modifier.padding(8.dp))
-
         when (val response = recentMyAccountData.value) {
             is Response.Failure -> Text(text = "실패")
             is Response.Loading -> AnimatedLoading(text = "가져오고 있어요")
@@ -92,18 +84,14 @@ private fun Recent(
                                         cpLogo = it.cpName, cpName = it.cpName
                                     )
                                 )
-                                remitViewModel.validRecieveAccountNumber.value = it.acNo
+                                remitViewModel.validReceiveAccountNumber.value = it.acNo
                                 navController.navigate(Const.INPUT_MONEY_SCREEN)
                             }
                         )
                     }
+                }
             }
-
-
-            }
-
         }
-
         Spacer(modifier = Modifier.padding(8.dp))
         Text(
             text = "최근 보낸 계좌",
@@ -130,15 +118,12 @@ private fun Recent(
                                 cpLogo = it.cpName, cpName = it.cpName
                             )
                         )
-                        remitViewModel.validRecieveAccountNumber.value = it.acNo
+                        remitViewModel.validReceiveAccountNumber.value = it.acNo
                         navController.navigate(Const.INPUT_MONEY_SCREEN)
                     }
                 )
-
             }
         }
-
-
     }
 }
 

@@ -2,11 +2,7 @@ package com.finance.android.viewmodels
 
 import android.app.Application
 import android.util.Log
-import androidx.compose.foundation.layout.Box
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.request.AccountNumberDto
@@ -19,12 +15,8 @@ import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.RemitRepository
-import com.finance.android.ui.components.CustomDialog
-import com.finance.android.ui.components.DialogActionType
-import com.finance.android.ui.components.DialogType
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -36,7 +28,7 @@ class RemitViewModel @Inject constructor(
     private val remitRepository: RemitRepository,
     private val bankRepository: BankRepository
 ) : BaseViewModel(application, baseRepository) {
-    val accountName = savedStateHandle.get<String>("accountName")!! //acName
+    private val accountName = savedStateHandle.get<String>("accountName")!! //acName
     val accountNumber = savedStateHandle.get<String>("accountNumber")!! //ac_send
     val moneyValue = mutableStateOf("")
     val balance = savedStateHandle.get<Int>("balance")
@@ -56,7 +48,6 @@ class RemitViewModel @Inject constructor(
             }
                 .collect {
                     _recommendedAccountData.value = it
-
                 }
         }
     }
@@ -110,8 +101,8 @@ class RemitViewModel @Inject constructor(
 
     //계좌 체크
     var isRightAccount = mutableStateOf(true)
-    var validRecieveAccountNumber = mutableStateOf("0")
-    var validRecieveBankName = mutableStateOf("0")
+    var validReceiveAccountNumber = mutableStateOf("0")
+    private var validReceiveBankName = mutableStateOf("0")
 
     fun checkRightAccount(acNo: String, cpCode: Int, onSuccess: () -> Unit) {
         viewModelScope.launch {
@@ -124,8 +115,8 @@ class RemitViewModel @Inject constructor(
 
                     } else {
                         Log.i("test", "Success")
-                        validRecieveAccountNumber.value = acNo
-                        validRecieveBankName.value = selectedReceiveBank.value!!.cpName.toString()
+                        validReceiveAccountNumber.value = acNo
+                        validReceiveBankName.value = selectedReceiveBank.value!!.cpName
                         onSuccess()
                     }
 
@@ -146,7 +137,7 @@ class RemitViewModel @Inject constructor(
                 remitRepository.postRemitToAccount(
                     RemitInfoRequestDto(
                         acTag = selectedReceiveBank.value!!.cpName,
-                        acReceive = validRecieveAccountNumber.value,
+                        acReceive = validReceiveAccountNumber.value,
                         acSend = accountNumber,
                         acName = accountName,
                         value = value,
@@ -163,16 +154,9 @@ class RemitViewModel @Inject constructor(
                 }
             }
         }
-
     }
 
     val phoneNum = mutableStateOf("")
-
-    //전화번호 가져오기
-    fun onClickContact(phone: String) {
-        phoneNum.value = phone
-
-    }
 
     //전화번호로 송금하기
     fun remitFromPhone(
@@ -268,13 +252,8 @@ class RemitViewModel @Inject constructor(
         }
     }
 
-
-    fun onClickAccount(key: Any) {
-        _recommendedAccountData.value
-    }
-
     val selectedReceiveBank = mutableStateOf<BankInfoResponseDto?>(null)
     fun onClickReceiveBank(bankInfoResponseDto: BankInfoResponseDto) {
-        selectedReceiveBank.value = bankInfoResponseDto;
+        selectedReceiveBank.value = bankInfoResponseDto
     }
 }

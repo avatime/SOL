@@ -59,9 +59,7 @@ class LoginViewModel @Inject constructor(
                 InputUserInfoStep.BIRTHDAY -> validateBirthday(birthday.value)
                 InputUserInfoStep.PHONE_NUM -> validatePhoneNum(phoneNumber.value)
             }
-            SignupStep.TestPhone -> code.value.isNotEmpty() && rightCode.value is Response.Success<String> && (rightCode.value as Response.Success<String>).data.equals(
-                code.value
-            )
+            SignupStep.TestPhone -> code.value.isNotEmpty() && rightCode.value is Response.Success<String> && (rightCode.value as Response.Success<String>).data == code.value
             SignupStep.InputPassword -> {
                 if (passwordRepeat.value == null) {
                     password.value.length == 6
