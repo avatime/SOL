@@ -38,10 +38,12 @@ fun GroupAccountMainScreen(
 
     fun launch() {
         groupAccountViewModel.getGroupAccountData()
+        groupAccountViewModel.duesVal.value = 0
     }
     LaunchedEffect(Unit) {
         launch()
     }
+
     Column(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
@@ -52,7 +54,6 @@ fun GroupAccountMainScreen(
                     shape = RoundedCornerShape(10)
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
         ) {
             when (val response = groupAccountViewModel.groupAccountData.value) {
                 is Response.Failure -> Text(text = "실패")
@@ -73,7 +74,7 @@ fun GroupAccountMainScreen(
 
                     } else {
 
-                        LazyColumn {
+                        LazyColumn(modifier = Modifier) {
                             items(count = response.data.size, key = { it }, itemContent = {
                                 val item = response.data[it]
                                 val paId = item.paId
@@ -81,8 +82,9 @@ fun GroupAccountMainScreen(
                                     paName = item.paName,
                                     amount = item.amount,
                                     onClick = {
-                                        navController.navigate("${Const.GROUP_ACCOUNT_DETAIL_SCREEN}/${paId}")
+                                        navController.navigate(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
                                         groupAccountViewModel.paId.value = paId
+                                        Log.i("group", "모통 paId $paId")
                                     })
 
                             })
@@ -93,7 +95,10 @@ fun GroupAccountMainScreen(
             } //when
         }//column
         TextButton(
-            onClick = { navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN) },
+            onClick = {
+                navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN)
+                groupAccountViewModel.OKtext.value = "모두의 통장을 개설했습니다."
+            },
             modifier = modifier.withBottomButton(),
             text = "모두의 통장 만들러 가기",
             buttonType = ButtonType.ROUNDED
@@ -101,6 +106,7 @@ fun GroupAccountMainScreen(
     }//column
 
 }
+
 
 
 

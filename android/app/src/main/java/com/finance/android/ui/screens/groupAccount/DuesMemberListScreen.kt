@@ -27,6 +27,7 @@ import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.utils.retrieveAllContacts
 import com.finance.android.viewmodels.GroupAccountViewModel
+import java.lang.Integer.parseInt
 
 @Composable
 fun DuesMemberListScreen(
@@ -34,6 +35,7 @@ fun DuesMemberListScreen(
     navController: NavController,
     modifier: Modifier,
 ) {
+
     if (ActivityCompat.checkSelfPermission(
             LocalContext.current,
             Manifest.permission.READ_CONTACTS
@@ -61,8 +63,8 @@ fun DuesMemberListScreen(
     val createDuesRequestDto = CreateDuesRequestDto(
         groupAccountViewModel.duesName.value,
         groupAccountViewModel.paId.value,
-        groupAccountViewModel.duesBalance.value,
-        "2022-11-10 17:45",
+        parseInt(groupAccountViewModel.duesBalance.value),
+        duesDue = "${groupAccountViewModel.mDate.value} ${groupAccountViewModel.mTime.value}",
         memberList
     )
 

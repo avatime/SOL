@@ -27,7 +27,7 @@ fun GroupAccountListItem(
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .padding(horizontal = 10.dp)
+        .padding(horizontal = 15.dp)
         .height(75.dp)
         .clickable { onClick()
         }, verticalAlignment = Alignment.CenterVertically

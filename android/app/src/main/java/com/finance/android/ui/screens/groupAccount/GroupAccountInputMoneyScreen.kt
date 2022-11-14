@@ -6,8 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -27,6 +26,9 @@ import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
+import java.lang.Integer.parseInt
+import java.util.regex.Pattern
+
 
 @Composable
 fun GroupAccountInputMoneyScreen(
@@ -36,45 +38,44 @@ fun GroupAccountInputMoneyScreen(
 ) {
     LaunchedEffect(Unit) {
         groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
+//        Log.i(
+//            "group",
+//            "inputmoney에서 잔액값 : ${DecimalFormat("#,###원").format(parseInt(groupAccountViewModel.representAccountBalance.value))} "
+//        )
     }
+
 
     val placeholderText = remember {
         mutableStateOf("")
     }
     val duesValue = remember {
-        mutableStateOf("${groupAccountViewModel.duesVal.value}")
+        mutableStateOf("")
     }
-
+    if (groupAccountViewModel.duesVal.value > 0) {
+        duesValue.value = groupAccountViewModel.duesVal.value.toString()
+    }
     //계좌잔액
-    val balance = remember {
-        mutableStateOf(groupAccountViewModel.representAccountBalance.value)
-    }
-
-    val isValid = remember {
+    val balance = groupAccountViewModel.representAccountBalance.value
+    var isValid = remember {
         mutableStateOf(true)
     }
-
     if (duesValue.value.isEmpty()) {
         placeholderText.value = "얼마를 보낼까요?"
     }
-
     if (duesValue.value.isEmpty()
-        || balance.value.isEmpty()
-        || Integer.parseInt(duesValue.value) > Integer.parseInt(
-            balance.value
+        || balance.isEmpty()
+        || parseInt(duesValue.value) > parseInt(
+            balance
         )
     ) {
         isValid.value = false
     }
 
-    if (!isValid.value) {
-        Text(
-            text = "잔액이 ${balance}원이에요.",
-            color = MaterialTheme.colors.error,
-            style = MaterialTheme.typography.caption,
-            modifier = Modifier.padding(start = 30.dp)
-        )
+    if (duesValue.value == "0") {
+        duesValue.value == ""
     }
+
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -82,11 +83,13 @@ fun GroupAccountInputMoneyScreen(
     ) {
         TextField(
             value = duesValue.value,
-
             onValueChange = {
-                duesValue.value = it
-
-
+                if(!Pattern.matches("^[0-9]*$", it)) return@TextField
+                if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
+                if (!isValid.value && duesValue.value < it) {
+                    return@TextField
+                }
+                else if (duesValue.value == it) return@TextField
             },
             modifier = Modifier
                 .padding(start = 16.dp)
@@ -99,7 +102,6 @@ fun GroupAccountInputMoneyScreen(
                     fontSize = 30.sp,
                     textAlign = TextAlign.Center,
                 )
-
             },
             colors = TextFieldDefaults
                 .textFieldColors(
@@ -109,10 +111,23 @@ fun GroupAccountInputMoneyScreen(
                     cursorColor = Color.Transparent,
                 ),
             textStyle = TextStyle().copy(fontSize = 40.sp),
-            isError = !isValid.value,
+            isError = isValid.value,
         )
+        if (!isValid.value && balance.isNotEmpty() && parseInt(balance) > 0 && duesValue.value.isNotEmpty() && parseInt(
+                balance
+            ) < parseInt(duesValue.value)
+        ) {
+
+
+        }
         TextButton(
-            onClick = { navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN) },
+            onClick = {
+                if (duesValue.value.isNotEmpty() && duesValue.value > "0") {
+                    navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN)
+                    groupAccountViewModel.duesVal.value = Integer.parseInt(duesValue.value)
+                }
+
+            },
             text = "다음",
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton()

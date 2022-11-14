@@ -26,8 +26,9 @@ fun GroupAccountTradeDetailScreen(
     LaunchedEffect(Unit) {
         launch()
     }
+
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {

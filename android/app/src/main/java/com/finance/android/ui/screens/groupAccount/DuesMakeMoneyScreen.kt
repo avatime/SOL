@@ -2,14 +2,21 @@ package com.finance.android.ui.screens.groupAccount
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
@@ -29,7 +36,7 @@ fun DuesMakeMoneyScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(color = MaterialTheme.colorScheme.surface),
+            .background(color = Color.White),
         horizontalAlignment = Alignment.Start,
         verticalArrangement = Arrangement.Top
     ) {
@@ -51,25 +58,35 @@ fun DuesMakeMoneyScreen(
         }
 
         TextInput(
-            value = groupAccountViewModel.duesBalance.value.toString(),
+            value = groupAccountViewModel.duesBalance.value,
             onValueChange = {
+
                 if (it.length in 1..20) {
-                    groupAccountViewModel.duesBalance.value = Integer.parseInt(it)
+                    groupAccountViewModel.duesBalance.value = it
                 }
             },
+            keyboardType = KeyboardType.Number,
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_medium))
                 .fillMaxWidth()
-                .padding(0.dp)
+                .padding(0.dp),
+            textStyle = TextStyle().copy(fontSize = 40.sp),
         )
 
         Spacer(modifier = Modifier.weight(1f))
-        TextButton(
-            onClick = { navController.navigate(Const.DUES_MEMBER_LIST) },
-            modifier = Modifier
-                .withBottomButton(),
-            text = "확인",
-            buttonType = ButtonType.ROUNDED,
-        )
+        if (groupAccountViewModel.duesBalance.value.isNotEmpty() && groupAccountViewModel.duesBalance.value != "0") {
+            TextButton(
+                onClick = {
+                    if (groupAccountViewModel.duesBalance.value.isNotEmpty()) {
+                        navController.navigate(Const.DUES_DATE_PICK_SCREEN)
+                    }
+                },
+                modifier = Modifier
+                    .withBottomButton(),
+                text = "다음",
+                buttonType = ButtonType.ROUNDED,
+            )
+        }
+
     }
 }

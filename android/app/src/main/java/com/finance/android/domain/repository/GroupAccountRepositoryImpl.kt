@@ -58,4 +58,12 @@ class GroupAccountRepositoryImpl @Inject constructor(
     override suspend fun postGroupAccountInfo(groupIdRequestDto: GroupIdRequestDto): PublicAccountResponseDto {
         return groupAccountService.postGroupAccountInfo(groupIdRequestDto)
     }
+
+    override suspend fun postDeposit(groupDepositRequestDto: GroupDepositRequestDto) {
+        return groupAccountService.postDeposit(groupDepositRequestDto)
+    }
+
+    override suspend fun postWithdrawDues(groupWithdrawDuesRequestDto: GroupWithdrawDuesRequestDto) {
+       return groupAccountService.postWithdrawDues(groupWithdrawDuesRequestDto)
+    }
 }

@@ -52,14 +52,15 @@ fun GroupAccountDuesScreen(
                         DuesItem(
                             paid = it.paid,
                             name = it.duesName,
-                            dueDate = it.dueData,
+                            dueDate = it.dueDate,
                             totalUser = it.totalUSer,
                             paidUser = it.paidUser,
                             duesVal = it.duesVal,
                             onClick = {
-                                navController.navigate("${Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN}/${it.duesVal}")
+                                navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN)
                                 groupAccountViewModel.duesVal.value = it.duesVal
                                 groupAccountViewModel.duesId.value = it.duesId
+                                groupAccountViewModel.screenType.value = 1
                             }
                         )
                     }
@@ -67,7 +68,9 @@ fun GroupAccountDuesScreen(
             }
         }// end of scrollColumn
         TextButton(
-            onClick = { navController.navigate(Const.DUES_MAKE_NAME_SCREEN) },
+            onClick = { navController.navigate(Const.DUES_MAKE_NAME_SCREEN)
+                      groupAccountViewModel.OKtext.value = "회비를 생성했습니다."
+                      groupAccountViewModel.duesVal.value = 0},
             text = "회비 걷기",
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton()
