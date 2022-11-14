@@ -59,6 +59,12 @@ class RemitViewModel @Inject constructor(
                 .collect {
                     _recommendedAccountData.value = it
                 }
+            this@RemitViewModel.run {
+                bankRepository.getRecentMyAccount()
+            }.collect {
+                _recentMyAccountData.value = it
+            }
+
         }
     }
 
