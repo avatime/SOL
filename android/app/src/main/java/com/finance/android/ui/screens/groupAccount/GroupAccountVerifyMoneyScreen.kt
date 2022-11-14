@@ -3,12 +3,16 @@ package com.finance.android.ui.screens.groupAccount
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.domain.dto.request.GroupDepositRequestDto
 import com.finance.android.domain.dto.request.GroupWithdrawDuesRequestDto
@@ -35,7 +39,21 @@ fun GroupAccountVerifyMoneyScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        Text(text = "${DecimalFormat("#,###원").format(groupAccountViewModel.duesVal.value)}을 보내겠습니까?")
+        Text(
+            text = "${DecimalFormat("#,###원").format(groupAccountViewModel.duesVal.value)}을",
+            softWrap = false,
+            maxLines = 1,
+            fontSize = 30.sp,
+            modifier = Modifier.padding(start = 25.dp)
+        )
+        Text(
+            text = "보내겠습니까?",
+            softWrap = false,
+            maxLines = 1,
+            fontSize = 30.sp,
+            modifier = Modifier.padding(start = 25.dp)
+        )
+        Spacer(modifier = Modifier.weight(1.0f))
         TextButton(
             onClick = {
                 if (groupAccountViewModel.screenType.value == 1) {
@@ -43,18 +61,24 @@ fun GroupAccountVerifyMoneyScreen(
                         RemitDuesRequestDto(
                             duesVal = groupAccountViewModel.duesVal.value,
                             duesId = groupAccountViewModel.duesId.value
-                        ), onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN) })
+                        ), onSuccess = {
+                            navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                        })
                 } else if (groupAccountViewModel.screenType.value == 2) {
                     groupAccountViewModel.postDeposit(GroupDepositRequestDto(
                         paId = groupAccountViewModel.paId.value,
                         value = groupAccountViewModel.duesVal.value,
-                    ), onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN) })
+                    ), onSuccess = {
+                        navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                    })
                 } else if (groupAccountViewModel.screenType.value == 3) {
                     groupAccountViewModel.postWithdraw(
                         GroupWithdrawDuesRequestDto(
                             paId = groupAccountViewModel.paId.value,
                             value = groupAccountViewModel.duesVal.value
-                        ), onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN) })
+                        ), onSuccess = {
+                            navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                        })
 
                 }
             },

@@ -1,6 +1,8 @@
 package com.finance.android.domain.dto.response
 
 import com.google.gson.annotations.SerializedName
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 data class DuesResponseDto(
     @SerializedName("paid")
@@ -12,7 +14,7 @@ data class DuesResponseDto(
     @SerializedName("created_at")
     val createdAt : String,//생성 날짜
     @SerializedName("due_date")
-    val dueData : String, //만기일 (정기납부일때만)
+    val dueDate : LocalDateTime, //만기일 (정기납부일때만)
     @SerializedName("dues_val")
     val duesVal : Int, //금액
     @SerializedName("paid_user")

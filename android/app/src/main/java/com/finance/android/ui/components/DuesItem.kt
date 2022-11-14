@@ -14,9 +14,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
 import java.text.DecimalFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Composable
-fun DuesItem(paid : Boolean, name: String, dueDate: String, totalUser: Int, paidUser: Int, duesVal: Int, onClick : ()-> Unit) {
+fun DuesItem(paid : Boolean, name: String, dueDate: LocalDateTime, totalUser: Int, paidUser: Int, duesVal: Int, onClick : ()-> Unit) {
 
     val progress: Float = paidUser.toFloat() / totalUser.toFloat()
     val text = remember {
@@ -40,7 +42,7 @@ fun DuesItem(paid : Boolean, name: String, dueDate: String, totalUser: Int, paid
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    Text(text = dueDate, color = Color(R.color.noActiveColor))
+                    Text(text = "${dueDate.monthValue}/${dueDate.dayOfMonth}", color = Color(R.color.noActiveColor))
                     Spacer(modifier = Modifier.padding(3.dp))
                     Text(
                         text = "${DecimalFormat("#,###").format(duesVal)}원",
