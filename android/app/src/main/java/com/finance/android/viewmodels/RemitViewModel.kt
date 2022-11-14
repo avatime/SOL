@@ -26,8 +26,8 @@ import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
-import java.net.URLEncoder
 import java.text.DecimalFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -206,14 +206,14 @@ class RemitViewModel @Inject constructor(
                         UserStore(getApplication()).getValue(UserStore.KEY_USER_NAME)
                             .collect { name ->
                                 val link =
-                                    "${Const.WEB_API}remit?query=${encodeValue("$name/$accountName/$accountNumber/$value/$token")}"
+                                    "${Const.WEB_API}remit?query=${encodeValue("$token/${UUID.randomUUID()}")}"
 
                                 val smsUri = Uri.parse("sms:${phoneNum.value.replace("-", "")}")
                                 val sendIntent = Intent(Intent.ACTION_SENDTO, smsUri).apply {
                                     addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                     putExtra(
                                         "sms_body",
-                                        "${name}님이 ${DecimalFormat("#.###원").format(value)}을 보냈어요.\n아래 링크로 접속해서 송금 받을 계좌 번호를 입력하세요.\n$link"
+                                        "${name}님이 ${DecimalFormat("#,###원").format(value)}을 보냈어요.\n아래 링크로 접속해서 송금 받을 계좌 번호를 입력하세요.\n$link"
                                     )
                                 }
                                 getApplication<Application>().startActivity(sendIntent)
@@ -230,7 +230,7 @@ class RemitViewModel @Inject constructor(
 
     private fun encodeValue(value: String): String {
         return Base64.encodeToString(
-            URLEncoder.encode(value, "UTF-8").toByteArray(),
+            value.toByteArray(),
             Base64.DEFAULT
         )
     }
