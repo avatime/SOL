@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -54,11 +55,11 @@ private fun Draw(
         )
         Column(
             modifier = Modifier
-                .padding(start = 8.dp).weight(1f),
+                .padding(start = 12.dp).weight(1f),
         ) {
             Text(text = insuranceName, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(text = "보험료: ${DecimalFormat("#,###원").format(fee)}", fontWeight = FontWeight.Bold)
-            Text(text = "계약자: ${myName}|피보험자: $isName", fontSize = 10.sp)
+            Text(text = "계약자: ${myName}|피보험자: $isName", fontSize = 10.sp, color = Color(R.color.noActiveColor))
         }
         trailing?.invoke()
     }

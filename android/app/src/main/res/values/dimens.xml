@@ -12,7 +12,7 @@
     <dimen name="font_size_btn_bottom_text">20sp</dimen>
     <dimen name="font_size_btn_small_text">14sp</dimen>
     <dimen name="font_size_tab_default">20sp</dimen>
-    <dimen name="account_like_name">18sp</dimen>
-    <dimen name="account_like_account_number">15sp</dimen>
+    <dimen name="account_like_name">16sp</dimen>
+    <dimen name="account_like_account_number">13sp</dimen>
     <dimen name="calendar_default">20sp</dimen>
 </resources>

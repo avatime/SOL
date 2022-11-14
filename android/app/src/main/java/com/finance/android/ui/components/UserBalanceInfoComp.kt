@@ -75,7 +75,7 @@ fun UserBalanceInfo(
 
     val buttonText = when (type) {
         "포인트" -> "출금"
-        else -> "이체"
+        else -> "송금"
     }
     Column(
         modifier = Modifier
