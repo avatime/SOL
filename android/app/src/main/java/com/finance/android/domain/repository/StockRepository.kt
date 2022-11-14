@@ -9,6 +9,7 @@ interface StockRepository {
     suspend fun getStockAccountList(): MutableList<BankAccountResponseDto>
     suspend fun putRegisterStockAccount(stockAccountNumberDtoArray: Array<StockAccountNumberDto>)
     suspend fun getFinanceList(): Array<FinanceResponseDto>
+    suspend fun getHomeFinanceList(): MutableList<FinanceResponseDto>
     suspend fun getFinanceDetailList(fnName: String) : Array<FinanceDetailResponseDto>
     suspend fun getMyFinanceList(): MutableList<BankAccountResponseDto>
 }

@@ -10,10 +10,10 @@ import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
 import androidx.compose.animation.*
-import androidx.compose.animation.core.keyframes
-import androidx.compose.animation.core.tween
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -28,7 +28,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -39,6 +38,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
+import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.services.WalkService
 import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.LightMainColor
@@ -51,7 +51,9 @@ import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import java.net.URLEncoder
 import java.text.DecimalFormat
+import kotlin.math.roundToInt
 
+@ExperimentalAnimationApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
@@ -102,7 +104,7 @@ fun HomeScreen(
                     HomeCardContainer(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(dimensionResource(R.dimen.padding_medium))
+                            .padding(dimensionResource(R.dimen.padding_medium), top = 0.dp)
                             .background(
                                 color = MaterialTheme.colorScheme.surface,
                                 shape = RoundedCornerShape(10.dp)
@@ -318,6 +320,7 @@ private fun HomeCardContainer2(modifier: Modifier, navController: NavController)
     }
 }
 
+@ExperimentalAnimationApi
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 private fun TopBar(
@@ -326,8 +329,8 @@ private fun TopBar(
 ) {
     Row(
         modifier = Modifier
-            .padding(top = 10.dp)
             .padding(
+                vertical = 10.dp,
                 horizontal = dimensionResource(id = R.dimen.padding_medium).value.dp,
             )
             .fillMaxWidth(),
@@ -365,9 +368,21 @@ private fun TopBar(
             )
         }
         
-        Spacer(modifier = Modifier.weight(1.0f))
+        Spacer(modifier = Modifier.padding(20.dp))
 
-        minibar()
+        Column (
+            modifier = Modifier
+                .clip(RoundedCornerShape(10.dp))
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .clickable {
+                    onClick()
+                },
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
+        ){
+            if(homeViewModel.getStockLoadState() == Response.Success(Unit)) animate_num(homeViewModel)
+        }
     }
 }
 
@@ -476,9 +491,25 @@ private fun PedometerOnStateButton(
 
 @ExperimentalAnimationApi
 @Composable
-fun animate() {
+fun animate_num(homeViewModel: HomeViewModel = hiltViewModel()) {
+    var state by remember { mutableStateOf(0) }
+    var count by remember { mutableStateOf(0) }
+    val transition = rememberInfiniteTransition()
+    val value by transition.animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(1500, easing = { it.roundToInt().toFloat() }),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+    if(state != value.toInt()) {
+        state = value.toInt()
+        if(state == 0) count++
+    }
+
     AnimatedContent(
-        targetState = List(1, 2, 3, 4, 5 ),
+        targetState = count,
         transitionSpec = {
             // Compare the incoming number with the previous number.
             if (targetState > initialState) {
@@ -498,16 +529,16 @@ fun animate() {
             )
         }
     ) { targetCount ->
-        Text(text = "$targetCount")
+        minibar(idx = targetCount, stockList = (homeViewModel.stockList.value as Response.Success).data)
     }
 }
 
-@Preview
 @Composable
 fun minibar(
+    idx : Int = 0,
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    homeViewModel: HomeViewModel = hiltViewModel()
+    stockList : MutableList<FinanceResponseDto>,
 ) {
     Row(
         modifier = modifier
@@ -517,36 +548,38 @@ fun minibar(
                 onClick()
             }
             .padding(10.dp),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        for(stock in homeViewModel.stockList.value) {
+        val stock = stockList[idx % stockList.size]
+        Row(verticalAlignment = Alignment.CenterVertically) {
             Box(
                 modifier = Modifier.size(24.dp)
             ) {
-                AsyncImage(model = stock.fnLogo, contentDescription = stock.fnName)
+                AsyncImage(modifier = Modifier.clip(CircleShape).background(color = Color.White), model = stock.fnLogo, contentDescription = stock.fnName)
             }
             Spacer(modifier = Modifier.width(7.dp))
             Text(
-                text = stock.fnName
+                text = stock.fnName, fontSize = if(stock.fnName.length > 7) 12.sp else 16.sp
             )
-            Spacer(modifier = Modifier.width(7.dp))
-            val per = stock.per
-            val color = if (per > 0) Color.Red else Color.Blue
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.End){
-                Text(
-                    text = DecimalFormat("#,###원").format(stock.close),
-                    color = color,
-                    fontSize = 12.sp
-                )
-                Text(
-                    text = "${if (per > 0) "+" else ""}$per%",
-                    color = color,
-                    fontSize = 9.sp
-                )
-            }
-        break
+        }
+//        Spacer(modifier = Modifier.width(7.dp))
+        Spacer(modifier = Modifier.weight(1.0f))
+        val per = stock.per
+        val color = if (per > 0) Color.Red else Color.Blue
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.End){
+            Text(
+                text = DecimalFormat("#,###원").format(stock.close),
+                color = color,
+                fontSize = 12.sp
+            )
+            Text(
+                text = "${if (per > 0) "+" else ""}$per%",
+                color = color,
+                fontSize = 9.sp
+            )
         }
     }
 }
