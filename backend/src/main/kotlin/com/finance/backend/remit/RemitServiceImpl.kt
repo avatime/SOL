@@ -70,7 +70,7 @@ class RemitServiceImpl(
             val recentAccountList = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
             for (recentHistory in recentAccountList){
                 if (!myAccountList.contains(recentHistory.tdTgAc) && !checkBookmarkList.contains(recentHistory.tdTgAc)){
-                    val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).orElse(null)?: throw NoAccountException()
+                    val recentAccount = accountRepository.findById(recentHistory.tdTgAc!!).orElse(null)?: if(recentHistory.tdCn != "비회원") throw NoAccountException() else continue
                     val recentUser = userRepository.findById(recentAccount.user.id).orElse(null)
                     val recentCorporation = corporationRepository.findById(recentAccount.acCpCode).orElse(null)
                     accountDetailList.add(RecentTradeRes(recentUser.name, recentAccount.acNo, recentCorporation.cpName, false, recentCorporation.cpLogo, recentHistory.tdDt))
