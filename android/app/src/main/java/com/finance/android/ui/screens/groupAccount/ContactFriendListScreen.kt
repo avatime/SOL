@@ -45,19 +45,13 @@ fun ContactFriendListScreen(
     val friendsList =
         list.filterIndexed { idx, _ -> groupAccountViewModel.selectFriendsList!![idx].value }
 
-    for (friend in friendsList) {
-        Log.i("친구 번호", "${friend.phoneNumber}")
-    }
-
     val name = groupAccountViewModel.name.value
     val memberList = ArrayList<MemberRequestDto>()
     for (friend in friendsList) {
-        memberList.add(MemberRequestDto(friend.name, friend.phoneNumber.toString()))
+        memberList.add(MemberRequestDto(friend.name, friend.phoneNumber[0]))
     }
 
     val createGroupAccountRequestDto = CreateGroupAccountRequestDto(name, memberList)
-
-
 
     Column(
         modifier = modifier
@@ -76,8 +70,6 @@ fun ContactFriendListScreen(
                             val index = list.indexOfFirst { data -> data.contactId == item.contactId }
                             groupAccountViewModel.onClickDeleteFriend(index)
                         })
-
-
                 })
             }
         }
@@ -97,7 +89,6 @@ fun ContactFriendListScreen(
                     onClickItem = { groupAccountViewModel.onClickFriend(it) })
             }
             )
-
         }
 
         TextButton(
