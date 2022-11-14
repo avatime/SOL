@@ -109,4 +109,5 @@ dependencies {
     implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
     //noinspection GradleCompatible
     implementation 'com.android.support:palette-v7:28.0.0'
+    implementation "androidx.paging:paging-compose:1.0.0-alpha17"
 }
