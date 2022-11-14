@@ -54,5 +54,6 @@ object Const {
         const val CARD_DETAIL = "route_cardDetail"
         const val EXCHANGE = "route_pointExchange"
         const val CARD_BENEFIT = "route_cardBenefit"
+        const val QRCODE = "route_qrcode"
     }
 }
