@@ -9,14 +9,14 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
+import androidx.compose.animation.*
+import androidx.compose.animation.core.keyframes
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +28,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
@@ -473,6 +474,34 @@ private fun PedometerOnStateButton(
     }
 }
 
+@ExperimentalAnimationApi
+@Composable
+fun animate() {
+    AnimatedContent(
+        targetState = List(1, 2, 3, 4, 5 ),
+        transitionSpec = {
+            // Compare the incoming number with the previous number.
+            if (targetState > initialState) {
+                // If the target number is larger, it slides up and fades in
+                // while the initial (smaller) number slides up and fades out.
+                slideInVertically { height -> height } + fadeIn() with
+                        slideOutVertically { height -> -height } + fadeOut()
+            } else {
+                // If the target number is smaller, it slides down and fades in
+                // while the initial number slides down and fades out.
+                slideInVertically { height -> -height } + fadeIn() with
+                        slideOutVertically { height -> height } + fadeOut()
+            }.using(
+                // Disable clipping since the faded slide-in/out should
+                // be displayed out of bounds.
+                SizeTransform(clip = false)
+            )
+        }
+    ) { targetCount ->
+        Text(text = "$targetCount")
+    }
+}
+
 @Preview
 @Composable
 fun minibar(
@@ -517,7 +546,7 @@ fun minibar(
                     fontSize = 9.sp
                 )
             }
-            break
+        break
         }
     }
 }
