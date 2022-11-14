@@ -12,4 +12,5 @@ interface AccountRepository : JpaRepository<Account, String> {
     fun findByAcNoAndUser(acNo: String, user : User) : Account?
     fun findByUserIdAndAcTypeAndAcReg(userId: UUID, acType: Int, acReg: Boolean): List<Account>?
     fun findByUserIdAndAcType(userId: UUID, acType: Int): List<Account>?
+    fun findByUserIdAndAcReg(userId: UUID, acReg: Boolean) : List<Account>?
 }

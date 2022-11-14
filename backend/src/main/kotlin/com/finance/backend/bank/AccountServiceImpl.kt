@@ -153,7 +153,7 @@ class AccountServiceImpl(
             val user = userRepository.findById(userId).orElse(null)
 
             // 내 계좌 가져오기
-            val accountList = accountRepository.findByUserId(userId).orEmpty()
+            val accountList = accountRepository.findByUserIdAndAcReg(userId, true).orEmpty()
 
             // 북마크 한 내 계좌
             val myBookmarkList = ArrayList<String>()
