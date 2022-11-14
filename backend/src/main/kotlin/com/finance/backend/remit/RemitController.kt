@@ -43,8 +43,13 @@ class RemitController(val remitService: RemitService, val kafka: KafkaProducer) 
 
     @PostMapping("/phone/nonmember")
     fun postRemitNonMember(@RequestBody remitNonMemberReq: RemitNonMemberReq): ResponseEntity<Any>{
+        println("postRemitNomMember")
         kafka.noMemberMessage(remitNonMemberReq)
-        return ResponseEntity.status(200).body(remitService.postRemitPhoneNonMember(remitNonMemberReq))
+        return try{
+            ResponseEntity.status(200).body(remitService.postRemitPhoneNonMember(remitNonMemberReq))
+        } catch (e :Exception) {
+            ResponseEntity.status(500).body(e)
+        }
     }
 
     @GetMapping("/phone/nonmember/{tokenId}")
