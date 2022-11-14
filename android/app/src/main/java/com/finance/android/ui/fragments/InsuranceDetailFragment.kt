@@ -133,9 +133,6 @@ fun ContentList(
             Column(
                 modifier =
                 if (expandable) Modifier
-                    .padding(horizontal = 15.dp / 2)
-                    .clip(RoundedCornerShape(10.dp))
-                    .clickable { expanded.value = !expanded.value }
                     .padding(
                         vertical = dimensionResource(R.dimen.padding_medium) / 2,
                         horizontal = 15.dp / 2
@@ -144,12 +141,14 @@ fun ContentList(
                     .padding(
                         vertical = dimensionResource(R.dimen.padding_medium) / 2,
                         horizontal = 15.dp
-                    ).animateContentSize()
+                    )
             ) {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 15.dp / 2),
+                        .padding(horizontal = 15.dp / 2)
+                        .clip(RoundedCornerShape(5.dp))
+                        .clickable { expanded.value = !expanded.value },
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
