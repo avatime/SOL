@@ -210,7 +210,7 @@ class GroupServiceImpl (
             val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user: User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             val state : PublicAccountMember = publicAccountMemberRepository.findByUserAndPublicAccountId(user, publicAccountDepositReq.publicAccountId)?: throw AuthenticationException()
-            val account : Account = accountRepository.findByAcNoAndUser(publicAccountDepositReq.account, user) ?: throw NoAccountException()
+            val account : Account = accountRepository.findByAcNo(user.account) ?: throw NoAccountException()
             val id = publicAccountDepositReq.publicAccountId
             val tradeHistory : TradeHistory = TradeHistory(
                     state.publicAccount.paName,

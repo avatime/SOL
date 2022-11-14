@@ -54,7 +54,7 @@ class User(
     var point : Long = 0
 
     @Column
-    var account: String? = null
+    var account: String = ""
 
     @Column
     var type: String = type
