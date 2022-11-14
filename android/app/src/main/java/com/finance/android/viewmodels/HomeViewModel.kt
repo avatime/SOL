@@ -89,9 +89,6 @@ class HomeViewModel @Inject constructor(
         }
             .collect {
                 stockList.value = it
-                if (it is Response.Success) {
-//                    stockList.value = it.data
-                }
             }
     }
 

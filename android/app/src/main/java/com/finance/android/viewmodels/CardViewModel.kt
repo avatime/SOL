@@ -3,7 +3,10 @@ package com.finance.android.viewmodels
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.finance.android.domain.dto.response.*
+import com.finance.android.domain.dto.response.CardBenefitInfoResponseDto
+import com.finance.android.domain.dto.response.CardBillDetailResponseDto
+import com.finance.android.domain.dto.response.CardRecommendResponseDto
+import com.finance.android.domain.dto.response.CardResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.CardRepository
 import com.finance.android.utils.Response
@@ -112,7 +115,7 @@ class CardViewModel @Inject constructor(
 
     val cardRecommendList = mutableStateOf<Response<CardRecommendResponseDto>>(Response.Loading)
 
-    fun getLoadCardReccommend(): Response<Unit> {
+    fun getLoadCardRecommend(): Response<Unit> {
         val arr = arrayOf(cardRecommendList)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
