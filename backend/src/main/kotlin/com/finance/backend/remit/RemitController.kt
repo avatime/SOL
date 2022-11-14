@@ -2,9 +2,11 @@ package com.finance.backend.remit
 
 import com.finance.backend.kafka.KafkaProducer
 import com.finance.backend.remit.request.RemitInfoReq
+import com.finance.backend.remit.request.RemitNonMemberReq
 import com.finance.backend.remit.request.RemitPhoneReq
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -29,6 +31,7 @@ class RemitController(val remitService: RemitService, val kafka: KafkaProducer) 
 
     @PostMapping("/phone")
     fun postRemitPhone(@RequestBody remitPhoneReq: RemitPhoneReq): ResponseEntity<Any>{
+        kafka.phoneMessage(remitPhoneReq)
         return ResponseEntity.status(200).body(remitService.postRemitPhone(remitPhoneReq))
 
     }
@@ -39,8 +42,13 @@ class RemitController(val remitService: RemitService, val kafka: KafkaProducer) 
     }
 
     @PostMapping("/phone/nonmember")
-    fun postRemitNonMember(@RequestBody remitInfoReq: RemitInfoReq): ResponseEntity<Any>{
-        kafka.accountMessage(remitInfoReq)
-        return ResponseEntity.status(200).body(remitService.postRemitPhoneNonMember(remitInfoReq))
+    fun postRemitNonMember(@RequestBody remitNonMemberReq: RemitNonMemberReq): ResponseEntity<Any>{
+        kafka.noMemberMessage(remitNonMemberReq)
+        return ResponseEntity.status(200).body(remitService.postRemitPhoneNonMember(remitNonMemberReq))
+    }
+
+    @GetMapping("/phone/nonmember/{tokenId}")
+    fun getRemitNonMember(@PathVariable tokenId : Long): ResponseEntity<Any>{
+        return ResponseEntity.status(200).body(remitService.getRemitPhoneNonMember(tokenId))
     }
 }
