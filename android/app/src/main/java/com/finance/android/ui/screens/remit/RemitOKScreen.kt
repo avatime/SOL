@@ -18,6 +18,7 @@ import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.RemitViewModel
+import java.text.DecimalFormat
 
 @Composable
 fun RemitOKScreen(
@@ -58,7 +59,7 @@ fun RemitOKScreen(
         )
         Spacer(modifier = Modifier.padding(10.dp))
 
-        Text(text = "${remitViewModel.moneyValue.value}원", fontSize = 25.sp)
+        Text(text = DecimalFormat("#,###원").format(remitViewModel.moneyValue.value.toInt()), fontSize = 25.sp)
         Text(text = "송금완료",  fontSize = 25.sp)
         Spacer(modifier = Modifier.padding(10.dp))
         com.finance.android.ui.components.TextButton(
