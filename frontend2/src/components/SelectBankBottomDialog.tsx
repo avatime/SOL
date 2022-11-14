@@ -100,7 +100,7 @@ function TabPanel(props: TabPanelProps) {
   const { children, value, index, ...other } = props;
 
   return (
-    <div
+    <Box
       role="tabpanel"
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
@@ -115,7 +115,7 @@ function TabPanel(props: TabPanelProps) {
           <Typography>{children}</Typography>
         </Box>
       )}
-    </div>
+    </Box>
   );
 }
 
@@ -127,12 +127,12 @@ interface DrawTwoColumnProps {
 function DrawTwoColumn({ items, onClickItem }: DrawTwoColumnProps) {
   return (
     <Grid container direction="row">
-      {items.map((it) => (
-        <Grid xs={6} onClick={() => onClickItem(it)}>
+      {items.map((it, idx) => (
+        <Grid key={idx} item xs={6} onClick={() => onClickItem(it)}>
           <Stack direction="row" alignItems="center" my={1}>
             <img src={it.cp_logo} style={{ width: "24px", height: "24px", borderRadius: "20px" }} />
             <Box m={1} />
-            <p style={{ fontSize: "12px" }}>{it.cp_name}</p>
+            <span style={{ fontSize: "12px" }}>{it.cp_name}</span>
           </Stack>
         </Grid>
       ))}
