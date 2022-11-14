@@ -30,12 +30,6 @@ function SendPage() {
     } catch {}
   }, [searchParams]);
 
-  useEffect(() => {
-    if (data == null) {
-      return;
-    }
-  }, [data]);
-
   const [openBottomDialog, setOpenBottomDialog] = useState(false);
   const [bankInfo, setBankInfo] = useState<BankInfoRes | null>(null);
   const [acReceive, setAcReceive] = useState("");
