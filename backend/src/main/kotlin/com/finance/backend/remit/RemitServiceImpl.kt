@@ -126,7 +126,8 @@ class RemitServiceImpl(
 
             val remitTarget = userCorporation.cpName
             val targetAccount = userAccount.acNo
-            val receive = accountRepository.findById(remitPhoneReq.receive).orElse(null)?: throw  NoAccountException()
+            val send = remitPhoneReq.send
+            val receive = remitPhoneReq.receive
             val remitAccount = accountRepository.findById(remitPhoneReq.acSend).orElse(null)?: throw NoAccountException()
 
             if (remitAccount.balance < value){ throw InsufficientBalanceException()} // 잔액 부족시 418 에러
@@ -134,7 +135,7 @@ class RemitServiceImpl(
             if (remitAccount.acNo == targetAccount){ throw RemitFailedException() } // 보내는 계좌 받는 계좌 같으면 예외 처리
 
             // 출금 거래 내역
-            val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive.user.name, remitAccount.user.name, remitAccount)
+            val tradeRemitHistory = TradeHistory("출금",value, date, 2, remitTarget, targetAccount, receive, send, remitAccount)
             tradeHistoryRepository.save(tradeRemitHistory)
             // 잔액 변경 저장
             remitAccount.withdraw(value)
@@ -143,7 +144,7 @@ class RemitServiceImpl(
 
             // 입금 거래 내역
             val depositAccount = accountRepository.findById(targetAccount).orElse(null)?: throw NoAccountException()
-            val depositRemitHistory = TradeHistory("입금",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, remitAccount.user.name, receive.user.name, depositAccount)
+            val depositRemitHistory = TradeHistory("입금",value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
             tradeHistoryRepository.save(depositRemitHistory)
             // 잔액 변경 저장
             depositAccount.deposit(value)
@@ -185,7 +186,7 @@ class RemitServiceImpl(
         if (remitAccount.acNo == targetAccount){ throw RemitFailedException() } // 보내는 계좌 받는 계좌 같으면 예외 처리
 
         // 출금 거래 내역
-        val tradeRemitHistory = TradeHistory(remitName,value, date, 2, remitTarget, targetAccount, remitTarget, remitAccount.user.name, remitAccount)
+        val tradeRemitHistory = TradeHistory(remitName,value, date, 2, remitTarget, targetAccount, remitTarget, remitInfoReq.send, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
         // 잔액 변경 저장
         remitAccount.withdraw(value)
