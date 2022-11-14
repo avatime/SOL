@@ -9,5 +9,6 @@ interface RemitService {
     fun postRemit(remitInfoReq: RemitInfoReq)
     fun postRemitPhone(remitPhoneReq: RemitPhoneReq)
     fun putBookmark(acNo: String, token: String)
+    fun postRemitPhoneNonMember(remitInfoReq: RemitInfoReq)
 
 }
