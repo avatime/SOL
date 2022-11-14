@@ -7,6 +7,4 @@ data class PublicAccountDepositReq(
         val publicAccountId : Long,
         @JsonProperty("value")
         val value : Long,
-        @JsonProperty("ac_no")
-        val account : String
         )
