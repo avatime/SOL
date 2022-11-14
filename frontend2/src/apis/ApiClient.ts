@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import BankInfoRes from "./response/BankInfoRes";
+import CheckTokenRes from "./response/CheckTokenRes";
 
 const BASE_URL = "https://k7a403.p.ssafy.io/";
 const API_PATH = "api/v1";
@@ -15,7 +16,7 @@ interface BankApi {
     money: Number,
     token: Number
   ): Promise<void>;
-  checkToken(token: Number): Promise<boolean>;
+  checkToken(token: String): Promise<CheckTokenRes>;
 }
 
 export default class ApiClient implements BankApi {
@@ -26,13 +27,13 @@ export default class ApiClient implements BankApi {
     this.axiosInstance = this.createAxiosInstance();
   }
 
-  async checkToken(token: Number): Promise<boolean> {
+  async checkToken(token: String): Promise<CheckTokenRes> {
     return (
       await this.axiosInstance.request({
         method: "GET",
         url: `${API_PATH}/remit/phone/nonmember/${token}`,
       })
-    ).data.token;
+    ).data;
   }
 
   async remit(
