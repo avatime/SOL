@@ -89,7 +89,7 @@ fun ShowWalkingCalendar(
     val startMonth = remember { currentMonth.minusMonths(0) } // Adjust as needed
     val endMonth = remember { currentMonth.plusMonths(0) } // Adjust as needed
     val daysOfWeek = daysOfWeek()
-    val attendanceNum : Int = attendanceList.filter { i -> i.success }.size
+    attendanceList.filter { i -> i.success }.size
 
     val state = rememberCalendarState(
         startMonth = startMonth,
@@ -106,10 +106,7 @@ fun ShowWalkingCalendar(
             )
             .padding(dimensionResource(R.dimen.calendar_default))
     ) {
-        Column(
-//            verticalArrangement = Arrangement.Center,
-//            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column {
             Text(
                 text = "미션 달성 기록",
                 fontSize = 20.sp,

@@ -22,13 +22,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
-import com.airbnb.lottie.parser.IntegerParser
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
-import kotlinx.coroutines.launch
 
 @Composable
 fun GroupAccountInputMoneyScreen(
@@ -52,7 +50,7 @@ fun GroupAccountInputMoneyScreen(
         mutableStateOf(groupAccountViewModel.representAccountBalance.value)
     }
 
-    var isValid = remember {
+    val isValid = remember {
         mutableStateOf(true)
     }
 

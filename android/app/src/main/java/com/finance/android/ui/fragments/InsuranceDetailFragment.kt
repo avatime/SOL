@@ -105,7 +105,7 @@ fun InsuranceDetailFragment(
                     )
                 }
             }
-            when (val data = insuranceDetailViewModel.getLoadState()) {
+            when (insuranceDetailViewModel.getLoadState()) {
                 is Response.Success -> {
                     ContentList(
                         accData = (insuranceDetailViewModel.insuranceDetail.value as Response.Success).data

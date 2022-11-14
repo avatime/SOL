@@ -41,7 +41,7 @@ fun InputPasswordScreen(
     val context = LocalContext.current
     var isRepeat by remember { mutableStateOf(false) }
     val errorPassword = remember { mutableStateOf(false) }
-    var successBiometric by remember { mutableStateOf(false) }
+    val successBiometric by remember { mutableStateOf(false) }
 
     AnimatedVisibility(
         visible = !isRepeat,
@@ -100,7 +100,6 @@ fun InputPasswordScreen(
     }
 
     if (isLoginFragment && !successBiometric && useBio) {
-        successBiometric = true
         BiometricDialog(
             callback = object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {

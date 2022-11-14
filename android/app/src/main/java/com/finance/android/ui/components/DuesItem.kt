@@ -1,10 +1,6 @@
 package com.finance.android.ui.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -14,7 +10,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.R
@@ -37,8 +32,8 @@ fun DuesItem(paid : Boolean, name: String, dueDate: String, totalUser: Int, paid
             .padding(20.dp)
     ) {
 
-        Row() {
-            Column() {
+        Row {
+            Column {
                 Text(text = name, fontSize = 18.sp)
                 Spacer(modifier = Modifier.padding(3.dp))
                 Row(
@@ -64,7 +59,7 @@ fun DuesItem(paid : Boolean, name: String, dueDate: String, totalUser: Int, paid
         Spacer(modifier = Modifier.padding(5.dp))
 
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Row() {
+            Row {
                 Text(text = "${paidUser}/${totalUser} 완료")
                 Spacer(modifier = Modifier.padding(3.dp))
                 Text(text = "${DecimalFormat("#,###").format(duesVal * paidUser)}원")

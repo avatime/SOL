@@ -37,7 +37,7 @@ fun DuesMakeMoneyScreen(
         Row(
             modifier = Modifier.padding(32.dp)
         ) {
-            Column() {
+            Column {
                 Text(
                     text = "얼마를 보낼까요?",
                     style = Typography.headlineLarge
@@ -53,7 +53,7 @@ fun DuesMakeMoneyScreen(
         TextInput(
             value = groupAccountViewModel.duesBalance.value.toString(),
             onValueChange = {
-                if (1 <= it.length && it.length <= 20) {
+                if (it.length in 1..20) {
                     groupAccountViewModel.duesBalance.value = Integer.parseInt(it)
                 }
             },

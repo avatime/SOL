@@ -193,7 +193,7 @@ fun UserBalanceInfo(
 
 @Preview
 @Composable
-fun test() {
+fun Test() {
     UserBalanceInfo(
         title = "포인트",
         isAccount = false,

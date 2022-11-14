@@ -7,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -15,40 +14,31 @@ import com.finance.android.domain.dto.response.DailyProfileResponseDto
 
 
 @Composable
-fun showProfileList(
+fun ShowProfileList(
     profileList: MutableList<DailyProfileResponseDto>,
     onClickImage: (profileId : Int) -> Unit = {}
 ) {
     MyGrid(content = profileList , columnSize = 3, onClickImage)
 }
 
-/**
- * @param content : grid로 표현하려는 아이템 리스트
- * @param columnSize : grid column 개수
- */
+
 @Composable
 fun MyGrid(content: MutableList<DailyProfileResponseDto>, columnSize: Int, onClickImage: (profileId: Int) -> Unit){
     val rowsCount = 1 + (content.size -1)/columnSize // row 개수
     BoxWithConstraints {
-        val maxWidth = this.maxWidth
-        Column(
-        ) {
+        Column{
             repeat(rowsCount) { rowIndex ->
                 val rangeStart = rowIndex * columnSize
                 var rangeEnd = rangeStart + columnSize -1
                 if (rangeEnd > content.lastIndex) rangeEnd = content.lastIndex // row로 표현될 list의 range를 계산, slice하여 row 생성
-                RowOfGrid(content.slice(rangeStart..rangeEnd), maxWidth/columnSize, onClickImage)
+                RowOfGrid(content.slice(rangeStart..rangeEnd), onClickImage)
             }
         }
     }
 }
 
-/**
- * @param rowList : row로 표현될 아이템 리스트
- * @param columnWidth : row item들을 동일 width로 보여주기 위해 maxWidth를 column으로 나눈 dp 값
- */
 @Composable
-fun RowOfGrid(rowList: List<DailyProfileResponseDto>, columnWidth: Dp, onClickImage: (profileId : Int) -> Unit){
+fun RowOfGrid(rowList: List<DailyProfileResponseDto>, onClickImage: (profileId: Int) -> Unit){
     Row (
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = Modifier.padding(bottom = 25.dp, top = 10.dp),

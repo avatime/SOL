@@ -42,14 +42,14 @@ data class HistoryEntity(
 @Composable
 fun showHistoryList(
     modifier : Modifier,
-    onClick : (year : Int, month : Int) -> Unit = { year: Int, month: Int -> {}},
+    onClick : (year : Int, month : Int) -> Unit = { _: Int, _: Int -> run {} },
     type : String = "계좌",
     historyList : List<HistoryEntity>,
     emptyMessage : String = "거래 내역이 없어요."
 ) {
-    val context = LocalContext.current
-    var currentMonth = remember { mutableStateOf(YearMonth.now()) }
-    var currentMenu = remember { mutableStateOf(0) }
+    LocalContext.current
+    val currentMonth = remember { mutableStateOf(YearMonth.now()) }
+    val currentMenu = remember { mutableStateOf(0) }
     var column by remember {
          mutableStateOf(0)
     }
@@ -70,7 +70,7 @@ fun showHistoryList(
 
     if(type != "카드") {
         if(showMenuList) {
-            val outMetrics = DisplayMetrics()
+            DisplayMetrics()
 
             BoxWithConstraints(modifier = Modifier.background(color = Color.Blue)) {
                 BottomSheetDialog(
@@ -299,9 +299,7 @@ fun HistoryItem(
         Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            Column(
-
-            ) {
+            Column {
                 DateText(text = date.format(DateTimeFormatter.ofPattern("MM.dd")).toString(), show = showDate)
             }
             Column(

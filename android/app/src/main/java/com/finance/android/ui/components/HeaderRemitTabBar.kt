@@ -1,7 +1,10 @@
 package com.finance.android.ui.components
 
 
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -14,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.ui.screens.remit.AccountScreen
-import com.finance.android.ui.screens.ContactScreen
+import com.finance.android.ui.screens.remit.ContactScreen
 import com.finance.android.ui.screens.remit.RecoScreen
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.viewmodels.RemitViewModel

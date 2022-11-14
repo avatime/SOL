@@ -17,12 +17,9 @@ import com.finance.android.domain.dto.response.RecentMyTradeResponseDto
 import com.finance.android.domain.dto.response.RecentTradeResponseDto
 import com.finance.android.ui.components.AccountLikeItem
 import com.finance.android.ui.components.AnimatedLoading
-
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.RemitViewModel
-import java.util.*
-import kotlin.Comparator
 
 @Composable
 fun RecoScreen(
@@ -79,7 +76,7 @@ private fun Recent(
             is Response.Failure -> Text(text = "실패")
             is Response.Loading -> AnimatedLoading(text = "가져오고 있어요")
             is Response.Success -> {
-                response.data.forEach { it ->
+                response.data.forEach {
                     if(it.acNo != remitViewModel.accountNumber) {
                         AccountLikeItem(
                             bkStatus = it.bkStatus,
@@ -87,7 +84,7 @@ private fun Recent(
                             name = it.acName,
                             accountNumber = it.acNo,
                             cpName = it.cpName,
-                            onClickBookmark = { remitViewModel.onClickAccountBookmark(it);
+                            onClickBookmark = { remitViewModel.onClickAccountBookmark(it)
                             },
                             onClickItem = {
                                 remitViewModel.onClickReceiveBank(

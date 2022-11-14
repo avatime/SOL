@@ -27,7 +27,7 @@ fun CompanyItem(
             .padding(5.dp)
             .clip(RoundedCornerShape(10.dp))
             .clickable {
-                remitViewModel.onClickReceiveBank(BankInfoResponseDto(cpCode,cpName,cpLogo));
+                remitViewModel.onClickReceiveBank(BankInfoResponseDto(cpCode,cpName,cpLogo))
                 remitViewModel.cpCode.value = cpCode
             }
             .padding(20.dp),
@@ -44,22 +44,6 @@ fun CompanyItem(
                 .clip(CircleShape)
         )
         Spacer(modifier = Modifier.padding(5.dp))
-        Text(text = cpName, softWrap = true, maxLines = 1, )
+        Text(text = cpName, softWrap = true, maxLines = 1)
     }
 }
-
-//@Preview
-//@Composable
-//fun PreviewCompanyItem() {
-//    CompanyItem(
-//
-//    )
-//
-//}
-//
-//fun CompanyItem(cpName: String, cpLogo: String) {
-//    cpName = "우리",
-//    cpLogo = "https://w.namu.la/s/8e3ea802358c827ac96c128113c80ecb4529d429f9902973d5adb2d72b95bacf5888b8939beefff4ff0e78da8a0ed6aeb13d04b869c508f7cd4bbc51567b0da8ff1df5048908ecf179522e185514ba4d47afa717c57c3e039968f7c87aa2c7e5",
-//
-//
-//}

@@ -1,24 +1,24 @@
 package com.finance.android.ui.screens.groupAccount
 
-import com.finance.android.viewmodels.GroupAccountViewModel
-
-
 import android.Manifest
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.airbnb.lottie.compose.*
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.finance.android.R
-import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
-
+import com.finance.android.viewmodels.GroupAccountViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -44,7 +44,6 @@ fun GroupAccountFriendScreen(groupAccountViewModel: GroupAccountViewModel, navCo
             ) {
 
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_remit_contact))
-                val progress by animateLottieCompositionAsState(composition)
                 Spacer(modifier = modifier.padding(40.dp))
                 LottieAnimation(
                     composition = composition,

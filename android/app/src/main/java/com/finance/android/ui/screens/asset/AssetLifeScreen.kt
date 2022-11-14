@@ -39,7 +39,7 @@ fun AssetLifeScreen(
         launch()
     }
 
-    when (val data = insuranceViewModel.getLoadState()) {
+    when (insuranceViewModel.getLoadState()) {
         is Response.Success -> {
             val isData = (insuranceViewModel.isList.value as Response.Success).data
             Column()
@@ -80,7 +80,7 @@ private fun AssetLifeContainer(
     Column(modifier = modifier
         .padding(dimensionResource(R.dimen.padding_medium)))
     {
-        isList!!.forEach {
+        isList.forEach {
             InsuranceListItem_Normal(
                 insuranceName = it.isPdName,
                 fee = it.isPdFee,

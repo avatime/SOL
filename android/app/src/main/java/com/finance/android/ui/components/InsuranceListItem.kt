@@ -27,11 +27,6 @@ import com.finance.android.ui.theme.Disabled
 import java.text.DecimalFormat
 
 @Composable
-fun InsuranceListItem() {
-    PreviewInsuranceListItem_Arrow()
-}
-
-@Composable
 private fun Draw(
     modifier: Modifier,
     insuranceName: String,

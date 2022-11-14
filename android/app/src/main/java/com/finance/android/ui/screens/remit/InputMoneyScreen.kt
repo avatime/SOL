@@ -1,4 +1,4 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.screens.remit
 
 
 import androidx.compose.foundation.layout.*
@@ -33,18 +33,18 @@ fun InputMoneyScreen(
         mutableStateOf("")
     }
 
-    var balance by remember {
+    val balance by remember {
         mutableStateOf(remitViewModel.balance)
     }
 
 
-    var error = remember { mutableStateOf(false) }
+    val error = remember { mutableStateOf(false) }
 
-    var placeholderText = remember {
+    val placeholderText = remember {
         mutableStateOf("얼마를 보낼까요?")
     }
 
-    var keyboardController = LocalSoftwareKeyboardController.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
 
     var isNext by remember {
@@ -72,13 +72,13 @@ fun InputMoneyScreen(
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Column() {
+        Column {
 
             if (isNext) {
                 TextButton(
                     onClick = { isNext = false },
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Transparent,
+                        backgroundColor = Transparent,
                         contentColor = Color.Black,
                     ),
                     modifier = Modifier.padding(start = 20.dp)
@@ -148,7 +148,7 @@ fun InputMoneyScreen(
                 TextButton(
                     onClick = { moneyValue = balance.toString() },
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Transparent,
+                        backgroundColor = Transparent,
                         contentColor = Color.Black,
                     ),
                     modifier = Modifier.padding(start = 30.dp)
@@ -164,7 +164,7 @@ fun InputMoneyScreen(
                 TextButton(
                     onClick = { moneyValue = balance.toString() },
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color.Transparent,
+                        backgroundColor = Transparent,
                         contentColor = Color.Black,
                     ),
                     modifier = Modifier.padding(start = 30.dp)
@@ -200,7 +200,7 @@ fun InputMoneyScreen(
                                     receive = "",
                                     send = "",
                                     onSuccess = {
-                                        navController.navigate(Const.REMIT_OK_SCREEN);
+                                        navController.navigate(Const.REMIT_OK_SCREEN)
                                         remitViewModel.moneyValue.value = moneyValue
                                     }
                                 )

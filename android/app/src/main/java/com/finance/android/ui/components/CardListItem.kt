@@ -57,7 +57,7 @@ private fun Draw(
                     .crossfade(true)
                     .build(),
                 contentDescription = "cardImage",
-                modifier = modifier
+                modifier = Modifier
                     .size(40.dp)
                     .padding(end = dimensionResource(R.dimen.padding_small))
             )
@@ -84,6 +84,7 @@ fun CardListItem_Arrow(
 ) {
     Draw(
         modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
             .clickable { onClickItem() }
             .padding(contentPadding),
         cardName = cardName,

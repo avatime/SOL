@@ -2,13 +2,10 @@ package com.finance.android.ui.components
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -52,7 +49,7 @@ fun CpListSheet (modifier: Modifier, remitViewModel: RemitViewModel) {
                 Tab(
                     selected = selected,
                     onClick = { selectedIndex = index },
-                    text = { Text(text = text, fontSize = 18.sp,) },
+                    text = { Text(text = text, fontSize = 18.sp) },
                     modifier = Modifier.width(30.dp),
                     selectedContentColor = Color.Black,
                     unselectedContentColor = Disabled,
@@ -108,7 +105,7 @@ fun AllBankList(allBankData : MutableState<Response<MutableList<BankInfoResponse
               .width(400.dp)
               .background(Color.White)) {
               items(response.data) { idx ->
-                  idx.cpName?.let { CompanyItem(cpCode = idx.cpCode, cpName = it, cpLogo = idx.cpLogo , remitViewModel = remitViewModel) }
+                  CompanyItem(cpCode = idx.cpCode, cpName = idx.cpName, cpLogo = idx.cpLogo , remitViewModel = remitViewModel)
 
               }
           }
@@ -130,10 +127,8 @@ fun AllStockCpList(allStockCpData : MutableState<Response<MutableList<BankInfoRe
                 .height(400.dp)
                 .background(Color.White)) {
                 items(response.data) { idx ->
-                    idx.cpName?.let {
-                        CompanyItem(cpCode= idx.cpCode,
-                            cpName = it, cpLogo = idx.cpLogo , remitViewModel = remitViewModel)
-                    }
+                    CompanyItem(cpCode= idx.cpCode,
+                        cpName = idx.cpName, cpLogo = idx.cpLogo , remitViewModel = remitViewModel)
 
                 }
             }

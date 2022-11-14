@@ -95,7 +95,7 @@ fun HomeScreen(
                 .verticalScroll(rememberScrollState())
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
-            when (val data = homeViewModel.getLoadState()) {
+            when (homeViewModel.getLoadState()) {
                 is Response.Success -> {
                     HomeCardContainer(
                         modifier = Modifier
@@ -171,12 +171,11 @@ private fun HomeCardContainer(
                 )
             }
         }
-        mainData.accountList!!.forEach {
+        mainData.accountList.forEach {
             AccountListItem_Remit(
                 accountNumber = it.acNo,
                 balance = it.balance,
                 accountName = it.acName,
-                companyName = it.cpName,
                 companyLogoPath = it.cpLogo,
                 acMain = it.acMain,
                 onClickItem = {
@@ -190,7 +189,7 @@ private fun HomeCardContainer(
         if (mainData.cardList.size != 0) {
             Divider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium)))
         }
-        mainData.cardList!!.forEach {
+        mainData.cardList.forEach {
             val pathTmp = Uri.encode(it.cardInfoRes.cardImgPath)
             CardListItem_Arrow(
                 cardName = it.cardInfoRes.cardName,
@@ -204,7 +203,7 @@ private fun HomeCardContainer(
         if (mainData.insuranceList.size != 0) {
             Divider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium)))
         }
-        mainData.insuranceList!!.forEach {
+        mainData.insuranceList.forEach {
             InsuranceListItem_Normal(
                 insuranceName = it.isPdName,
                 fee = it.isPdFee,
@@ -220,7 +219,7 @@ private fun HomeCardContainer(
                 modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium))
             )
         }
-        mainData.financeList!!.forEach {
+        mainData.financeList.forEach {
             AccountListItem_Arrow(
                 accountNumber = it.acNo,
                 balance = it.balance,
