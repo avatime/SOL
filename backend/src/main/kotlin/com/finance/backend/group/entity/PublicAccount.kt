@@ -27,6 +27,6 @@ class PublicAccount(
 
     fun addPaVal(value : Long) {this.paVal += value}
     fun terminate() {this.paStatus = 99}
-    fun toEntity() : PublicAccountRes = PublicAccountRes(this.id, this.paName, this.paVal)
+    fun toEntity(type : String) : PublicAccountRes = PublicAccountRes(this.id, this.paName, this.paVal, type)
 
 }

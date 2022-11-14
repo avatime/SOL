@@ -46,7 +46,7 @@ class GroupServiceImpl (
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val list : List<PublicAccountMember> = publicAccountMemberRepository.findAllByUserAndPublicAccount_PaStatus(user, 10)?: emptyList()
-            return List(list.size) {i -> list[i].publicAccount.toEntity()}
+            return List(list.size) {i -> list[i].publicAccount.toEntity(list[i].type)}
         } else throw Exception()
     }
 
@@ -172,7 +172,8 @@ class GroupServiceImpl (
             val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user: User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             val publicAccount : PublicAccount = publicAccountRepository.findById(publicAccountId).orElseGet(null) ?: throw NoSuchElementException()
-            return publicAccount.toEntity()
+            val member : PublicAccountMember = publicAccountMemberRepository.findByUserAndPublicAccountId(user, publicAccountId) ?: throw NoSuchElementException()
+            return publicAccount.toEntity(member.type)
         } else throw Exception()
     }
 
@@ -198,6 +199,32 @@ class GroupServiceImpl (
             )
             state.publicAccount.addPaVal(-1 * publicAccountWithdrawReq.value)
             account.deposit(publicAccountWithdrawReq.value)
+            publicAccountRepository.save(state.publicAccount)
+            accountRepository.save(account)
+            tradeHistoryRepository.save(tradeHistory)
+        }
+    }
+
+    override fun putMoney(accessToken: String, publicAccountDepositReq: PublicAccountDepositReq) {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }) {
+            val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user: User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
+            val state : PublicAccountMember = publicAccountMemberRepository.findByUserAndPublicAccountId(user, publicAccountDepositReq.publicAccountId)?: throw AuthenticationException()
+            val account : Account = accountRepository.findByAcNoAndUser(publicAccountDepositReq.account, user) ?: throw NoAccountException()
+            val id = publicAccountDepositReq.publicAccountId
+            val tradeHistory : TradeHistory = TradeHistory(
+                    state.publicAccount.paName,
+                    publicAccountDepositReq.value,
+                    LocalDateTime.now(),
+                    2,
+                    state.publicAccount.paName,
+                    "모임통장 $id",
+                    user.name,
+                    state.publicAccount.paName,
+                    account
+            )
+            state.publicAccount.addPaVal(publicAccountDepositReq.value)
+            account.withdraw(publicAccountDepositReq.value)
             publicAccountRepository.save(state.publicAccount)
             accountRepository.save(account)
             tradeHistoryRepository.save(tradeHistory)
