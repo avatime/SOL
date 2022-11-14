@@ -134,7 +134,8 @@ private fun PreviewScreen() {
                 cpName = "cpName",
                 cpLogo = "cpLogo",
                 isRegister = false,
-                acMain = 1
+                acMain = 1,
+                acType = 1
             )
         },
         checkAccountIndex = 0,

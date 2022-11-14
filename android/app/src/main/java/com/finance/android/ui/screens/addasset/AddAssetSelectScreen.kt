@@ -503,7 +503,8 @@ private fun PreviewAccount() {
                 cpName = "cpName",
                 cpLogo = "cpLogo",
                 isRegister = false,
-                acMain = 1
+                acMain = 1,
+                acType = 1
             )
         },
         accountCheckList = Array(5) {
@@ -546,7 +547,8 @@ private fun PreviewStock() {
                 cpName = "cpName",
                 cpLogo = "cpLogo",
                 isRegister = false,
-                acMain = 1
+                acMain = 1,
+                acType = 1
             )
         },
         stockAccountCheckList = Array(5) {
