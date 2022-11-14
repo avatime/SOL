@@ -35,11 +35,7 @@ function SendPage() {
 
     ApiClient.getInstance()
       .checkToken(+data.token)
-      .then((value) => {
-        if (!value) {
-          setShowExpiration(true);
-        }
-      })
+      .then((value) => setShowExpiration(!value))
       .catch(() => setShowExpiration(true));
   }, [data]);
 
