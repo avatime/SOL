@@ -3,6 +3,8 @@ package com.finance.backend.Exceptions.controller
 import com.finance.backend.Exceptions.*
 import com.finance.backend.remit.RemitAvailable
 import com.finance.backend.remit.RemitAvailableRepository
+import com.finance.backend.remit.response.PhoneTokenRes
+import com.finance.backend.remit.response.RemitAvailableRes
 import org.springframework.http.ResponseEntity
 import org.springframework.kafka.listener.ListenerExecutionFailedException
 import org.springframework.web.bind.MissingRequestHeaderException
@@ -111,8 +113,8 @@ class ExceptionController(
     }
 
     @ExceptionHandler(NonMemberException::class)
-    fun handleNonMemberEXCEPTION(e : Exception) : ResponseEntity<Any>{
-        return ResponseEntity.status(405).body("비회원입니다.")
+    fun handleNonMemberEXCEPTION(e : NonMemberException) : ResponseEntity<Any>{
+        return ResponseEntity.status(405).body(PhoneTokenRes(e.message!!.toLong()))
     }
     @ExceptionHandler(NoPhoneTokenException::class)
     fun handleNoPhoneTokenException(e : Exception) : ResponseEntity<String>{
