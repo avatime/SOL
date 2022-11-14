@@ -35,6 +35,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
 import com.finance.android.services.WalkService
@@ -44,6 +45,7 @@ import com.finance.android.ui.theme.SetStatusBarColor
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.HomeViewModel
+import com.finance.android.viewmodels.StockViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -323,10 +325,9 @@ private fun TopBar(
     homeViewModel: HomeViewModel
 ) {
     Row(
-        modifier = Modifier
+        modifier = Modifier.padding(top = 10.dp)
             .padding(
                 horizontal = dimensionResource(id = R.dimen.padding_medium).value.dp,
-                vertical = 10.dp
             )
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -362,6 +363,10 @@ private fun TopBar(
                 homeViewModel = homeViewModel
             )
         }
+        
+        Spacer(modifier = Modifier.weight(1.0f))
+
+        minibar()
     }
 }
 
@@ -465,5 +470,34 @@ private fun PedometerOnStateButton(
                 text = "$it 걸음"
             )
         }
+    }
+}
+
+@Preview
+@Composable
+fun minibar(
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit = {},
+    stockViewModel: StockViewModel = hiltViewModel()
+) {
+    Row(
+        modifier = modifier
+            .clip(RoundedCornerShape(10.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant)
+            .clickable {
+                onClick()
+            }
+            .padding(10.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Box(
+            modifier = Modifier.size(24.dp)
+        ) {
+            AsyncImage(model = "https://img1.daumcdn.net/thumb/C400x400/?fname=http://t1.daumcdn.net/brunch/service/user/41jj/image/XsgnrTPMROwS8juOxy7oVokVqyg.jpg", contentDescription = "")
+        }
+        Spacer(modifier = Modifier.width(7.dp))
+        Text(
+            text = "카카오"
+        )
     }
 }
