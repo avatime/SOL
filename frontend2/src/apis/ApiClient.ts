@@ -45,7 +45,7 @@ export default class ApiClient implements BankApi {
       method: "POST",
       url: `${API_PATH}/remit/phone/nonmember`,
       data: {
-        remit_nonmember_req: {
+        remit_info_req: {
           ac_name: senderAccountName,
           ac_tag: receiverAccountName,
           ac_send: senderAccountNumber,
