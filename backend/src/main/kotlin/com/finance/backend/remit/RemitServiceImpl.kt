@@ -190,6 +190,7 @@ class RemitServiceImpl(
         val remitAvailable = remitAvailableRepository.findById(remitAvailableRes.tokenId).orElse(null)?: throw NoPhoneTokenException()
         // 기존의 true 였던 걸 false로 변경
         remitAvailable.check()
+        remitAvailableRepository.save(remitAvailable)
 
         val value = remitInfoReq.value  // 이체 금액
         val date = LocalDateTime.now()  // 이체 일자
