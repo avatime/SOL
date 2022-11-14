@@ -11,6 +11,6 @@ interface RemitService {
     fun postRemitPhone(remitPhoneReq: RemitPhoneReq)
     fun putBookmark(acNo: String, token: String)
     fun postRemitPhoneNonMember(remitNonMemberReq: RemitNonMemberReq)
-    fun getRemitPhoneNonMember(tokenId : Long) : Boolean
+    fun getRemitPhoneNonMember(tokenId : Long) : Map<String, Boolean>
 
 }
