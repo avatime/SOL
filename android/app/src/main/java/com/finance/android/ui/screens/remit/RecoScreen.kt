@@ -27,9 +27,12 @@ fun RecoScreen(
     modifier: Modifier = Modifier,
     navController: NavController
 ) {
+    fun launch() {
+       remitViewModel.getRecommendedAccountData()
+    }
+
     LaunchedEffect(Unit) {
-        remitViewModel.getRecommendedAccountData()
-        remitViewModel.getRecentMyAccountData()
+        launch()
     }
 
     Box(
@@ -37,8 +40,6 @@ fun RecoScreen(
             .fillMaxSize()
     ) {
         Recent(
-            recommendedAccountData = remitViewModel.recommendedAccountData,
-            recentMyAccountData = remitViewModel.recentMyAccountData,
             remitViewModel = remitViewModel,
             navController = navController
         )
@@ -50,8 +51,6 @@ fun RecoScreen(
 
 @Composable
 private fun Recent(
-    recommendedAccountData: MutableState<Response<MutableList<RecentTradeResponseDto>>>,
-    recentMyAccountData: MutableState<Response<MutableList<RecentMyTradeResponseDto>>>,
     remitViewModel: RemitViewModel,
     navController: NavController
 ) {
@@ -64,10 +63,12 @@ private fun Recent(
             modifier = Modifier.padding(start = 10.dp)
         )
         Spacer(modifier = Modifier.padding(8.dp))
-        when (val response = recentMyAccountData.value) {
+
+        when (remitViewModel.getLoadRecommendation()) {
             is Response.Failure -> Text(text = "실패")
             is Response.Loading -> AnimatedLoading(text = "가져오고 있어요")
             is Response.Success -> {
+                val response = remitViewModel.recentMyAccountData.value as Response.Success
                 response.data.forEach {
                     if(it.acNo != remitViewModel.accountNumber) {
                         AccountLikeItem(
@@ -101,27 +102,31 @@ private fun Recent(
         )
         Spacer(modifier = Modifier.padding(8.dp))
 
-        when (val response = recommendedAccountData.value) {
+        when (remitViewModel.getLoadRecommendation()) {
             is Response.Failure -> Text(text = "실패")
             is Response.Loading -> AnimatedLoading(text = "가져오고 있어요")
-            is Response.Success -> response.data.forEach {
-                AccountLikeItem(
-                    bkStatus = it.bkStatus,
-                    cpLogo = it.cpLogo,
-                    name = it.acReceive,
-                    accountNumber = it.acNo,
-                    cpName = it.cpName,
-                    onClickBookmark = { remitViewModel.onClickAccountBookmark(it)},
-                    onClickItem = {
-                        remitViewModel.onClickReceiveBank(
-                            BankInfoResponseDto(cpCode = remitViewModel.cpCode.value,
-                                cpLogo = it.cpName, cpName = it.cpName
+            is Response.Success -> {
+                val response2 = remitViewModel.recommendedAccountData.value as Response.Success
+                response2.data.forEach {
+                    AccountLikeItem(
+                        bkStatus = it.bkStatus,
+                        cpLogo = it.cpLogo,
+                        name = it.acReceive,
+                        accountNumber = it.acNo,
+                        cpName = it.cpName,
+                        onClickBookmark = { remitViewModel.onClickAccountBookmark(it)},
+                        onClickItem = {
+                            remitViewModel.onClickReceiveBank(
+                                BankInfoResponseDto(cpCode = remitViewModel.cpCode.value,
+                                    cpLogo = it.cpName, cpName = it.cpName
+                                )
                             )
-                        )
-                        remitViewModel.validReceiveAccountNumber.value = it.acNo
-                        navController.navigate(Const.INPUT_MONEY_SCREEN)
-                    }
-                )
+                            remitViewModel.validReceiveAccountNumber.value = it.acNo
+                            navController.navigate(Const.INPUT_MONEY_SCREEN)
+                        }
+                    )
+
+                }
             }
         }
     }
