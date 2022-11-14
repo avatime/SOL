@@ -93,7 +93,6 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                                     .crossfade(true)
                                     .build(),
                                 contentDescription = "회사 로고",
-                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .width(40.dp)
                                     .height(40.dp)

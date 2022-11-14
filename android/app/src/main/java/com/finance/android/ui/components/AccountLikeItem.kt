@@ -30,6 +30,7 @@ import com.finance.android.R
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun AccountLikeItem(
+    modifier: Modifier = Modifier,
     bkStatus: Boolean,
     cpLogo: String,
     name: String,
@@ -39,10 +40,9 @@ fun AccountLikeItem(
     onClickBookmark: () -> Unit
 ) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp)
-            .height(75.dp)
+        modifier = modifier
+            .fillMaxSize()
+            .padding(start = 15.dp, end = 15.dp, top = 10.dp, bottom = 10.dp)
             .clickable {
                 onClickItem()
             },
@@ -55,15 +55,12 @@ fun AccountLikeItem(
                 .crossfade(true)
                 .build(),
             contentDescription = "회사 로고",
-            contentScale = ContentScale.Crop,
             modifier = Modifier
-                .width(60.dp)
-                .height(60.dp)
+                .size(45.dp)
                 .clip(CircleShape)
-
         )
         Spacer(modifier = Modifier.padding(10.dp))
-        Column(modifier = Modifier.weight(1f)) {
+        Column(modifier = Modifier.weight(1f).fillMaxHeight(), verticalArrangement = Arrangement.Center) {
             Text(
                 text = name, fontSize = dimensionResource(R.dimen.account_like_name).value.sp,
                 overflow = TextOverflow.Ellipsis,
@@ -71,7 +68,7 @@ fun AccountLikeItem(
                 maxLines = 1
 
             )
-            Spacer(modifier = Modifier.padding(3.dp))
+            Spacer(modifier = Modifier.padding(1.dp))
             Row(modifier = Modifier.fillMaxHeight()) {
                 Text(
                     text = cpName,
@@ -81,9 +78,9 @@ fun AccountLikeItem(
                     maxLines = 1
 
                 )
-                Spacer(modifier = Modifier.padding(1.dp))
+                Spacer(modifier = Modifier.padding(2.dp))
                 Text(
-                    text = accountNumber,
+                    text = formatAccount(companyName = cpName, accountNumber = accountNumber),
                     fontSize = dimensionResource(R.dimen.account_like_account_number).value.sp,
                     color = Color(R.color.noActiveColor),
                     softWrap = false,
@@ -96,7 +93,7 @@ fun AccountLikeItem(
 
         IconButton(onClick = {
             onClickBookmark()
-        }, modifier = Modifier.padding(end=5.dp)) {
+        }, modifier = Modifier) {
 
 
             AnimatedVisibility(

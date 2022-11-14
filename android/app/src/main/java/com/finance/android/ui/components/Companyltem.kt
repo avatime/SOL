@@ -24,20 +24,19 @@ fun CompanyItem(
     Row(
         modifier = Modifier
             .fillMaxSize()
-            .padding(5.dp)
+            .padding(top = 10.dp, bottom = 10.dp, start = 15.dp, end = 15.dp)
             .clip(RoundedCornerShape(10.dp))
             .clickable {
                 remitViewModel.onClickReceiveBank(BankInfoResponseDto(cpCode,cpName,cpLogo))
                 remitViewModel.cpCode.value = cpCode
-            }
-            .padding(20.dp),
+            },
         verticalAlignment = Alignment.CenterVertically,
     ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(cpLogo)
                 .crossfade(true)
-                .build(), contentDescription = "회사 로고", contentScale = ContentScale.Crop,
+                .build(), contentDescription = "회사 로고",
             modifier = Modifier
                 .width(40.dp)
                 .height(40.dp)
