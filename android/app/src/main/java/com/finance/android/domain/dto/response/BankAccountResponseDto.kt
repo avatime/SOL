@@ -17,6 +17,8 @@ data class BankAccountResponseDto(
     @SerializedName("ac_reg")
     val isRegister: Boolean, // 등록 여부
     @SerializedName("ac_main")
-    val acMain: Int    // 대표계좌 여부
+    val acMain: Int, // 대표계좌 여부
+    @SerializedName("ac_type")
+    val acType: Int, // 계좌 타입 (1 : 예금, 2 : 증권)
 
 )

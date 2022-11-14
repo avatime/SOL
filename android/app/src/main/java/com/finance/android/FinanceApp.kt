@@ -45,19 +45,21 @@ fun FinanceApp() {
                 RemitFragment(navController = navController)
             }
             composable(
-                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}/{cpLogo}/{acMain}",
+                route = "${Const.Routes.ACC_DETAIL}/{acName}/{cpName}/{acNo}/{cpLogo}/{acMain}/{acType}",
                 arguments = listOf(
                     navArgument("acName") { type = NavType.StringType },
                     navArgument("cpName") { type = NavType.StringType },
                     navArgument("acNo") { type = NavType.StringType },
                     navArgument("cpLogo") { type = NavType.StringType },
-                    navArgument("acMain") { type = NavType.IntType }
+                    navArgument("acMain") { type = NavType.IntType },
+                    navArgument("acType") { type = NavType.IntType }
                 )
             ) {
                 AccountDetailFragment(acName = it.arguments!!.getString("acName")!!,
                     cpName = it.arguments!!.getString("cpName")!!,
                     acNo = it.arguments!!.getString("acNo")!!,
                     cpLogo = it.arguments!!.getString("cpLogo")!!,
+                    acType = it.arguments!!.getInt("acType"),
                     navController = navController,
                     onClose = { navController.popBackStack() })
             }
