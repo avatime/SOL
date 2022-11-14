@@ -114,7 +114,6 @@ function SendPage() {
         onChange={(it) => setAcReceive(it.target.value)}
         type="number"
       />
-
       <Box flex="1" />
       <Button
         variant="contained"
@@ -124,6 +123,7 @@ function SendPage() {
       >
         입금 받기
       </Button>
+      <Box m={2} />
       <SelectBankBottomDialog
         open={openBottomDialog}
         onClose={() => setOpenBottomDialog(false)}
