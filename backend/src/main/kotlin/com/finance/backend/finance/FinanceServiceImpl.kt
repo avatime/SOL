@@ -33,7 +33,7 @@ class FinanceServiceImpl(
                 if(account.acNo == userMainAccount){
                     acMain = 1
                 }
-                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain))
+                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain, account.acType))
             }
         }
         return bankAccountList
@@ -51,7 +51,7 @@ class FinanceServiceImpl(
                 if(account.acNo == userMainAccount){
                     acMain = 1
                 }
-                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain))
+                bankAccountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain, account.acType))
             }
         }
         return bankAccountList

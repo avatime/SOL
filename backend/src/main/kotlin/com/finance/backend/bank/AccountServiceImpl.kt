@@ -58,7 +58,7 @@ class AccountServiceImpl(
                 if(ac.acNo == userMainAccount){
                     acMain = 1
                 }
-                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg, acMain))
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg, acMain, ac.acType))
             }
         }
 
@@ -78,7 +78,7 @@ class AccountServiceImpl(
                 if(ac.acNo == userMainAccount){
                     acMain = 1
                 }
-                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg, acMain))
+                bankAccountList.add(BankAccountRes(ac.acNo, ac.balance, ac.acName, corporation.cpName, corporation.cpLogo, ac.acReg, acMain, ac.acType))
             }
         }
         Collections.sort(bankAccountList, AccountSortComparator().reversed())
@@ -235,7 +235,7 @@ class AccountServiceImpl(
                 if(account.acNo == userMainAccount){
                     acMain = 1
                 }
-                accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain))
+                accountList.add(BankAccountRes(account.acNo, account.balance, account.acName, corporation.cpName, corporation.cpLogo, account.acReg, acMain, account.acType))
             }
             Collections.sort(accountList, AccountSortComparator().reversed())
             val financeInfoList = accountRepository.findByUserIdAndAcTypeAndAcReg(userId, 2, true).orEmpty()
@@ -245,7 +245,7 @@ class AccountServiceImpl(
                 if(finance.acNo == userMainAccount){
                     acMain = 1
                 }
-                financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo, finance.acReg, acMain))
+                financeList.add(BankAccountRes(finance.acNo, finance.balance, finance.acName, corporation.cpName, corporation.cpLogo, finance.acReg, acMain, finance.acType))
             }
             Collections.sort(financeList, AccountSortComparator().reversed())
             val cardInfoList = cardRepository.findAllByUserIdAndCdReg(userId, true).orEmpty()

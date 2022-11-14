@@ -37,4 +37,10 @@ class RemitController(val remitService: RemitService, val kafka: KafkaProducer) 
     fun putBookmark(@RequestBody acNo: String, @RequestHeader("access_token") accessToken: String): ResponseEntity<Any>{
         return ResponseEntity.status(200).body(remitService.putBookmark(acNo, accessToken))
     }
+
+    @PostMapping("/phone/nonmember")
+    fun postRemitNonMember(@RequestBody remitInfoReq: RemitInfoReq): ResponseEntity<Any>{
+        kafka.accountMessage(remitInfoReq)
+        return ResponseEntity.status(200).body(remitService.postRemitPhoneNonMember(remitInfoReq))
+    }
 }
