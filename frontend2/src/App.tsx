@@ -6,6 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import PrivacyPage from "./pages/PrivacyPage";
 import SuccessPage from "./pages/SuccessPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import IndexPage from "./pages/IndexPage";
 
 function App() {
   const theme = createTheme({
@@ -14,8 +15,8 @@ function App() {
         main: "#0046FF",
       },
       secondary: {
-        main: "#000000"
-      }
+        main: "#000000",
+      },
     },
   });
 
@@ -23,6 +24,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<IndexPage />} />
           <Route path="/remit" element={<SendPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="*" element={<NotFoundPage />} />

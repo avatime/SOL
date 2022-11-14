@@ -1,0 +1,72 @@
+main {
+  text-align: center;
+  font-family: "Pretendard", sans-serif;
+}
+
+.c2 {
+  height: 400px;
+}
+
+.sticky {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+}
+
+.slide-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  display: none;
+  z-index: 0;
+}
+
+.slide.enabled {
+  display: block;
+}
+
+.slide-big-text p {
+  margin: 0;
+  font-size: 45px;
+  font-weight: bold;
+  line-height: 1.35;
+  letter-spacing: -1.5px;
+  word-spacing: 1.5px;
+  text-align: center;
+}
+
+.slide-small-text {
+  margin-top: 20px;
+  margin-left: 5px;
+}
+
+.slide-small-text p {
+  font-size: 18px;
+  margin: 0;
+}
+
+#scroll-down {
+  position: absolute;
+  padding: 30px 0;
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  bottom: 0px;
+}
+
+#moving-background {
+  width: 500px;
+  padding-top: 40px;
+  height: 500px;
+  background-color: #f5f5f5;
+  color: #777;
+  z-index: -1;
+}
