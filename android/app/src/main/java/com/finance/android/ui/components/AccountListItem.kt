@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
@@ -41,7 +42,7 @@ private fun Draw(
     accountNumber: String,
     balance: Int,
     accountName: String,
-    companyName: String = "",
+    companyName: String,
     companyLogoPath: String,
     acMain: Int,
     trailing: (@Composable () -> Unit)? = null
@@ -59,7 +60,7 @@ private fun Draw(
             modifier = Modifier.weight(1f),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Box (modifier = Modifier.size(width = 40.dp, height =53.dp)) {
+            Box (modifier = Modifier.size(width = 40.dp, height = 53.dp)) {
                 AsyncImage(
                     model = ImageRequest.Builder(LocalContext.current)
                         .data(companyLogoPath)
@@ -83,11 +84,11 @@ private fun Draw(
             }
             Column(
                 modifier = Modifier
-                    .padding(start = 8.dp)
+                    .padding(start = 12.dp)
             ) {
                 Text(text = accountName, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 14.sp)
                 Text(text = DecimalFormat("#,###원").format(balance), fontWeight = FontWeight.Bold)
-                Text(text = formatAccount(companyName = companyName, accountNumber = accountNumber), maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 12.sp)
+                Text(text = formatAccount(companyName = companyName, accountNumber = accountNumber), maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 12.sp, color = Color(R.color.noActiveColor))
             }
         }
         trailing?.invoke()
@@ -102,17 +103,21 @@ fun AccountListItem_Normal(
     balance: Int,
     accountName: String,
     companyLogoPath: String,
+    companyName: String? = "",
     acMain: Int
 ) {
-    Draw(
-        modifier = modifier
-            .padding(contentPadding),
-        accountNumber = accountNumber,
-        balance = balance,
-        accountName = accountName,
-        companyLogoPath = companyLogoPath,
-        acMain = acMain
-    )
+    if (companyName != null) {
+        Draw(
+            modifier = modifier
+                .padding(contentPadding),
+            accountNumber = accountNumber,
+            balance = balance,
+            accountName = accountName,
+            companyLogoPath = companyLogoPath,
+            companyName = companyName,
+            acMain = acMain
+        )
+    }
 }
 
 @Composable
@@ -123,28 +128,32 @@ fun AccountListItem_Check(
     balance: Int,
     accountName: String,
     companyLogoPath: String,
+    companyName: String? = "",
     checked: Boolean,
     acMain: Int,
     onClickItem: () -> Unit
 ) {
-    Draw(
-        modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
-            .clickable { onClickItem() }
-            .padding(contentPadding),
-        accountNumber = accountNumber,
-        balance = balance,
-        accountName = accountName,
-        companyLogoPath = companyLogoPath,
-        acMain = acMain,
-        trailing = {
-            Icon(
-                Icons.Filled.CheckCircle,
-                contentDescription = "checked",
-                tint = if (checked) MaterialTheme.colorScheme.primary else Disabled
-            )
-        }
-    )
+    if (companyName != null) {
+        Draw(
+            modifier = modifier
+                .clip(RoundedCornerShape(20.dp))
+                .clickable { onClickItem() }
+                .padding(contentPadding),
+            accountNumber = accountNumber,
+            balance = balance,
+            accountName = accountName,
+            companyLogoPath = companyLogoPath,
+            companyName = companyName,
+            acMain = acMain,
+            trailing = {
+                Icon(
+                    Icons.Filled.CheckCircle,
+                    contentDescription = "checked",
+                    tint = if (checked) MaterialTheme.colorScheme.primary else Disabled
+                )
+            }
+        )
+    }
 }
 
 @Composable
@@ -154,6 +163,7 @@ fun AccountListItem_Remit(
     balance: Int,
     accountName: String,
     companyLogoPath: String,
+    companyName: String,
     acMain: Int,
     onClickItem: () -> Unit,
     onClickRemit: () -> Unit
@@ -165,6 +175,7 @@ fun AccountListItem_Remit(
         balance = balance,
         accountName = accountName,
         companyLogoPath = companyLogoPath,
+        companyName = companyName,
         acMain = acMain,
         trailing = {
             TextButton(
@@ -196,7 +207,7 @@ fun formatAccount(companyName: String, accountNumber: String) : String {
         "광주" -> return formatNum.insert(6, "-").insert(3, "-").toString()
         "대구" -> return formatNum.insert(11, "-").insert(5, "-").insert(3,"-").toString()
     }
-    return formatNum.insert(9, "-").insert(3, "-").toString()
+    return if(accountNumber.length > 10) formatNum.insert(9, "-").insert(3, "-").toString() else accountNumber
 }
 
 @Composable
@@ -207,26 +218,30 @@ fun AccountListItem_Select(
     balance: Int,
     accountName: String,
     companyLogoPath: String,
+    companyName: String? = "",
     selected: Boolean,
     acMain: Int,
     onClickItem: () -> Unit
 ) {
-    Draw(
-        modifier = modifier
-            .clip(RoundedCornerShape(20.dp))
-            .border(
-                width = 1.dp,
-                color = if (selected) MaterialTheme.colorScheme.primary else Disabled,
-                shape = RoundedCornerShape(20.dp)
-            )
-            .clickable { onClickItem() }
-            .padding(contentPadding),
-        accountNumber = accountNumber,
-        balance = balance,
-        accountName = accountName,
-        companyLogoPath = companyLogoPath,
-        acMain = acMain
-    )
+    if (companyName != null) {
+        Draw(
+            modifier = modifier
+                .clip(RoundedCornerShape(20.dp))
+                .border(
+                    width = 1.dp,
+                    color = if (selected) MaterialTheme.colorScheme.primary else Disabled,
+                    shape = RoundedCornerShape(20.dp)
+                )
+                .clickable { onClickItem() }
+                .padding(contentPadding),
+            accountNumber = accountNumber,
+            balance = balance,
+            accountName = accountName,
+            companyLogoPath = companyLogoPath,
+            companyName = companyName,
+            acMain = acMain
+        )
+    }
 }
 
 @Composable
@@ -236,27 +251,31 @@ fun AccountListItem_Arrow(
     balance: Int,
     accountName: String,
     companyLogoPath: String,
+    companyName: String? = "",
     acMain: Int,
     onClickItem: () -> Unit
 ) {
-    Draw(
-        modifier = modifier
-            .clip(RoundedCornerShape(10.dp))
-            .clickable {
-                onClickItem()
-            },
-        accountNumber = accountNumber,
-        balance = balance,
-        accountName = accountName,
-        companyLogoPath = companyLogoPath,
-        acMain = acMain,
-        trailing = {
-            Icon(
-                painter = painterResource(R.drawable.arrow_forward_ios),
-                contentDescription = "forwardArrow"
-            )
-        }
-    )
+    if (companyName != null) {
+        Draw(
+            modifier = modifier
+                .clip(RoundedCornerShape(10.dp))
+                .clickable {
+                    onClickItem()
+                },
+            accountNumber = accountNumber,
+            balance = balance,
+            accountName = accountName,
+            companyLogoPath = companyLogoPath,
+            companyName = companyName,
+            acMain = acMain,
+            trailing = {
+                Icon(
+                    painter = painterResource(R.drawable.arrow_forward_ios),
+                    contentDescription = "forwardArrow"
+                )
+            }
+        )
+    }
 }
 
 @Preview
@@ -283,6 +302,7 @@ private fun PreviewAccountListItem_Remit(onClickRemit: () -> Unit = {}) {
         balance = 10000,
         accountName = "accountName",
         companyLogoPath = "https://www.shinhancard.com/pconts/company/images/contents/shc_symbol_ci.png",
+        companyName = "신한",
         acMain = 1,
         onClickItem = {},
         onClickRemit = onClickRemit

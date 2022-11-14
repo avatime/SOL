@@ -182,6 +182,7 @@ private fun HomeCardContainer(
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
+                companyName = it.cpName,
                 acMain = it.acMain,
                 onClickItem = {
                     navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/$pathTmp/${it.acMain}/${it.acType}")
@@ -209,7 +210,7 @@ private fun HomeCardContainer(
             Divider(modifier = Modifier.padding(vertical = dimensionResource(R.dimen.padding_medium)))
         }
         mainData.insuranceList.forEach {
-            InsuranceListItem_Normal(
+            InsuranceListItem_Arrow(
                 insuranceName = it.isPdName,
                 fee = it.isPdFee,
                 myName = it.name,
@@ -230,6 +231,7 @@ private fun HomeCardContainer(
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
+                companyName = it.cpName,
                 acMain = it.acMain,
                 onClickItem = {
                     navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}/${it.acMain}/${it.acType}")

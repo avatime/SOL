@@ -69,6 +69,7 @@ fun AssetStockContainer(modifier: Modifier,
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
+                companyName = it.cpName,
                 acMain = it.acMain,
                 onClickItem = {
                     navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/$pathTmp/${it.acMain}/${it.acType}")
