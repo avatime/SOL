@@ -25,7 +25,7 @@ class HomeViewModel @Inject constructor(
     private val stockRepository: StockRepository
 ) : BaseViewModel(application, baseRepository), SensorEventListener {
     val mainData = mutableStateOf<Response<AccountRegisteredResponseDto>>(Response.Loading)
-    val stockList = mutableStateOf<Array<FinanceResponseDto>>(arrayOf())
+    val stockList = mutableStateOf<Response<MutableList<FinanceResponseDto>>>(Response.Loading)
     val walkCount = mutableStateOf<Int?>(null)
 
     fun load() {
@@ -38,6 +38,18 @@ class HomeViewModel @Inject constructor(
 
     fun getLoadState(): Response<Unit> {
         val arr = arrayOf(mainData)
+
+        return if (arr.count { it.value is Response.Loading } != 0) {
+            Response.Loading
+        } else if (arr.count { it.value is Response.Failure } != 0) {
+            Response.Failure(null)
+        } else {
+            Response.Success(Unit)
+        }
+    }
+
+    fun getStockLoadState(): Response<Unit> {
+        val arr = arrayOf(stockList)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -69,13 +81,16 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+
+
     private suspend fun loadStockList() {
         this@HomeViewModel.run {
-            stockRepository.getFinanceList()
+            stockRepository.getHomeFinanceList()
         }
             .collect {
+                stockList.value = it
                 if (it is Response.Success) {
-                    stockList.value = it.data
+//                    stockList.value = it.data
                 }
             }
     }
