@@ -3,6 +3,7 @@ import { Route } from "react-router";
 import SendPage from "./pages/SendPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import { createTheme, ThemeProvider } from "@mui/material";
+import PrivacyPage from "./pages/PrivacyPage";
 
 function App() {
   const theme = createTheme({
@@ -20,7 +21,8 @@ function App() {
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <Routes>
-          <Route path="/a" element={<SendPage />} />
+          <Route path="/remit" element={<SendPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
