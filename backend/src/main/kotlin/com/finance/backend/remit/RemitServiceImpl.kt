@@ -185,7 +185,6 @@ class RemitServiceImpl(
     override fun postRemitPhoneNonMember(remitNonMemberReq: RemitNonMemberReq) {
         val remitInfoReq = remitNonMemberReq.remitInfoReq
         val remitAvailableRes = remitNonMemberReq.remitAvailableRes
-        println(remitNonMemberReq.toString())
 
         // 폰 토큰 가지고 db 객체 가져오기
         val remitAvailable = remitAvailableRepository.findById(remitAvailableRes.tokenId).orElse(null)?: throw NoPhoneTokenException()
