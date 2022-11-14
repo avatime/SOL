@@ -85,13 +85,9 @@ class GroupServiceImpl (
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
-            println("직책 시작: " + publicAccountId)
             val userType = publicAccountMemberRepository.findByUserAndPublicAccountId(user, publicAccountId)!!.type
-            println("직책 성공")
             if(!publicAccountMemberRepository.existsByUserAndPublicAccountId(user, publicAccountId)) throw AuthenticationException()
-            println("내역 시작")
             val tradeList : List<TradeHistory> = tradeHistoryRepository.findAllByTdTgAc("모임통장 $publicAccountId") ?:throw Exception()
-            println("내역 성공")
             return List(tradeList.size) {i -> tradeList[i].toEntity(userType)}
         } else throw Exception()
     }
@@ -194,7 +190,7 @@ class GroupServiceImpl (
                     state.publicAccount.paName,
                     "모임통장 $id",
                     user.name,
-                    state.publicAccount.paName,
+                    user.name,
                     account
             )
             state.publicAccount.addPaVal(-1 * publicAccountWithdrawReq.value)
@@ -220,7 +216,7 @@ class GroupServiceImpl (
                     state.publicAccount.paName,
                     "모임통장 $id",
                     user.name,
-                    state.publicAccount.paName,
+                    user.name,
                     account
             )
             state.publicAccount.addPaVal(publicAccountDepositReq.value)
