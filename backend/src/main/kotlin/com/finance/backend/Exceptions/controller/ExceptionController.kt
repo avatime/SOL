@@ -112,9 +112,7 @@ class ExceptionController(
 
     @ExceptionHandler(NonMemberException::class)
     fun handleNonMemberEXCEPTION(e : Exception) : ResponseEntity<Any>{
-        val remitAvailable = RemitAvailable(true)
-        remitAvailableRepository.save(remitAvailable)
-        return ResponseEntity.status(405).body(remitAvailable.toEntity())
+        return ResponseEntity.status(405).body("")
     }
     @ExceptionHandler(NoPhoneTokenException::class)
     fun handleNoPhoneTokenException(e : Exception) : ResponseEntity<String>{

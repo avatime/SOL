@@ -159,7 +159,9 @@ class RemitServiceImpl(
         }
         // 비회원이면
         else {
-            throw NonMemberException()
+            val remitAvailable = RemitAvailable(true)
+            remitAvailableRepository.save(remitAvailable)
+            throw NonMemberException(remitAvailable.tokenId.toString())
         }
     }
 
@@ -186,7 +188,7 @@ class RemitServiceImpl(
 
         // 폰 토큰 가지고 db 객체 가져오기
         val remitAvailable = remitAvailableRepository.findById(remitAvailableRes.tokenId).orElse(null)?: throw NoPhoneTokenException()
-        // 기존의 true 였던 걸 false로
+        // 기존의 true 였던 걸 false로 변경
         remitAvailable.check()
 
         val value = remitInfoReq.value  // 이체 금액
