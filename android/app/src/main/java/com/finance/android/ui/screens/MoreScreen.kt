@@ -254,6 +254,13 @@ private fun MenuList(navController: NavController) {
             text = "모두의 통장"
         )
 
+        MoreMenuItem(
+            onClickMenu = { navController.navigate(Const.Routes.QRCODE) },
+            painter = painterResource(R.drawable.ic_moim),
+            color = Color(0xffc0f0d2),
+            text = "qr 코드 송금"
+        )
+
         Spacer(modifier = Modifier.size(40.dp))
     }
 }
