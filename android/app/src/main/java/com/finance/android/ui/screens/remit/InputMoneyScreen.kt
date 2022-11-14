@@ -21,7 +21,6 @@ import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.RemitViewModel
 import java.text.DecimalFormat
-import java.util.regex.Pattern
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -88,7 +87,7 @@ fun InputMoneyScreen(
 
                 ) {
                     Text(
-                        text = DecimalFormat("#,###원").format(moneyValue)+"을 보낼까요?",
+                        text = DecimalFormat("#,###원").format(moneyValue.toInt())+"을 보낼까요?",
                         fontSize = 30.sp,
                         softWrap = true,
                         maxLines = 1
@@ -101,12 +100,9 @@ fun InputMoneyScreen(
                     value = moneyValue,
                     onValueChange = {
 
-                        if(!Pattern.matches("^[0-9]*$", it)) return@TextField
-                        if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
                         if (error.value && moneyValue < it) {
                             return@TextField
                         }
-                        else if (moneyValue == it) return@TextField
 
                         moneyValue = if (it.isEmpty()) "" else it.toInt().toString()
                     },
@@ -138,7 +134,7 @@ fun InputMoneyScreen(
 
                 if (error.value) {
                     Text(
-                        text = "계좌 잔액이 "+DecimalFormat("#,###원").format(balance)+"이에요.",
+                        text = "계좌에 잔액이 "+DecimalFormat("#,###원").format(balance)+"$ 있어요.",
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(start = 30.dp)
@@ -220,7 +216,7 @@ fun InputMoneyScreen(
                             }
 
                         },
-                        text = "송금",
+                        text = "보내기",
                         modifier = Modifier.withBottomButton(),
                         buttonType = ButtonType.ROUNDED,
 
@@ -240,6 +236,4 @@ fun InputMoneyScreen(
 
 
 }
-
-
 
