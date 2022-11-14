@@ -83,7 +83,7 @@ class RemitServiceImpl(
         val date = LocalDateTime.now()  // 이체 일자
         val remitTarget = remitInfoReq.acTag    // 입금 받는 계좌 은행
         val targetAccount = remitInfoReq.acReceive  // 입금 받는 계좌 번호
-        val receive = accountRepository.findById(remitInfoReq.receive).orElse(null)?: throw  NoAccountException()
+
         val remitAccount = accountRepository.findById(remitInfoReq.acSend).orElse(null)?: throw NoAccountException()// 송금 하는 계좌 객체
 
         val realRemitAccount = accountRepository.findById(targetAccount).orElse(null)?: throw NoAccountException()
@@ -97,7 +97,7 @@ class RemitServiceImpl(
         if (remitAccount.acNo == targetAccount){ throw RemitFailedException() } // 보내는 계좌 받는 계좌 같으면 예외 처리
 
         // 출금 거래 내역
-        val tradeRemitHistory = TradeHistory(remitName,value, date, 2, remitTarget, targetAccount, receive.user.name, remitAccount.user.name, remitAccount)
+        val tradeRemitHistory = TradeHistory(remitName,value, date, 2, remitTarget, targetAccount, remitInfoReq.receive, remitAccount.user.name, remitAccount)
         tradeHistoryRepository.save(tradeRemitHistory)
         // 잔액 변경 저장
         remitAccount.withdraw(value)
@@ -105,7 +105,7 @@ class RemitServiceImpl(
 
         // 입금 거래 내역
         val depositAccount = accountRepository.findById(remitInfoReq.acReceive).orElse(null)?: throw NoAccountException() // 입금 받는 계좌 객체
-        val depositRemitHistory = TradeHistory(depositName,value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, remitAccount.user.name, receive.user.name, depositAccount)
+        val depositRemitHistory = TradeHistory(depositName,value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, remitAccount.user.name, remitInfoReq.receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
         // 잔액 변경 저장
         depositAccount.deposit(value)
