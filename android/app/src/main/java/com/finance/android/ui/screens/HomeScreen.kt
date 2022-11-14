@@ -385,7 +385,7 @@ private fun TopBar(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            if(homeViewModel.getStockLoadState() == Response.Success(Unit)) animate_num(homeViewModel)
+            if(homeViewModel.getStockLoadState() == Response.Success(Unit)) animate_num(homeViewModel, navController = navController)
         }
     }
 }
@@ -495,7 +495,7 @@ private fun PedometerOnStateButton(
 
 @ExperimentalAnimationApi
 @Composable
-fun animate_num(homeViewModel: HomeViewModel = hiltViewModel()) {
+fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
     var state by remember { mutableStateOf(0) }
     var count by remember { mutableStateOf(0) }
     val transition = rememberInfiniteTransition()
@@ -533,7 +533,7 @@ fun animate_num(homeViewModel: HomeViewModel = hiltViewModel()) {
             )
         }
     ) { targetCount ->
-        minibar(idx = targetCount, stockList = (homeViewModel.stockList.value as Response.Success).data)
+        minibar(idx = targetCount, stockList = (homeViewModel.stockList.value as Response.Success).data, navController = navController)
     }
 }
 
@@ -541,7 +541,7 @@ fun animate_num(homeViewModel: HomeViewModel = hiltViewModel()) {
 fun minibar(
     idx : Int = 0,
     modifier: Modifier = Modifier,
-    onClick: () -> Unit = {},
+    navController : NavController,
     stockList : MutableList<FinanceResponseDto>,
 ) {
     Row(
@@ -549,7 +549,7 @@ fun minibar(
             .clip(RoundedCornerShape(10.dp))
             .background(MaterialTheme.colorScheme.surfaceVariant)
             .clickable {
-                onClick()
+                navController.navigate("${Const.Routes.STOCK}/${stockList[idx % stockList.size].fnName}")
             }
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically,
