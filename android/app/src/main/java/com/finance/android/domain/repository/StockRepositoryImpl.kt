@@ -23,6 +23,10 @@ class StockRepositoryImpl @Inject constructor(
         return stockService.getFinanceList()
     }
 
+    override suspend fun getHomeFinanceList(): MutableList<FinanceResponseDto> {
+        return stockService.getHomeFinanceList()
+    }
+
     override suspend fun getFinanceDetailList(fnName: String): Array<FinanceDetailResponseDto> {
         return stockService.getFinanceDetailList(fnName)
     }

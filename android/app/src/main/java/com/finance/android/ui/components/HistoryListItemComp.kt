@@ -212,7 +212,7 @@ fun showHistoryList(
                     modifier = Modifier
                         .verticalScroll(rememberScrollState())
                 ) {
-                    bf = findIdx(type = currentMenu.value, historyList = historyList)
+                    bf = findIdx(type = currentMenu.value, year = currentMonth.value.year, month = currentMonth.value.monthValue, historyList = historyList)
                     for (history in historyList) {
                         when(currentMenu.value) {
                             1 -> {
@@ -319,16 +319,19 @@ fun HistoryItem(
 @Composable
 fun findIdx(
     type : Int,
+    year : Int, month : Int,
     historyList: List<HistoryEntity>
 ): Int {
     when(type) {
         1 -> for(i in historyList) {
-            if(i.value > 0) return i.date.dayOfMonth + 1
+            if(i.value > 0 && i.date.year == year && i.date.monthValue == month) return i.date.dayOfMonth + 1
         }
         2 -> for(i in historyList) {
-            if(i.value < 0) return i.date.dayOfMonth + 1
+            if(i.value < 0 && i.date.year == year && i.date.monthValue == month) return i.date.dayOfMonth + 1
         }
-        else -> return historyList[0].date.dayOfMonth + 1
+        else -> for(i in historyList) {
+            if(i.date.year == year && i.date.monthValue == month) return i.date.dayOfMonth + 1
+        }
     }
     return historyList[0].date.dayOfMonth + 1
 }
