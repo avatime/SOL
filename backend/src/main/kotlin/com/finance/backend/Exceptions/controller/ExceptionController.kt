@@ -112,7 +112,7 @@ class ExceptionController(
 
     @ExceptionHandler(NonMemberException::class)
     fun handleNonMemberEXCEPTION(e : Exception) : ResponseEntity<Any>{
-        return ResponseEntity.status(405).body("")
+        return ResponseEntity.status(405).body("비회원입니다.")
     }
     @ExceptionHandler(NoPhoneTokenException::class)
     fun handleNoPhoneTokenException(e : Exception) : ResponseEntity<String>{

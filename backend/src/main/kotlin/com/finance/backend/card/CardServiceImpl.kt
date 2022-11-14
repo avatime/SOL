@@ -79,7 +79,7 @@ class CardServiceImpl(
 
     override fun getCardMonthInfo(cdNo: String): List<CardBillDetailRes> {
         val cardBillDetailList = ArrayList<CardBillDetailRes>()
-        val cardProductHistoryList = cardPaymentHistoryRepository.findAllByCardCdNo(cdNo)?: emptyList()
+        val cardProductHistoryList = cardPaymentHistoryRepository.findAllByCardCdNoOrderByCdPyDtDesc(cdNo)?: emptyList()
         for(cardProductHistory in cardProductHistoryList){
 
             val cardBillDetailRes = CardBillDetailRes(cardProductHistory.cdPyDt, cardProductHistory.cdPyName, cardProductHistory.cdVal * -1, cardProductHistory.cdTp)
