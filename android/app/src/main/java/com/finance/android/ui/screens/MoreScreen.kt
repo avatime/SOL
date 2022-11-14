@@ -29,8 +29,8 @@ import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
-import com.finance.android.ui.components.TransientSnackbar
 import com.finance.android.ui.components.ShowProfileList
+import com.finance.android.ui.components.TransientSnackbar
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.toPx
@@ -228,6 +228,13 @@ private fun MenuList(navController: NavController) {
             painter = painterResource(R.drawable.ic_moim),
             color = Color(0xffc0f0d2),
             text = "모두의 통장"
+        )
+
+        MoreMenuItem(
+            onClickMenu = { navController.navigate(Const.Routes.QRCODE) },
+            painter = painterResource(R.drawable.ic_moim),
+            color = Color(0xffc0f0d2),
+            text = "qr 코드 송금"
         )
 
         Spacer(modifier = Modifier.size(40.dp))
