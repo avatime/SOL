@@ -25,12 +25,14 @@ export default class ApiClient implements BankApi {
   constructor() {
     this.axiosInstance = this.createAxiosInstance();
   }
-  
+
   async checkToken(token: Number): Promise<boolean> {
-    return (await this.axiosInstance.request({
-      method: "GET",
-      url: `${API_PATH}/remit/phone/nonmember/${token}`
-    })).data.token
+    return (
+      await this.axiosInstance.request({
+        method: "GET",
+        url: `${API_PATH}/remit/phone/nonmember/${token}`,
+      })
+    ).data.token;
   }
 
   async remit(
@@ -41,23 +43,31 @@ export default class ApiClient implements BankApi {
     money: Number,
     token: Number
   ): Promise<void> {
+    console.log(`senderAccountName: ${senderAccountName}`);
+    console.log(`senderAccountNumber: ${senderAccountNumber}`);
+    console.log(`receiverAccountName: ${receiverAccountName}`);
+    console.log(`receiverAccountNumber: ${receiverAccountNumber}`);
+    console.log(`money: ${money}`);
+    console.log(`token: ${token}`);
     return await this.axiosInstance.request({
       method: "POST",
       url: `${API_PATH}/remit/phone/nonmember`,
       data: {
-        remit_info_req: {
-          ac_name: senderAccountName,
-          ac_tag: receiverAccountName,
-          ac_send: senderAccountNumber,
-          ac_receive: receiverAccountNumber,
-          value: money,
-          receive: "",
-          send: "",
+        remit_nonmember_req: {
+          remit_info_req: {
+            ac_name: senderAccountName,
+            ac_tag: receiverAccountName,
+            ac_send: senderAccountNumber,
+            ac_receive: receiverAccountNumber,
+            value: money,
+            receive: "",
+            send: "",
+          },
+          remit_available_res: {
+            token_id: token,
+            token: false,
+          },
         },
-        remit_available_res: {
-          token_id: token,
-          token: false
-        }
       },
     });
   }
