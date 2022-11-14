@@ -59,12 +59,11 @@ export default class ApiClient implements BankApi {
       },
     };
 
-    console.log(JSON.stringify(data));
-    await this.axiosInstance.request({
+    return (await this.axiosInstance.request({
       method: "POST",
       url: `${API_PATH}/remit/phone/nonmember`,
-      data: JSON.stringify(data),
-    }).catch((e) => console.log(e))
+      data: data,
+    }))
   }
 
   static getInstance(): ApiClient {
@@ -95,7 +94,7 @@ export default class ApiClient implements BankApi {
 
   private createAxiosInstance = (token?: string) => {
     const headers: any = {
-      "content-type": "application/json",
+      "Content-Type": "application/json",
     };
 
     if (token) {
