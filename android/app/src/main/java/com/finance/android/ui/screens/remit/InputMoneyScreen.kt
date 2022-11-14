@@ -1,5 +1,4 @@
-package com.finance.android.ui.screens.remit
-
+package com.finance.android.ui.screens
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -20,8 +19,6 @@ import com.finance.android.ui.components.ButtonType
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.RemitViewModel
-import java.text.DecimalFormat
-import java.util.regex.Pattern
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -30,24 +27,21 @@ fun InputMoneyScreen(
     remitViewModel: RemitViewModel,
     navController: NavController
 ) {
-
     var moneyValue by remember {
         mutableStateOf("")
     }
 
-    val balance by remember {
+    var balance by remember {
         mutableStateOf(remitViewModel.balance)
     }
 
+    var error = remember { mutableStateOf(false) }
 
-    val error = remember { mutableStateOf(false) }
-
-    val placeholderText = remember {
+    var placeholderText = remember {
         mutableStateOf("얼마를 보낼까요?")
     }
 
-    val keyboardController = LocalSoftwareKeyboardController.current
-
+    var keyboardController = LocalSoftwareKeyboardController.current
 
     var isNext by remember {
         mutableStateOf(false)
@@ -73,40 +67,31 @@ fun InputMoneyScreen(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-
-        Column {
-
+        Column() {
             if (isNext) {
                 TextButton(
                     onClick = { isNext = false },
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Transparent,
-                        contentColor = Color.Black,
+                        backgroundColor = Color.Transparent,
+                        contentColor = Color.Black
                     ),
                     modifier = Modifier.padding(start = 20.dp)
 
-
                 ) {
                     Text(
-                        text = DecimalFormat("#,###원").format(moneyValue)+"을 보낼까요?",
+                        text = "${moneyValue}원 보낼까요?",
                         fontSize = 30.sp,
                         softWrap = true,
                         maxLines = 1
                     )
                 }
-
-
             } else {
                 TextField(
                     value = moneyValue,
                     onValueChange = {
-
-                        if(!Pattern.matches("^[0-9]*$", it)) return@TextField
-                        if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
                         if (error.value && moneyValue < it) {
                             return@TextField
                         }
-                        else if (moneyValue == it) return@TextField
 
                         moneyValue = if (it.isEmpty()) "" else it.toInt().toString()
                     },
@@ -119,70 +104,60 @@ fun InputMoneyScreen(
                         Text(
                             text = placeholderText.value,
                             fontSize = 30.sp,
-                            textAlign = TextAlign.Center,
+                            textAlign = TextAlign.Center
                         )
-
                     },
                     colors = TextFieldDefaults
                         .textFieldColors(
                             backgroundColor = Transparent,
                             focusedIndicatorColor = Transparent,
                             unfocusedIndicatorColor = Transparent,
-                            cursorColor = Transparent,
+                            cursorColor = Transparent
                         ),
                     textStyle = androidx.compose.ui.text.TextStyle().copy(fontSize = 40.sp),
-                    isError = error.value,
+                    isError = error.value
 
-
-                    )
+                )
 
                 if (error.value) {
                     Text(
-                        text = "계좌 잔액이 "+DecimalFormat("#,###원").format(balance)+"이에요.",
+                        text = "잔액이 ${balance}원이에요.",
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(start = 30.dp)
                     )
                 }
-
             }
-
-
 
             if (moneyValue.isNotEmpty() && (Integer.parseInt(moneyValue) > balance!!)) {
                 TextButton(
                     onClick = { moneyValue = balance.toString() },
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Transparent,
-                        contentColor = Color.Black,
+                        backgroundColor = Color.Transparent,
+                        contentColor = Color.Black
                     ),
                     modifier = Modifier.padding(start = 30.dp)
 
-
                 ) {
-                    Text(text = "잔액 "+DecimalFormat("#,###원").format(balance)+" 입력", fontSize = 20.sp)
+                    Text(text = "잔액 ${balance}원 입력", fontSize = 20.sp)
                 }
-
             }
 
             if (moneyValue.isEmpty()) {
                 TextButton(
                     onClick = { moneyValue = balance.toString() },
                     colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Transparent,
-                        contentColor = Color.Black,
+                        backgroundColor = Color.Transparent,
+                        contentColor = Color.Black
                     ),
                     modifier = Modifier.padding(start = 30.dp)
 
-
                 ) {
-                    Text(text = "잔액 "+DecimalFormat("#,###원").format(balance)+" 입력", fontSize = 20.sp)
+                    Text(text = "잔액 ${balance}원 입력", fontSize = 20.sp)
                 }
-
             }
 
             if (moneyValue.isNotEmpty()) {
-
                 if (!isNext) {
                     Spacer(modifier = Modifier.weight(1.0f))
 
@@ -190,10 +165,9 @@ fun InputMoneyScreen(
                         onClick = { isNext = true },
                         text = "다음",
                         modifier = Modifier.withBottomButton(),
-                        buttonType = ButtonType.ROUNDED,
+                        buttonType = ButtonType.ROUNDED
 
-                        )
-
+                    )
                 } else {
                     Spacer(modifier = Modifier.weight(1.0f))
 
@@ -205,41 +179,29 @@ fun InputMoneyScreen(
                                     receive = "",
                                     send = "",
                                     onSuccess = {
-                                        navController.navigate(Const.REMIT_OK_SCREEN)
+                                        navController.navigate("${Const.REMIT_OK_SCREEN}/${moneyValue}/송금 완료")
                                         remitViewModel.moneyValue.value = moneyValue
                                     }
                                 )
                             } else if (Integer.parseInt(moneyValue) > 0) {
-                                remitViewModel.remitFromPhone(value = Integer.parseInt(moneyValue),
+                                remitViewModel.remitFromPhone(
+                                    value = Integer.parseInt(moneyValue),
                                     receive = "",
                                     send = "",
                                     onSuccess = {
-                                        navController.navigate(Const.REMIT_OK_SCREEN)
+                                        navController.navigate("${Const.REMIT_OK_SCREEN}/${moneyValue}/$it")
                                         remitViewModel.moneyValue.value = moneyValue
-                                    })
+                                    }
+                                )
                             }
-
                         },
-                        text = "송금",
+                        text = "보내기",
                         modifier = Modifier.withBottomButton(),
-                        buttonType = ButtonType.ROUNDED,
+                        buttonType = ButtonType.ROUNDED
 
-
-                        )
-
+                    )
                 }
-
-
             }
-
-
         }
-
-
     }
-
-
 }
-
-
-
