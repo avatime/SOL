@@ -59,7 +59,6 @@ fun ContactListScreen(
                         name = it.name,
                         number = it.phoneNumber,
                         avatar = it.avatar,
-                        modifier = Modifier,
                         remitViewModel = remitViewModel,
                         navController = navController
                     )
