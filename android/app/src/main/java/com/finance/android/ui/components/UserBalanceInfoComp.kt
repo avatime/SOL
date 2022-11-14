@@ -44,6 +44,7 @@ fun UserBalanceInfo(
     balance: String = "100,000,000원",
     cpLogo: String? = null,
     acMain: Int? = null,
+    acType: Int? = null,
     onClickCrown : (acNo : String) -> Unit = {},
     onClick: () -> Unit = {}
 ) {
@@ -110,7 +111,7 @@ fun UserBalanceInfo(
                         overflow = TextOverflow.Ellipsis
                     )
                     Spacer(modifier = Modifier.weight(1f))
-                    if (acMain == 0 || acMain == 1)
+                    if (acType == 1)
                         Box(modifier = Modifier.size(27.dp)) {
                             Canvas(
                                 modifier = if (acMain == 1) Modifier

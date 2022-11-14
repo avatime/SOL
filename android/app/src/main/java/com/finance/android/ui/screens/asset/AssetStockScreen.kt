@@ -1,5 +1,6 @@
 package com.finance.android.ui.screens.asset
 
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -62,6 +63,7 @@ fun AssetStockContainer(modifier: Modifier,
         .padding(dimensionResource(R.dimen.padding_medium)))
     {
         financeData.forEach {
+            val pathTmp = Uri.encode(it.cpLogo)
             AccountListItem_Arrow(
                 accountNumber = it.acNo,
                 balance = it.balance,
@@ -69,7 +71,7 @@ fun AssetStockContainer(modifier: Modifier,
                 companyLogoPath = it.cpLogo,
                 acMain = it.acMain,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}/${it.acName}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/$pathTmp/${it.acMain}/${it.acType}")
                 }
             )
         }

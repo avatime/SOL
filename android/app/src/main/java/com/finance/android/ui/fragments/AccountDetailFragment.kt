@@ -29,6 +29,7 @@ fun AccountDetailFragment(
     cpName: String,
     acNo: String,
     cpLogo: String,
+    acType: Int? = null,
     bankViewModel: BankViewModel = hiltViewModel(),
 ) {
     fun launch() {
@@ -71,6 +72,7 @@ fun AccountDetailFragment(
                                 balance = DecimalFormat("#,###원").format(balance) ?: "0원",
                                 cpLogo = cpLogo,
                                 acMain = bankViewModel.acMain.value,
+                                acType = acType,
                                 onClickCrown = {
                                     bankViewModel.setRepAccount(acNo)
                                 },

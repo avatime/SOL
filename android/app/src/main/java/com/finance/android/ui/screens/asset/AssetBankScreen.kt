@@ -23,6 +23,7 @@ import com.finance.android.ui.components.AccountListItem_Arrow
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.BankViewModel
+import java.net.URLEncoder
 
 @Composable
 fun AssetBankScreen(
@@ -71,17 +72,16 @@ private fun AssetBankContainer(
     )
     {
         accData.forEach {
-            var pathTmp = Uri.encode(it.cpLogo)
+            val pathTmp = Uri.encode(it.cpLogo)
             AccountListItem_Arrow(
                 accountNumber = it.acNo,
                 balance = it.balance,
                 accountName = it.acName,
                 companyLogoPath = it.cpLogo,
-                acMain = it.acMain,
-                onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${it.cpLogo}/${it.acName}")
-                }
-            )
+                acMain = it.acMain
+            ) {
+                navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/$pathTmp/${it.acMain}/${it.acType}")
+            }
         }
         if (accData.size == 0) {
             Column(

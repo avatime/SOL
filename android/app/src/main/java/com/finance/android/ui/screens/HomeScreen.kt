@@ -180,7 +180,7 @@ private fun HomeCardContainer(
                 companyLogoPath = it.cpLogo,
                 acMain = it.acMain,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}/${it.acMain}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}/${it.acMain}/${it.acType}")
                 },
                 onClickRemit = {
                     navController.navigate("${Const.Routes.REMIT}/${it.cpName}/${it.acNo}/${it.balance}")
@@ -228,7 +228,7 @@ private fun HomeCardContainer(
                 companyLogoPath = it.cpLogo,
                 acMain = it.acMain,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}")
+                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}/${it.acMain}/${it.acType}")
                 }
             )
         }
