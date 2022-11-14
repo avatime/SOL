@@ -94,19 +94,19 @@ private fun Recent(
             }
         }
         Spacer(modifier = Modifier.padding(8.dp))
-        Text(
-            text = "최근 보낸 계좌",
-            fontWeight = FontWeight.Bold,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(start = 10.dp)
-        )
-        Spacer(modifier = Modifier.padding(8.dp))
 
         when (remitViewModel.getLoadRecommendation()) {
             is Response.Failure -> Text(text = "실패")
-            is Response.Loading -> AnimatedLoading(text = "가져오고 있어요")
+            is Response.Loading -> {}
             is Response.Success -> {
                 val response2 = remitViewModel.recommendedAccountData.value as Response.Success
+                Text(
+                    text = "최근 보낸 계좌",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 16.sp,
+                    modifier = Modifier.padding(start = 10.dp)
+                )
+                Spacer(modifier = Modifier.padding(8.dp))
                 response2.data.forEach {
                     AccountLikeItem(
                         bkStatus = it.bkStatus,
