@@ -36,7 +36,7 @@ fun AssetStockScreen(
         launch()
     }
 
-    when (val data = financeViewModel.getLoadState2()) {
+    when (financeViewModel.getLoadState2()) {
         is Response.Success -> {
             Column()
             {

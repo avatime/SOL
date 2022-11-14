@@ -20,7 +20,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
-import com.finance.android.viewmodels.GroupAccountViewModel
 
 @Composable
 fun SelectedFriendItem(

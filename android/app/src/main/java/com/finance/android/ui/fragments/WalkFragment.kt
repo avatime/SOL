@@ -1,12 +1,14 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.fragments
 
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -16,23 +18,17 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.fragment.app.Fragment
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.finance.android.R
-import com.finance.android.domain.dto.response.DailyAttendanceResponseDto
 import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 import com.finance.android.ui.components.BackHeaderBar
-import com.finance.android.ui.screens.more.ShowAttendanceCalendar
 import com.finance.android.ui.screens.more.ShowWalkingCalendar
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
-import com.finance.android.viewmodels.AttendanceViewModel
 import com.finance.android.viewmodels.WalkViewModel
-import java.util.*
 
 @Composable
 fun WalkFragment(

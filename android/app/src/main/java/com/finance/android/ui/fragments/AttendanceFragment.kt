@@ -1,4 +1,4 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.fragments
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -26,7 +26,6 @@ import com.finance.android.ui.screens.more.ShowAttendanceCalendar
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.AttendanceViewModel
-import java.util.*
 
 @Composable
 fun AttendanceFragment(

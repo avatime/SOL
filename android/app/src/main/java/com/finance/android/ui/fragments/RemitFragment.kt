@@ -8,14 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.HeaderRemitTabBar
-import com.finance.android.ui.screens.*
+import com.finance.android.ui.screens.remit.InputMoneyScreen
 import com.finance.android.ui.screens.remit.RemitOKScreen
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.RemitViewModel

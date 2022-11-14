@@ -133,7 +133,7 @@ fun GroupAccountDetailScreen(
                             unselectedContentColor = Disabled,
                         )
                     }
-                }//colunm
+                }
 
             }
             when (selectedIndex.value) {
@@ -141,15 +141,13 @@ fun GroupAccountDetailScreen(
                     Log.i("group", "${selectedIndex.value}")
                     GroupAccountDuesScreen(
                         navController = navController,
-                        groupAccountViewModel = groupAccountViewModel,
-                        modifier = modifier
+                        groupAccountViewModel = groupAccountViewModel
                     )
                 }
 
                 1 -> {
                     Log.i("group", "${selectedIndex.value}")
                     GroupAccountTradeDetailScreen(
-                        navController = navController,
                         groupAccountViewModel = groupAccountViewModel,
                         modifier = modifier
                     )
@@ -157,9 +155,7 @@ fun GroupAccountDetailScreen(
                 2 -> {
                     Log.i("group", "${selectedIndex.value}")
                     GroupAccountMemberScreen(
-                        navController = navController,
-                        groupAccountViewModel = groupAccountViewModel,
-                        modifier = modifier
+                        groupAccountViewModel = groupAccountViewModel
                     )
                 }
 

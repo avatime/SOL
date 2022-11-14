@@ -1,27 +1,20 @@
 package com.finance.android.ui.screens.groupAccount
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.navigation.NavController
 import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.showHistoryList
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.TextButton
-import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.GroupAccountViewModel
 
 @Composable
 fun GroupAccountTradeDetailScreen(
-    navController: NavController,
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier = Modifier,
 ) {
@@ -38,7 +31,6 @@ fun GroupAccountTradeDetailScreen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-
         when (val response = groupAccountViewModel.duesTradeHistoryData.value) {
 
             is Response.Failure -> Text(text = "실패")
@@ -46,9 +38,7 @@ fun GroupAccountTradeDetailScreen(
             is Response.Success -> {
                 showHistoryList(modifier = Modifier.weight(1.0f),
                     historyList = List(response.data.size) { i -> response.data[i].toEntity() })
-
             }
-
-        }//end of when
-    }//end of column
+        }
+    }
 }

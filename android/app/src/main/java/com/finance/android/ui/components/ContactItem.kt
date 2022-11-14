@@ -1,7 +1,6 @@
 package com.finance.android.ui.components
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Button
@@ -16,7 +15,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -27,7 +25,13 @@ import com.finance.android.utils.Const
 import com.finance.android.viewmodels.RemitViewModel
 
 @Composable
-fun ContactItem(name: String, number: String, avatar: String, modifier: Modifier, remitViewModel: RemitViewModel,navController: NavController) {
+fun ContactItem(
+    name: String,
+    number: String,
+    avatar: String,
+    remitViewModel: RemitViewModel,
+    navController: NavController
+) {
 
     Button (onClick = {remitViewModel.phoneNum.value = number; navController.navigate(Const.INPUT_MONEY_SCREEN)}, colors = ButtonDefaults.buttonColors(Color.White) ){
         Row(
@@ -64,7 +68,7 @@ fun ContactItem(name: String, number: String, avatar: String, modifier: Modifier
             Spacer(modifier = Modifier.padding(15.dp))
 
 
-            Column() {
+            Column {
                 Text(text = name, fontSize = dimensionResource(R.dimen.account_like_name).value.sp)
                 Spacer(modifier = Modifier.padding(3.dp))
                 Text(

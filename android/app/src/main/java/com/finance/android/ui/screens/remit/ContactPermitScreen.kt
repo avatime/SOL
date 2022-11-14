@@ -1,19 +1,22 @@
-package com.finance.android.ui.screens
+package com.finance.android.ui.screens.remit
 
 
 import android.Manifest
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.airbnb.lottie.compose.*
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.finance.android.R
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
-import com.finance.android.ui.screens.remit.ContactListScreen
 import com.finance.android.viewmodels.RemitViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -48,7 +51,6 @@ fun ContactScreen(remitViewModel: RemitViewModel, navController: NavController) 
             ) {
 
                 val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_remit_contact))
-                val progress by animateLottieCompositionAsState(composition)
                 Spacer(modifier = Modifier.padding(40.dp))
                 LottieAnimation(
                     composition = composition,

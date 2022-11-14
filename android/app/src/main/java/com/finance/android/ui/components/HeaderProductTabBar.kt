@@ -1,14 +1,9 @@
 package com.finance.android.ui.components
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Tab
 import androidx.compose.material.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.runtime.*
@@ -24,13 +19,7 @@ import com.finance.android.R
 import com.finance.android.domain.dto.response.CardRecommendResponseDto
 import com.finance.android.ui.screens.CardProductCheckScreen
 import com.finance.android.ui.screens.CardProductCreditScreen
-import com.finance.android.ui.screens.asset.AssetLifeScreen
-import com.finance.android.ui.screens.asset.AssetStockScreen
-import com.finance.android.ui.screens.asset.*
 import com.finance.android.ui.theme.Disabled
-import com.finance.android.utils.Const
-
-// import com.google.accompanist.pager.*
 
 @Composable
 fun HeaderProductTabBar(

@@ -28,7 +28,7 @@ fun ProductScreen(
         launch()
     }
 
-    when (val data = cardViewModel.getLoadCardReccommend()) {
+    when (cardViewModel.getLoadCardReccommend()) {
         is Response.Success -> {
             val cardRecommendList = (cardViewModel.cardRecommendList.value as Response.Success).data
             Box(

@@ -23,7 +23,6 @@ import com.finance.android.ui.components.AccountListItem_Arrow
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.BankViewModel
-import java.net.URLEncoder
 
 @Composable
 fun AssetBankScreen(
@@ -40,7 +39,7 @@ fun AssetBankScreen(
 
     Column()
     {
-        when (val data = bankViewModel.getLoadState()) {
+        when (bankViewModel.getLoadState()) {
             is Response.Success -> {
                 AssetBankContainer(
                     modifier = Modifier

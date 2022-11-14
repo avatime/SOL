@@ -30,7 +30,7 @@ import com.finance.android.R
 import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.TransientSnackbar
-import com.finance.android.ui.components.showProfileList
+import com.finance.android.ui.components.ShowProfileList
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.toPx
@@ -93,7 +93,7 @@ fun Screen(
     var showProfileList by remember { mutableStateOf(false) }
 
     if(showProfileList) {
-        val outMetrics = DisplayMetrics()
+        DisplayMetrics()
 
         BoxWithConstraints(modifier = Modifier.background(color = Color.Blue)) {
             BottomSheetDialog(
@@ -125,8 +125,8 @@ fun Screen(
                         ) {
                             Text(text = "프로필 이미지", style = MaterialTheme.typography.headlineMedium)
                         }
-                        Column() {
-                            showProfileList(profileList, onClickImage = {
+                        Column {
+                            ShowProfileList(profileList, onClickImage = {
                                 onClick(it)
                                 println("프로필 이미지 변경 $it")
 //                            showSnackbar = true

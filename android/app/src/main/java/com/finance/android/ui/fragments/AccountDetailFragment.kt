@@ -50,7 +50,7 @@ fun AccountDetailFragment(
         Column(modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)) {
-            when (val data = bankViewModel.getLoadAccountBalanceandHistory()) {
+            when (bankViewModel.getLoadAccountBalanceandHistory()) {
                 is Response.Success -> {
                     val balance = (bankViewModel.accountBalance.value as Response.Success).data
                     val accountHistoryList = (bankViewModel.accountHistory.value as Response.Success).data

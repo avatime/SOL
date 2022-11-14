@@ -25,12 +25,12 @@ fun InputExchangePoint(
     balance: Int = 1000000,
     pointViewModel: PointViewModel
 ) {
-    var error = remember { mutableStateOf(false) }
+    val error = remember { mutableStateOf(false) }
     var isNext by remember { mutableStateOf(false) }
     var pointValue by remember { mutableStateOf("") }
-    var placeholderText = remember { mutableStateOf("얼마를 교환할까요?") }
+    val placeholderText = remember { mutableStateOf("얼마를 교환할까요?") }
 
-    var keyboardController = LocalSoftwareKeyboardController.current
+    val keyboardController = LocalSoftwareKeyboardController.current
 
     if (pointValue.isNotEmpty() && (Integer.parseInt(pointValue) > balance)) {
         error.value = true
@@ -60,7 +60,7 @@ fun InputExchangePoint(
                 modifier = Modifier.padding(start = 20.dp)
 
             ) {
-                androidx.compose.material.Text(
+                Text(
                     text = "${pointValue}포인트를 교환할까요?",
                     fontSize = 30.sp,
                     softWrap = true,
@@ -97,7 +97,7 @@ fun InputExchangePoint(
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 singleLine = true,
                 placeholder = {
-                    androidx.compose.material.Text(
+                    Text(
                         text = placeholderText.value,
                         fontSize = 30.sp,
                         textAlign = TextAlign.Center,
@@ -116,7 +116,7 @@ fun InputExchangePoint(
             )
 
             if (error.value) {
-                androidx.compose.material.Text(
+                Text(
                     text = "보유한 포인트를 초과한 금액은 입력할 수 없습니다.",
                     color = MaterialTheme.colors.error,
                     style = MaterialTheme.typography.caption,

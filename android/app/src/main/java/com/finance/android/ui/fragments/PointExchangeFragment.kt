@@ -4,7 +4,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.*
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -17,7 +20,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.compose.*
 import com.finance.android.R
@@ -30,11 +32,9 @@ import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.PointViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PointExchangeFragment(
     pointViewModel: PointViewModel = hiltViewModel(),
-    navController: NavController,
     onClose: () -> Unit = {}
 ) {
     LaunchedEffect(Unit) {
@@ -50,7 +50,7 @@ fun PointExchangeFragment(
                 userInfo = (pointViewModel.myInfo.value as Response.Success).data
                 )
                 1 -> SuccessScreen(pointViewModel, onClose = onClose)
-                else -> FailureScreen(pointViewModel, onClose = onClose)
+                else -> FailureScreen(onClose = onClose)
             }
         }
         is Response.Failure -> Loading("실패", onClose = onClose)
@@ -89,7 +89,6 @@ private fun Screen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun SuccessScreen(
     pointViewModel: PointViewModel,
@@ -147,7 +146,6 @@ private fun SuccessScreen(
 
 @Composable
 private fun FailureScreen(
-    pointViewModel: PointViewModel,
     onClose: () -> Unit,
 ) {
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_failed))

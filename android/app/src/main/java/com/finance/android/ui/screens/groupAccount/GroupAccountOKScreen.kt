@@ -13,12 +13,10 @@ import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
-import com.finance.android.viewmodels.GroupAccountViewModel
 
 @Composable
 fun GroupAccountOKScreen(
     navController: NavController,
-    groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
     Box {

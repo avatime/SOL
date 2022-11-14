@@ -22,7 +22,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.CardRecommendInfoResponseDto
-import com.finance.android.domain.dto.response.CardRecommendResponseDto
 import com.finance.android.ui.components.CardListItem_Arrow
 import com.finance.android.utils.Const
 
@@ -31,7 +30,7 @@ fun CardProductCheckScreen(
     navController: NavController,
     checkCardList: MutableList<CardRecommendInfoResponseDto>
 ) {
-    checkCardList!!.forEach {
+    checkCardList.forEach {
         CardProductContainer(
             modifier = Modifier
                 .fillMaxWidth()
@@ -75,8 +74,8 @@ private fun CardProductContainer(
                     bottom = dimensionResource(R.dimen.padding_small)
                 )
         )
-        cardData.cardBenefitInfoList!!.forEach { benefit ->
-            benefitListItem(
+        cardData.cardBenefitInfoList.forEach { benefit ->
+            BenefitListItem(
                 benefitSummary = benefit.cardBenefitSummary,
                 companyLogoPath = benefit.cardBenefitImage
             )
@@ -86,7 +85,7 @@ private fun CardProductContainer(
 
 
 @Composable
-private fun benefitListItem(
+private fun BenefitListItem(
     benefitSummary: String?,
     companyLogoPath: String
 ) {

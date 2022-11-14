@@ -3,18 +3,18 @@ package com.finance.android.ui.screens.groupAccount
 
 import android.util.Log
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.key.Key.Companion.G
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -73,7 +73,7 @@ fun GroupAccountMainScreen(
 
                     } else {
 
-                        LazyColumn() {
+                        LazyColumn {
                             items(count = response.data.size, key = { it }, itemContent = {
                                 val item = response.data[it]
                                 val paId = item.paId

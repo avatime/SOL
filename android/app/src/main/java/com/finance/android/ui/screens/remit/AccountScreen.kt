@@ -10,7 +10,10 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,7 +39,7 @@ import kotlinx.coroutines.launch
 fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) {
     remitViewModel.requestRemit.value = false
 
-    var accountNumber = remember { mutableStateOf("") }
+    val accountNumber = remember { mutableStateOf("") }
     val sheetState = rememberModalBottomSheetState(
         initialValue = ModalBottomSheetValue.Hidden,
     )
@@ -97,7 +100,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                                     .clip(CircleShape)
                             )
                             Spacer(modifier = Modifier.padding(5.dp))
-                            Text(text = "${remitViewModel.selectedReceiveBank.value!!.cpName}")
+                            Text(text = remitViewModel.selectedReceiveBank.value!!.cpName)
                         }
                     }
 
@@ -120,7 +123,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                 )
             )
             if (accountNumber.value.isNotEmpty()) {
-                com.finance.android.ui.components.TextButton(
+                TextButton(
                     onClick = {
                         remitViewModel.checkRightAccount(
                             cpCode = remitViewModel.cpCode.value,
@@ -144,7 +147,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                        title = "계좌번호 오류",
                        subTitle = "다시 한번 확인해주세요",
                        onPositive = {
-                           isShow.value = true;
+                           isShow.value = true
                        },
                    )
                }
@@ -157,7 +160,6 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
     }
 }
 
-@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BottomSheet(remitViewModel: RemitViewModel) {
     Box(

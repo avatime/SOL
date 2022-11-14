@@ -16,7 +16,7 @@ import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 
 @Composable
-fun GroupAccontVerifyMoneyScreen(
+fun GroupAccountVerifyMoneyScreen(
     navController: NavController,
     modifier: Modifier,
     groupAccountViewModel: GroupAccountViewModel
