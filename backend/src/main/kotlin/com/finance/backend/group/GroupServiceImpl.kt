@@ -188,7 +188,7 @@ class GroupServiceImpl (
             val id = publicAccountWithdrawReq.publicAccountId
             val tradeHistory : TradeHistory = TradeHistory(
                     state.publicAccount.paName,
-                    publicAccountWithdrawReq.value,
+                    -1 * publicAccountWithdrawReq.value,
                     LocalDateTime.now(),
                     1,
                     state.publicAccount.paName,
