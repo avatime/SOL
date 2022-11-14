@@ -153,12 +153,16 @@ fun UserBalanceInfo(
                             }
                         }
                 }
-                if (isAccount) Text(
-                    text = "$cpName $acNo",
-                    fontSize = 14.sp,
-                    color = animatedTextColor.value,
-                    fontWeight = FontWeight.Normal
-                )
+                if (isAccount) {
+                    if (cpName != null && acNo != null) {
+                        Text(
+                            text = "$cpName ${formatAccount(cpName, acNo)}",
+                            fontSize = 14.sp,
+                            color = animatedTextColor.value,
+                            fontWeight = FontWeight.Normal
+                        )
+                    }
+                }
             }
 
             Row(
