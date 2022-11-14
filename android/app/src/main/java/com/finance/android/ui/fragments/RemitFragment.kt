@@ -16,7 +16,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.finance.android.ui.components.BackHeaderBar
 import com.finance.android.ui.components.HeaderRemitTabBar
-import com.finance.android.ui.screens.remit.InputMoneyScreen
+import com.finance.android.ui.screens.InputMoneyScreen
 import com.finance.android.ui.screens.remit.RemitOKScreen
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.RemitViewModel
