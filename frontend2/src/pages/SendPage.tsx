@@ -8,35 +8,31 @@ import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import ExpirationTokenPage from "./ExpirationTokenPage";
 import ApiClient from "../apis/ApiClient";
 import SuccessPage from "./SuccessPage";
+import CheckTokenRes from "../apis/response/CheckTokenRes";
 
 function SendPage() {
   const [searchParams] = useSearchParams();
+  const [data, setData] = useState<CheckTokenRes | null>();
+  const [token, setToken] = useState<String>("");
 
-  const data = useMemo(() => {
+  useEffect(() => {
     try {
-      const query = decodeURIComponent(window.atob(searchParams.get("query")!!.toString()));
-      const splited = query.split("/");
-      return {
-        senderName: splited[0],
-        accountName: splited[1],
-        accountNumber: splited[2],
-        money: splited[3],
-        token: splited[4],
-      };
-    } catch {
-      return null;
-    }
+      const token = decodeURIComponent(window.atob(searchParams.get("query")!!.toString()));
+      ApiClient.getInstance()
+        .checkToken(token)
+        .then((res) => {
+          setShowExpiration(!res.token);
+          setData(res);
+          setToken(token);
+        })
+        .catch(() => setShowExpiration(true));
+    } catch {}
   }, [searchParams]);
 
   useEffect(() => {
     if (data == null) {
       return;
     }
-
-    ApiClient.getInstance()
-      .checkToken(+data.token)
-      .then((value) => setShowExpiration(!value))
-      .catch(() => setShowExpiration(true));
   }, [data]);
 
   const [openBottomDialog, setOpenBottomDialog] = useState(false);
@@ -48,12 +44,12 @@ function SendPage() {
   const receive = () => {
     ApiClient.getInstance()
       .remit(
-        data!!["accountName"],
-        data!!["accountNumber"],
+        data!!.ac_name,
+        data!!.ac_send,
         bankInfo!!.cp_name,
         acReceive,
-        +data!!["money"],
-        +data!!["token"]
+        data!!.value,
+        +token
       )
       .then(() => setShowSuccess(true))
       .catch(() => alert("알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요."));
@@ -62,7 +58,7 @@ function SendPage() {
   if (!data || showExpiration) {
     return <ExpirationTokenPage />;
   } else if (showSuccess) {
-    return <SuccessPage money={+data["money"]} />;
+    return <SuccessPage money={data!!.value} />;
   }
   return (
     <Box p={2} display="flex" flexDirection="column" height="100vh">
@@ -73,9 +69,9 @@ function SendPage() {
         </Typography>
       </Stack>
       <Typography mt={2} variant="body2" color="primary">
-        {data["senderName"]}님이
+        {data!!.sender}님이
         <br />
-        {data["money"]!!.toLocaleString()}원을 보냈어요.
+        {data!!.value.toLocaleString()}원을 보냈어요.
       </Typography>
       <Typography mt={2} variant="h6" fontWeight="bold">
         어디로 받을까요?
