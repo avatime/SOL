@@ -45,7 +45,6 @@ import com.finance.android.ui.theme.SetStatusBarColor
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.viewmodels.HomeViewModel
-import com.finance.android.viewmodels.StockViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -325,7 +324,8 @@ private fun TopBar(
     homeViewModel: HomeViewModel
 ) {
     Row(
-        modifier = Modifier.padding(top = 10.dp)
+        modifier = Modifier
+            .padding(top = 10.dp)
             .padding(
                 horizontal = dimensionResource(id = R.dimen.padding_medium).value.dp,
             )
@@ -478,7 +478,7 @@ private fun PedometerOnStateButton(
 fun minibar(
     modifier: Modifier = Modifier,
     onClick: () -> Unit = {},
-    stockViewModel: StockViewModel = hiltViewModel()
+    homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     Row(
         modifier = modifier
@@ -490,14 +490,34 @@ fun minibar(
             .padding(10.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box(
-            modifier = Modifier.size(24.dp)
-        ) {
-            AsyncImage(model = "https://img1.daumcdn.net/thumb/C400x400/?fname=http://t1.daumcdn.net/brunch/service/user/41jj/image/XsgnrTPMROwS8juOxy7oVokVqyg.jpg", contentDescription = "")
+        for(stock in homeViewModel.stockList.value) {
+            Box(
+                modifier = Modifier.size(24.dp)
+            ) {
+                AsyncImage(model = stock.fnLogo, contentDescription = stock.fnName)
+            }
+            Spacer(modifier = Modifier.width(7.dp))
+            Text(
+                text = stock.fnName
+            )
+            Spacer(modifier = Modifier.width(7.dp))
+            val per = stock.per
+            val color = if (per > 0) Color.Red else Color.Blue
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.End){
+                Text(
+                    text = DecimalFormat("#,###원").format(stock.close),
+                    color = color,
+                    fontSize = 12.sp
+                )
+                Text(
+                    text = "${if (per > 0) "+" else ""}$per%",
+                    color = color,
+                    fontSize = 9.sp
+                )
+            }
+            break
         }
-        Spacer(modifier = Modifier.width(7.dp))
-        Text(
-            text = "카카오"
-        )
     }
 }
