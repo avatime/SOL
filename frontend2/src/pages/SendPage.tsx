@@ -17,7 +17,8 @@ function SendPage() {
 
   useEffect(() => {
     try {
-      const token = decodeURIComponent(window.atob(searchParams.get("query")!!.toString()));
+      const query = window.atob(searchParams.get("query")!!.toString());
+      const token = query.split("/")[0]
       ApiClient.getInstance()
         .checkToken(token)
         .then((res) => {
