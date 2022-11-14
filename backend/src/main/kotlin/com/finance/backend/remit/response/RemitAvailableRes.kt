@@ -6,5 +6,6 @@ data class RemitAvailableRes(
         @JsonProperty("token_id")
         val tokenId : Long,
 
+        @JsonProperty("token")
         val token : Boolean
 )
