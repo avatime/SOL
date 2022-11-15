@@ -1,9 +1,7 @@
 package com.finance.android.ui.screens.asset
 
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,49 +17,46 @@ import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.ui.components.AccountListItem_Arrow
+import com.finance.android.ui.components.BaseScreen
 import com.finance.android.utils.Const
-import com.finance.android.utils.Response
 import com.finance.android.viewmodels.FinanceViewModel
 
 @Composable
 fun AssetStockScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     financeViewModel: FinanceViewModel = hiltViewModel()
 ) {
-    fun launch() {
+    LaunchedEffect(Unit) {
         financeViewModel.myFinanceLoad()
     }
 
-    LaunchedEffect(Unit) {
-        launch()
-    }
-
-    when (financeViewModel.getLoadState2()) {
-        is Response.Success -> {
-            Column()
-            {
-                AssetStockContainer(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.padding_medium))
-                    .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
-                    navController = navController,
-                    financeData = (financeViewModel.myFinanceList.value as Response.Success).data
-                )
-            }
+    BaseScreen(
+        loading = financeViewModel.loading.value,
+        error = financeViewModel.error.value,
+        onError = { financeViewModel.myFinanceLoad() },
+        calculatedTopPadding = 0.dp
+    ) {
+        if (financeViewModel.myFinanceList.value != null) {
+            AssetStockContainer(
+                modifier = modifier,
+                navController = navController,
+                financeData = financeViewModel.myFinanceList.value!!
+            )
         }
-        is Response.Loading -> {}
-        else -> {}
     }
 }
 
 @Composable
-fun AssetStockContainer(modifier: Modifier,
-                        navController: NavController,
-                        financeData: MutableList<BankAccountResponseDto>
+fun AssetStockContainer(
+    modifier: Modifier,
+    navController: NavController,
+    financeData: Array<BankAccountResponseDto>
 ) {
-    Column(modifier = modifier
-        .padding(dimensionResource(R.dimen.padding_medium)))
-    {
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.padding_medium))
+    ) {
         financeData.forEach {
             val pathTmp = Uri.encode(it.cpLogo)
             AccountListItem_Arrow(
@@ -76,7 +71,7 @@ fun AssetStockContainer(modifier: Modifier,
                 }
             )
         }
-        if(financeData.size == 0) {
+        if (financeData.isEmpty()) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,

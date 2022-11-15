@@ -1,5 +1,8 @@
+@file:Suppress("NAME_SHADOWING")
+
 package com.finance.android.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Tab
@@ -20,21 +23,24 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.R
+import com.finance.android.ui.screens.asset.*
 import com.finance.android.ui.screens.asset.AssetLifeScreen
 import com.finance.android.ui.screens.asset.AssetStockScreen
-import com.finance.android.ui.screens.asset.*
 import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Const
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
-// import com.google.accompanist.pager.*
-
+@OptIn(ExperimentalPagerApi::class)
 @Composable
 fun HeaderAssetTabBar(
     modifier: Modifier,
     navController: NavController
 ) {
-    var selectedIndex by remember { mutableStateOf(0) }
-
+    val pagerState = rememberPagerState()
+    val coroutineScope = rememberCoroutineScope()
     val list = listOf("은행", "카드", "라이프", "증권")
     Column(modifier = modifier.fillMaxSize()) {
         Row(
@@ -57,20 +63,19 @@ fun HeaderAssetTabBar(
 
             ScrollableTabRow(
                 modifier = Modifier.weight(1.0f),
-                selectedTabIndex = selectedIndex,
+                selectedTabIndex = pagerState.currentPage,
                 containerColor = MaterialTheme.colorScheme.background,
                 indicator = {},
                 divider = {},
                 edgePadding = 0.dp
             ) {
                 list.forEachIndexed { index, text ->
-                    val selected = selectedIndex == index
                     Tab(
                         modifier = Modifier
                             .padding(all = 5.dp)
                             .clip(RoundedCornerShape(10.dp)),
-                        selected = selected,
-                        onClick = { selectedIndex = index },
+                        selected = pagerState.currentPage == index,
+                        onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
                         text = {
                             Text(
                                 text = text,
@@ -94,18 +99,49 @@ fun HeaderAssetTabBar(
             }
         }
 
-        when (selectedIndex) {
-            0 -> {
-                AssetBankScreen(navController)
-            }
-            1 -> {
-                AssetCardScreen(navController)
-            }
-            2 -> {
-                AssetLifeScreen(navController)
-            }
-            3 -> {
-                AssetStockScreen(navController)
+        val modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                start = dimensionResource(R.dimen.padding_medium),
+                end = dimensionResource(R.dimen.padding_medium),
+                bottom = dimensionResource(R.dimen.padding_medium)
+            )
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(10.dp)
+            )
+
+        HorizontalPager(
+            count = list.size,
+            state = pagerState,
+            verticalAlignment = Alignment.Top
+        ) {
+
+            when (it) {
+                0 -> {
+                    AssetBankScreen(
+                        modifier = modifier,
+                        navController = navController
+                    )
+                }
+                1 -> {
+                    AssetCardScreen(
+                        modifier = modifier,
+                        navController = navController
+                    )
+                }
+                2 -> {
+                    AssetLifeScreen(
+                        modifier = modifier,
+                        navController = navController
+                    )
+                }
+                3 -> {
+                    AssetStockScreen(
+                        modifier = modifier,
+                        navController = navController
+                    )
+                }
             }
         }
     }

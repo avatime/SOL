@@ -25,24 +25,11 @@ class BankViewModel @Inject constructor(
 ) : BaseViewModel(application, baseRepository) {
 
     val acMain = mutableStateOf(savedStateHandle.get<Int>("acMain"))
-    val accountList =
-        mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
+    val accountList = mutableStateOf<Array<BankAccountResponseDto>?>(null)
 
     fun myAccountLoad() {
         viewModelScope.launch {
             loadMyAccountList()
-        }
-    }
-
-    fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(accountList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
         }
     }
 
@@ -51,14 +38,17 @@ class BankViewModel @Inject constructor(
             bankRepository.getMyAccount()
         }
             .collect {
-                accountList.value = it
+                if (it is Response.Success) {
+                    accountList.value = it.data
+                }
             }
     }
 
     // 계좌 잔액, 거래 내역 불러오기
 
     val accountBalance = mutableStateOf<Response<Int>>(Response.Loading)
-    val accountHistory = mutableStateOf<Response<MutableList<BankTradeResponseDto>>>(Response.Loading)
+    val accountHistory =
+        mutableStateOf<Response<MutableList<BankTradeResponseDto>>>(Response.Loading)
 
     fun getLoadAccountBalanceandHistory(): Response<Unit> {
         val arr = arrayOf(accountBalance, accountHistory)
@@ -113,5 +103,4 @@ class BankViewModel @Inject constructor(
             }
         }
     }
-
 }

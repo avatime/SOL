@@ -21,23 +21,11 @@ class CardViewModel @Inject constructor(
     private val cardRepository: CardRepository
 ) : BaseViewModel(application, baseRepository) {
     val cardList =
-        mutableStateOf<Response<MutableList<CardResponseDto>>>(Response.Loading)
+        mutableStateOf<Array<CardResponseDto>?>(null)
 
     fun myCardLoad() {
         viewModelScope.launch {
             loadMyCardList()
-        }
-    }
-
-    fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(cardList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
         }
     }
 
@@ -46,7 +34,9 @@ class CardViewModel @Inject constructor(
             cardRepository.getMyCardList()
         }
             .collect {
-                cardList.value = it
+                if (it is Response.Success) {
+                    cardList.value = it.data
+                }
             }
     }
 

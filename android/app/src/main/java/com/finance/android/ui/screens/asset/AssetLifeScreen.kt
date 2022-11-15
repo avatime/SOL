@@ -18,9 +18,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
+import com.finance.android.ui.components.BaseScreen
 import com.finance.android.ui.components.InsuranceListItem_Normal
 import com.finance.android.utils.Const
-import com.finance.android.utils.Response
 import com.finance.android.viewmodels.InsuranceViewModel
 import java.text.DecimalFormat
 import java.time.LocalDateTime
@@ -28,46 +28,40 @@ import java.time.format.DateTimeFormatter
 
 @Composable
 fun AssetLifeScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     insuranceViewModel: InsuranceViewModel = hiltViewModel()
 ) {
-    fun launch() {
+    LaunchedEffect(Unit) {
         insuranceViewModel.myIsLoad()
     }
 
-    LaunchedEffect(Unit) {
-        launch()
-    }
-
-    when (insuranceViewModel.getLoadState()) {
-        is Response.Success -> {
-            val isData = (insuranceViewModel.isList.value as Response.Success).data
-            Column()
-            {
-                AssetLifeContainer(modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(dimensionResource(R.dimen.padding_medium))
-                    .background(
-                        color = MaterialTheme.colorScheme.surface,
-                        shape = RoundedCornerShape(10.dp)
-                    ),
-                    isList = isData.list,
-                    navController = navController
-                )
-                if(isData.totalFee != 0) {
-                    AssetLifeContainer2(modifier = Modifier
+    BaseScreen(
+        loading = insuranceViewModel.loading.value,
+        error = insuranceViewModel.error.value,
+        onError = { insuranceViewModel.myIsLoad() },
+        calculatedTopPadding = 0.dp
+    ) {
+        val isData = insuranceViewModel.isList.value
+        if (isData != null) {
+            AssetLifeContainer(
+                modifier = modifier,
+                isList = isData.list,
+                navController = navController,
+            )
+            if (isData.totalFee != 0) {
+                AssetLifeContainer2(
+                    modifier = Modifier
                         .fillMaxWidth()
                         .padding(dimensionResource(R.dimen.padding_medium))
                         .background(
                             color = MaterialTheme.colorScheme.surface,
                             shape = RoundedCornerShape(10.dp)
                         ),
-                        value = isData.totalFee)
-                }
+                    value = isData.totalFee
+                )
             }
         }
-        is Response.Loading -> {}
-        else -> {}
     }
 }
 
@@ -75,11 +69,9 @@ fun AssetLifeScreen(
 private fun AssetLifeContainer(
     modifier: Modifier,
     isList: MutableList<InsuranceInfoResponseDto>,
-    navController: NavController
-    ) {
-    Column(modifier = modifier
-        .padding(dimensionResource(R.dimen.padding_medium)))
-    {
+    navController: NavController,
+) {
+    Column(modifier = modifier.padding(dimensionResource(R.dimen.padding_medium))) {
         isList.forEach {
             InsuranceListItem_Normal(
                 insuranceName = it.isPdName,
@@ -91,7 +83,7 @@ private fun AssetLifeContainer(
                 }
             )
         }
-        if(isList.size == 0) {
+        if (isList.size == 0) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -117,21 +109,24 @@ private fun AssetLifeContainer2(
     val current = LocalDateTime.now()
     val formatter = DateTimeFormatter.ofPattern("M월")
     val formatted = current.format(formatter)
-    Column(modifier = modifier
-        .padding(dimensionResource(R.dimen.padding_medium)))
-    {
-        Row (verticalAlignment = Alignment.CenterVertically)
-        {
-            Text(text = "신한라이프",
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.padding_medium))
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "신한라이프",
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.padding(end = 16.dp),
+                modifier = Modifier.padding(end = 16.dp)
             )
             Text(text = "$formatted 납입보험료", fontSize = 12.sp)
         }
-        Text(text = DecimalFormat("#,###원").format(value)?:"0원",
+        Text(
+            text = DecimalFormat("#,###원").format(value) ?: "0원",
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp,
-        modifier = Modifier.padding(top = 24.dp, bottom = 24.dp, start = 8.dp))
+            modifier = Modifier.padding(top = 24.dp, bottom = 24.dp, start = 8.dp)
+        )
     }
 }

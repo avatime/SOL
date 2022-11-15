@@ -18,23 +18,11 @@ class FinanceViewModel @Inject constructor(
     baseRepository: BaseRepository,
     private val stockRepository: StockRepository
 ) : BaseViewModel(application, baseRepository){
-    val myFinanceList = mutableStateOf<Response<MutableList<BankAccountResponseDto>>>(Response.Loading)
+    val myFinanceList = mutableStateOf<Array<BankAccountResponseDto>?>(null)
 
     fun myFinanceLoad() {
         viewModelScope.launch {
             loadMyFinanceList()
-        }
-    }
-
-    fun getLoadState2(): Response<Unit> {
-        val arr = arrayOf(myFinanceList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
         }
     }
 
@@ -43,7 +31,9 @@ class FinanceViewModel @Inject constructor(
             stockRepository.getMyFinanceList()
         }
             .collect {
-                myFinanceList.value = it
+                if (it is Response.Success) {
+                    myFinanceList.value = it.data
+                }
             }
     }
 
