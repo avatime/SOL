@@ -55,7 +55,7 @@ private fun Draw(
         )
         Column(
             modifier = Modifier
-                .padding(start = 12.dp).weight(1f),
+                .padding(start = 12.dp, end = 6.dp).weight(1f),
         ) {
             Text(text = insuranceName, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(text = "보험료: ${DecimalFormat("#,###원").format(fee)}", fontWeight = FontWeight.Bold)
