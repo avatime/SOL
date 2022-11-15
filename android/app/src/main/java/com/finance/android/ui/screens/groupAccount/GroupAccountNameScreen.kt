@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -28,6 +29,9 @@ fun GroupAccountNameScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
+    LaunchedEffect(Unit){
+        groupAccountViewModel.name.value=""
+    }
     var isError = remember { mutableStateOf(false) }
     Column(
         modifier = modifier

@@ -1,11 +1,13 @@
 package com.finance.android.ui.screens.groupAccount
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material.TextField
 import androidx.compose.material.TextFieldDefaults
@@ -21,12 +23,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
+import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 import java.lang.Integer.parseInt
+import java.text.DecimalFormat
 import java.util.regex.Pattern
 
 
@@ -36,13 +41,33 @@ fun GroupAccountInputMoneyScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
-    LaunchedEffect(Unit) {
+    fun launch() {
         groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
-//        Log.i(
-//            "group",
-//            "inputmoney에서 잔액값 : ${DecimalFormat("#,###원").format(parseInt(groupAccountViewModel.representAccountBalance.value))} "
-//        )
+        //출금화면일때 balace 모임 통장 잔액으로 바꾸기
+        if (groupAccountViewModel.screenType.value == 3) {
+            groupAccountViewModel.postGroupAccountInfo(groupAccountViewModel.paId.value)
+
+        }
+
     }
+
+    LaunchedEffect(Unit) {
+        launch()
+
+    }
+
+
+    var balance = groupAccountViewModel.representAccountBalance.value
+    if (groupAccountViewModel.screenType.value == 3) {
+        when (val response = groupAccountViewModel.groupAccountInfo.value) {
+            is Response.Failure -> {}
+            is Response.Loading -> {}
+            is Response.Success -> {
+                balance = response.data.amount.toString()
+            }
+        }
+    }
+
 
 
     val placeholderText = remember {
@@ -55,24 +80,25 @@ fun GroupAccountInputMoneyScreen(
         duesValue.value = groupAccountViewModel.duesVal.value.toString()
     }
     //계좌잔액
-    val balance = groupAccountViewModel.representAccountBalance.value
-    var isValid = remember {
-        mutableStateOf(true)
+    var isError = remember {
+        mutableStateOf(false)
     }
     if (duesValue.value.isEmpty()) {
         placeholderText.value = "얼마를 보낼까요?"
     }
-    if (duesValue.value.isEmpty()
-        || balance.isEmpty()
-        || parseInt(duesValue.value) > parseInt(
-            balance
-        )
-    ) {
-        isValid.value = false
-    }
+
 
     if (duesValue.value == "0") {
         duesValue.value == ""
+    }
+
+
+    if (duesValue.value.isNotEmpty() && (parseInt(duesValue.value) > parseInt(balance)!!)) {
+        isError.value = true
+    }
+
+    if (duesValue.value.isNotEmpty() && (parseInt(duesValue.value) <= parseInt(balance)!!)) {
+        isError.value = false
     }
 
 
@@ -84,12 +110,13 @@ fun GroupAccountInputMoneyScreen(
         TextField(
             value = duesValue.value,
             onValueChange = {
-                if(!Pattern.matches("^[0-9]*$", it)) return@TextField
-                if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
-                if (!isValid.value && duesValue.value < it) {
+                if (!Pattern.matches("^[0-9]*$", it)) return@TextField
+                if (it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
+                if (isError.value && duesValue.value < it) {
                     return@TextField
-                }
-                else if (duesValue.value == it) return@TextField
+                } else if (duesValue.value == it) return@TextField
+
+                duesValue.value = if (it.isEmpty()) "" else it.toInt().toString()
             },
             modifier = Modifier
                 .padding(start = 16.dp)
@@ -111,27 +138,33 @@ fun GroupAccountInputMoneyScreen(
                     cursorColor = Color.Transparent,
                 ),
             textStyle = TextStyle().copy(fontSize = 40.sp),
-            isError = isValid.value,
+            isError = isError.value,
         )
-        if (!isValid.value && balance.isNotEmpty() && parseInt(balance) > 0 && duesValue.value.isNotEmpty() && parseInt(
-                balance
-            ) < parseInt(duesValue.value)
-        ) {
 
-
+        if (isError.value) {
+            androidx.compose.material.Text(
+                text = "잔액 ${balance}입니다.",
+                color = MaterialTheme.colors.error,
+                style = MaterialTheme.typography.caption,
+                modifier = Modifier.padding(start = 30.dp)
+            )
         }
-        TextButton(
-            onClick = {
-                if (duesValue.value.isNotEmpty() && duesValue.value > "0") {
-                    navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN)
-                    groupAccountViewModel.duesVal.value = Integer.parseInt(duesValue.value)
-                }
+        if (!isError.value && duesValue.value.isNotEmpty() && balance.isNotEmpty()) {
+            TextButton(
+                onClick = {
+                    if (duesValue.value.isNotEmpty() && duesValue.value > "0") {
+                        navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN)
+                        groupAccountViewModel.duesVal.value = Integer.parseInt(duesValue.value)
+                    }
 
-            },
-            text = "다음",
-            buttonType = ButtonType.ROUNDED,
-            modifier = Modifier.withBottomButton()
-        )
+                },
+                text = "다음",
+                buttonType = ButtonType.ROUNDED,
+                modifier = Modifier.withBottomButton()
+            )
+        }
+
 
     }
 }
+

@@ -47,6 +47,8 @@ class GroupAccountViewModel @Inject constructor(
 
     val mDate = mutableStateOf("")
 
+    val goToMain = mutableStateOf(false)
+
 
     //1-> 회비입금 2-> 돈 입금 3-> 돈출금
     val screenType = mutableStateOf(0)
@@ -178,7 +180,7 @@ class GroupAccountViewModel @Inject constructor(
             }.collect {
                 if(it is Response.Success)   {
                     representAccountBalance.value = it.data
-                    Log.i("group", "계좌 잔액 : ${representAccountBalance.value}")
+                    Log.i("group", "계좌 잔액 ㅎㅎㅎㅎ: ${representAccountBalance.value}")
                 }
             }
 
