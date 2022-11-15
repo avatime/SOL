@@ -385,7 +385,7 @@ private fun TopBar(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            if(homeViewModel.getStockLoadState() == Response.Success(Unit)) animate_num(homeViewModel, navController = navController)
+            if(homeViewModel.getStockLoadState() == Response.Success(Unit)) Animate_num(homeViewModel, navController = navController)
         }
     }
 }
@@ -495,7 +495,7 @@ private fun PedometerOnStateButton(
 
 @ExperimentalAnimationApi
 @Composable
-fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
+fun Animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
     var state by remember { mutableStateOf(0) }
     var count by remember { mutableStateOf(0) }
     val transition = rememberInfiniteTransition()
@@ -533,12 +533,12 @@ fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: N
             )
         }
     ) { targetCount ->
-        minibar(idx = targetCount, stockList = (homeViewModel.stockList.value as Response.Success).data, navController = navController)
+        Minibar(idx = targetCount, stockList = (homeViewModel.stockList.value as Response.Success).data, navController = navController)
     }
 }
 
 @Composable
-fun minibar(
+fun Minibar(
     idx : Int = 0,
     modifier: Modifier = Modifier,
     navController : NavController,
