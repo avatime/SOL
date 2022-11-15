@@ -188,7 +188,8 @@ private fun Screen(
                     )
                 ),
                 verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text(text = "다른 주식 둘러보기", fontWeight = FontWeight.Bold)
+                Text(text = "다른 주식 둘러보기", fontWeight = FontWeight.Bold, fontSize = 20.sp)
+                Spacer(modifier = Modifier.height(10.dp))
                 Row(modifier = Modifier
 //                    .background(color = MaterialTheme.colorScheme.surface)
 //                    .padding(10.dp)
