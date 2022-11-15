@@ -20,7 +20,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,10 +30,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.FinanceResponseDto
-import com.finance.android.ui.components.AnimatedLoading
-import com.finance.android.ui.components.CustomDialog
-import com.finance.android.ui.components.DialogActionType
-import com.finance.android.ui.components.DialogType
+import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.StockViewModel
 import java.text.DecimalFormat
@@ -52,33 +48,23 @@ fun StockScreen(
     Scaffold(
         containerColor = MaterialTheme.colorScheme.background
     ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(top = it.calculateTopPadding())
+        BaseScreen(
+            loading = stockViewModel.loading.value,
+            error = stockViewModel.error.value,
+            onError = { stockViewModel.launch() },
+            calculatedTopPadding = it.calculateTopPadding()
         ) {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
-            ) {
-                StockContainer(
-                    accData = stockViewModel.stockList.value,
-                    onClickItem = { data ->
-                        navController.navigate("${Const.Routes.STOCK}/${data.fnName}")
-                    }
-                )
-            }
-
-            if (stockViewModel.loading.value) {
-                AnimatedLoading()
-            }
-
-            if (stockViewModel.error.value != null) {
-                CustomDialog(
-                    dialogType = DialogType.ERROR,
-                    dialogActionType = DialogActionType.ONE_BUTTON,
-                    title = stringResource(id = R.string.msg_server_error),
-                    onPositive = { stockViewModel.launch() }
-                )
+            if (stockViewModel.stockList.value.isNotEmpty()) {
+                Column(
+                    modifier = Modifier.verticalScroll(rememberScrollState())
+                ) {
+                    StockContainer(
+                        accData = stockViewModel.stockList.value,
+                        onClickItem = { data ->
+                            navController.navigate("${Const.Routes.STOCK}/${data.fnName}")
+                        }
+                    )
+                }
             }
         }
     }

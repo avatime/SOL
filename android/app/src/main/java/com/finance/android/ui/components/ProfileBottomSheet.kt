@@ -15,7 +15,7 @@ import com.finance.android.domain.dto.response.DailyProfileResponseDto
 
 @Composable
 fun ShowProfileList(
-    profileList: MutableList<DailyProfileResponseDto>,
+    profileList: Array<DailyProfileResponseDto>,
     onClickImage: (profileId : Int) -> Unit = {}
 ) {
     MyGrid(content = profileList , columnSize = 3, onClickImage)
@@ -23,7 +23,7 @@ fun ShowProfileList(
 
 
 @Composable
-fun MyGrid(content: MutableList<DailyProfileResponseDto>, columnSize: Int, onClickImage: (profileId: Int) -> Unit){
+fun MyGrid(content: Array<DailyProfileResponseDto>, columnSize: Int, onClickImage: (profileId: Int) -> Unit){
     val rowsCount = 1 + (content.size -1)/columnSize // row 개수
     BoxWithConstraints {
         Column{

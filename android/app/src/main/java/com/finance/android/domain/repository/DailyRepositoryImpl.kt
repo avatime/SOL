@@ -19,7 +19,7 @@ class DailyRepositoryImpl @Inject constructor(
     override suspend fun getAttendanceList(
         year: Int,
         month: Int
-    ): MutableList<DailyAttendanceResponseDto> {
+    ): Array<DailyAttendanceResponseDto> {
         return dailyService.getAttendanceList(year, month)
     }
 
@@ -30,7 +30,7 @@ class DailyRepositoryImpl @Inject constructor(
         return dailyService.getWalkingList(year, month)
     }
 
-    override suspend fun getProfileList(): MutableList<DailyProfileResponseDto> {
+    override suspend fun getProfileList(): Array<DailyProfileResponseDto> {
         return dailyService.getProfileList()
     }
 

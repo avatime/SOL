@@ -16,13 +16,13 @@ interface DailyService {
     suspend fun attendance()
 
     @GET("${Const.API_PATH}/daily/{year}/{month}")
-    suspend fun getAttendanceList(@Path("year") year: Int, @Path("month") month: Int) : MutableList<DailyAttendanceResponseDto>
+    suspend fun getAttendanceList(@Path("year") year: Int, @Path("month") month: Int) : Array<DailyAttendanceResponseDto>
 
     @GET("${Const.API_PATH}/daily/walk/{year}/{month}")
     suspend fun getWalkingList(@Path("year") year: Int, @Path("month") month: Int) : MutableList<DailyWalkingResponseDto>
 
     @GET("${Const.API_PATH}/daily/profiles")
-    suspend fun getProfileList() : MutableList<DailyProfileResponseDto>
+    suspend fun getProfileList() : Array<DailyProfileResponseDto>
 
     @POST("${Const.API_PATH}/user/profile")
     suspend fun changeProfile(@Body changeProfileRequestDto: ChangeProfileRequestDto)
