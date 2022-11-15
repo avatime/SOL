@@ -59,15 +59,12 @@ fun DuesMemberListScreen(
             for (friend in friendsList) {
                 memberList.add(MemberRequestDto(friend.userName, friend.phone))
             }
-            val name = groupAccountViewModel.name.value
+            val name = groupAccountViewModel.duesName.value
             val paId = groupAccountViewModel.paId.value
-            val duesVal = groupAccountViewModel.duesVal.value
+            val duesVal = groupAccountViewModel.duesBalance.value.toInt()
 
-            val duesDue = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
-                .format(LocalDateTime.now().plusHours(9))
-            Log.i("gg", "${duesDue}")
             val createDuesRequestDto =
-                CreateDuesRequestDto(name, paId, duesVal, duesDue, memberList)
+                CreateDuesRequestDto(name, paId, duesVal , groupAccountViewModel.mDate.value, memberList)
             Column(
                 modifier = modifier
                     .fillMaxSize()

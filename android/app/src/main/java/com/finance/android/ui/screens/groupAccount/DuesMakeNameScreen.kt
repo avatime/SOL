@@ -1,5 +1,6 @@
 package com.finance.android.ui.screens.groupAccount
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -30,10 +31,13 @@ fun DuesMakeNameScreen(
     modifier: Modifier
 ) {
     LaunchedEffect(Unit){
+        Log.i("gg", "duesName ${groupAccountViewModel.duesName.value}")
         groupAccountViewModel.duesName.value = ""
     }
     var isError = remember{ mutableStateOf(false) }
-
+    var duesName = remember {
+        mutableStateOf("")
+    }
 
     Column(
         modifier = modifier
@@ -55,10 +59,10 @@ fun DuesMakeNameScreen(
         }
 
         TextInput(
-            value = groupAccountViewModel.duesName.value,
+            value = duesName.value,
             onValueChange = {
                 if (it.length <20) {
-                    groupAccountViewModel.duesName.value = it
+                    duesName.value = it
                     isError.value = false
                 }
                 else if(it.length==20) {
@@ -83,7 +87,8 @@ fun DuesMakeNameScreen(
         Spacer(modifier = Modifier.weight(1f))
         TextButton(
             onClick = {
-                if (groupAccountViewModel.duesName.value.isNotEmpty()) {
+                if (duesName.value.isNotEmpty()) {
+                    groupAccountViewModel.duesName.value = duesName.value
                     navController.navigate(Const.DUES_MAKE_MONEY_SCREEN)
                 }
 
