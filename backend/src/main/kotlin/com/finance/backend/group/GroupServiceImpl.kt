@@ -143,10 +143,10 @@ class GroupServiceImpl (
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
             val date : LocalDateTime? = LocalDateTime.parse(registDueReq.duesDue, formatter);
             val dues : Dues = duesRepository.save(Dues(publicAccount, registDueReq.name, registDueReq.duesVal, if(date == null) 1 else 0, date, userId))
-            val memberList = publicAccountMemberRepository.findAllByPublicAccountId(registDueReq.paId).orEmpty()
 
-            for(member in memberList) {
-                userDuesRelationRepository.save(UserDuesRelation(dues, member.user))
+            for(member in registDueReq.memberList) {
+                val paMember = userRepository.findByPhone(member.phone) ?: throw NoSuchElementException()
+                userDuesRelationRepository.save(UserDuesRelation(dues, paMember))
             }
         }
     }

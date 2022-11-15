@@ -10,4 +10,6 @@ data class RegistDueReq(
         var duesVal : Long,
         @JsonProperty("dues_due")
         var duesDue : String?,
+        @JsonProperty("member_list")
+        var memberList : List<MemberInfoReq>
 )
