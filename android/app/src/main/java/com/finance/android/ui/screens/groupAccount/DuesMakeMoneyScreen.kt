@@ -33,6 +33,9 @@ fun DuesMakeMoneyScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
+    LaunchedEffect(Unit){
+        groupAccountViewModel.duesBalance.value = ""
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -61,7 +64,7 @@ fun DuesMakeMoneyScreen(
             value = groupAccountViewModel.duesBalance.value,
             onValueChange = {
 
-                if (it.length in 1..20) {
+                if (it.length in 0..20) {
                     groupAccountViewModel.duesBalance.value = it
                 }
             },
