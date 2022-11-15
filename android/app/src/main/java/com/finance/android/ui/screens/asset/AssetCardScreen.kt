@@ -1,10 +1,7 @@
 package com.finance.android.ui.screens.asset
 
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -19,43 +16,34 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.CardResponseDto
+import com.finance.android.ui.components.BaseScreen
 import com.finance.android.ui.components.CardListItem_Arrow
 import com.finance.android.utils.Const
-import com.finance.android.utils.Response
 import com.finance.android.viewmodels.CardViewModel
 import java.text.DecimalFormat
 
 @Composable
 fun AssetCardScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     cardViewModel: CardViewModel = hiltViewModel()
 ) {
-    fun launch() {
+    LaunchedEffect(Unit) {
         cardViewModel.myCardLoad()
     }
 
-    LaunchedEffect(Unit) {
-        launch()
-    }
-
-    Column()
-    {
-        when (cardViewModel.getLoadState()) {
-            is Response.Success -> {
-                    AssetCardContainer(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(dimensionResource(R.dimen.padding_medium))
-                            .background(
-                                color = MaterialTheme.colorScheme.surface,
-                                shape = RoundedCornerShape(10.dp)
-                            ),
-                        navController = navController,
-                        cardData = (cardViewModel.cardList.value as Response.Success).data
-                    )
-            }
-            is Response.Loading -> {}
-            else -> {}
+    BaseScreen(
+        loading = cardViewModel.loading.value,
+        error = cardViewModel.error.value,
+        onError = { cardViewModel.myCardLoad() },
+        calculatedTopPadding = 0.dp
+    ) {
+        if (cardViewModel.cardList.value != null) {
+            AssetCardContainer(
+                modifier = modifier,
+                navController = navController,
+                cardData = cardViewModel.cardList.value!!,
+            )
         }
     }
 }
@@ -64,26 +52,25 @@ fun AssetCardScreen(
 private fun AssetCardContainer(
     modifier: Modifier,
     navController: NavController,
-    cardData: MutableList<CardResponseDto>
+    cardData: Array<CardResponseDto>,
 ) {
     Column(
         modifier = modifier
             .padding(dimensionResource(R.dimen.padding_medium))
-    )
-    {
+    ) {
         cardData.forEach {
             val pathTmp = Uri.encode(it.cardInfoRes.cardImgPath)
             CardListItem_Arrow(
                 cardName = it.cardInfoRes.cardName,
                 cardImgPath = it.cardInfoRes.cardImgPath,
-                cardFee = "당월 청구 금액 : "+ DecimalFormat("#,###원").format(it.cardValueAll),
+                cardFee = "당월 청구 금액 : " + DecimalFormat("#,###원").format(it.cardValueAll),
                 onClickItem = {
                     navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardInfoRes.cardName}/${it.cardInfoRes.cardNumber}/$pathTmp/${it.cardValueAll}")
                 }
             )
         }
 
-        if (cardData.size == 0) {
+        if (cardData.isEmpty()) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
@@ -116,4 +103,3 @@ private fun AssetCardContainer(
 //        }
     }
 }
-

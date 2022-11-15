@@ -18,23 +18,11 @@ class InsuranceViewModel @Inject constructor(
     private val insuranceRepository: InsuranceRepository,
 ) : BaseViewModel(application, baseRepository) {
     val isList =
-        mutableStateOf<Response<MyInsuranceInfoResponseDto>>(Response.Loading)
+        mutableStateOf<MyInsuranceInfoResponseDto?>(null)
 
     fun myIsLoad() {
         viewModelScope.launch {
             loadMyIsList()
-        }
-    }
-
-    fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(isList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
         }
     }
 
@@ -43,7 +31,9 @@ class InsuranceViewModel @Inject constructor(
             insuranceRepository.getMyInsurance()
         }
             .collect {
-                isList.value = it
+                if (it is Response.Success) {
+                    isList.value = it.data
+                }
             }
     }
 

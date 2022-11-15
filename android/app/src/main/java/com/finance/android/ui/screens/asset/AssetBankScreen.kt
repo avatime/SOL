@@ -1,10 +1,7 @@
 package com.finance.android.ui.screens.asset
 
 import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,56 +17,46 @@ import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.domain.dto.response.BankAccountResponseDto
 import com.finance.android.ui.components.AccountListItem_Arrow
+import com.finance.android.ui.components.BaseScreen
 import com.finance.android.utils.Const
-import com.finance.android.utils.Response
 import com.finance.android.viewmodels.BankViewModel
 
 @Composable
 fun AssetBankScreen(
+    modifier: Modifier = Modifier,
     navController: NavController,
     bankViewModel: BankViewModel = hiltViewModel()
 ) {
-    fun launch() {
+    LaunchedEffect(Unit) {
         bankViewModel.myAccountLoad()
     }
 
-    LaunchedEffect(Unit) {
-        launch()
-    }
-
-    Column()
-    {
-        when (bankViewModel.getLoadState()) {
-            is Response.Success -> {
-                AssetBankContainer(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                        .background(
-                            color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(10.dp)
-                        ),
-                    navController = navController,
-                    accData = (bankViewModel.accountList.value as Response.Success).data
-                )
-            }
-            is Response.Loading -> {}
-            else -> {}
+    BaseScreen(
+        loading = bankViewModel.loading.value,
+        error = bankViewModel.error.value,
+        onError = { bankViewModel.myAccountLoad() },
+        calculatedTopPadding = 0.dp
+    ) {
+        if (bankViewModel.accountList.value != null) {
+            AssetBankContainer(
+                modifier = modifier,
+                navController = navController,
+                accData = bankViewModel.accountList.value!!,
+            )
         }
     }
 }
 
 @Composable
 private fun AssetBankContainer(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     navController: NavController,
-    accData: MutableList<BankAccountResponseDto>
+    accData: Array<BankAccountResponseDto>,
 ) {
     Column(
         modifier = modifier
             .padding(dimensionResource(R.dimen.padding_medium))
-    )
-    {
+    ) {
         accData.forEach {
             val pathTmp = Uri.encode(it.cpLogo)
             AccountListItem_Arrow(
@@ -83,7 +70,7 @@ private fun AssetBankContainer(
                 navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/$pathTmp/${it.acMain}/${it.acType}")
             }
         }
-        if (accData.size == 0) {
+        if (accData.isEmpty()) {
             Column(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.Center,
