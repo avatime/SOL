@@ -13,4 +13,7 @@ data class FriendRes(
 
         @JsonProperty("pf_name")
         val pfName : String,
+
+        @JsonProperty("phone")
+        val phone : String,
 )

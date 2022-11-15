@@ -28,5 +28,5 @@ class PublicAccountMember(
     @Column
     var type : String = type
 
-    fun toEntity(profile: Profile) : FriendRes = FriendRes(this.user.name, if(this.type == "회원") "" else this.type, profile.pfImg, profile.pfName)
+    fun toEntity(profile: Profile) : FriendRes = FriendRes(this.user.name, if(this.type == "회원") "" else this.type, profile.pfImg, profile.pfName, this.user.phone)
 }
