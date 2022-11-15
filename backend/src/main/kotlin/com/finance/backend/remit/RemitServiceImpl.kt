@@ -67,8 +67,8 @@ class RemitServiceImpl(
             }
 
             // 최근 거래 계좌 추가
-            val recentAccountList = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
-            recentAccountList.reversed()
+            val list = tradeHistoryRepository.getTradeHistoriesByUserId(userId).orEmpty()
+            val recentAccountList = list.reversed()
             for (recentHistory in recentAccountList){
                 if (!myAccountList.contains(recentHistory.tdTgAc) && !checkBookmarkList.contains(recentHistory.tdTgAc)){
                     if(recentHistory.tdTgAc!!.contains("모임통장")) continue
