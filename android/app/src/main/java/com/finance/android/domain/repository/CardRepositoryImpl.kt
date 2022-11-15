@@ -14,7 +14,7 @@ class CardRepositoryImpl @Inject constructor(
         return cardService.getCardList()
     }
 
-    override suspend fun getMyCardList(): MutableList<CardResponseDto> {
+    override suspend fun getMyCardList(): Array<CardResponseDto> {
         return cardService.getMyCardList()
     }
 

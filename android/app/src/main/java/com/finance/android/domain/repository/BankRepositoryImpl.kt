@@ -15,7 +15,7 @@ class BankRepositoryImpl @Inject constructor(
         return bankService.getAccountList()
     }
 
-    override suspend fun getMyAccount(): MutableList<BankAccountResponseDto> {
+    override suspend fun getMyAccount(): Array<BankAccountResponseDto> {
         return bankService.getMyAccount()
     }
 

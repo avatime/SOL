@@ -11,5 +11,5 @@ interface StockRepository {
     suspend fun getFinanceList(): Array<FinanceResponseDto>
     suspend fun getHomeFinanceList(): Array<FinanceResponseDto>
     suspend fun getFinanceDetailList(fnName: String) : Array<FinanceDetailResponseDto>
-    suspend fun getMyFinanceList(): MutableList<BankAccountResponseDto>
+    suspend fun getMyFinanceList(): Array<BankAccountResponseDto>
 }

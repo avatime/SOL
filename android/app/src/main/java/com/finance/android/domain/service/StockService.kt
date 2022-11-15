@@ -27,5 +27,5 @@ interface StockService {
     suspend fun getFinanceDetailList(@Path("fn_name")fnName: String) : Array<FinanceDetailResponseDto>
 
     @GET("${Const.API_PATH}/finance/asset")
-    suspend fun getMyFinanceList(): MutableList<BankAccountResponseDto>
+    suspend fun getMyFinanceList(): Array<BankAccountResponseDto>
 }
