@@ -34,7 +34,7 @@
     <string name="btn_use_bio">지문 로그인</string>
     <string name="btn_later">나중에 할래요</string>
     <string name="btn_add_asset">자산 추가</string>
-    <string name="btn_tab_account">계좌</string>
+    <string name="btn_tab_account">은행</string>
     <string name="btn_tab_card">카드</string>
     <string name="btn_tab_stock">증권</string>
     <string name="btn_tab_insurance">라이프</string>
