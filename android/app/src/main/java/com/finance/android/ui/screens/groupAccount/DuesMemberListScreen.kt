@@ -43,6 +43,7 @@ fun DuesMemberListScreen(
     }
     LaunchedEffect(Unit) {
         launch()
+        groupAccountViewModel.selectFriendsList = null
     }
 
     when (val response = groupAccountViewModel.groupAccountMemberData.value) {

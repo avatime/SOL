@@ -58,14 +58,17 @@ fun GroupAccountMakeScreen(
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
         Text(text = "가족, 친구, 연인과 함께", fontSize = 20.sp, color = Color(R.color.noActiveColor))
         Text(text = "돈 같이 모으고 함께 써요", fontSize = 20.sp, color = Color(R.color.noActiveColor))
-        Spacer(modifier = Modifier.size(30.dp))
+        Spacer(modifier = Modifier.size(10.dp))
+        Text(text = "간편하게 송금 대표 계좌를 사용하여", fontSize = 20.sp, color = Color(R.color.noActiveColor))
+        Text(text = "입출금을 해보아요", fontSize = 20.sp, color = Color(R.color.noActiveColor))
 
+        Spacer(modifier = Modifier.weight(0.5f))
         Image(
             painter = painterResource(id = R.drawable.ic_groupintro),
             contentDescription = "GroupAccount Intro"
         )
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.5f))
         TextButton(
             onClick = { navController.navigate(Const.GROUP_ACCOUNT_NAME_SCREEN) },
             modifier = Modifier
