@@ -6,6 +6,7 @@ import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.point.request.RewardDto
 import com.finance.backend.point.response.RewardDao
 import com.finance.backend.bank.Account
+import com.finance.backend.point.request.GetRewardDto
 import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
 import com.finance.backend.user.User
@@ -80,5 +81,14 @@ class RewardServiceImpl(
         rewardRepository.save(Reward(user, point * -1, name))
         user.addPoint(point * -1)
         userRepository.save(user)
+    }
+
+    override fun getPoint(accessToken: String, getRewardDto: GetRewardDto) {
+        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException()
+                }) {
+            val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
+            accumulatePoint(user, getRewardDto.point, getRewardDto.name)
+        }
     }
 }
