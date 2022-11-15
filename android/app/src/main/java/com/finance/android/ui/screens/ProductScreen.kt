@@ -21,7 +21,9 @@ fun ProductScreen(
     productViewModel: ProductViewModel = hiltViewModel()
 ) {
     LaunchedEffect(Unit) {
-        productViewModel.loadCardRecommend()
+        if (productViewModel.cardRecommendList.value == null) {
+            productViewModel.loadCardRecommend()
+        }
     }
     BaseScreen(
         modifier = Modifier
