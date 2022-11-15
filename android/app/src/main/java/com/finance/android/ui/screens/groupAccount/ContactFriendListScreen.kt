@@ -32,9 +32,6 @@ fun ContactFriendListScreen(
     modifier: Modifier,
 ) {
 
-    LaunchedEffect(Unit){
-        groupAccountViewModel.selectFriendsList = null
-    }
     if (ActivityCompat.checkSelfPermission(
             LocalContext.current,
             Manifest.permission.READ_CONTACTS
