@@ -22,7 +22,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.finance.android.R
 import com.finance.android.ui.components.BackHeaderBar
 import com.google.zxing.BarcodeFormat
-import com.google.zxing.qrcode.QRCodeWriter
 import com.journeyapps.barcodescanner.*
 
 
@@ -162,16 +161,17 @@ private fun MyQRCode(
                 .padding(dimensionResource(R.dimen.padding_medium))
         ) {
             val barcodeEncoder = BarcodeEncoder()
-            val qrCodeWriter = QRCodeWriter()
             val bitmap = barcodeEncoder.encodeBitmap(
-                "신한,11111111111",
+                "avatime, gamulgamul, ssol# kkaji hamyeonseo team name hana mot jeonghan uritim hwaiting!!",
                 BarcodeFormat.QR_CODE,
                 1200,
-                1200
+                1200,
             ).asImageBitmap()
 
             ForceBrightness()
-            Image(modifier = Modifier.aspectRatio(1f).fillMaxWidth(), bitmap = bitmap, contentDescription = "qr 코드")
+            Image(modifier = Modifier
+                .aspectRatio(1f)
+                .fillMaxWidth(), bitmap = bitmap, contentDescription = "qr 코드")
         }
     }
 }
