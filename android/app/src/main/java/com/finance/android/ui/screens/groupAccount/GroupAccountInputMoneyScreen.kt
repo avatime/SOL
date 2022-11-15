@@ -23,9 +23,11 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
+import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
 import java.lang.Integer.parseInt
@@ -39,16 +41,33 @@ fun GroupAccountInputMoneyScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
-    fun launch(){
+    fun launch() {
         groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
+        //출금화면일때 balace 모임 통장 잔액으로 바꾸기
+        if (groupAccountViewModel.screenType.value == 3) {
+            groupAccountViewModel.postGroupAccountInfo(groupAccountViewModel.paId.value)
+
+        }
+
     }
 
     LaunchedEffect(Unit) {
         launch()
-        Log.i("group", "계좌잔액 ${groupAccountViewModel.representAccountBalance.value}")
 
     }
-    val balance = groupAccountViewModel.representAccountBalance.value
+
+
+    var balance = groupAccountViewModel.representAccountBalance.value
+    if (groupAccountViewModel.screenType.value == 3) {
+        when (val response = groupAccountViewModel.groupAccountInfo.value) {
+            is Response.Failure -> {}
+            is Response.Loading -> {}
+            is Response.Success -> {
+                balance = response.data.amount.toString()
+            }
+        }
+    }
+
 
 
     val placeholderText = remember {
@@ -91,12 +110,11 @@ fun GroupAccountInputMoneyScreen(
         TextField(
             value = duesValue.value,
             onValueChange = {
-                if(!Pattern.matches("^[0-9]*$", it)) return@TextField
-                if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
+                if (!Pattern.matches("^[0-9]*$", it)) return@TextField
+                if (it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
                 if (isError.value && duesValue.value < it) {
                     return@TextField
-                }
-                else if ( duesValue.value == it) return@TextField
+                } else if (duesValue.value == it) return@TextField
 
                 duesValue.value = if (it.isEmpty()) "" else it.toInt().toString()
             },
@@ -125,14 +143,13 @@ fun GroupAccountInputMoneyScreen(
 
         if (isError.value) {
             androidx.compose.material.Text(
-                text = "잔액 ${balance}입니다." ,
+                text = "잔액 ${balance}입니다.",
                 color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier.padding(start = 30.dp)
             )
         }
-        if (!isError.value &&duesValue.value.isNotEmpty() && balance.isNotEmpty())
-         {
+        if (!isError.value && duesValue.value.isNotEmpty() && balance.isNotEmpty()) {
             TextButton(
                 onClick = {
                     if (duesValue.value.isNotEmpty() && duesValue.value > "0") {
@@ -150,3 +167,4 @@ fun GroupAccountInputMoneyScreen(
 
     }
 }
+
