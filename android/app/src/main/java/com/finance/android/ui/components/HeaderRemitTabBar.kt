@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Tab
 import androidx.compose.material.TabRow
 import androidx.compose.material.TabRowDefaults
@@ -12,6 +13,7 @@ import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +40,6 @@ fun HeaderRemitTabBar(
     Column(modifier = modifier.fillMaxSize()) {
         TabRow(selectedTabIndex = selectedIndex,
             backgroundColor = Color.White,
-            modifier = Modifier.padding(end = 150.dp),
             indicator = {
                 TabRowDefaults.Indicator(
                     modifier = Modifier
@@ -62,7 +63,8 @@ fun HeaderRemitTabBar(
                     selected = selected,
                     onClick = { selectedIndex = index },
                     text = { Text(text = text, fontSize = 18.sp, softWrap = false, maxLines = 1) },
-                    modifier = Modifier.width(90.dp),
+                    modifier = Modifier.width(90.dp)
+                        .clip(RoundedCornerShape(10.dp)),
                     selectedContentColor = Color.Black,
                     unselectedContentColor = Disabled,
 

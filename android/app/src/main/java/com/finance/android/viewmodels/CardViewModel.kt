@@ -3,10 +3,7 @@ package com.finance.android.viewmodels
 import android.app.Application
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
-import com.finance.android.domain.dto.response.CardBenefitInfoResponseDto
-import com.finance.android.domain.dto.response.CardBillDetailResponseDto
-import com.finance.android.domain.dto.response.CardRecommendResponseDto
-import com.finance.android.domain.dto.response.CardResponseDto
+import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.CardRepository
 import com.finance.android.utils.Response
@@ -42,11 +39,11 @@ class CardViewModel @Inject constructor(
 
     // 카드 혜택 조회
 
-//    val cardBill = mutableStateOf<Response<CardBillResponseDto>>(Response.Loading)
     val cardBenefit = mutableStateOf<Response<MutableList<CardBenefitInfoResponseDto>>>(Response.Loading)
+    val cardBenefitDetail = mutableStateOf<Response<MutableList<CardBenefitDetailResponseDto>>>(Response.Loading)
 
     fun getLoadCardBenefit(): Response<Unit> {
-        val arr = arrayOf(cardBenefit)
+        val arr = arrayOf(cardBenefit, cardBenefitDetail)
 
         return if (arr.count { it.value is Response.Loading } != 0) {
             Response.Loading
@@ -67,6 +64,13 @@ class CardViewModel @Inject constructor(
                 )
             }.collect {
                 cardBenefit.value = it
+            }
+            this@CardViewModel.run {
+                cardRepository.getCardBenefitDetail(
+                    cardProductCode = cardProductCode,
+                )
+            }.collect {
+                cardBenefitDetail.value = it
             }
         }
     }

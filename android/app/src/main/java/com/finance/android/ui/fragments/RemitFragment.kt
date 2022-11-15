@@ -33,7 +33,7 @@ fun RemitFragment(
         topBar = {
             if (!remitViewModel.enabledBackHeader.value) {
                 BackHeaderBar(
-                    text = "",
+                    text = "송금",
                     modifier = Modifier,
                     onClickBack = {
                         if (remitViewModel.isBackToMain.value) {
