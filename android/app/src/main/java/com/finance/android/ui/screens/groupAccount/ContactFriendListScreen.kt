@@ -31,6 +31,10 @@ fun ContactFriendListScreen(
     navController: NavController,
     modifier: Modifier,
 ) {
+
+    LaunchedEffect(Unit){
+        groupAccountViewModel.selectFriendsList = null
+    }
     if (ActivityCompat.checkSelfPermission(
             LocalContext.current,
             Manifest.permission.READ_CONTACTS
@@ -59,7 +63,9 @@ fun ContactFriendListScreen(
             .background(Color.White)
     ) {
         if (friendsList.isNotEmpty()) {
-            LazyRow(modifier = Modifier.height(130.dp).fillMaxWidth()) {
+            LazyRow(modifier = Modifier
+                .height(130.dp)
+                .fillMaxWidth()) {
                 items(count = friendsList.size, key = { it }, itemContent = {
                     val item = friendsList[it]
                     Log.i("gg", "${item.contactId}")
