@@ -133,7 +133,7 @@ private fun SuccessScreen(
             fontSize = 25.sp,
         )
         androidx.compose.material.Text(text = "전환완료", fontSize = 25.sp)
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.weight(1f))
         com.finance.android.ui.components.TextButton(
             onClick = onClose,
             text = "완료",
@@ -170,7 +170,7 @@ private fun FailureScreen(
             fontSize = 25.sp,
         )
         androidx.compose.material.Text(text = "문제가 계속될시 문의주세요", fontSize = 25.sp)
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.weight(1f))
         com.finance.android.ui.components.TextButton(
             onClick = onClose,
             buttonColor = ButtonColor.ERROR,

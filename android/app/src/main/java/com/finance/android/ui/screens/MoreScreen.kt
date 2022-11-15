@@ -27,6 +27,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.R
+import com.finance.android.datastore.UserStore
 import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.ui.components.BaseScreen
@@ -46,13 +47,6 @@ fun MoreScreen(
     navController: NavController,
     myPageViewModel: MyPageViewModel = hiltViewModel()
 ) {
-//    val context = LocalContext.current
-//    var name by remember { mutableStateOf("") }
-//    LaunchedEffect(Unit){
-//        UserStore(context).getValue(UserStore.KEY_USER_NAME).collect {
-//            name = it
-//        }
-//    }
     var showSnackbar by remember { mutableStateOf(false) }
     if (showSnackbar) {
         TransientSnackbar(
@@ -224,6 +218,14 @@ fun Screen(
 
 @Composable
 private fun MenuList(navController: NavController) {
+    val context = LocalContext.current
+    var phone by remember { mutableStateOf("") }
+    LaunchedEffect(Unit){
+        UserStore(context).getValue(UserStore.KEY_PHONE_NUMBER).collect {
+            phone = it
+        }
+    }
+    println("phone : $phone")
     Column(
         modifier = Modifier
             .padding(dimensionResource(R.dimen.account_like_account_number))
@@ -254,12 +256,14 @@ private fun MenuList(navController: NavController) {
             text = "모두의 통장"
         )
 
-        MoreMenuItem(
-            onClickMenu = { navController.navigate(Const.Routes.QRCODE) },
-            painter = painterResource(R.drawable.ic_moim),
-            color = Color(0xffc0f0d2),
-            text = "qr 코드 송금"
-        )
+        if(phone == "01111118865"){
+            MoreMenuItem(
+                onClickMenu = { navController.navigate(Const.Routes.QRCODE) },
+                painter = painterResource(R.drawable.ic_qr_code),
+                color = Color(0xffFFE0E5),
+                text = "qr 코드 송금"
+            )
+        }
 
         Spacer(modifier = Modifier.size(40.dp))
     }

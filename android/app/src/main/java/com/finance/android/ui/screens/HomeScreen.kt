@@ -393,7 +393,7 @@ private fun TopBar(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
                 .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.surfaceVariant)
+//                .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable {
                     onClick()
                 },
@@ -590,8 +590,7 @@ fun minibar(
             }
             Spacer(modifier = Modifier.width(7.dp))
             Text(
-                text = stock.fnName,
-                fontSize = if (stock.fnName.length > 7) 12.sp else 16.sp
+                text = stock.fnName, fontSize = if(stock.fnName.length > 7) 12.sp else if(stock.fnName.length > 5) 14.sp else 16.sp
             )
         }
 //        Spacer(modifier = Modifier.width(7.dp))
