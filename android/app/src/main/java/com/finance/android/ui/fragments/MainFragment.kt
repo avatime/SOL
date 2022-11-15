@@ -3,25 +3,25 @@ package com.finance.android.ui.fragments
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.finance.android.ui.components.BottomNavBar
+import com.finance.android.ui.components.MainBackPressHandler
 import com.finance.android.ui.screens.HomeScreen
 import com.finance.android.ui.screens.MoreScreen
 import com.finance.android.ui.screens.ProductScreen
 import com.finance.android.ui.screens.StockScreen
 import com.finance.android.utils.Const
-import com.finance.android.viewmodels.ProductViewModel
 
 @ExperimentalAnimationApi
 @Composable
 fun MainFragment(navController: NavController) {
     val innerNavController = rememberNavController()
+    MainBackPressHandler()
     Scaffold(
         bottomBar = {
             BottomNavBar(
