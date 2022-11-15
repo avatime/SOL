@@ -12,9 +12,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.finance.android.ui.fragments.*
-import com.finance.android.ui.fragments.AttendanceFragment
 import com.finance.android.ui.screens.CardBenefitScreen
-import com.finance.android.ui.fragments.WalkFragment
 import com.finance.android.ui.theme.FinanceTheme
 import com.finance.android.utils.Const
 import dagger.hilt.android.HiltAndroidApp
@@ -134,6 +132,18 @@ fun FinanceApp() {
                     exit = slideOutVertically()
                 ) {
                     WalkFragment(onClose = {
+                        navController.popBackStack()
+                    })
+                }
+            }
+            composable(Const.Routes.QRCODE) {
+                AnimatedVisibility(
+                    initiallyVisible = false,
+                    visible = true,
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
+                    exit = slideOutVertically()
+                ) {
+                    QRCodeFragment(onClose = {
                         navController.popBackStack()
                     })
                 }
