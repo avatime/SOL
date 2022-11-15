@@ -19,7 +19,7 @@ open class BaseViewModel(
     application: Application,
     private val baseRepository: BaseRepository
 ): AndroidViewModel(application) {
-    val loading: MutableState<Boolean> = mutableStateOf(false)
+    val loading: MutableState<Boolean> = mutableStateOf(true)
 
     val error: MutableState<Exception?> = mutableStateOf(null)
     protected suspend fun <T> run(call: suspend () -> T): Flow<Response<T>> = flow {
