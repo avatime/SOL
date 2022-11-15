@@ -9,12 +9,15 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
+import android.os.Vibrator
+import android.os.VibratorManager
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,11 +34,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.airbnb.lottie.compose.*
 import com.finance.android.R
 import com.finance.android.domain.dto.response.AccountRegisteredResponseDto
 import com.finance.android.domain.dto.response.FinanceResponseDto
@@ -53,6 +58,7 @@ import java.net.URLEncoder
 import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
+
 @ExperimentalAnimationApi
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,20 +72,6 @@ fun HomeScreen(
 
     LaunchedEffect(Unit) {
         launch()
-    }
-
-    val lifecycleOwner = LocalLifecycleOwner.current
-    DisposableEffect(lifecycleOwner) {
-        val observer = LifecycleEventObserver { _, event ->
-            if (event == Lifecycle.Event.ON_RESUME) {
-                launch()
-            }
-        }
-
-        lifecycleOwner.lifecycle.addObserver(observer)
-        onDispose {
-            lifecycleOwner.lifecycle.removeObserver(observer)
-        }
     }
 
     SetStatusBarColor(color = MaterialTheme.colorScheme.background)
@@ -116,16 +108,19 @@ fun HomeScreen(
                         mainData = homeViewModel.mainData.value!!
                     )
                 }
-                HomeCardContainer2(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                        .background(
-                            color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(10.dp)
-                        ),
-                    navController = navController
-                )
+                if (homeViewModel.point.value != null) {
+                    HomeCardContainer2(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(dimensionResource(R.dimen.padding_medium))
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        navController = navController,
+                        onEasterEgg = { homeViewModel.onEasterEgg() }
+                    )
+                }
             }
         }
     }
@@ -269,13 +264,17 @@ private fun HomeCardContainer(
 }
 
 @Composable
-private fun HomeCardContainer2(modifier: Modifier, navController: NavController) {
+private fun HomeCardContainer2(
+    modifier: Modifier,
+    navController: NavController,
+    onEasterEgg: () -> Unit
+) {
     Column(
         modifier = modifier.padding(dimensionResource(R.dimen.padding_medium))
     ) {
         Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = "쌀",
+                text = "포인트",
                 fontWeight = FontWeight.Bold,
                 fontSize = 20.sp
             )
@@ -294,47 +293,105 @@ private fun HomeCardContainer2(modifier: Modifier, navController: NavController)
                 )
             }
         }
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentSize(Alignment.Center),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Image(
-                painter = painterResource(R.drawable.ssal),
-                contentDescription = null,
-                modifier = Modifier
-                    .height(150.dp)
-                    .width(150.dp)
+        CoinImage(navController = navController, onEasterEgg = onEasterEgg)
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+private fun CoinImage(
+    navController: NavController,
+    onEasterEgg: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .wrapContentSize(Alignment.Center),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        var flipCnt by remember { mutableStateOf(0) }
+        var showDialog by remember { mutableStateOf(false) }
+        if (showDialog) {
+            LaunchedEffect(Unit) {
+                onEasterEgg()
+            }
+            CustomDialog(
+                dialogType = DialogType.INFO,
+                dialogActionType = DialogActionType.ONE_BUTTON,
+                title = "이스터에그 발견\n100포인트를 적립해드려요~",
+                onPositive = { showDialog = false }
             )
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = dimensionResource(R.dimen.padding_medium)),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                TextButton(
-                    onClick = { navController.navigate(Const.Routes.PEDOMETER) },
-                    text = "만보기",
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(120.dp)
-                        .padding(start = 20.dp),
-                    buttonType = ButtonType.CIRCULAR,
-                    fontSize = 14.sp
+        }
+        LaunchedEffect(flipCnt) {
+            if (flipCnt != 0 && flipCnt % 10 == 0) {
+                showDialog = true
+            }
+        }
+        var cardFace by remember { mutableStateOf(CardFace.Front) }
+        FlipCard(
+            cardFace = cardFace,
+            onClick = {
+                cardFace = it
+                flipCnt++
+            },
+            front = {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_static_coin),
+                    contentDescription = null
                 )
-                Spacer(modifier = Modifier.weight(1.0f))
-                TextButton(
-                    onClick = { navController.navigate(Const.Routes.ATTENDANCE) },
-                    text = "출석체크",
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(120.dp)
-                        .padding(end = 20.dp),
-                    buttonType = ButtonType.CIRCULAR,
-                    fontSize = 14.sp
+            },
+            back = {
+                Image(
+                    painter = painterResource(id = R.drawable.ic_static_coin),
+                    contentDescription = null
                 )
             }
+        )
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = dimensionResource(R.dimen.padding_medium)),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            TextButton(
+                onClick = {
+                    cardFace = cardFace.next
+                    navController.navigate(Const.Routes.PEDOMETER)
+                },
+                text = "만보기",
+                modifier = Modifier
+                    .height(40.dp)
+                    .weight(1f),
+                buttonType = ButtonType.ROUNDED,
+                fontSize = 14.sp
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            TextButton(
+                onClick = {
+                    cardFace = cardFace.next
+                    navController.navigate(Const.Routes.EXCHANGE)
+                },
+                text = "출금",
+                modifier = Modifier
+                    .height(40.dp)
+                    .weight(1f),
+                buttonType = ButtonType.ROUNDED,
+                fontSize = 14.sp
+            )
+            Spacer(modifier = Modifier.width(10.dp))
+            TextButton(
+                onClick = {
+                    cardFace = cardFace.next
+                    navController.navigate(Const.Routes.ATTENDANCE)
+                },
+                text = "출석체크",
+                modifier = Modifier
+                    .height(40.dp)
+                    .weight(1f),
+                buttonType = ButtonType.ROUNDED,
+                fontSize = 14.sp
+            )
         }
     }
 }
@@ -583,14 +640,17 @@ fun Minibar(
                 modifier = Modifier.size(24.dp)
             ) {
                 AsyncImage(
-                    modifier = Modifier.clip(CircleShape).background(color = Color.White),
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(color = Color.White),
                     model = stock.fnLogo,
                     contentDescription = stock.fnName
                 )
             }
             Spacer(modifier = Modifier.width(7.dp))
             Text(
-                text = stock.fnName, fontSize = if(stock.fnName.length > 7) 12.sp else if(stock.fnName.length > 5) 14.sp else 16.sp
+                text = stock.fnName,
+                fontSize = if (stock.fnName.length > 7) 12.sp else if (stock.fnName.length > 5) 14.sp else 16.sp
             )
         }
 //        Spacer(modifier = Modifier.width(7.dp))

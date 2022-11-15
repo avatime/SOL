@@ -34,4 +34,7 @@ interface UserService {
 
     @GET("${Const.API_PATH}/user")
     suspend fun getUserProfile() : UserProfileResponseDto
+
+    @POST("${Const.API_PATH}/point/easter")
+    suspend fun receivePoint(@Body receivePointDto: ReceivePointDto)
 }
