@@ -38,10 +38,6 @@ fun GroupAccountInputMoneyScreen(
 ) {
     LaunchedEffect(Unit) {
         groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
-//        Log.i(
-//            "group",
-//            "inputmoney에서 잔액값 : ${DecimalFormat("#,###원").format(parseInt(groupAccountViewModel.representAccountBalance.value))} "
-//        )
     }
 
 
@@ -86,10 +82,12 @@ fun GroupAccountInputMoneyScreen(
             onValueChange = {
                 if(!Pattern.matches("^[0-9]*$", it)) return@TextField
                 if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
-                if (!isValid.value && duesValue.value < it) {
+                if (isValid.value && duesValue.value < it) {
                     return@TextField
                 }
                 else if (duesValue.value == it) return@TextField
+
+               duesValue.value = if (it.isEmpty()) "" else it.toInt().toString()
             },
             modifier = Modifier
                 .padding(start = 16.dp)
@@ -117,21 +115,20 @@ fun GroupAccountInputMoneyScreen(
                 balance
             ) < parseInt(duesValue.value)
         ) {
+            TextButton(
+                onClick = {
+                    if (duesValue.value.isNotEmpty() && duesValue.value > "0") {
+                        navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN)
+                        groupAccountViewModel.duesVal.value = Integer.parseInt(duesValue.value)
+                    }
 
-
+                },
+                text = "다음",
+                buttonType = ButtonType.ROUNDED,
+                modifier = Modifier.withBottomButton()
+            )
         }
-        TextButton(
-            onClick = {
-                if (duesValue.value.isNotEmpty() && duesValue.value > "0") {
-                    navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN)
-                    groupAccountViewModel.duesVal.value = Integer.parseInt(duesValue.value)
-                }
 
-            },
-            text = "다음",
-            buttonType = ButtonType.ROUNDED,
-            modifier = Modifier.withBottomButton()
-        )
 
     }
 }
