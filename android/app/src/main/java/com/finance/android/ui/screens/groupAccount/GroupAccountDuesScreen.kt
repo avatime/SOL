@@ -69,7 +69,6 @@ fun GroupAccountDuesScreen(
         }// end of scrollColumn
         TextButton(
             onClick = { navController.navigate(Const.DUES_MAKE_NAME_SCREEN)
-                      groupAccountViewModel.OKtext.value = "회비를 생성했습니다."
                       groupAccountViewModel.duesVal.value = 0},
             text = "회비 걷기",
             buttonType = ButtonType.ROUNDED,

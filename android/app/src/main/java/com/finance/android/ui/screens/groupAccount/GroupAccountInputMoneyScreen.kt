@@ -43,7 +43,7 @@ fun GroupAccountInputMoneyScreen(
 ) {
     fun launch() {
         groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
-        //출금화면일때 balace 모임 통장 잔액으로 바꾸기
+        //출금화면일때 balance 모임 통장 잔액으로 바꾸기
         if (groupAccountViewModel.screenType.value == 3) {
             groupAccountViewModel.postGroupAccountInfo(groupAccountViewModel.paId.value)
 
