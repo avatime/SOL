@@ -33,6 +33,10 @@ import com.finance.android.ui.theme.Disabled
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.AddAssetViewModel
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddAssetSelectScreen(
@@ -162,7 +166,7 @@ private fun Loading(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPagerApi::class)
 @Composable
 private fun Screen(
     modifier: Modifier = Modifier,
@@ -200,9 +204,11 @@ private fun Screen(
                 .padding(top = it.calculateTopPadding())
                 .fillMaxSize()
         ) {
-            var selectedTabIndex by remember { mutableStateOf(0) }
-            Spacer(modifier = modifier.height(20.dp))
+            val pagerState = rememberPagerState()
+            val coroutineScope = rememberCoroutineScope()
+            val list = stringArrayResource(id = R.array.add_asset_tab_array)
 
+            Spacer(modifier = modifier.height(20.dp))
             Text(
                 modifier = modifier
                     .padding(start = dimensionResource(id = R.dimen.padding_medium).value.dp),
@@ -238,18 +244,24 @@ private fun Screen(
                 }
 
                 ScrollableTabRow(
-                    selectedTabIndex = selectedTabIndex,
+                    selectedTabIndex = pagerState.currentPage,
                     modifier = modifier.weight(1.0f),
                     containerColor = MaterialTheme.colorScheme.surface,
                     edgePadding = 0.dp,
                     indicator = {},
                     divider = {}
                 ) {
-                    stringArrayResource(id = R.array.add_asset_tab_array)
+                    list
                         .forEachIndexed { index, s ->
                             Tab(
-                                selected = selectedTabIndex == index,
-                                onClick = { selectedTabIndex = index },
+                                selected = pagerState.currentPage == index,
+                                onClick = {
+                                    coroutineScope.launch {
+                                        pagerState.animateScrollToPage(
+                                            index
+                                        )
+                                    }
+                                },
                                 modifier = Modifier
                                     .padding(all = 5.dp)
                                     .clip(RoundedCornerShape(10.dp)),
@@ -287,27 +299,33 @@ private fun Screen(
                 }
             }
             Box(modifier = modifier.weight(1.0f)) {
-                when (selectedTabIndex) {
-                    0 -> Account(
-                        accountList = accountList,
-                        accountCheckList = accountCheckList,
-                        onClickAccountItem = onClickAccountItem
-                    )
-                    1 -> Card(
-                        cardList = cardList,
-                        cardCheckList = cardCheckList,
-                        onClickCardItem = onClickCardItem
-                    )
-                    2 -> Stock(
-                        stockAccountList = stockAccountList,
-                        stockAccountCheckList = stockAccountCheckList,
-                        onClickStockAccountItem = onClickStockAccountItem
-                    )
-                    else -> Insurance(
-                        insuranceList = insuranceList,
-                        insuranceCheckList = insuranceCheckList,
-                        onClickInsuranceItem = onClickInsuranceItem
-                    )
+                HorizontalPager(
+                    count = list.size,
+                    state = pagerState,
+                    verticalAlignment = Alignment.Top
+                ) { page ->
+                    when (page) {
+                        0 -> Account(
+                            accountList = accountList,
+                            accountCheckList = accountCheckList,
+                            onClickAccountItem = onClickAccountItem
+                        )
+                        1 -> Card(
+                            cardList = cardList,
+                            cardCheckList = cardCheckList,
+                            onClickCardItem = onClickCardItem
+                        )
+                        2 -> Insurance(
+                            insuranceList = insuranceList,
+                            insuranceCheckList = insuranceCheckList,
+                            onClickInsuranceItem = onClickInsuranceItem
+                        )
+                        else -> Stock(
+                            stockAccountList = stockAccountList,
+                            stockAccountCheckList = stockAccountCheckList,
+                            onClickStockAccountItem = onClickStockAccountItem
+                        )
+                    }
                 }
             }
             var showSnackbar by remember { mutableStateOf(false) }

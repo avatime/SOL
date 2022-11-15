@@ -3,7 +3,7 @@
     <string-array name="add_asset_tab_array">
         <item>@string/btn_tab_account</item>
         <item>@string/btn_tab_card</item>
-        <item>@string/btn_tab_stock</item>
         <item>@string/btn_tab_insurance</item>
+        <item>@string/btn_tab_stock</item>
     </string-array>
 </resources>
