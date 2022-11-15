@@ -34,4 +34,7 @@ interface CardService {
     @GET("${Const.API_PATH}/card/recommend")
     suspend fun getCardRecommend(): CardRecommendResponseDto
 
+    @GET("${Const.API_PATH}/card/{cd_pd_code}")
+    suspend fun getCardBenefitDetail(@Path("cd_pd_code") cardProductCode: Int): MutableList<CardBenefitDetailResponseDto>
+
 }

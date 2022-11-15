@@ -59,7 +59,7 @@ private fun Draw(
         ) {
             Text(text = insuranceName, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
             Text(text = "보험료: ${DecimalFormat("#,###원").format(fee)}", fontWeight = FontWeight.Bold)
-            Text(text = "계약자: ${myName}|피보험자: $isName", fontSize = 10.sp, color = Color(R.color.noActiveColor))
+            Text(text = "계약자: $myName | 피보험자: $isName", fontSize = 10.sp, color = Color(R.color.noActiveColor))
         }
         trailing?.invoke()
     }
