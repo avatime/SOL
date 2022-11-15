@@ -164,7 +164,7 @@ private fun MyQRCode(
             val barcodeEncoder = BarcodeEncoder()
             val qrCodeWriter = QRCodeWriter()
             val bitmap = barcodeEncoder.encodeBitmap(
-                "신한,11111111111",
+                "아바타임 가물가물 쏠# 까지 하면서 팀이름 하나 못 정한 우리팀 화이팅!!",
                 BarcodeFormat.QR_CODE,
                 1200,
                 1200
