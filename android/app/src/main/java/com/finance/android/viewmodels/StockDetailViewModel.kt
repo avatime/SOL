@@ -5,6 +5,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.finance.android.domain.dto.response.FinanceDetailResponseDto
+import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.StockRepository
 import com.finance.android.utils.Response
@@ -22,12 +23,14 @@ class StockDetailViewModel @Inject constructor(
     val fnName = savedStateHandle.get<String>("fnName")!!
 
     val stockDetailList = mutableStateOf<Array<FinanceDetailResponseDto>>(emptyArray())
+    val stockList = mutableStateOf<Array<FinanceResponseDto>>(arrayOf())
     val periodType = mutableStateOf(PeriodType.WEEK)
     val graphType = mutableStateOf(GraphType.LINE)
 
     fun launch() {
         viewModelScope.launch {
             loadFinanceDetailList()
+            loadStockList()
         }
     }
 
@@ -47,6 +50,17 @@ class StockDetailViewModel @Inject constructor(
             .collect {
                 if (it is Response.Success) {
                     stockDetailList.value = it.data
+                }
+            }
+    }
+
+    private suspend fun loadStockList() {
+        this@StockDetailViewModel.run {
+            stockRepository.getFinanceList()
+        }
+            .collect {
+                if (it is Response.Success) {
+                    stockList.value = it.data
                 }
             }
     }

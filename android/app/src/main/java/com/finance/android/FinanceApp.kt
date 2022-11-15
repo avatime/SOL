@@ -155,6 +155,7 @@ fun FinanceApp() {
                 )
             ) {
                 StockDetailFragment(
+                    navController = navController,
                     onClose = {
                         navController.popBackStack()
                     }
