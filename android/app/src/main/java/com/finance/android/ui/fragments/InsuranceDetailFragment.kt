@@ -53,7 +53,6 @@ fun InsuranceDetailFragment(
                 .padding(top = innerPaddingModifier.calculateTopPadding())
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .background(color = MaterialTheme.colorScheme.background)
         ) {
             Column(
                 modifier = Modifier
@@ -135,14 +134,15 @@ fun ContentList(
                     .padding(
                         vertical = dimensionResource(R.dimen.padding_medium) / 2,
                         horizontal = 15.dp / 2
-                    ).animateContentSize()
+                    )
+                    .animateContentSize()
             ) {
                 Row(
                     modifier =
                     if (expandable) Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 15.dp / 2)
-                        .clip(RoundedCornerShape(5.dp))
+                        .clip(RoundedCornerShape(10.dp))
                         .clickable { expanded.value = !expanded.value }
                     else Modifier
                         .fillMaxWidth(),
@@ -150,9 +150,11 @@ fun ContentList(
                 ) {
                     Text(
                         modifier = Modifier
+                            .padding(dimensionResource(R.dimen.padding_medium))
                             .weight(1f),
                         text = text[0],
-                        fontWeight = FontWeight.Bold
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 17.sp
                     )
                     Spacer(modifier = Modifier.width(15.dp))
                     if (expandable) {
@@ -176,13 +178,13 @@ fun ContentList(
                 if (expanded.value && expandable) {
                     Text(
                         modifier = Modifier.padding(horizontal = 15.dp),
-                        text = text.slice(1 until text.size).joinToString("\n")
+                        text = text.slice(1 until text.size).joinToString("\n"),
+                        color = Color.Gray
                     )
                 }
             }
             Divider(
                 modifier = Modifier.padding(
-                    vertical = dimensionResource(R.dimen.padding_medium) / 2,
                     horizontal = 15.dp
                 )
             )
@@ -217,14 +219,14 @@ fun Item(
             fontSize = 15.sp,
             fontWeight = FontWeight.Bold,
             color = Color.Gray,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Justify
         )
         Text(
             modifier = Modifier,
             text = detail,
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
+            textAlign = TextAlign.Justify
         )
     }
 }
