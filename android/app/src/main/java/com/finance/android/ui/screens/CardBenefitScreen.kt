@@ -108,7 +108,7 @@ fun CardBenefitScreen(
                             text = "혜택 더보기",
                             buttonColor = ButtonColor.WHITE,
                             buttonType = ButtonType.ROUNDED,
-                            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_large))
+                            modifier = Modifier.padding(top = dimensionResource(R.dimen.padding_medium))
                         )
                     }
                 }

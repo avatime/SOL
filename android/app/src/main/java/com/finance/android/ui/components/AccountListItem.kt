@@ -84,7 +84,7 @@ private fun Draw(
             }
             Column(
                 modifier = Modifier
-                    .padding(start = 12.dp)
+                    .padding(start = 12.dp, end = 6.dp)
             ) {
                 Text(text = accountName, maxLines = 1, overflow = TextOverflow.Ellipsis, fontSize = 14.sp)
                 Text(text = DecimalFormat("#,###원").format(balance), fontWeight = FontWeight.Bold)

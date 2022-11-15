@@ -63,7 +63,7 @@ private fun Draw(
                     .size(40.dp)
                     .padding(end = dimensionResource(R.dimen.padding_small))
             )
-            Column (modifier = Modifier.padding(start = 12.dp)) {
+            Column (modifier = Modifier.padding(start = 12.dp, end = 6.dp)) {
                 Text(text = cardName, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if(cardFee != null) {
                     Text(text = cardFee, fontSize = 12.sp, color = Color(R.color.noActiveColor))
