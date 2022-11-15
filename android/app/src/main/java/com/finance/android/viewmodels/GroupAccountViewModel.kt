@@ -178,7 +178,7 @@ class GroupAccountViewModel @Inject constructor(
             }.collect {
                 if(it is Response.Success)   {
                     representAccountBalance.value = it.data
-                    Log.i("group", "계좌 잔액 : ${representAccountBalance.value}")
+                    Log.i("group", "계좌 잔액 ㅎㅎㅎㅎ: ${representAccountBalance.value}")
                 }
             }
 
