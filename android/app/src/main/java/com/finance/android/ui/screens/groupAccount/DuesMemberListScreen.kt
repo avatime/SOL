@@ -56,66 +56,66 @@ fun DuesMemberListScreen(
                 groupAccountViewModel.selectFriendsList!![idx].value
             }
             val memberList = ArrayList<MemberRequestDto>()
-            for (friend in friendsList){
+            for (friend in friendsList) {
                 memberList.add(MemberRequestDto(friend.userName, friend.phone))
             }
             val name = groupAccountViewModel.name.value
             val paId = groupAccountViewModel.paId.value
             val duesVal = groupAccountViewModel.duesVal.value
 
-            val duesDue = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm").format(LocalDateTime.now().plusHours(9))
+            val duesDue = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")
+                .format(LocalDateTime.now().plusHours(9))
             Log.i("gg", "${duesDue}")
-            val createDuesRequestDto = CreateDuesRequestDto(name, paId, duesVal, duesDue, memberList)
+            val createDuesRequestDto =
+                CreateDuesRequestDto(name, paId, duesVal, duesDue, memberList)
             Column(
                 modifier = modifier
                     .fillMaxSize()
                     .background(Color.White)
             ) {
                 if (friendsList.isNotEmpty()) {
-                    LazyRow(modifier = Modifier
-                        .height(130.dp)
-                        .fillMaxWidth()) {
+                    LazyRow(
+                        modifier = Modifier
+                            .height(130.dp)
+                            .fillMaxWidth()
+                    ) {
                         items(count = friendsList.size, key = { it }, itemContent = {
                             val item = friendsList[it]
                             Log.i("gg", "${item.id}")
-                            SelectedFriendItem(
-                                img = item.pfImg,
-                                name = item.userName,
-                                onClick = {
-                                    val index =
-                                        groupAccountViewModel.list.indexOfFirst { data -> data.id == item.id }
-                                    groupAccountViewModel.onClickDeleteFriend(index)
-                                })
+                            SelectedFriendItem(img = item.pfImg, name = item.userName, onClick = {
+                                val index =
+                                    groupAccountViewModel.list.indexOfFirst { data -> data.id == item.id }
+                                groupAccountViewModel.onClickDeleteFriend(index)
+                            })
                         })
                     }
                 }
 
-                LazyColumn {
+                LazyColumn(
+                    modifier = Modifier
+                        .weight(1f)
+                ) {
                     items(count = groupAccountViewModel.list.size, key = { it }, itemContent = {
                         val item = groupAccountViewModel.list[it]
-                        FriendSelectItem(
-                            checked = groupAccountViewModel.selectFriendsList!![it].value,
+                        FriendSelectItem(checked = groupAccountViewModel.selectFriendsList!![it].value,
                             img = item.pfImg,
                             name = item.userName,
                             phone = item.type,
-                            onClickItem = { groupAccountViewModel.onClickFriend(it) }
-                        )
-                    }
-                    )
+                            onClickItem = { groupAccountViewModel.onClickFriend(it) })
+                    })
                 }
-
                 TextButton(
                     onClick = {
-                        groupAccountViewModel.makeGroupDues(
-                            createDuesRequestDto,
+                        groupAccountViewModel.makeGroupDues(createDuesRequestDto,
                             onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_COMPLETED) })
                     },
-                    modifier = Modifier
-                        .withBottomButton(),
+                    modifier = Modifier.withBottomButton(),
                     text = "회비 생성하기",
                     buttonType = ButtonType.ROUNDED
                 )
             }
+
         }
+
     }
 }
