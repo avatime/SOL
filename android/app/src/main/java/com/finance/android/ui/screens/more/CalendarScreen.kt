@@ -33,7 +33,7 @@ import java.util.*
 
 @Composable
 fun ShowAttendanceCalendar(
-    attendanceList: MutableList<DailyAttendanceResponseDto>
+    attendanceList: Array<DailyAttendanceResponseDto>
 ) {
     val currentMonth = remember { YearMonth.now() }
     val startMonth = remember { currentMonth.minusMonths(0) } // Adjust as needed
@@ -144,7 +144,7 @@ fun DaysOfWeekTitle(daysOfWeek: List<DayOfWeek>) {
 }
 
 @Composable
-fun Day(day: CalendarDay, attendanceList : MutableList<DailyAttendanceResponseDto>) {
+fun Day(day: CalendarDay, attendanceList : Array<DailyAttendanceResponseDto>) {
     Box(
         modifier = Modifier
             .aspectRatio(1f), // This is important for square sizing!

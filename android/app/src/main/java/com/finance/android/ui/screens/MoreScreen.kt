@@ -29,8 +29,9 @@ import coil.request.ImageRequest
 import com.finance.android.R
 import com.finance.android.domain.dto.response.DailyProfileResponseDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
-import com.finance.android.ui.components.TransientSnackbar
+import com.finance.android.ui.components.BaseScreen
 import com.finance.android.ui.components.ShowProfileList
+import com.finance.android.ui.components.TransientSnackbar
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.toPx
@@ -39,7 +40,6 @@ import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
 import com.holix.android.bottomsheetdialog.compose.NavigationBarProperties
-
 
 @Composable
 fun MoreScreen(
@@ -68,31 +68,38 @@ fun MoreScreen(
     LaunchedEffect(Unit) {
         myPageViewModel.launchMyPage()
     }
-    when(myPageViewModel.getLoadState()) {
-        is Response.Success -> Screen(
-            navController = navController,
-            userInfo = (myPageViewModel.myInfo.value as Response.Success).data,
-            profileList = (myPageViewModel.profileList.value as Response.Success).data,
-            onClick = {
-                myPageViewModel.callChangeProfile(it)
-            }
-        )
-        is Response.Failure -> Loading("실패")
-        else -> Loading()
+
+    BaseScreen(
+        loading = myPageViewModel.loading.value,
+        error = myPageViewModel.error.value,
+        onError = { myPageViewModel.launchMyPage() },
+        calculatedTopPadding = 0.dp
+    ) {
+        if (myPageViewModel.myInfo.value != null && myPageViewModel.profileList.value.isNotEmpty()) {
+            Screen(
+                navController = navController,
+                userInfo = myPageViewModel.myInfo.value!!,
+                profileList = myPageViewModel.profileList.value,
+                onClick = {
+                    myPageViewModel.callChangeProfile(it)
+                }
+            )
+        }
+
     }
 }
 
 @Composable
 fun Screen(
     navController: NavController,
-    userInfo : UserProfileResponseDto,
-    profileList : MutableList<DailyProfileResponseDto>,
-    onClick : (profileId: Int) -> Unit = {}
+    userInfo: UserProfileResponseDto,
+    profileList: Array<DailyProfileResponseDto>,
+    onClick: (profileId: Int) -> Unit = {}
 ) {
     val context = LocalContext.current
     var showProfileList by remember { mutableStateOf(false) }
 
-    if(showProfileList) {
+    if (showProfileList) {
         DisplayMetrics()
 
         BoxWithConstraints(modifier = Modifier.background(color = Color.Blue)) {
@@ -103,11 +110,15 @@ fun Screen(
                 properties = BottomSheetDialogProperties(
                     navigationBarProperties = NavigationBarProperties(),
                     behaviorProperties = BottomSheetBehaviorProperties(
-                        maxHeight = BottomSheetBehaviorProperties.Size(this@BoxWithConstraints.maxHeight.toPx(context)/2),
+                        maxHeight = BottomSheetBehaviorProperties.Size(
+                            this@BoxWithConstraints.maxHeight.toPx(
+                                context
+                            ) / 2
+                        )
                     )
                 )
             ) {
-                Surface (
+                Surface(
                     shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp)
                 ) {
                     Column(
@@ -151,7 +162,7 @@ fun Screen(
                 .padding(top = 35.dp)
                 .padding(bottom = 13.dp),
             verticalAlignment = Alignment.CenterVertically
-        ){
+        ) {
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(userInfo.profileUrl)
@@ -169,7 +180,11 @@ fun Screen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier.padding(start = 16.dp)
             ) {
-                Text(text = userInfo.username, fontWeight = FontWeight.Bold, style = TextStyle(fontSize = 20.sp))
+                Text(
+                    text = userInfo.username,
+                    fontWeight = FontWeight.Bold,
+                    style = TextStyle(fontSize = 20.sp)
+                )
             }
         }
 
@@ -183,13 +198,23 @@ fun Screen(
                 .clickable { navController.navigate(Const.Routes.POINT) }
                 .background(
                     MaterialTheme.colorScheme.primary,
-                    RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2),
+                    RoundedCornerShape(dimensionResource(R.dimen.calendar_default) / 2)
                 ),
             verticalArrangement = Arrangement.Center
         ) {
             Column(modifier = Modifier.padding(start = 23.dp)) {
-                Text(text = "포인트", fontSize = 14.sp, color = Color.White, fontWeight = FontWeight.SemiBold)
-                Text(text = userInfo.point.toString() + "포인트", fontSize = 18.sp, color = Color.White, fontWeight = FontWeight.Bold)
+                Text(
+                    text = "포인트",
+                    fontSize = 14.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.SemiBold
+                )
+                Text(
+                    text = userInfo.point.toString() + "포인트",
+                    fontSize = 18.sp,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
 
@@ -199,7 +224,6 @@ fun Screen(
 
 @Composable
 private fun MenuList(navController: NavController) {
-
     Column(
         modifier = Modifier
             .padding(dimensionResource(R.dimen.account_like_account_number))
@@ -207,7 +231,7 @@ private fun MenuList(navController: NavController) {
                 MaterialTheme.colorScheme.surface,
                 RoundedCornerShape(dimensionResource(R.dimen.calendar_default))
             )
-    ){
+    ) {
         Spacer(modifier = Modifier.size(10.dp))
 
         MoreMenuItem(
@@ -239,8 +263,8 @@ fun MoreMenuItem(
     onClickMenu: () -> Unit = {},
     painter: Painter,
     color: Color = Color(0xffbfd0ff),
-    text : String
-){
+    text: String
+) {
     Column(
         modifier = Modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -267,7 +291,7 @@ fun MoreMenuItem(
             ) {
                 Image(
                     painter = painter,
-                    contentDescription = null, // 필수 param
+                    contentDescription = null // 필수 param
                 )
             }
             Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_btn_small_text)))
@@ -280,7 +304,7 @@ fun MoreMenuItem(
 
 @Composable
 private fun Loading(
-    message : String = "로딩 중...",
+    message: String = "로딩 중..."
 ) {
     Column(
         verticalArrangement = Arrangement.Center,

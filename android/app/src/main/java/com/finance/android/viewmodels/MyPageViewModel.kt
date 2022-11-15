@@ -11,6 +11,7 @@ import com.finance.android.domain.repository.DailyRepository
 import com.finance.android.domain.repository.UserRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -21,41 +22,39 @@ class MyPageViewModel @Inject constructor(
     private val userRepository: UserRepository,
     private val dailyRepository: DailyRepository
 ) : BaseViewModel(application, baseRepository) {
-    val myInfo = mutableStateOf<Response<UserProfileResponseDto>>(Response.Loading)
-    val profileList = mutableStateOf<Response<MutableList<DailyProfileResponseDto>>>(Response.Loading)
+    val myInfo = mutableStateOf<UserProfileResponseDto?>(null)
+    val profileList = mutableStateOf<Array<DailyProfileResponseDto>>(arrayOf())
 
     fun launchMyPage() {
         viewModelScope.launch {
-            getUserInfo()
-            getProfileList()
+            this@MyPageViewModel.run {
+                arrayOf(
+                    userRepository.getUserProfile(),
+                    dailyRepository.getProfileList()
+                )
+            }.collect {
+                if (it is Response.Success) {
+                    myInfo.value = it.data[0] as UserProfileResponseDto
+                    profileList.value =
+                        (it.data[1] as Array<*>).map { v -> v as DailyProfileResponseDto }
+                            .toTypedArray()
+                }
+            }
         }
     }
 
-    fun callChangeProfile(profileId : Int) {
+    fun callChangeProfile(profileId: Int) {
         println(profileId)
         viewModelScope.launch {
             changeUserProfile(ChangeProfileRequestDto(profileNo = profileId))
         }
     }
 
-    fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(myInfo, profileList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
-        }
-    }
-
     private suspend fun changeUserProfile(changeProfileRequestDto: ChangeProfileRequestDto) {
         this@MyPageViewModel.run {
-            println(changeProfileRequestDto.toString())
             dailyRepository.changeProfile(changeProfileRequestDto)
         }.collect {
-            if(it is Response.Success) {
+            if (it is Response.Success) {
                 getUserInfo()
             }
         }
@@ -65,19 +64,8 @@ class MyPageViewModel @Inject constructor(
         this@MyPageViewModel.run {
             userRepository.getUserProfile()
         }.collect {
-            myInfo.value = it
-//            if(it is Response.Success) {
-//            }
-        }
-    }
-
-    private suspend fun getProfileList() {
-        this@MyPageViewModel.run {
-            dailyRepository.getProfileList()
-        }.collect {
-            profileList.value = it
-            if(it is Response.Success) {
-                println(it.data.toString())
+            if (it is Response.Success) {
+                myInfo.value = it.data
             }
         }
     }

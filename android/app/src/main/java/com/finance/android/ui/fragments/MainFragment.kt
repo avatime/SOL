@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -15,6 +16,7 @@ import com.finance.android.ui.screens.MoreScreen
 import com.finance.android.ui.screens.ProductScreen
 import com.finance.android.ui.screens.StockScreen
 import com.finance.android.utils.Const
+import com.finance.android.viewmodels.ProductViewModel
 
 @ExperimentalAnimationApi
 @Composable

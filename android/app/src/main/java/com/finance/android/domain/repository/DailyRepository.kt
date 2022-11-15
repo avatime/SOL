@@ -7,9 +7,9 @@ import com.finance.android.domain.dto.response.DailyWalkingResponseDto
 
 interface DailyRepository {
     suspend fun attendance()
-    suspend fun getAttendanceList(year : Int, month : Int) : MutableList<DailyAttendanceResponseDto>
+    suspend fun getAttendanceList(year : Int, month : Int) : Array<DailyAttendanceResponseDto>
     suspend fun getWalkingList(year: Int, month: Int): MutableList<DailyWalkingResponseDto>
-    suspend fun getProfileList() : MutableList<DailyProfileResponseDto>
+    suspend fun getProfileList() : Array<DailyProfileResponseDto>
     suspend fun changeProfile(changeProfileRequestDto: ChangeProfileRequestDto)
     suspend fun test()
     suspend fun receiveWalkPoint()
