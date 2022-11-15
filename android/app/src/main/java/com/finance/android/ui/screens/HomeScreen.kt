@@ -107,7 +107,7 @@ fun HomeScreen(
                     HomeCardContainer(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(dimensionResource(R.dimen.padding_medium), top = 0.dp)
+                            .padding(horizontal = dimensionResource(R.dimen.padding_medium))
                             .background(
                                 color = MaterialTheme.colorScheme.surface,
                                 shape = RoundedCornerShape(10.dp)
