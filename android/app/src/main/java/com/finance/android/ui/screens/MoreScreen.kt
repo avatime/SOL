@@ -34,13 +34,13 @@ import com.finance.android.ui.components.BaseScreen
 import com.finance.android.ui.components.ShowProfileList
 import com.finance.android.ui.components.TransientSnackbar
 import com.finance.android.utils.Const
-import com.finance.android.utils.Response
 import com.finance.android.utils.ext.toPx
 import com.finance.android.viewmodels.MyPageViewModel
 import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialog
 import com.holix.android.bottomsheetdialog.compose.BottomSheetDialogProperties
 import com.holix.android.bottomsheetdialog.compose.NavigationBarProperties
+import java.text.DecimalFormat
 
 @Composable
 fun MoreScreen(
@@ -204,7 +204,7 @@ fun Screen(
                     fontWeight = FontWeight.SemiBold
                 )
                 Text(
-                    text = userInfo.point.toString() + "포인트",
+                    text = DecimalFormat("#,### 포인트").format(userInfo.point),
                     fontSize = 18.sp,
                     color = Color.White,
                     fontWeight = FontWeight.Bold
