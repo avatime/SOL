@@ -44,6 +44,7 @@ class GroupAccountViewModel @Inject constructor(
 
     val isBackToMain = mutableStateOf(false)
 
+
     val mDate = mutableStateOf("")
     val mTime = mutableStateOf("")
 
@@ -52,6 +53,9 @@ class GroupAccountViewModel @Inject constructor(
     val screenType = mutableStateOf(0)
 
     val OKtext = mutableStateOf("")
+
+    lateinit var list : MutableList<FriendResponseDto>
+
 
     //모임 통장 조회
     private val _groupAccountData =
@@ -145,7 +149,9 @@ class GroupAccountViewModel @Inject constructor(
             this@GroupAccountViewModel.run {
                 groupAccountRepository.postGroupMember(GroupIdRequestDto(paId))
             }.collect {
-                _groupAccountMemberData.value = it
+                if(it is Response.Success){
+                    _groupAccountMemberData.value = it
+                }
             }
         }
     }
