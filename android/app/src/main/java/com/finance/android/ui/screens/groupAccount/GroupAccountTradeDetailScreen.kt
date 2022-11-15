@@ -35,7 +35,7 @@ fun GroupAccountTradeDetailScreen(
         when (val response = groupAccountViewModel.duesTradeHistoryData.value) {
 
             is Response.Failure -> Text(text = "실패")
-            is Response.Loading -> AnimatedLoading(text = "조그만 기다려주세요!")
+            is Response.Loading -> AnimatedLoading()
             is Response.Success -> {
                 showHistoryList(modifier = Modifier.weight(1.0f),
                     historyList = List(response.data.size) { i -> response.data[i].toEntity() })

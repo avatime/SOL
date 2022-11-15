@@ -29,6 +29,9 @@ fun DuesMakeNameScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
+    LaunchedEffect(Unit){
+        groupAccountViewModel.duesName.value = ""
+    }
     var isError = remember{ mutableStateOf(false) }
 
 
@@ -82,7 +85,6 @@ fun DuesMakeNameScreen(
             onClick = {
                 if (groupAccountViewModel.duesName.value.isNotEmpty()) {
                     navController.navigate(Const.DUES_MAKE_MONEY_SCREEN)
-                    groupAccountViewModel.duesName.value = ""
                 }
 
             },
