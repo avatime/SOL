@@ -20,7 +20,7 @@ class AttendanceViewModel @Inject constructor(
     private val dailyRepository: DailyRepository,
 ) : BaseViewModel(application, baseRepository) {
     val isAttend = mutableStateOf(false)
-    val attendanceList = mutableStateOf<Response<MutableList<DailyAttendanceResponseDto>>>(Response.Loading)
+    val attendanceList = mutableStateOf<Array<DailyAttendanceResponseDto>>(arrayOf())
 
     fun launchAttendance() {
         viewModelScope.launch {
@@ -32,18 +32,6 @@ class AttendanceViewModel @Inject constructor(
         isAttend.value = !isAttend.value
         viewModelScope.launch {
             checkAttendance { loadAttendanceList(LocalDateTime.now().year, LocalDateTime.now().monthValue) }
-        }
-    }
-
-    fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(attendanceList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
         }
     }
 
@@ -62,8 +50,8 @@ class AttendanceViewModel @Inject constructor(
             dailyRepository.getAttendanceList(year, month)
         }
             .collect {
-                attendanceList.value = it
                 if(it is Response.Success) {
+                    attendanceList.value = it.data
                     isAttend.value = it.data[LocalDate.now().dayOfMonth - 1].attendance
                 }
             }
