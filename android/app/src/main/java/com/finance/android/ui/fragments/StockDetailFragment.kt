@@ -17,7 +17,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -63,10 +62,11 @@ fun StockDetailFragment(
         },
         containerColor = MaterialTheme.colorScheme.surface
     ) {
-        Box(
-            modifier = Modifier
-                .padding(top = it.calculateTopPadding())
-                .fillMaxSize()
+        BaseScreen(
+            loading = stockDetailViewModel.loading.value,
+            error = stockDetailViewModel.error.value,
+            onError = { stockDetailViewModel.launch() },
+            calculatedTopPadding = it.calculateTopPadding()
         ) {
             if (stockDetailViewModel.stockDetailList.value.isNotEmpty()) {
                 val after = stockDetailViewModel.stockDetailList.value.last()
@@ -89,19 +89,6 @@ fun StockDetailFragment(
                     onClickPeriodType = { type -> stockDetailViewModel.onClickPeriod(type) },
                     graphType = stockDetailViewModel.graphType.value,
                     onClickGraphType = { stockDetailViewModel.onClickGraphType() }
-                )
-            }
-
-            if (stockDetailViewModel.loading.value) {
-                AnimatedLoading()
-            }
-
-            if (stockDetailViewModel.error.value != null) {
-                CustomDialog(
-                    dialogType = DialogType.ERROR,
-                    dialogActionType = DialogActionType.ONE_BUTTON,
-                    title = stringResource(id = R.string.msg_server_error),
-                    onPositive = { stockDetailViewModel.launch() }
                 )
             }
         }

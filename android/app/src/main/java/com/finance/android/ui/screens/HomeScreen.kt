@@ -44,7 +44,7 @@ import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.LightMainColor
 import com.finance.android.ui.theme.SetStatusBarColor
 import com.finance.android.utils.Const
-import com.finance.android.utils.Response
+import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.HomeViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
@@ -92,15 +92,18 @@ fun HomeScreen(
         },
         containerColor = MaterialTheme.colorScheme.background
     ) {
-        Column(
-            modifier = Modifier
-                .padding(top = it.calculateTopPadding())
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .background(color = MaterialTheme.colorScheme.background)
+        BaseScreen(
+            loading = homeViewModel.loading.value,
+            error = homeViewModel.error.value,
+            onError = { homeViewModel.load() },
+            calculatedTopPadding = it.calculateTopPadding()
         ) {
-            when (homeViewModel.getLoadState()) {
-                is Response.Success -> {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .background(color = MaterialTheme.colorScheme.background)
+            ) {
+                if (homeViewModel.mainData.value != null) {
                     HomeCardContainer(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -110,21 +113,19 @@ fun HomeScreen(
                                 shape = RoundedCornerShape(10.dp)
                             ),
                         navController = navController,
-                        mainData = (homeViewModel.mainData.value as Response.Success).data
-                    )
-                    HomeCardContainer2(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(dimensionResource(R.dimen.padding_medium))
-                            .background(
-                                color = MaterialTheme.colorScheme.surface,
-                                shape = RoundedCornerShape(10.dp)
-                            ),
-                        navController = navController
+                        mainData = homeViewModel.mainData.value!!
                     )
                 }
-                is Response.Loading -> {}
-                else -> {}
+                HomeCardContainer2(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                    navController = navController
+                )
             }
         }
     }
@@ -138,7 +139,6 @@ private fun HomeCardContainer(
 ) {
     val totalSize =
         mainData.accountList.size + mainData.cardList.size + mainData.financeList.size + mainData.insuranceList.size
-
     Column(
         modifier = modifier.padding(dimensionResource(R.dimen.padding_medium))
     ) {
@@ -234,7 +234,13 @@ private fun HomeCardContainer(
                 companyName = it.cpName,
                 acMain = it.acMain,
                 onClickItem = {
-                    navController.navigate("${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${URLEncoder.encode(it.cpLogo)}/${it.acMain}/${it.acType}")
+                    navController.navigate(
+                        "${Const.Routes.ACC_DETAIL}/${it.acName}/${it.cpName}/${it.acNo}/${
+                        URLEncoder.encode(
+                            it.cpLogo
+                        )
+                        }/${it.acMain}/${it.acType}"
+                    )
                 }
             )
         }
@@ -250,6 +256,12 @@ private fun HomeCardContainer(
                     fontSize = 22.sp,
                     color = Color.Gray,
                     modifier = Modifier.padding(vertical = 80.dp)
+                )
+                TextButton(
+                    onClick = { navController.navigate(Const.Routes.ADD_ASSET) },
+                    text = "자산 등록하기",
+                    buttonType = ButtonType.ROUNDED,
+                    modifier = Modifier.withBottomButton()
                 )
             }
         }
@@ -268,7 +280,10 @@ private fun HomeCardContainer2(modifier: Modifier, navController: NavController)
                 fontSize = 20.sp
             )
             Spacer(modifier = Modifier.weight(1.0f))
-            IconButton(onClick = { navController.navigate(Const.Routes.POINT) }, modifier = Modifier.size(30.dp)) {
+            IconButton(
+                onClick = { navController.navigate(Const.Routes.POINT) },
+                modifier = Modifier.size(30.dp)
+            ) {
                 Image(
                     painter = painterResource(R.drawable.arrow_forward_ios),
                     contentDescription = null,
@@ -335,7 +350,7 @@ private fun TopBar(
         modifier = Modifier
             .padding(
                 vertical = 10.dp,
-                horizontal = dimensionResource(id = R.dimen.padding_medium).value.dp,
+                horizontal = dimensionResource(id = R.dimen.padding_medium).value.dp
             )
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -371,10 +386,10 @@ private fun TopBar(
                 homeViewModel = homeViewModel
             )
         }
-        
+
         Spacer(modifier = Modifier.padding(20.dp))
 
-        Column (
+        Column(
             modifier = Modifier
                 .clip(RoundedCornerShape(10.dp))
                 .fillMaxWidth()
@@ -384,8 +399,11 @@ private fun TopBar(
                 },
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
-        ){
-            if(homeViewModel.getStockLoadState() == Response.Success(Unit)) animate_num(homeViewModel, navController = navController)
+        ) {
+            if (homeViewModel.stockList.value.isNotEmpty()) animate_num(
+                homeViewModel,
+                navController = navController
+            )
         }
     }
 }
@@ -507,9 +525,9 @@ fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: N
             repeatMode = RepeatMode.Reverse
         )
     )
-    if(state != value.toInt()) {
+    if (state != value.toInt()) {
         state = value.toInt()
-        if(state == 0) count++
+        if (state == 0) count++
     }
 
     AnimatedContent(
@@ -520,12 +538,12 @@ fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: N
                 // If the target number is larger, it slides up and fades in
                 // while the initial (smaller) number slides up and fades out.
                 slideInVertically { height -> height } + fadeIn() with
-                        slideOutVertically { height -> -height } + fadeOut()
+                    slideOutVertically { height -> -height } + fadeOut()
             } else {
                 // If the target number is smaller, it slides down and fades in
                 // while the initial number slides down and fades out.
                 slideInVertically { height -> -height } + fadeIn() with
-                        slideOutVertically { height -> height } + fadeOut()
+                    slideOutVertically { height -> height } + fadeOut()
             }.using(
                 // Disable clipping since the faded slide-in/out should
                 // be displayed out of bounds.
@@ -533,16 +551,20 @@ fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: N
             )
         }
     ) { targetCount ->
-        minibar(idx = targetCount, stockList = (homeViewModel.stockList.value as Response.Success).data, navController = navController)
+        minibar(
+            idx = targetCount,
+            stockList = homeViewModel.stockList.value,
+            navController = navController
+        )
     }
 }
 
 @Composable
 fun minibar(
-    idx : Int = 0,
+    idx: Int = 0,
     modifier: Modifier = Modifier,
-    navController : NavController,
-    stockList : MutableList<FinanceResponseDto>,
+    navController: NavController,
+    stockList: Array<FinanceResponseDto>
 ) {
     Row(
         modifier = modifier
@@ -560,11 +582,16 @@ fun minibar(
             Box(
                 modifier = Modifier.size(24.dp)
             ) {
-                AsyncImage(modifier = Modifier.clip(CircleShape).background(color = Color.White), model = stock.fnLogo, contentDescription = stock.fnName)
+                AsyncImage(
+                    modifier = Modifier.clip(CircleShape).background(color = Color.White),
+                    model = stock.fnLogo,
+                    contentDescription = stock.fnName
+                )
             }
             Spacer(modifier = Modifier.width(7.dp))
             Text(
-                text = stock.fnName, fontSize = if(stock.fnName.length > 7) 12.sp else 16.sp
+                text = stock.fnName,
+                fontSize = if (stock.fnName.length > 7) 12.sp else 16.sp
             )
         }
 //        Spacer(modifier = Modifier.width(7.dp))
@@ -573,7 +600,8 @@ fun minibar(
         val color = if (per > 0) Color.Red else Color.Blue
         Column(
             verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.End){
+            horizontalAlignment = Alignment.End
+        ) {
             Text(
                 text = DecimalFormat("#,###원").format(stock.close),
                 color = color,

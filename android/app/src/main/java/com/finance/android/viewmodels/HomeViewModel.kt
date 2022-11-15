@@ -14,6 +14,7 @@ import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.StockRepository
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -24,49 +25,30 @@ class HomeViewModel @Inject constructor(
     private val bankRepository: BankRepository,
     private val stockRepository: StockRepository
 ) : BaseViewModel(application, baseRepository), SensorEventListener {
-    val mainData = mutableStateOf<Response<AccountRegisteredResponseDto>>(Response.Loading)
-    val stockList = mutableStateOf<Response<MutableList<FinanceResponseDto>>>(Response.Loading)
+    val mainData = mutableStateOf<AccountRegisteredResponseDto?>(null)
+    val stockList = mutableStateOf<Array<FinanceResponseDto>>(arrayOf())
     val walkCount = mutableStateOf<Int?>(null)
 
     fun load() {
         viewModelScope.launch {
-            loadList()
+            loadData()
             loadWalkCount()
-            loadStockList()
         }
     }
 
-    fun getLoadState(): Response<Unit> {
-        val arr = arrayOf(mainData)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
-        }
-    }
-
-    fun getStockLoadState(): Response<Unit> {
-        val arr = arrayOf(stockList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
-        }
-    }
-
-    private suspend fun loadList() {
+    private suspend fun loadData() {
         this@HomeViewModel.run {
-            bankRepository.getAllMainAccount()
-        }
-            .collect {
-                mainData.value = it
+            arrayOf(
+                bankRepository.getAllMainAccount(),
+                stockRepository.getHomeFinanceList()
+            )
+        }.collect {
+            if (it is Response.Success) {
+                mainData.value = it.data[0] as AccountRegisteredResponseDto
+                stockList.value =
+                    (it.data[1] as Array<*>).map { v -> v as FinanceResponseDto }.toTypedArray()
             }
+        }
     }
 
     private suspend fun loadWalkCount() {
@@ -79,17 +61,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             loadWalkCount()
         }
-    }
-
-
-
-    private suspend fun loadStockList() {
-        this@HomeViewModel.run {
-            stockRepository.getHomeFinanceList()
-        }
-            .collect {
-                stockList.value = it
-            }
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {

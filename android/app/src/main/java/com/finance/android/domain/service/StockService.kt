@@ -21,7 +21,7 @@ interface StockService {
     suspend fun getFinanceList(): Array<FinanceResponseDto>
 
     @GET("${Const.DATA_PATH}/finance")
-    suspend fun getHomeFinanceList(): MutableList<FinanceResponseDto>
+    suspend fun getHomeFinanceList(): Array<FinanceResponseDto>
 
     @GET("${Const.DATA_PATH}/finance/{fn_name}")
     suspend fun getFinanceDetailList(@Path("fn_name")fnName: String) : Array<FinanceDetailResponseDto>
