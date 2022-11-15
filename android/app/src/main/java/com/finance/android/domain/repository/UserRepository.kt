@@ -16,4 +16,5 @@ interface UserRepository {
     suspend fun checkRepAccount(): Boolean
     suspend fun getUserProfile() : UserProfileResponseDto
     suspend fun changeRepAccount(mainAccountDto: MainAccountDto)
+    suspend fun receivePoint(receivePointDto: ReceivePointDto)
 }

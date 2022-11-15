@@ -59,4 +59,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun changeRepAccount(mainAccountDto: MainAccountDto) {
         return userService.changeRepAccount(mainAccountDto)
     }
+
+    override suspend fun receivePoint(receivePointDto: ReceivePointDto) {
+        return userService.receivePoint(receivePointDto)
+    }
 }
