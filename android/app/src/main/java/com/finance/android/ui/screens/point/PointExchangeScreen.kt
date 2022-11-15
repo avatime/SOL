@@ -17,6 +17,7 @@ import com.finance.android.domain.dto.request.PointExchangeRequestDto
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.PointViewModel
+import java.text.DecimalFormat
 import java.util.regex.Pattern
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -60,11 +61,12 @@ fun InputExchangePoint(
                 modifier = Modifier.padding(start = 20.dp)
 
             ) {
+                val bal = DecimalFormat("#,### 포인트").format(pointValue.toInt())
                 Text(
-                    text = "${pointValue}포인트를 교환할까요?",
-                    fontSize = 30.sp,
+                    text = "${bal}를 교환할까요?",
+                    fontSize = 25.sp,
                     softWrap = true,
-                    maxLines = 1
+                    maxLines = 2
                 )
             }
 
@@ -132,7 +134,8 @@ fun InputExchangePoint(
                     modifier = Modifier.padding(start = 30.dp),
                     enabled = !error.value
                 ) {
-                    Text(text = "잔액 ${balance}포인트(클릭시 입력)", fontSize = 20.sp)
+                    val bal = DecimalFormat("#,### 포인트").format(balance)
+                    Text(text = "잔액 $bal (클릭시 입력)", fontSize = 20.sp)
                 }
             }
 
