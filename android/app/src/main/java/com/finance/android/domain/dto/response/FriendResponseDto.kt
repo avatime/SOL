@@ -11,5 +11,7 @@ data class FriendResponseDto(
     @SerializedName("pf_img")
     val pfImg : String,//프로필이미지
     @SerializedName("pf_name")
-    val pfName : String //프로필 이름
+    val pfName : String, //프로필 이름
+    @SerializedName("phone")
+    val phone : String // 폰 번호
 )
