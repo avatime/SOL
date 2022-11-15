@@ -126,7 +126,7 @@ fun InputMoneyScreen(
 
                 if (error.value) {
                     Text(
-                        text = "계좌에 잔액이 "+DecimalFormat("#,###원").format(balance)+"$ 있어요.",
+                        text = "잔액을 초과한 금액은 입력할 수 없습니다.",
                         color = MaterialTheme.colors.error,
                         style = MaterialTheme.typography.caption,
                         modifier = Modifier.padding(start = 30.dp)
@@ -144,7 +144,7 @@ fun InputMoneyScreen(
                     modifier = Modifier.padding(start = 30.dp)
 
                 ) {
-                    Text(text = "잔액 "+DecimalFormat("#,###원").format(balance)+" 입력", fontSize = 20.sp)
+                    Text(text = "잔액 "+DecimalFormat("#,###원").format(balance)+"(클릭시 입력)", fontSize = 20.sp)
                 }
             }
 
@@ -158,7 +158,7 @@ fun InputMoneyScreen(
                     modifier = Modifier.padding(start = 30.dp)
 
                 ) {
-                    Text(text = "잔액 "+DecimalFormat("#,###원").format(balance)+" 입력", fontSize = 20.sp)
+                    Text(text = "잔액 "+DecimalFormat("#,###원").format(balance)+"(클릭시 입력)", fontSize = 20.sp)
                 }
             }
 
