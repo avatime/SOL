@@ -31,6 +31,8 @@ import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
 import com.finance.android.R
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 
 @Composable
@@ -55,6 +57,7 @@ fun DuesDataPickScreen(
         LaunchedEffect(Unit) {
             dialogState.show()
             isNextTo.value = false
+            groupAccountViewModel.mDate.value = ""
         }
         // Declaring a string value to
         // store date in string format
@@ -79,8 +82,9 @@ fun DuesDataPickScreen(
                         it.isAfter(LocalDate.now().minusDays(1))
                     }
                 ) { date ->
-                    mDate.value = "${date.year}-${date.monthValue}-${date.dayOfMonth}"
+                    mDate.value = "${date.year}-${date.monthValue}-${date.dayOfMonth} 23:59"
                     // Do stuff with java.time.LocalDate object which is passed in
+                    groupAccountViewModel.mDate.value = mDate.value
                 }
             }
 
