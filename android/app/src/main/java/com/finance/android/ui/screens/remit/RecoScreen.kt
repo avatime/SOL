@@ -17,9 +17,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -67,7 +69,6 @@ private fun Recent(
     val expanded = remember { mutableStateOf(false) }
 
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-        Spacer(modifier = Modifier.padding(8.dp))
 
         when (remitViewModel.getLoadRecommendation()) {
             is Response.Failure -> Text(text = "실패")
@@ -82,33 +83,35 @@ private fun Recent(
                             modifier = Modifier
                                 .clip(RoundedCornerShape(10.dp))
                                 .clickable { expanded.value = !expanded.value }
-                                .padding(vertical = 15.dp)
+                                .padding(top = 5.dp)
+                                .fillMaxHeight(),
+                            verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
                                 text = "내 계좌",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 16.sp,
-                                modifier = Modifier.padding(start = 10.dp)
+                                modifier = Modifier.padding(start = dimensionResource(R.dimen.padding_medium), end = 10.dp)
                             )
-                            Spacer(modifier = Modifier.weight(1f))
                             Text(
-                                modifier = Modifier.padding(end = 10.dp),
-                                text = if (expanded.value) "${response.data.size - 1}개" else "+${response.data.size - 1}개",
+                                text = "${response.data.size - 1}",
                                 color = Color.Gray
                             )
+                            Spacer(modifier = Modifier.weight(1f))
+
                             Image(
                                 modifier = Modifier
-                                    .size(24.dp),
+                                    .size(48.dp)
+                                    .padding(end = 25.dp),
                                 painter = painterResource(id = if (expanded.value) R.drawable.up else R.drawable.down),
                                 contentDescription = null
                             )
                         }
                     }
-                    Spacer(modifier = Modifier.padding(8.dp))
 
                     response.data.forEach {
                         if (it.acNo != remitViewModel.accountNumber) {
-                            AnimatedVisibility(visible = expanded.value, enter = fadeIn(animationSpec = tween(1000)), exit = fadeOut()) {
+                            AnimatedVisibility(visible = expanded.value, enter = fadeIn(animationSpec = tween(1500)), exit = fadeOut()) {
                                 AccountLikeItem(
                                     bkStatus = it.bkStatus,
                                     cpLogo = it.cpLogo,
@@ -136,7 +139,7 @@ private fun Recent(
                 }
             }
         }
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.padding(6.dp))
 
         when (remitViewModel.getLoadRecommendation()) {
             is Response.Failure -> Text(text = "실패")
@@ -147,9 +150,9 @@ private fun Recent(
                     text = "최근 보낸 계좌",
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    modifier = Modifier.padding(start = 10.dp)
+                    modifier = Modifier.padding(start = dimensionResource(R.dimen.padding_medium))
                 )
-                Spacer(modifier = Modifier.padding(8.dp))
+                Spacer(modifier = Modifier.padding(4.dp))
                 response2.data.forEach {
                     AccountLikeItem(
                         bkStatus = it.bkStatus,
