@@ -1,8 +1,13 @@
 package com.finance.android.ui.components
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -21,42 +26,88 @@ fun CardDetailComp(
     cdName: String, // 카드 이름
     cdImgPath: String, // 카드 이미지
     cdNo: String, // 카드 번호
-    balance: Int, // 월 청구 금액
+    balance: Int // 월 청구 금액
 ) {
+    var visible by remember { mutableStateOf(false) }
+    LaunchedEffect(Unit) {
+        visible = true
+    }
+
     Column(
         modifier = modifier
             .padding(18.dp)
     ) {
-        Text(text = cdName,
-            fontSize = 17.sp,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis
-        )
-        Text(
-            text = cdNo,
-            fontSize = 12.sp,
-        )
+        AnimatedVisibility(
+            visible = visible,
+            enter = slideInHorizontally(
+                initialOffsetX = { -800 }, // small slide 300px
+                animationSpec = tween(
+                    durationMillis = 200,
+                    easing = LinearEasing // interpolator
+                )
+            )
+        ) {
+            Column {
+                Text(
+                    text = cdName,
+                    fontSize = 17.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = cdNo,
+                    fontSize = 12.sp
+                )
+            }
+        }
+
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Column {
-                Text(text = "${YearMonth.now().monthValue}월 청구 금액", fontSize = 12.sp, fontWeight = FontWeight.SemiBold)
-                Text(
-                    text = DecimalFormat("#,###원").format(balance),
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 26.sp,
+            AnimatedVisibility(
+                visible = visible,
+                enter = slideInHorizontally(
+                    initialOffsetX = { -800 }, // small slide 300px
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        easing = LinearEasing // interpolator
+                    )
                 )
+            ) {
+                Column {
+                    Text(
+                        text = "${YearMonth.now().monthValue}월 청구 금액",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                    Text(
+                        text = DecimalFormat("#,###원").format(balance),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 26.sp
+                    )
+                }
             }
             Spacer(modifier = Modifier.weight(1.0f))
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(cdImgPath)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "cardImage",
-                modifier = modifier
-                    .size(130.dp)
-            )
+            AnimatedVisibility(
+                visible = visible,
+                enter = slideInVertically(
+                    initialOffsetY = { 800 }, // small slide 300px
+                    animationSpec = tween(
+                        durationMillis = 200,
+                        easing = LinearEasing // interpolator
+                    )
+                )
+            ) {
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(cdImgPath)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "cardImage",
+                    modifier = modifier
+                        .size(130.dp)
+                )
+            }
         }
     }
 }
