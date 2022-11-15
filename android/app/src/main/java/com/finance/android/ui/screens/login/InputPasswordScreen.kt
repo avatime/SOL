@@ -41,7 +41,7 @@ fun InputPasswordScreen(
     val context = LocalContext.current
     var isRepeat by remember { mutableStateOf(false) }
     val errorPassword = remember { mutableStateOf(false) }
-    val successBiometric by remember { mutableStateOf(false) }
+    var successBiometric by remember { mutableStateOf(false) }
 
     AnimatedVisibility(
         visible = !isRepeat,
@@ -93,7 +93,7 @@ fun InputPasswordScreen(
     }
 
     var useBio by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
+    LaunchedEffect(inputPasswordType) {
         UserStore(context).getValue(UserStore.KEY_USE_BIO).collect {
             useBio = it == "1"
         }
@@ -104,6 +104,7 @@ fun InputPasswordScreen(
             callback = object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
                     super.onAuthenticationSucceeded(result)
+                    successBiometric = true
                     loginViewModel.autoLogin(
                         onSuccess = onNextStep
                     )
