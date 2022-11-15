@@ -3,12 +3,10 @@ package com.finance.android.ui.fragments
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,6 +22,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.anychart.AnyChart
 import com.anychart.AnyChartView
 import com.anychart.chart.common.dataentry.BoxDataEntry
@@ -31,9 +33,11 @@ import com.anychart.data.Mapping
 import com.anychart.enums.MarkerType
 import com.finance.android.R
 import com.finance.android.domain.dto.response.FinanceDetailResponseDto
+import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.DarkBlueGrey
 import com.finance.android.ui.theme.Disabled
+import com.finance.android.utils.Const
 import com.finance.android.viewmodels.GraphType
 import com.finance.android.viewmodels.PeriodType
 import com.finance.android.viewmodels.StockDetailViewModel
@@ -46,6 +50,7 @@ import kotlin.math.round
 @Composable
 fun StockDetailFragment(
     stockDetailViewModel: StockDetailViewModel = hiltViewModel(),
+    navController: NavController,
     onClose: () -> Unit
 ) {
     LaunchedEffect(Unit) {
@@ -88,7 +93,9 @@ fun StockDetailFragment(
                     periodType = stockDetailViewModel.periodType.value,
                     onClickPeriodType = { type -> stockDetailViewModel.onClickPeriod(type) },
                     graphType = stockDetailViewModel.graphType.value,
-                    onClickGraphType = { stockDetailViewModel.onClickGraphType() }
+                    onClickGraphType = { stockDetailViewModel.onClickGraphType() },
+                    stockList = stockDetailViewModel.stockList.value,
+                    navController
                 )
             }
         }
@@ -105,7 +112,9 @@ private fun Screen(
     periodType: PeriodType,
     onClickPeriodType: (periodType: PeriodType) -> Unit,
     graphType: GraphType,
-    onClickGraphType: () -> Unit
+    onClickGraphType: () -> Unit,
+    stockList : Array<FinanceResponseDto>,
+    navController : NavController
 ) {
     Column(
         modifier = Modifier
@@ -168,13 +177,60 @@ private fun Screen(
             onClickGraphType = onClickGraphType,
             color = if (per > 0) Color.Red else Color.Blue
         )
+        Spacer(modifier = Modifier.height(20.dp))
+        Column(modifier = Modifier.padding(horizontal = dimensionResource(id = R.dimen.padding_medium))) {
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(
+                    vertical = dimensionResource(id = R.dimen.padding_medium),
+                    horizontal = dimensionResource(
+                        id = R.dimen.padding_small
+                    )
+                ),
+                verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(text = "다른 주식 둘러보기", fontWeight = FontWeight.Bold)
+                Row(modifier = Modifier
+//                    .background(color = MaterialTheme.colorScheme.surface)
+//                    .padding(10.dp)
+//                    .clip(RoundedCornerShape(10.dp))
+                    .horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(15.dp)
+                ) {
+                    for(stock in stockList) {
+//                        if(stock.fnName == fnName) continue
+                        Row( modifier = Modifier
+                            .clickable { navController.navigate("${Const.Routes.STOCK}/${stock.fnName}") }
+                            .clip(RoundedCornerShape(30.dp))
+                            .background(color = MaterialTheme.colorScheme.background)
+                            .padding(10.dp)
+                            .padding(vertical = 3.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            AsyncImage(
+                                model = ImageRequest.Builder(LocalContext.current)
+                                    .data(stock.fnLogo)
+                                    .crossfade(true)
+                                    .build(), contentDescription = "회사 로고",
+                                modifier = Modifier
+                                    .width(40.dp)
+                                    .height(40.dp)
+                                    .clip(CircleShape)
+                            )
+                            Spacer(modifier = Modifier.padding(8.dp))
+                            Text(text = stock.fnName)
+                        }
+                    }
+                }
+            }
+
+        }
     }
 }
 
 @Preview
 @Composable
 private fun Title(
-    fnName: String = "오만전자",
+    fnName: String = "십오만전자",
     close: Int = 50000,
     per: Float = 5.5f,
     diff: Int = 1000,
