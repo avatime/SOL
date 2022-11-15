@@ -42,7 +42,7 @@ fun GroupAccountMakeScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.padding(40.dp))
+        Spacer(modifier = Modifier.padding(20.dp))
         AnimatedVisibility(
             visible = visible,
             enter = slideInVertically(
@@ -54,21 +54,22 @@ fun GroupAccountMakeScreen(
             ) + fadeIn(initialAlpha = 1f),
         ) {
             Text(text = "모두의 통장", style = Typography.headlineLarge)
+            Spacer(modifier = Modifier.padding(20.dp))
         }
-        Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
+        Spacer(modifier = Modifier.weight(0.3f))
         Text(text = "가족, 친구, 연인과 함께", fontSize = 20.sp, color = Color(R.color.noActiveColor))
         Text(text = "돈 같이 모으고 함께 써요", fontSize = 20.sp, color = Color(R.color.noActiveColor))
         Spacer(modifier = Modifier.size(10.dp))
         Text(text = "간편하게 송금 대표 계좌를 사용하여", fontSize = 20.sp, color = Color(R.color.noActiveColor))
         Text(text = "입출금을 해보아요", fontSize = 20.sp, color = Color(R.color.noActiveColor))
 
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(0.3f))
         Image(
             painter = painterResource(id = R.drawable.ic_groupintro),
             contentDescription = "GroupAccount Intro"
         )
         Spacer(modifier = Modifier.size(dimensionResource(R.dimen.font_size_title_desc)))
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(0.4f))
         TextButton(
             onClick = { navController.navigate(Const.GROUP_ACCOUNT_NAME_SCREEN) },
             modifier = Modifier

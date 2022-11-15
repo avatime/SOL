@@ -57,27 +57,30 @@ fun GroupAccountVerifyMoneyScreen(
         TextButton(
             onClick = {
                 if (groupAccountViewModel.screenType.value == 1) {
+                    groupAccountViewModel.OKtext.value = "회비 입금 성공"
                     groupAccountViewModel.postPayDues(
                         RemitDuesRequestDto(
                             duesVal = groupAccountViewModel.duesVal.value,
                             duesId = groupAccountViewModel.duesId.value
                         ), onSuccess = {
-                            navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                            navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
                         })
                 } else if (groupAccountViewModel.screenType.value == 2) {
+                    groupAccountViewModel.OKtext.value = "모두의 통장으로 입금 성공"
                     groupAccountViewModel.postDeposit(GroupDepositRequestDto(
                         paId = groupAccountViewModel.paId.value,
                         value = groupAccountViewModel.duesVal.value,
                     ), onSuccess = {
-                        navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                        navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
                     })
                 } else if (groupAccountViewModel.screenType.value == 3) {
+                    groupAccountViewModel.OKtext.value = "모두의 통장에서 출금 성공"
                     groupAccountViewModel.postWithdraw(
                         GroupWithdrawDuesRequestDto(
                             paId = groupAccountViewModel.paId.value,
                             value = groupAccountViewModel.duesVal.value
                         ), onSuccess = {
-                            navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                            navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
                         })
 
                 }
