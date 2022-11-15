@@ -400,7 +400,7 @@ private fun TopBar(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            if (homeViewModel.stockList.value.isNotEmpty()) animate_num(
+            if (homeViewModel.stockList.value.isNotEmpty()) Animate_num(
                 homeViewModel,
                 navController = navController
             )
@@ -513,7 +513,7 @@ private fun PedometerOnStateButton(
 
 @ExperimentalAnimationApi
 @Composable
-fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
+fun Animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: NavController) {
     var state by remember { mutableStateOf(0) }
     var count by remember { mutableStateOf(0) }
     val transition = rememberInfiniteTransition()
@@ -551,7 +551,7 @@ fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: N
             )
         }
     ) { targetCount ->
-        minibar(
+        Minibar(
             idx = targetCount,
             stockList = homeViewModel.stockList.value,
             navController = navController
@@ -560,9 +560,9 @@ fun animate_num(homeViewModel: HomeViewModel = hiltViewModel(), navController: N
 }
 
 @Composable
-fun minibar(
-    idx: Int = 0,
+fun Minibar(
     modifier: Modifier = Modifier,
+    idx: Int = 0,
     navController: NavController,
     stockList: Array<FinanceResponseDto>
 ) {
