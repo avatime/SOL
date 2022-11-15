@@ -110,31 +110,4 @@ class CardViewModel @Inject constructor(
             }
         }
     }
-
-    // 카드 추천 (신용카드 10, 체크카드 10)
-
-    val cardRecommendList = mutableStateOf<Response<CardRecommendResponseDto>>(Response.Loading)
-
-    fun getLoadCardRecommend(): Response<Unit> {
-        val arr = arrayOf(cardRecommendList)
-
-        return if (arr.count { it.value is Response.Loading } != 0) {
-            Response.Loading
-        } else if (arr.count { it.value is Response.Failure } != 0) {
-            Response.Failure(null)
-        } else {
-            Response.Success(Unit)
-        }
-    }
-
-    fun loadCardRecommend() {
-        viewModelScope.launch {
-            this@CardViewModel.run {
-                cardRepository.getCardRecommend()
-            }.collect {
-                cardRecommendList.value = it
-            }
-        }
-    }
-
 }

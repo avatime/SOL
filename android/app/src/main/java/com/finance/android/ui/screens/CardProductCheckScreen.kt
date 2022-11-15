@@ -3,6 +3,7 @@ package com.finance.android.ui.screens
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,18 +31,20 @@ fun CardProductCheckScreen(
     navController: NavController,
     checkCardList: MutableList<CardRecommendInfoResponseDto>
 ) {
-    checkCardList.forEach {
-        CardProductContainer(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(dimensionResource(R.dimen.padding_medium))
-                .background(
-                    color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(10)
-                ),
-            navController = navController,
-            cardData = it
-        )
+    LazyColumn {
+        items(count = checkCardList.size) {
+            CardProductContainer(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(dimensionResource(R.dimen.padding_medium))
+                    .background(
+                        color = MaterialTheme.colorScheme.surface,
+                        shape = RoundedCornerShape(10)
+                    ),
+                navController = navController,
+                cardData = checkCardList[it]
+            )
+        }
     }
 }
 
@@ -54,14 +57,13 @@ private fun CardProductContainer(
     Column(
         modifier = modifier
             .padding(dimensionResource(R.dimen.padding_medium))
-    )
-    {
+    ) {
         val pathTmp = Uri.encode(cardData.cardImage)
         CardListItem_Arrow(
             cardName = cardData.cardName,
             cardImgPath = cardData.cardImage,
             onClickItem = {
-                navController.navigate("${Const.Routes.CARD_BENEFIT}/${cardData.cardPdCode}/${pathTmp}/${cardData.cardName}")
+                navController.navigate("${Const.Routes.CARD_BENEFIT}/${cardData.cardPdCode}/$pathTmp/${cardData.cardName}")
             }
         )
         Text(
@@ -83,7 +85,6 @@ private fun CardProductContainer(
     }
 }
 
-
 @Composable
 private fun BenefitListItem(
     benefitSummary: String?,
@@ -93,8 +94,7 @@ private fun BenefitListItem(
         modifier = Modifier
             .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
-    )
-    {
+    ) {
         AsyncImage(
             model = ImageRequest.Builder(LocalContext.current)
                 .data(companyLogoPath)
