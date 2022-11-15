@@ -37,4 +37,8 @@ class CardRepositoryImpl @Inject constructor(
     override suspend fun getCardRecommend(): CardRecommendResponseDto {
         return cardService.getCardRecommend()
     }
+
+    override suspend fun getCardBenefitDetail(cardProductCode: Int): MutableList<CardBenefitDetailResponseDto> {
+        return cardService.getCardBenefitDetail(cardProductCode)
+    }
 }

@@ -5,6 +5,7 @@ import androidx.compose.animation.*
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -43,6 +44,7 @@ fun AccountLikeItem(
         modifier = modifier
             .fillMaxSize()
             .padding(start = 15.dp, end = 15.dp, top = 10.dp, bottom = 10.dp)
+            .clip(RoundedCornerShape(10.dp))
             .clickable {
                 onClickItem()
             },
