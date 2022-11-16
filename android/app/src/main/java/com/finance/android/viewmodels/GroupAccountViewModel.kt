@@ -81,6 +81,11 @@ class GroupAccountViewModel @Inject constructor(
         selectFriendsList = Array(size) { mutableStateOf(false) }
     }
 
+    //친구리스트 초기화하기
+    fun initList(size : Int){
+        selectFriendsList = Array(size) { mutableStateOf(false) }
+    }
+
     fun onClickFriend(index: Int) {
         if (selectFriendsList == null) {
             return

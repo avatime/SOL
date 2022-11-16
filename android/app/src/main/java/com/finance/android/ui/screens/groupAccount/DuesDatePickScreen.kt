@@ -82,7 +82,7 @@ fun DuesDataPickScreen(
                         it.isAfter(LocalDate.now().minusDays(1))
                     }
                 ) { date ->
-                    mDate.value = "${date.year}-${date.monthValue}-${date.dayOfMonth} 23:59"
+                    mDate.value = "${date.year}-${date.monthValue}-${date.dayOfMonth}"
                     // Do stuff with java.time.LocalDate object which is passed in
                     groupAccountViewModel.mDate.value = mDate.value
                 }
@@ -117,7 +117,7 @@ fun DuesDataPickScreen(
             TextButton(
                 onClick = {
                     navController.navigate(Const.DUES_MEMBER_LIST)
-                    groupAccountViewModel.mDate.value = mDate.value
+                    groupAccountViewModel.mDate.value = "${mDate.value} 23:59"
                 },
                 text = "다음",
                 buttonType = ButtonType.ROUNDED,
