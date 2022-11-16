@@ -223,7 +223,8 @@ fun FinanceApp() {
                     cdName = it.arguments!!.getString("cdName")!!,
                     cdNo = it.arguments!!.getString("cdNo")!!,
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
-                    balance = it.arguments!!.getInt("balance")
+                    balance = it.arguments!!.getInt("balance"),
+                    navController = navController
                 )
             }
             composable(Const.Routes.EASTER_EGG) {

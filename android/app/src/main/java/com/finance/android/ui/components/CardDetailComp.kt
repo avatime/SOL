@@ -1,10 +1,12 @@
 package com.finance.android.ui.components
 
+import android.net.Uri
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -15,8 +17,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.finance.android.utils.Const
 import java.text.DecimalFormat
 import java.time.YearMonth
 
@@ -26,7 +30,8 @@ fun CardDetailComp(
     cdName: String, // 카드 이름
     cdImgPath: String, // 카드 이미지
     cdNo: String, // 카드 번호
-    balance: Int // 월 청구 금액
+    balance: Int, // 월 청구 금액
+    navController : NavController
 ) {
     var visible by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
@@ -105,6 +110,11 @@ fun CardDetailComp(
                         .build(),
                     contentDescription = "cardImage",
                     modifier = modifier
+                        .clickable {
+                            val pathTmp = Uri.encode(cdImgPath)
+                            val cardPdCode  = 1
+                            navController.navigate("${Const.Routes.CARD_BENEFIT}/${cardPdCode}/$pathTmp/${cdName}")
+                        }
                         .size(130.dp)
                 )
             }
