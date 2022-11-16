@@ -68,6 +68,8 @@ fun GroupAccountOKScreen(
 
         )
         Spacer(modifier = Modifier.padding(10.dp))
+        Text(text = text, fontSize = 20.sp, softWrap = false, maxLines = 1)
+        Spacer(modifier = Modifier.padding(10.dp))
         TextButton(
             onClick = {
                 if (groupAccountViewModel.startDetail.value){
@@ -80,6 +82,5 @@ fun GroupAccountOKScreen(
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton()
         )
-        Text(text = text, fontSize = 20.sp, softWrap = false, maxLines = 1)
     }
 }

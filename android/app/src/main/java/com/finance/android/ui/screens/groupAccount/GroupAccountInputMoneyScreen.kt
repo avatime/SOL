@@ -43,6 +43,7 @@ fun GroupAccountInputMoneyScreen(
 ) {
     fun launch() {
         groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
+        groupAccountViewModel.duesVal.value=0
         //출금화면일때 balance 모임 통장 잔액으로 바꾸기
         if (groupAccountViewModel.screenType.value == 3) {
             groupAccountViewModel.postGroupAccountInfo(groupAccountViewModel.paId.value)
@@ -75,9 +76,6 @@ fun GroupAccountInputMoneyScreen(
     }
     val duesValue = remember {
         mutableStateOf("")
-    }
-    if (groupAccountViewModel.duesVal.value > 0) {
-        duesValue.value = groupAccountViewModel.duesVal.value.toString()
     }
     //계좌잔액
     var isError = remember {
