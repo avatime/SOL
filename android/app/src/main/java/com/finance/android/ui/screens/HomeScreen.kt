@@ -74,7 +74,6 @@ fun HomeScreen(
         launch()
     }
 
-    SetStatusBarColor(color = MaterialTheme.colorScheme.background)
     Scaffold(
         topBar = {
             TopBar(
