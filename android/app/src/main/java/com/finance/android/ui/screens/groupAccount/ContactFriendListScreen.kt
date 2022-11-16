@@ -49,7 +49,7 @@ fun ContactFriendListScreen(
     val name = groupAccountViewModel.name.value
     val memberList = ArrayList<MemberRequestDto>()
     for (friend in friendsList) {
-        memberList.add(MemberRequestDto(friend.name, friend.phoneNumber))
+        memberList.add(MemberRequestDto(friend.name, friend.phoneNumber[0].toString()))
     }
 
     val createGroupAccountRequestDto = CreateGroupAccountRequestDto(name, memberList)
