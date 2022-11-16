@@ -26,6 +26,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.naming.AuthenticationException
+import kotlin.collections.ArrayList
 
 @Service("GroupService")
 @RequiredArgsConstructor
@@ -97,7 +98,11 @@ class GroupServiceImpl (
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
             val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             if(!publicAccountMemberRepository.existsByUserAndPublicAccountId(user, publicAccountId)) throw AuthenticationException()
-            val dueList : List<Dues> = duesRepository.findAllByPublicAccountIdAndStatus(publicAccountId, 10)?:throw Exception()
+            val duesList : List<Dues> = duesRepository.findAllByPublicAccountIdAndStatus(publicAccountId, 10)?:throw Exception()
+            val dueList = ArrayList<Dues>()
+            for (due in duesList){
+                if (userDuesRelationRepository.existsByUserAndDues(user, due)){dueList.add(due)}
+            }
             return List(dueList.size) {i -> dueList[i].toEntity(userDuesRelationRepository.findByUserAndDues(user, dueList[i])?.status?: throw Exception(), userDuesRelationRepository.countByDuesAndStatus(dueList[i], true), userDuesRelationRepository.countByDues(dueList[i]), userRepository.findById(dueList[i].creator).orElse(null)?.name?:throw NullPointerException())}
         } else throw Exception()
     }

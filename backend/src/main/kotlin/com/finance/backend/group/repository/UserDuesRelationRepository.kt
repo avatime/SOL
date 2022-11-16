@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserDuesRelationRepository : JpaRepository<UserDuesRelation, Long> {
     fun findByUserAndDues(user : User, due : Dues) : UserDuesRelation?
+    fun existsByUserAndDues(user : User, due : Dues) : Boolean
     fun findByUserAndDuesId(user : User, duesId : Long) : UserDuesRelation?
     fun findByUserAndId(user: User, id : Long) : UserDuesRelation?
     fun findAllByDues(due: Dues) : List<UserDuesRelation>?
