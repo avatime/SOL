@@ -49,8 +49,6 @@ class GroupAccountViewModel @Inject constructor(
 
     val useBackHeader = mutableStateOf(true)
 
-    val startDetail = mutableStateOf(false) // false 메인, true 상세 화면
-
     //1-> 회비입금 2-> 돈 입금 3-> 돈출금
     val screenType = mutableStateOf(0)
 
