@@ -34,6 +34,7 @@ import com.finance.android.ui.components.BaseScreen
 import com.finance.android.ui.components.ShowProfileList
 import com.finance.android.ui.components.TransientSnackbar
 import com.finance.android.utils.Const
+import com.finance.android.utils.ext.noRippleClickable
 import com.finance.android.utils.ext.toPx
 import com.finance.android.viewmodels.MyPageViewModel
 import com.holix.android.bottomsheetdialog.compose.BottomSheetBehaviorProperties
@@ -79,7 +80,6 @@ fun MoreScreen(
                 }
             )
         }
-
     }
 }
 
@@ -143,6 +143,8 @@ fun Screen(
         }
     }
 
+    var easterCnt by remember{ mutableStateOf(0) }
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
@@ -175,6 +177,12 @@ fun Screen(
                 modifier = Modifier.padding(start = 16.dp)
             ) {
                 Text(
+                    modifier = Modifier.noRippleClickable {
+                        easterCnt++
+                        if (easterCnt % 5 == 0) {
+                            navController.navigate(Const.Routes.EASTER_EGG)
+                        }
+                    },
                     text = userInfo.username,
                     fontWeight = FontWeight.Bold,
                     style = TextStyle(fontSize = 20.sp)
@@ -220,7 +228,7 @@ fun Screen(
 private fun MenuList(navController: NavController) {
     val context = LocalContext.current
     var phone by remember { mutableStateOf("") }
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         UserStore(context).getValue(UserStore.KEY_PHONE_NUMBER).collect {
             phone = it
         }
@@ -256,7 +264,7 @@ private fun MenuList(navController: NavController) {
             text = "모두의 통장"
         )
 
-        if(phone == "01111118865"){
+        if (phone == "01111118865") {
             MoreMenuItem(
                 onClickMenu = { navController.navigate(Const.Routes.QRCODE) },
                 painter = painterResource(R.drawable.ic_qr_code),

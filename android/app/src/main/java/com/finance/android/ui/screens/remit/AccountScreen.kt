@@ -54,9 +54,11 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                     navigationBarProperties = NavigationBarProperties(),
                     behaviorProperties = BottomSheetBehaviorProperties(
                         maxHeight = BottomSheetBehaviorProperties.Size(
-                            (this@BoxWithConstraints.maxHeight.toPx(
-                                context
-                            ) * 0.8).toInt()
+                            (
+                                this@BoxWithConstraints.maxHeight.toPx(
+                                    context
+                                ) * 0.8
+                                ).toInt()
                         )
                     )
                 )
@@ -80,7 +82,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
         modifier = Modifier.fillMaxSize()
         // verticalArrangement = Arrangement.Center
     ) {
-        Spacer(modifier = Modifier.padding(40.dp))
+        Spacer(modifier = Modifier.height(10.dp))
         OutlinedButton(
             onClick = {
                 coroutineScope.launch {
@@ -125,6 +127,7 @@ fun AccountScreen(remitViewModel: RemitViewModel, navController: NavController) 
                 Icon(Icons.Filled.ArrowDropDown, contentDescription = "selectBack")
             }
         }
+        Spacer(modifier = Modifier.height(10.dp))
         TextField(
             value = accountNumber.value,
             onValueChange = { accountNumber.value = it },

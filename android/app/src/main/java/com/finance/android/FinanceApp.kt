@@ -23,7 +23,8 @@ fun FinanceApp() {
     FinanceTheme {
         val navController = rememberNavController()
         NavHost(
-            navController = navController, startDestination = Const.Routes.LOGIN
+            navController = navController,
+            startDestination = Const.Routes.LOGIN
         ) {
             composable(Const.Routes.LOGIN) {
                 LoginFragment(navController = navController)
@@ -34,12 +35,15 @@ fun FinanceApp() {
             composable(Const.Routes.MAIN) {
                 MainFragment(navController = navController)
             }
-            composable(route = "${Const.Routes.REMIT}/{accountName}/{accountNumber}/{balance}",
-                arguments = listOf(navArgument("accountName") { type = NavType.StringType },
+            composable(
+                route = "${Const.Routes.REMIT}/{accountName}/{accountNumber}/{balance}",
+                arguments = listOf(
+                    navArgument("accountName") { type = NavType.StringType },
                     navArgument("accountNumber") { type = NavType.StringType },
                     navArgument("balance") { type = NavType.IntType }
                     // TODD 받는계좌번호, 받는계좌은행이름, 금액
-                )) {
+                )
+            ) {
                 RemitFragment(navController = navController)
             }
             composable(
@@ -53,13 +57,15 @@ fun FinanceApp() {
                     navArgument("acType") { type = NavType.IntType }
                 )
             ) {
-                AccountDetailFragment(acName = it.arguments!!.getString("acName")!!,
+                AccountDetailFragment(
+                    acName = it.arguments!!.getString("acName")!!,
                     cpName = it.arguments!!.getString("cpName")!!,
                     acNo = it.arguments!!.getString("acNo")!!,
                     cpLogo = it.arguments!!.getString("cpLogo")!!,
                     acType = it.arguments!!.getInt("acType"),
                     navController = navController,
-                    onClose = { navController.popBackStack() })
+                    onClose = { navController.popBackStack() }
+                )
             }
             composable(Const.Routes.ADD_ASSET) {
                 AnimatedVisibility(
@@ -151,7 +157,7 @@ fun FinanceApp() {
             composable(
                 route = "${Const.Routes.STOCK}/{fnName}",
                 arguments = listOf(
-                    navArgument("fnName") { type = NavType.StringType },
+                    navArgument("fnName") { type = NavType.StringType }
                 )
             ) {
                 StockDetailFragment(
@@ -162,7 +168,8 @@ fun FinanceApp() {
                 )
             }
             composable(
-                route = "${Const.Routes.INSURANCE}/{isId}/{name}", arguments = listOf(
+                route = "${Const.Routes.INSURANCE}/{isId}/{name}",
+                arguments = listOf(
                     navArgument("isId") { type = NavType.IntType },
                     navArgument("name") { type = NavType.StringType }
                 )
@@ -181,7 +188,6 @@ fun FinanceApp() {
                     enter = slideInVertically(initialOffsetY = { it / 2 }),
                     exit = slideOutVertically()
                 ) {
-
                     PedometerFragment(onClose = { navController.popBackStack() })
                 }
             }
@@ -190,7 +196,7 @@ fun FinanceApp() {
                 arguments = listOf(
                     navArgument("cardProductCode") { type = NavType.IntType },
                     navArgument("cdImgPath") { type = NavType.StringType },
-                    navArgument("cdName") { type = NavType.StringType },
+                    navArgument("cdName") { type = NavType.StringType }
                 )
             ) {
                 CardBenefitScreen(
@@ -209,7 +215,7 @@ fun FinanceApp() {
                     navArgument("cdName") { type = NavType.StringType },
                     navArgument("cdNo") { type = NavType.StringType },
                     navArgument("cdImgPath") { type = NavType.StringType },
-                    navArgument("balance") { type = NavType.IntType },
+                    navArgument("balance") { type = NavType.IntType }
                 )
             ) {
                 CardDetailFragment(
@@ -219,6 +225,9 @@ fun FinanceApp() {
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
                     balance = it.arguments!!.getInt("balance")
                 )
+            }
+            composable(Const.Routes.EASTER_EGG) {
+                EasterEggFragment()
             }
         }
     }
