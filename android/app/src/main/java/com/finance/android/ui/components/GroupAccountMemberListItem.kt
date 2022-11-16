@@ -19,7 +19,13 @@ import coil.request.ImageRequest
 import com.finance.android.R
 
 @Composable
-fun GroupAccountMemberListItem(img: String, name: String, type: String?) {
+fun GroupAccountMemberListItem(
+    img: String,
+    name: String,
+    type: String?,
+    onClickNonMember: () -> Unit,
+    phoneNumber: String
+) {
     Row(modifier = Modifier.padding(5.dp), verticalAlignment = Alignment.CenterVertically) {
         if (type == "") {
             AsyncImage(
@@ -72,7 +78,11 @@ fun GroupAccountMemberListItem(img: String, name: String, type: String?) {
                     Text(text = "비회원", color = Color(R.color.noActiveColor))
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                TextButton(onClick = { /*TODO*/ }, text = "초대", buttonType = ButtonType.ROUNDED)
+                TextButton(
+                    onClick = {onClickNonMember()},
+                    text = "초대",
+                    buttonType = ButtonType.ROUNDED
+                )
 
 
             }
@@ -80,3 +90,4 @@ fun GroupAccountMemberListItem(img: String, name: String, type: String?) {
 
     }
 }
+
