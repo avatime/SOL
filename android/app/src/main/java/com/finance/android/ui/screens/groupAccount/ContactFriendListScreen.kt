@@ -98,7 +98,8 @@ fun ContactFriendListScreen(
             onClick = {
                 groupAccountViewModel.makeGroupAccount(
                     createGroupAccountRequestDto,
-                    onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_COMPLETED) })
+                    onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
+                    groupAccountViewModel.initList(list.size)})
             },
             modifier = Modifier
                 .withBottomButton(),
