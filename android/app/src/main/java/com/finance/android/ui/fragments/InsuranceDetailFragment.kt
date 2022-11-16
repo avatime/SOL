@@ -45,7 +45,7 @@ fun InsuranceDetailFragment(
     }
     Scaffold(
         topBar = {
-            BackHeaderBar(text = "내 보험", modifier = Modifier, onClickBack = onClose)
+            BackHeaderBar(text = "보험", modifier = Modifier, onClickBack = onClose)
         }
     ) { innerPaddingModifier ->
         Column(
