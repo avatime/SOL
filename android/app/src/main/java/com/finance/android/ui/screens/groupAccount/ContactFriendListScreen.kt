@@ -39,7 +39,7 @@ fun ContactFriendListScreen(
     ) {
         return
     }
-    val list = LocalContext.current.retrieveAllContacts()
+    val list = LocalContext.current.retrieveAllContacts(limit = 1000)
     Log.i("TEST", "${list.size}")
     groupAccountViewModel.initSelectedFriendsList(list.size)
 
