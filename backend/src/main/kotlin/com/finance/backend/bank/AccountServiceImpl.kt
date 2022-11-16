@@ -252,7 +252,7 @@ class AccountServiceImpl(
             for (card in cardInfoList){
                 val cardProduct = cardProductRepository.findByCdPdCode(card.cdPdCode)
                 val balance = cardPaymentHistoryRepository.getByCdVal(card.cdNo,startDate,endDate)
-                cardList.add(CardRes(balance ,CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo)))
+                cardList.add(CardRes(balance ,CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo, card.cdPdCode)))
             }
 
             val insuranceInfoList = insuranceRepository.findAllByUserIdAndIsRegAndIsStatus(userId, true, 10)

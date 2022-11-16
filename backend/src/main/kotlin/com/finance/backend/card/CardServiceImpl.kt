@@ -46,7 +46,7 @@ class CardServiceImpl(
             val cardList = cardRepository.findAllByUserId(userId)
             for (card in cardList){
                 val cardProduct = cardProductRepository.findById(card.cdPdCode).get()
-                val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo)
+                val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo, card.cdPdCode)
                 cardInfoList.add(cardInfoRes)
             }
         }
@@ -68,7 +68,7 @@ class CardServiceImpl(
             val cardList = cardRepository.findAllByUserIdAndCdReg(userId, true).orEmpty()
             for (card in cardList){
                 val cardProduct = cardProductRepository.findById(card.cdPdCode).orElse(null)
-                val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo)
+                val cardInfoRes = CardInfoRes(cardProduct.cdImg, cardProduct.cdName, card.cdReg, card.cdNo, card.cdPdCode)
 
                 val balance = cardPaymentHistoryRepository.getByCdVal(card.cdNo,startDate,endDate)
                 cardInfoList.add(CardRes(balance, cardInfoRes))
