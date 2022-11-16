@@ -19,7 +19,7 @@ import com.finance.android.viewmodels.RemitViewModel
 
 @Composable
 fun CompanyItem(
-    cpCode : Int, cpName: String, cpLogo: String, remitViewModel: RemitViewModel
+    cpCode : Int, cpName: String, cpLogo: String, remitViewModel: RemitViewModel, onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -29,6 +29,7 @@ fun CompanyItem(
             .clickable {
                 remitViewModel.onClickReceiveBank(BankInfoResponseDto(cpCode,cpName,cpLogo))
                 remitViewModel.cpCode.value = cpCode
+                onClick()
             },
         verticalAlignment = Alignment.CenterVertically,
     ) {

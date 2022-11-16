@@ -13,10 +13,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -39,23 +36,17 @@ import com.finance.android.viewmodels.RemitViewModel
 fun RecoScreen(
     remitViewModel: RemitViewModel,
     modifier: Modifier = Modifier,
-    navController: NavController
+    navController: NavController,
+    expanded: MutableState<Boolean>
 ) {
-    fun launch() {
-        remitViewModel.getRecommendedAccountData()
-    }
-
-    LaunchedEffect(Unit) {
-        launch()
-    }
-
     Box(
         modifier = modifier
             .fillMaxSize()
     ) {
         Recent(
             remitViewModel = remitViewModel,
-            navController = navController
+            navController = navController,
+            expanded = expanded
         )
     }
 }
@@ -64,10 +55,9 @@ fun RecoScreen(
 @Composable
 private fun Recent(
     remitViewModel: RemitViewModel,
-    navController: NavController
+    navController: NavController,
+    expanded: MutableState<Boolean>
 ) {
-    val expanded = remember { mutableStateOf(false) }
-
     Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
 
         when (remitViewModel.getLoadRecommendation()) {
