@@ -3,6 +3,7 @@ package com.finance.android.ui.fragments
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -15,6 +16,7 @@ import com.finance.android.ui.screens.HomeScreen
 import com.finance.android.ui.screens.MoreScreen
 import com.finance.android.ui.screens.ProductScreen
 import com.finance.android.ui.screens.StockScreen
+import com.finance.android.ui.theme.SetStatusBarColor
 import com.finance.android.utils.Const
 
 @ExperimentalAnimationApi
@@ -22,6 +24,7 @@ import com.finance.android.utils.Const
 fun MainFragment(navController: NavController) {
     val innerNavController = rememberNavController()
     MainBackPressHandler()
+    SetStatusBarColor(color = MaterialTheme.colorScheme.background)
     Scaffold(
         bottomBar = {
             BottomNavBar(
