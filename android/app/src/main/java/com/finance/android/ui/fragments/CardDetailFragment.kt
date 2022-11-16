@@ -14,6 +14,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.BackHeaderBar
@@ -29,7 +30,8 @@ fun CardDetailFragment(
     cdNo: String,
     cdImgPath: String,
     balance: Int,
-    cardViewModel: CardViewModel = hiltViewModel()
+    cardViewModel: CardViewModel = hiltViewModel(),
+    navController : NavController
 ) {
     fun launch() {
         cardViewModel.loadCardHistory(cdNo)
@@ -70,7 +72,8 @@ fun CardDetailFragment(
                             cdName = cdName,
                             cdImgPath = cdImgPath,
                             cdNo = cdSecret,
-                            balance = balance
+                            balance = balance,
+                            navController = navController
                         )
                         showHistoryList(
                             modifier = Modifier.weight(1.0f),
