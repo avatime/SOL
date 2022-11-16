@@ -10,5 +10,7 @@ data class CardInfoResponseDto(
     @SerializedName("cd_no") // 카드 번호
     val cardNumber: String,
     @SerializedName("cd_reg")
-    val isRegister: Boolean // 등록 여부
+    val isRegister: Boolean, // 등록 여부
+    @SerializedName("cd_pd")
+    val cdPdCode: Int // 카드 상품 번호
 )
