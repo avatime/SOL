@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import com.finance.android.domain.dto.response.PublicTradeResponseDto
 import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.showHistoryList
 import com.finance.android.utils.Response
@@ -37,6 +38,7 @@ fun GroupAccountTradeDetailScreen(
             is Response.Failure -> Text(text = "실패")
             is Response.Loading -> AnimatedLoading()
             is Response.Success -> {
+                response.data.reverse()
                 showHistoryList(modifier = Modifier.weight(1.0f),
                     historyList = List(response.data.size) { i -> response.data[i].toEntity() })
             }
