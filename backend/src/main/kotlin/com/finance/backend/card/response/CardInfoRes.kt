@@ -6,7 +6,8 @@ class CardInfoRes(
         img: String,
         name: String,
         cdReg: Boolean,
-        cdNo: String
+        cdNo: String,
+        cdPd: Long,
 ) {
     @JsonProperty("cd_img")
     val cdImg: String = img
@@ -20,5 +21,6 @@ class CardInfoRes(
     @JsonProperty("cd_no")
     val cdNo = cdNo
 
-
+    @JsonProperty("cd_pd")
+    val cdPd = cdPd
 }
