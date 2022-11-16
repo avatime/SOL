@@ -57,7 +57,7 @@ fun CardBenefitScreen(
     }
 
     Scaffold(topBar = {
-        BackHeaderBar(text = "내 카드", modifier = Modifier, onClickBack = onClose)
+        BackHeaderBar(text = "카드", modifier = Modifier, onClickBack = onClose)
     }) { innerPaddingModifier ->
         Column(
             modifier = Modifier

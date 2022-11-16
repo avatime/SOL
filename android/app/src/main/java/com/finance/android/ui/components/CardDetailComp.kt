@@ -21,6 +21,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.finance.android.utils.Const
+import com.finance.android.utils.ext.noRippleClickable
 import java.text.DecimalFormat
 import java.time.YearMonth
 
@@ -111,7 +112,7 @@ fun CardDetailComp(
                         .build(),
                     contentDescription = "cardImage",
                     modifier = modifier
-                        .clickable {
+                        .noRippleClickable {
                             val pathTmp = Uri.encode(cdImgPath)
                             navController.navigate("${Const.Routes.CARD_BENEFIT}/${cdPdCode}/$pathTmp/${cdName}")
                         }
