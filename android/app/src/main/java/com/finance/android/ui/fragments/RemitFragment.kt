@@ -5,6 +5,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,6 +28,13 @@ fun RemitFragment(
     navController: NavController,
     remitViewModel: RemitViewModel = hiltViewModel()
 ) {
+
+    LaunchedEffect(Unit) {
+        remitViewModel.getAllBankData()
+        remitViewModel.getAllStockCpData()
+        remitViewModel.getRecommendedAccountData()
+    }
+
     val innerNavController = rememberNavController()
     Scaffold(
         containerColor = Color.White,
