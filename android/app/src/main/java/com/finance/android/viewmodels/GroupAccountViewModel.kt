@@ -47,7 +47,7 @@ class GroupAccountViewModel @Inject constructor(
 
     val mDate = mutableStateOf("")
 
-    val goToMain = mutableStateOf(false)
+    val useBackHeader = mutableStateOf(true)
 
     val startDetail = mutableStateOf(false) // false 메인, true 상세 화면
 
