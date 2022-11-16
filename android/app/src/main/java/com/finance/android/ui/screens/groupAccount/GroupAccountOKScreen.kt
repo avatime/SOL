@@ -68,6 +68,8 @@ fun GroupAccountOKScreen(
 
         )
         Spacer(modifier = Modifier.padding(10.dp))
+        Text(text = text, fontSize = 20.sp, softWrap = false, maxLines = 1)
+        Spacer(modifier = Modifier.padding(10.dp))
         TextButton(
             onClick = {
                 if (groupAccountViewModel.startDetail.value){
@@ -75,11 +77,10 @@ fun GroupAccountOKScreen(
                 }  else{
                     navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN) }
                 },
-
             text = "다음",
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton()
         )
-        Text(text = text, fontSize = 20.sp, softWrap = false, maxLines = 1)
+
     }
 }
