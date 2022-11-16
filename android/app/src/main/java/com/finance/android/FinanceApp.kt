@@ -210,12 +210,13 @@ fun FinanceApp() {
                 GroupAccountFragment(navController = navController)
             }
             composable(
-                route = "${Const.Routes.CARD_DETAIL}/{cdName}/{cdNo}/{cdImgPath}/{balance}",
+                route = "${Const.Routes.CARD_DETAIL}/{cdName}/{cdNo}/{cdImgPath}/{balance}/{cdPdCode}",
                 arguments = listOf(
                     navArgument("cdName") { type = NavType.StringType },
                     navArgument("cdNo") { type = NavType.StringType },
                     navArgument("cdImgPath") { type = NavType.StringType },
-                    navArgument("balance") { type = NavType.IntType }
+                    navArgument("balance") { type = NavType.IntType },
+                    navArgument("cdPdCode") { type = NavType.IntType }
                 )
             ) {
                 CardDetailFragment(
@@ -224,6 +225,7 @@ fun FinanceApp() {
                     cdNo = it.arguments!!.getString("cdNo")!!,
                     cdImgPath = it.arguments!!.getString("cdImgPath")!!,
                     balance = it.arguments!!.getInt("balance"),
+                    cdPdCode = it.arguments!!.getInt("cdPdCode"),
                     navController = navController
                 )
             }

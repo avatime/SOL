@@ -9,8 +9,6 @@ import android.hardware.Sensor
 import android.hardware.SensorManager
 import android.net.Uri
 import android.os.Build
-import android.os.Vibrator
-import android.os.VibratorManager
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -34,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -47,7 +44,6 @@ import com.finance.android.domain.dto.response.FinanceResponseDto
 import com.finance.android.services.WalkService
 import com.finance.android.ui.components.*
 import com.finance.android.ui.theme.LightMainColor
-import com.finance.android.ui.theme.SetStatusBarColor
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.HomeViewModel
@@ -196,7 +192,7 @@ private fun HomeCardContainer(
                 cardImgPath = it.cardInfoRes.cardImgPath,
                 cardFee = "당월 청구 금액 : " + DecimalFormat("#,###원").format(it.cardValueAll),
                 onClickItem = {
-                    navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardInfoRes.cardName}/${it.cardInfoRes.cardNumber}/$pathTmp/${it.cardValueAll}")
+                    navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardInfoRes.cardName}/${it.cardInfoRes.cardNumber}/$pathTmp/${it.cardValueAll}/${it.cardInfoRes.cdPdCode}")
                 }
             )
         }

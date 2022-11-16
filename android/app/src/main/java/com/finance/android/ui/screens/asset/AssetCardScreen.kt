@@ -1,7 +1,10 @@
 package com.finance.android.ui.screens.asset
 
 import android.net.Uri
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -65,7 +68,7 @@ private fun AssetCardContainer(
                 cardImgPath = it.cardInfoRes.cardImgPath,
                 cardFee = "당월 청구 금액 : " + DecimalFormat("#,###원").format(it.cardValueAll),
                 onClickItem = {
-                    navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardInfoRes.cardName}/${it.cardInfoRes.cardNumber}/$pathTmp/${it.cardValueAll}")
+                    navController.navigate("${Const.Routes.CARD_DETAIL}/${it.cardInfoRes.cardName}/${it.cardInfoRes.cardNumber}/$pathTmp/${it.cardValueAll}/${it.cardInfoRes.cdPdCode}")
                 }
             )
         }
