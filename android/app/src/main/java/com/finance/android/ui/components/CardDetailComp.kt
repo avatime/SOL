@@ -31,6 +31,7 @@ fun CardDetailComp(
     cdImgPath: String, // 카드 이미지
     cdNo: String, // 카드 번호
     balance: Int, // 월 청구 금액
+    cdPdCode : Int,
     navController : NavController
 ) {
     var visible by remember { mutableStateOf(false) }
@@ -112,8 +113,7 @@ fun CardDetailComp(
                     modifier = modifier
                         .clickable {
                             val pathTmp = Uri.encode(cdImgPath)
-                            val cardPdCode  = 1
-                            navController.navigate("${Const.Routes.CARD_BENEFIT}/${cardPdCode}/$pathTmp/${cdName}")
+                            navController.navigate("${Const.Routes.CARD_BENEFIT}/${cdPdCode}/$pathTmp/${cdName}")
                         }
                         .size(130.dp)
                 )

@@ -542,7 +542,8 @@ private fun PreviewCard() {
                 cardNumber = "123",
                 cardName = "cardName",
                 cardImgPath = "path",
-                isRegister = false
+                isRegister = false,
+                cdPdCode = 1
             )
         },
         cardCheckList = Array(5) {
