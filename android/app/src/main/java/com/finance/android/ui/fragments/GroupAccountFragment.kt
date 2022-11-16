@@ -48,7 +48,6 @@ fun GroupAccountFragment(
             }
             composable(Const.GROUP_ACCOUNT_MAKE_SCREEN) {
                 groupAccountViewModel.useBackHeader.value = true
-                groupAccountViewModel.startDetail.value = false
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountMakeScreen(
                     navController = innerNavController,
@@ -77,7 +76,6 @@ fun GroupAccountFragment(
                 route = Const.GROUP_ACCOUNT_DETAIL_SCREEN,
             ) {
                 groupAccountViewModel.useBackHeader.value = true
-                groupAccountViewModel.startDetail.value = true
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountDetailScreen(
                     navController = innerNavController,
