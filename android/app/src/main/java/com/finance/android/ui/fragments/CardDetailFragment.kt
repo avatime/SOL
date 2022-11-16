@@ -30,6 +30,7 @@ fun CardDetailFragment(
     cdNo: String,
     cdImgPath: String,
     balance: Int,
+    cdPdCode: Int,
     cardViewModel: CardViewModel = hiltViewModel(),
     navController : NavController
 ) {
@@ -73,6 +74,7 @@ fun CardDetailFragment(
                             cdImgPath = cdImgPath,
                             cdNo = cdSecret,
                             balance = balance,
+                            cdPdCode = cdPdCode,
                             navController = navController
                         )
                         showHistoryList(
