@@ -120,7 +120,7 @@ private fun DrawDialogWithOneButton(
                 fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             subTitle?.let {
                 Text(
                     text = it,
@@ -128,7 +128,7 @@ private fun DrawDialogWithOneButton(
                     fontSize = dimensionResource(id = R.dimen.font_size_small).value.sp
                 )
             }
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             TextButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onClick,
@@ -168,7 +168,7 @@ private fun DrawDialogWithTwoButton(
                 fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
                 fontWeight = FontWeight.Bold
             )
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(10.dp))
             subTitle?.let {
                 Text(
                     text = it,
@@ -176,7 +176,7 @@ private fun DrawDialogWithTwoButton(
                     fontSize = dimensionResource(id = R.dimen.font_size_small).value.sp
                 )
             }
-            Spacer(modifier = Modifier.height(5.dp))
+            Spacer(modifier = Modifier.height(20.dp))
             Row {
                 TextButton(
                     modifier = Modifier.weight(1.0f),
