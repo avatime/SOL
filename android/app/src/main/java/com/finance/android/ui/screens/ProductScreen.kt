@@ -1,9 +1,6 @@
 package com.finance.android.ui.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -22,7 +19,7 @@ fun ProductScreen(
 ) {
     LaunchedEffect(Unit) {
         if (productViewModel.cardRecommendList.value == null) {
-            productViewModel.loadCardRecommend()
+            productViewModel.launch()
         }
     }
     BaseScreen(
@@ -30,14 +27,16 @@ fun ProductScreen(
             .background(color = MaterialTheme.colorScheme.background),
         loading = productViewModel.loading.value,
         error = productViewModel.error.value,
-        onError = { productViewModel.loadCardRecommend() },
+        onError = { productViewModel.launch() },
         calculatedTopPadding = 0.dp
     ) {
-        if (productViewModel.cardRecommendList.value != null) {
+        if (productViewModel.cardRecommendList.value != null
+            && productViewModel.insuranceList.value != null) {
             HeaderProductTabBar(
                 modifier = Modifier,
                 navController = navController,
-                cardRecommendList = productViewModel.cardRecommendList.value!!
+                cardRecommendList = productViewModel.cardRecommendList.value!!,
+                insuranceProductList = productViewModel.insuranceList.value!!
             )
         }
     }

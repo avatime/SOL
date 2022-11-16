@@ -3,6 +3,7 @@ package com.finance.android.domain.repository
 import com.finance.android.domain.dto.request.InsuranceIdRequestDto
 import com.finance.android.domain.dto.response.InsuranceDetailResponseDto
 import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
+import com.finance.android.domain.dto.response.InsuranceProductInfoResponseDto
 import com.finance.android.domain.dto.response.MyInsuranceInfoResponseDto
 import com.finance.android.domain.service.InsuranceService
 import javax.inject.Inject
@@ -26,5 +27,9 @@ class InsuranceRepositoryImpl @Inject constructor(
 
     override suspend fun getInsuranceDetail(id: Int): InsuranceDetailResponseDto {
         return insuranceService.getInsuranceDetail(id)
+    }
+
+    override suspend fun getInsuranceAll(): Array<InsuranceProductInfoResponseDto> {
+        return insuranceService.getInsuranceAll()
     }
 }

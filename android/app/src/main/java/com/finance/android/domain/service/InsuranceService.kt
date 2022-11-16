@@ -3,6 +3,7 @@ package com.finance.android.domain.service
 import com.finance.android.domain.dto.request.InsuranceIdRequestDto
 import com.finance.android.domain.dto.response.InsuranceDetailResponseDto
 import com.finance.android.domain.dto.response.InsuranceInfoResponseDto
+import com.finance.android.domain.dto.response.InsuranceProductInfoResponseDto
 import com.finance.android.domain.dto.response.MyInsuranceInfoResponseDto
 import com.finance.android.utils.Const
 import retrofit2.http.Body
@@ -22,4 +23,7 @@ interface InsuranceService {
 
     @GET("${Const.API_PATH}/insurance/{id}")
     suspend fun getInsuranceDetail(@Path("id")id: Int): InsuranceDetailResponseDto
+
+    @GET("${Const.API_PATH}/insurance")
+    suspend fun getInsuranceAll(): Array<InsuranceProductInfoResponseDto>
 }
