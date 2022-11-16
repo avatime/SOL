@@ -133,6 +133,7 @@ fun Screen(
                         Column {
                             ShowProfileList(profileList, onClickImage = {
                                 onClick(it)
+                                showProfileList = false
                                 println("프로필 이미지 변경 $it")
 //                            showSnackbar = true
                             })
