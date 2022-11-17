@@ -110,15 +110,16 @@ def create(user_id, db):
     name = db.query(models.User).filter(models.User.id == user_id).first().name
     trade = []
     # i = 5 부터는 체크카드 내역
-    for i in range(30):
-        td_val = random.randint(1, 100) * 1000 if i < 5 else card_his[i + 20].cd_val
-        td_dt = "2022-11-18" if i < 5 else card_his[i + 20].cd_py_dt
-        td_cn = random.choice(team) if i < 5 else card_his[i + 20].cd_py_name
-        td_type = random.randint(1, 2) if i < 5 else 2
-        ac_no = new_ac[0].ac_no
-        trade.append(models.TradeHistory(td_val=td_val, td_dt=td_dt, td_cn=td_cn,
-                                         td_type=td_type, td_tg=td_cn, td_tg_ac=None,
-                                         td_rec=td_cn, td_sed=name, ac_no=ac_no))
+    for num in range(len(new_ac)):
+        for i in range(30):
+            td_val = random.randint(1, 100) * 1000 if i < 5 else card_his[i + 20].cd_val
+            td_dt = "2022-11-18" if i < 5 else card_his[i + 20].cd_py_dt
+            td_cn = random.choice(team) if i < 5 else card_his[i + 20].cd_py_name
+            td_type = random.randint(1, 2) if i < 5 else 2
+            ac_no = new_ac[num].ac_no
+            trade.append(models.TradeHistory(td_val=td_val, td_dt=td_dt, td_cn=td_cn,
+                                             td_type=td_type, td_tg=td_cn, td_tg_ac=None,
+                                             td_rec=td_cn, td_sed=name, ac_no=ac_no))
     db.add_all(trade)
     db.commit()
     for i in trade:
