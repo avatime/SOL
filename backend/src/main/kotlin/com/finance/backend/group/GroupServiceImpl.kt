@@ -125,7 +125,7 @@ class GroupServiceImpl (
 
     fun getDueDetail(user: User, due : Dues) : DuesDetailsRes {
         val memberList: List<UserDuesRelation> = userDuesRelationRepository.findAllByDues(due) ?: throw Exception()
-        return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) { i -> memberList[i].toEntity(profileRepository.getReferenceById(user.pfId)) }, due.creator == user.id || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
+        return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) { i -> memberList[i].toEntity(profileRepository.getReferenceById(memberList[i].user.pfId)) }, due.creator == user.id || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
     }
 
     override fun payDue(accessToken: String, duesPayReq: DuesPayReq) {
