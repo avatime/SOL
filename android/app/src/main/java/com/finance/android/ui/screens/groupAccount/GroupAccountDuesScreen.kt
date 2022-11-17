@@ -74,7 +74,8 @@ fun GroupAccountDuesScreen(
                             totalUser = it.totalUSer,
                             paidUser = it.paidUser,
                             duesVal = it.duesVal,
-                            onClick = {
+                            check = it.duesDetailResponseDto.check,
+                            onClickPay = {
                                 navController.navigate(Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN)
                                 groupAccountViewModel.duesVal.value = it.duesVal
                                 groupAccountViewModel.duesId.value = it.duesId
