@@ -1,5 +1,6 @@
 package com.finance.backend.group.entity
 
+import com.finance.backend.group.response.DuesDetailsRes
 import com.finance.backend.group.response.DuesRes
 import com.finance.backend.util.Timestamped
 import java.time.LocalDateTime
@@ -46,5 +47,5 @@ class Dues(
     var publicAccount : PublicAccount = publicAccount
 
     fun disable() {this.status = 99}
-    fun toEntity(paid: Boolean, num:Int, total: Int, user : String) : DuesRes = DuesRes(paid, this.duesName, this.createdAt, this.duesDue, this.duesVal, num, total, user, this.id)
+    fun toEntity(paid: Boolean, num:Int, total: Int, user : String, duesDetailsRes: DuesDetailsRes) : DuesRes = DuesRes(paid, this.duesName, this.createdAt, this.duesDue, this.duesVal, num, total, user, this.id, duesDetailsRes)
 }

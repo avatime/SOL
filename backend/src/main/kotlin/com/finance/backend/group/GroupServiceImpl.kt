@@ -103,18 +103,23 @@ class GroupServiceImpl (
             for (due in duesList){
                 if (userDuesRelationRepository.existsByUserAndDues(user, due)){dueList.add(due)}
             }
-            return List(dueList.size) {i -> dueList[i].toEntity(userDuesRelationRepository.findByUserAndDues(user, dueList[i])?.status?: throw Exception(), userDuesRelationRepository.countByDuesAndStatus(dueList[i], true), userDuesRelationRepository.countByDues(dueList[i]), userRepository.findById(dueList[i].creator).orElse(null)?.name?:throw NullPointerException())}
+            return List(dueList.size) {i -> dueList[i].toEntity(userDuesRelationRepository.findByUserAndDues(user, dueList[i])?.status?: throw Exception(), userDuesRelationRepository.countByDuesAndStatus(dueList[i], true), userDuesRelationRepository.countByDues(dueList[i]), userRepository.findById(dueList[i].creator).orElse(null)?.name?:throw NullPointerException(), getDueDetails(accessToken, dueList[i].id) ?: throw NullPointerException())}
         } else throw Exception()
     }
 
     override fun getDueDetails(accessToken: String, dueId: Long): DuesDetailsRes? {
-        if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }) {
-            val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
-            val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
-            val due : Dues = userDuesRelationRepository.findByUserAndId(user, dueId)?.dues ?: throw AuthenticationException()
-            if(due.status == 99) throw DuesNotExistsException()
-            val memberList : List<UserDuesRelation> = userDuesRelationRepository.findAllByDues(due)?:throw Exception()
-            return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) {i -> memberList[i].toEntity(profileRepository.getReferenceById(user.pfId))}, due.creator == userId || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
+        if (try {
+                    jwtUtils.validation(accessToken)
+                } catch (e: Exception) {
+                    throw TokenExpiredException()
+                }) {
+            val userId: UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
+            val user: User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
+            val due: Dues = userDuesRelationRepository.findByUserAndId(user, dueId)?.dues
+                    ?: throw AuthenticationException()
+            if (due.status == 99) throw DuesNotExistsException()
+            val memberList: List<UserDuesRelation> = userDuesRelationRepository.findAllByDues(due) ?: throw Exception()
+            return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) { i -> memberList[i].toEntity(profileRepository.getReferenceById(user.pfId)) }, due.creator == userId || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
         } else throw Exception()
     }
 
