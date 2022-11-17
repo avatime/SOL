@@ -33,6 +33,11 @@ fun HeaderRemitTabBar(
     navController: NavController
 ) {
     val pagerState = rememberPagerState()
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.currentPage }.collect { page ->
+            remitViewModel.requestRemit.value = page == 2
+        }
+    }
     val coroutineScope = rememberCoroutineScope()
     val expanded = remember { mutableStateOf(false) }
     val list = listOf("추천", "계좌", "연락처")
@@ -67,7 +72,6 @@ fun HeaderRemitTabBar(
                     onClick = {
                         coroutineScope.launch {
                             pagerState.animateScrollToPage(index)
-                            remitViewModel.requestRemit.value = index == 2
                         }
                     },
                     text = {
