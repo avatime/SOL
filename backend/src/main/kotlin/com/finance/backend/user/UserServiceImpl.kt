@@ -9,6 +9,9 @@ import com.finance.backend.auth.request.SignupDto
 import com.finance.backend.auth.response.LoginDao
 import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.common.util.JwtUtils
+import com.finance.backend.group.entity.PublicAccountMember
+import com.finance.backend.group.repository.PublicAccountMemberRepository
+import com.finance.backend.group.repository.PublicAccountRepository
 import com.finance.backend.profile.Profile
 import com.finance.backend.profile.ProfileRepository
 import com.finance.backend.user.response.UserDao
@@ -28,6 +31,7 @@ class UserServiceImpl (
         private val userRepository: UserRepository,
         private val profileRepository: ProfileRepository,
         private val passwordEncoder: BCryptPasswordEncoder,
+        private val publicAccountMemberRepository: PublicAccountMemberRepository,
 //        private val authenticationManager: AuthenticationManager,
         private val jwtUtils: JwtUtils
         ) : UserService {
@@ -36,6 +40,13 @@ class UserServiceImpl (
             var user : User? = userRepository.findByPhone(signupDto.phone)
             if(user == null) user = signupDto.toEntity()
             else if(user.type != "비회원") throw DuplicatedPhoneNumberException()
+            else if(user.type == "비회원") {
+                val group : List<PublicAccountMember> = publicAccountMemberRepository.findAllByUser(user) ?: emptyList()
+                for(member : PublicAccountMember in group) {
+                    member.type = "회원"
+                    publicAccountMemberRepository.save(member)
+                }
+            }
             else user.toMember(signupDto.password, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth), signupDto.sex)
             // 토큰 발급
             user = userRepository.save(user)
