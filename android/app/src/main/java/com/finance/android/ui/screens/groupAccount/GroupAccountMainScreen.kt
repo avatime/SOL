@@ -13,6 +13,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
@@ -20,10 +22,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.finance.android.R
 import com.finance.android.ui.GroupAccountEmpty
-import com.finance.android.ui.components.AnimatedLoading
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.GroupAccountListItem
-import com.finance.android.ui.components.TextButton
+import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
@@ -35,6 +34,16 @@ fun GroupAccountMainScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
+    val isShowError = remember { mutableStateOf(false) }
+
+
+    if (isShowError.value) {
+        CustomDialog(
+            dialogType = DialogType.ERROR,
+            dialogActionType = DialogActionType.ONE_BUTTON,
+            title = "대표계좌부터 설정해주세요",
+            onPositive = { isShowError.value = false })
+    }
 
     fun launch() {
         groupAccountViewModel.getGroupAccountData()
@@ -96,17 +105,23 @@ fun GroupAccountMainScreen(
             } //when
         }//column
         TextButton(
+            text = "모두의 통장 만들러 가기",
             onClick = {
-                navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN)
                 groupAccountViewModel.OKtext.value = "모두의 통장을 개설했습니다."
+                groupAccountViewModel.getHasRepresentAccount(onSuccess = {navController.navigate(
+                    Const.GROUP_ACCOUNT_MAKE_SCREEN
+                )}, onFail = {isShowError.value = true})
             },
             modifier = Modifier.withBottomButton(),
-            text = "모두의 통장 만들러 가기",
             buttonType = ButtonType.ROUNDED
         )
     }//column
 
+
 }
+
+
+
 
 
 
