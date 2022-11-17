@@ -44,21 +44,23 @@ fun AssetLifeScreen(
     ) {
         val isData = insuranceViewModel.isList.value
         if (isData != null) {
-            AssetLifeContainer(
-                modifier = modifier,
-                isList = isData.list,
-                navController = navController,
-            )
-            if (isData.totalFee != 0) {
-                AssetLifeContainer2(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(dimensionResource(R.dimen.padding_medium))
-                        .background(
-                            color = MaterialTheme.colorScheme.surface,
-                            shape = RoundedCornerShape(10.dp)
-                        ),
-                    value = isData.totalFee
+            Column {
+                if (isData.totalFee != 0) {
+                    AssetLifeContainer2(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(dimensionResource(R.dimen.padding_medium))
+                            .background(
+                                color = MaterialTheme.colorScheme.surface,
+                                shape = RoundedCornerShape(10.dp)
+                            ),
+                        value = isData.totalFee
+                    )
+                }
+                AssetLifeContainer(
+                    modifier = modifier,
+                    isList = isData.list,
+                    navController = navController,
                 )
             }
         }
