@@ -155,8 +155,9 @@ private fun Screen(
                     .width(70.dp)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.paw),
-                    contentDescription = null
+                    painter = painterResource(R.drawable.ic_firework),
+                    contentDescription = null,
+                    tint = Color.Unspecified
                 )
             }
         }

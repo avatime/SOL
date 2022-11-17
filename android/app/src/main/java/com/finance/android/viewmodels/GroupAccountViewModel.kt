@@ -110,6 +110,8 @@ class GroupAccountViewModel @Inject constructor(
                 if (it is Response.Success) {
                     Log.i("group", "모임통장 생성")
                     onSuccess()
+                    selectedContactList.value = emptyArray()
+                    selectedIdSet.clear()
                 } else if (it is Response.Failure) {
                     Log.i("group", "모임통장 생성 실패")
                 }

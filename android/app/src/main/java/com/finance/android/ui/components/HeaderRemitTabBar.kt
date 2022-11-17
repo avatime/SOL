@@ -64,7 +64,12 @@ fun HeaderRemitTabBar(
                         .padding(5.dp)
                         .clip(RoundedCornerShape(10.dp)),
                     selected = pagerState.currentPage == index,
-                    onClick = { coroutineScope.launch { pagerState.animateScrollToPage(index) } },
+                    onClick = {
+                        coroutineScope.launch {
+                            pagerState.animateScrollToPage(index)
+                            remitViewModel.requestRemit.value = index == 2
+                        }
+                    },
                     text = {
                         Text(
                             text = text,
