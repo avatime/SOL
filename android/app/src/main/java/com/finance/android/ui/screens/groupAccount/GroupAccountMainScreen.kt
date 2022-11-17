@@ -47,11 +47,12 @@ fun GroupAccountMainScreen(
     Column(modifier = modifier.fillMaxSize()) {
         Column(
             modifier = Modifier
-                .padding(top = dimensionResource(R.dimen.padding_medium))
+                .padding(horizontal = dimensionResource(R.dimen.padding_medium))
+                .padding(top = dimensionResource(R.dimen.padding_medium), bottom = 0.dp)
                 .weight(1f)
                 .background(
                     color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(10)
+                    shape = RoundedCornerShape(20.dp)
                 ),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
@@ -74,7 +75,7 @@ fun GroupAccountMainScreen(
 
                     } else {
 
-                        LazyColumn(modifier = Modifier) {
+                        LazyColumn {
                             items(count = response.data.size, key = { it }, itemContent = {
                                 val item = response.data[it]
                                 val paId = item.paId
@@ -99,7 +100,7 @@ fun GroupAccountMainScreen(
                 navController.navigate(Const.GROUP_ACCOUNT_MAKE_SCREEN)
                 groupAccountViewModel.OKtext.value = "모두의 통장을 개설했습니다."
             },
-            modifier = modifier.withBottomButton(),
+            modifier = Modifier.withBottomButton(),
             text = "모두의 통장 만들러 가기",
             buttonType = ButtonType.ROUNDED
         )
