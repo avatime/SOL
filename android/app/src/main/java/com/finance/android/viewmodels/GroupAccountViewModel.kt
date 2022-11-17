@@ -11,9 +11,14 @@ import com.finance.android.domain.dto.response.*
 import com.finance.android.domain.repository.BankRepository
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.GroupAccountRepository
+import com.finance.android.domain.repository.UserRepository
+import com.finance.android.ui.components.CustomDialog
+import com.finance.android.ui.components.DialogActionType
+import com.finance.android.ui.components.DialogType
 import com.finance.android.utils.Response
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import okhttp3.internal.userAgent
 import javax.inject.Inject
 
 @HiltViewModel
@@ -22,7 +27,8 @@ class GroupAccountViewModel @Inject constructor(
     baseRepository: BaseRepository,
     savedStateHandle: SavedStateHandle,
     private val groupAccountRepository: GroupAccountRepository,
-    private val bankRepository: BankRepository
+    private val bankRepository: BankRepository,
+    private val userRepository: UserRepository
 ) : BaseViewModel(application, baseRepository) {
 
     val name = mutableStateOf("")
@@ -279,5 +285,26 @@ class GroupAccountViewModel @Inject constructor(
         } else {
             onClickSelectedContact(contactDto.contactId)
         }
+    }
+
+    val hasRepresentAccount = mutableStateOf(false)
+    fun getHasRepresentAccount(onSuccess: () -> Unit, onFail: () -> Unit) {
+        viewModelScope.launch {
+            this@GroupAccountViewModel.run {
+               userRepository.checkRepAccount()
+            }.collect{
+                if (it is Response.Success) {
+                   if(it.data){
+                       onSuccess()
+                   }
+                    else{
+                        onFail()
+                   }
+                } else if (it is Response.Failure) {
+                    Log.i("group", "대표계좌 없음")
+                }
+            }
+        }
+
     }
 }
