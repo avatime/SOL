@@ -81,7 +81,7 @@ def create(user_id, db):
         for day in ['2022-11-14', '2022-11-15', '2022-11-16', '2022-11-17', '2022-11-18']:
             name = random.choice(td_list)
             money = random.randint(1, 50) * 1000
-            card_his.append(models.CardPaymentHistory(cd_py_dt=day, cd_py_name=name,
+            card_his.append(models.CardPaymentHistory(cd_py_dt=f"{day} {random.randint(1, 23)}:{random.randint(0, 59)}", cd_py_name=name,
                                                       cd_val=money, cd_tp=1,
                                                       cd_no=new_card[i].cd_no))
     db.add_all(card_his)
@@ -113,7 +113,7 @@ def create(user_id, db):
     for num in range(len(new_ac)):
         for i in range(30):
             td_val = random.randint(1, 100) * 1000 if i < 5 else card_his[i + 20].cd_val
-            td_dt = "2022-11-18" if i < 5 else card_his[i + 20].cd_py_dt
+            td_dt = f"2022-11-18 {random.randint(1, 23)}:{random.randint(0, 59)}" if i < 5 else card_his[i + 20].cd_py_dt
             td_cn = random.choice(team) if i < 5 else card_his[i + 20].cd_py_name
             td_type = random.randint(1, 2) if i < 5 else 2
             ac_no = new_ac[num].ac_no
