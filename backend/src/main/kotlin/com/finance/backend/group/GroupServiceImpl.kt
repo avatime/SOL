@@ -238,7 +238,7 @@ class GroupServiceImpl (
 
     fun registMembers(list : List<MemberInfoReq>, publicAccount : PublicAccount){
         for(member in list) {
-            val user : User = userRepository.findByPhone(member.phone) ?: userRepository.save(User(member.name, "password", member.phone, Timestamp.valueOf(LocalDateTime.now()), 0, "비회원"))
+            val user : User = userRepository.findByPhone(member.phone) ?: userRepository.save(User(member.name, "password", member.phone.replace("-", ""), Timestamp.valueOf(LocalDateTime.now()), 0, "비회원"))
             publicAccountMemberRepository.save(PublicAccountMember(publicAccount, user, user.type))
         }
     }
