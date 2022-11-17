@@ -127,13 +127,12 @@ class UserServiceImpl (
     }
 
     override fun checkAccount(token: String): Boolean {
-        var able = false
         if(try {jwtUtils.validation(token)} catch (e: Exception) {throw TokenExpiredException()}) {
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val user = userRepository.findById(userId).orElse(null)
-            if (user.account != null){ able = true }
+            return user.account.isNotEmpty()
         }
-        return able
+        throw Exception()
     }
 
     override fun putAccount(token: String, acNo: String) {
