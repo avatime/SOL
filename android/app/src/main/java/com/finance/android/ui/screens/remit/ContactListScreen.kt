@@ -45,15 +45,15 @@ fun ContactListScreen(
             ContactSource(context)
         }.flow
     }
-    val lazyMovieItems = list.collectAsLazyPagingItems()
+    val lazyItems = list.collectAsLazyPagingItems()
     Box(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 10.dp)
     ) {
         LazyColumn {
-            items(count = lazyMovieItems.itemCount) { idx ->
-                val item = lazyMovieItems[idx]
+            items(count = lazyItems.itemCount) { idx ->
+                val item = lazyItems[idx]
                 item?.let {
                     ContactItem(
                         name = it.name,
@@ -66,7 +66,7 @@ fun ContactListScreen(
             }
         }
 
-        if (lazyMovieItems.loadState.refresh is LoadState.Loading) {
+        if (lazyItems.loadState.refresh is LoadState.Loading) {
             AnimatedLoading()
         }
     }
