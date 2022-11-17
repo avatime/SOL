@@ -1,5 +1,8 @@
 package com.finance.android.ui.screens.addasset
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -86,7 +89,8 @@ fun AddAssetSelectScreen(
                     insuranceList = (addAssetViewModel.insuranceList.value as Response.Success).data,
                     insuranceCheckList = addAssetViewModel.insuranceCheckList,
                     onClickInsuranceItem = { addAssetViewModel.onClickInsuranceItem(it) },
-                    hasRepAccount = (addAssetViewModel.checkHasRepAccount.value as Response.Success).data
+                    hasRepAccount = (addAssetViewModel.checkHasRepAccount.value as Response.Success).data,
+                    countCheckedAsset = addAssetViewModel.getCountSelectedAssetToAdd()
                 )
             }
         }
@@ -186,7 +190,8 @@ private fun Screen(
     insuranceList: MutableList<InsuranceInfoResponseDto>,
     insuranceCheckList: Array<MutableState<Boolean>>,
     onClickInsuranceItem: (index: Int) -> Unit,
-    hasRepAccount: Boolean
+    hasRepAccount: Boolean,
+    countCheckedAsset: Int
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -339,18 +344,24 @@ private fun Screen(
                     )
                 }
             }
-            TextButton(
-                onClick = {
-                    if (!hasRepAccount && accountCheckList.all { c -> !c.value }) {
-                        showSnackbar = true
-                        return@TextButton
-                    }
-                    onClickNext()
-                },
-                text = stringResource(id = R.string.btn_confirm),
-                buttonType = ButtonType.ROUNDED,
-                modifier = Modifier.withBottomButton()
-            )
+            AnimatedVisibility(
+                visible = countCheckedAsset != 0,
+                enter = slideInVertically { v -> v / 2 },
+                exit = slideOutVertically { v -> 2 * v }
+            ) {
+                TextButton(
+                    onClick = {
+                        if (!hasRepAccount && accountCheckList.all { c -> !c.value }) {
+                            showSnackbar = true
+                            return@TextButton
+                        }
+                        onClickNext()
+                    },
+                    text = stringResource(id = R.string.btn_confirm),
+                    buttonType = ButtonType.ROUNDED,
+                    modifier = Modifier.withBottomButton()
+                )
+            }
         }
     }
 }
@@ -504,7 +515,8 @@ private fun PreviewScreen() {
         insuranceList = mutableListOf(),
         insuranceCheckList = arrayOf(),
         onClickInsuranceItem = {},
-        hasRepAccount = true
+        hasRepAccount = true,
+        countCheckedAsset = 0
     )
 }
 
