@@ -1,5 +1,8 @@
 package com.finance.android.ui.screens.groupAccount
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
@@ -77,7 +80,11 @@ fun DuesMakeMoneyScreen(
         )
 
         Spacer(modifier = Modifier.weight(1f))
-        if (groupAccountViewModel.duesBalance.value.isNotEmpty() && groupAccountViewModel.duesBalance.value != "0") {
+        AnimatedVisibility(
+            visible = groupAccountViewModel.duesBalance.value.isNotEmpty() && groupAccountViewModel.duesBalance.value != "0",
+            enter = slideInVertically(initialOffsetY = { it / 2 }),
+            exit = slideOutVertically(targetOffsetY = { 2 * it })
+        ) {
             TextButton(
                 onClick = {
                     if (groupAccountViewModel.duesBalance.value.isNotEmpty()) {
@@ -90,6 +97,5 @@ fun DuesMakeMoneyScreen(
                 buttonType = ButtonType.ROUNDED,
             )
         }
-
     }
 }

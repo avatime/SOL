@@ -1,6 +1,9 @@
 package com.finance.android.ui.screens.groupAccount
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -43,7 +46,7 @@ fun GroupAccountInputMoneyScreen(
 ) {
     fun launch() {
         groupAccountViewModel.getRepresentAccountBalance() //대표계좌 잔액조회
-        groupAccountViewModel.duesVal.value=0
+        groupAccountViewModel.duesVal.value = 0
         //출금화면일때 balance 모임 통장 잔액으로 바꾸기
         if (groupAccountViewModel.screenType.value == 3) {
             groupAccountViewModel.postGroupAccountInfo(groupAccountViewModel.paId.value)
@@ -68,7 +71,6 @@ fun GroupAccountInputMoneyScreen(
             }
         }
     }
-
 
 
     val placeholderText = remember {
@@ -147,7 +149,12 @@ fun GroupAccountInputMoneyScreen(
                 modifier = Modifier.padding(start = 30.dp)
             )
         }
-        if (!isError.value && duesValue.value.isNotEmpty() && balance.isNotEmpty()) {
+        AnimatedVisibility(
+            visible = !isError.value && duesValue.value.isNotEmpty() && balance.isNotEmpty(),
+            enter = slideInVertically(initialOffsetY = { it / 2 }),
+            exit = slideOutVertically(targetOffsetY = { 2 * it })
+        ) {
+
             TextButton(
                 onClick = {
                     if (duesValue.value.isNotEmpty() && duesValue.value > "0") {
@@ -161,8 +168,8 @@ fun GroupAccountInputMoneyScreen(
                 modifier = Modifier.withBottomButton()
             )
         }
-
-
     }
+
+
 }
 

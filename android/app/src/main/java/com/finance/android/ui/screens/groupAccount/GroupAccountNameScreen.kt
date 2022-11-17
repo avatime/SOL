@@ -1,5 +1,8 @@
 package com.finance.android.ui.screens.groupAccount
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -29,8 +32,8 @@ fun GroupAccountNameScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
-    LaunchedEffect(Unit){
-        groupAccountViewModel.name.value=""
+    LaunchedEffect(Unit) {
+        groupAccountViewModel.name.value = ""
     }
     var isError = remember { mutableStateOf(false) }
     Column(
@@ -48,12 +51,12 @@ fun GroupAccountNameScreen(
                 Text(
                     text = "모두의 통장 이름을",
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = "입력해주세요",
                     fontSize = 20.sp,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Bold
                 )
             }
         }
@@ -67,7 +70,6 @@ fun GroupAccountNameScreen(
                 } else if (it.length == 20) {
                     isError.value = true
                 }
-
             },
             modifier = Modifier
                 .padding(dimensionResource(id = R.dimen.padding_medium))
@@ -85,18 +87,22 @@ fun GroupAccountNameScreen(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        TextButton(
-            onClick = {
-                if (groupAccountViewModel.name.value.isNotEmpty()) {
+        AnimatedVisibility(
+            visible = groupAccountViewModel.name.value.isNotEmpty(),
+            enter = slideInVertically(initialOffsetY = { it / 2 }),
+            exit = slideOutVertically(targetOffsetY = { 2 * it })
+        ) {
+            TextButton(
+                onClick = {
                     navController.navigate(
                         Const.GROUP_ACCOUNT_FRIEND_SCREEN
                     )
-                }
-            },
-            modifier = Modifier
-                .withBottomButton(),
-            text = "다음",
-            buttonType = ButtonType.ROUNDED,
-        )
+                },
+                modifier = Modifier
+                    .withBottomButton(),
+                text = "다음",
+                buttonType = ButtonType.ROUNDED
+            )
+        }
     }
 }

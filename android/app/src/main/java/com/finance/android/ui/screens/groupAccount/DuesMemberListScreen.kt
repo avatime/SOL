@@ -1,45 +1,35 @@
 package com.finance.android.ui.screens.groupAccount
 
-import android.Manifest
-import android.content.pm.PackageManager
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import com.finance.android.domain.dto.request.CreateDuesRequestDto
-import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
 import com.finance.android.domain.dto.request.MemberRequestDto
-import com.finance.android.domain.dto.response.FriendResponseDto
-import com.finance.android.ui.GroupAccountEmpty
 import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
-import com.finance.android.utils.retrieveAllContacts
 import com.finance.android.viewmodels.GroupAccountViewModel
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 @Composable
 fun DuesMemberListScreen(
     groupAccountViewModel: GroupAccountViewModel,
     navController: NavController,
-    modifier: Modifier,
+    modifier: Modifier
 ) {
-
     fun launch() {
         groupAccountViewModel.getGroupAccountMember(groupAccountViewModel.paId.value)
-
     }
     LaunchedEffect(Unit) {
         launch()
@@ -64,28 +54,31 @@ fun DuesMemberListScreen(
             val duesVal = groupAccountViewModel.duesBalance.value.toInt()
 
             val createDuesRequestDto =
-                CreateDuesRequestDto(name, paId, duesVal , groupAccountViewModel.mDate.value, memberList)
+                CreateDuesRequestDto(
+                    name,
+                    paId,
+                    duesVal,
+                    groupAccountViewModel.mDate.value,
+                    memberList
+                )
             Column(
                 modifier = modifier
                     .fillMaxSize()
                     .background(Color.White)
             ) {
-                if (friendsList.isNotEmpty()) {
-                    LazyRow(
-                        modifier = Modifier
-                            .height(130.dp)
-                            .fillMaxWidth()
-                    ) {
-                        items(count = friendsList.size, key = { it }, itemContent = {
-                            val item = friendsList[it]
-                            Log.i("gg", "${item.id}")
-                            SelectedFriendItem(img = item.pfImg, name = item.userName, onClick = {
-                                val index =
-                                    groupAccountViewModel.list.indexOfFirst { data -> data.id == item.id }
-                                groupAccountViewModel.onClickDeleteFriend(index)
-                            })
+                LazyRow(
+                    modifier = Modifier
+                        .fillMaxWidth().animateContentSize()
+                ) {
+                    items(count = friendsList.size, key = { it }, itemContent = {
+                        val item = friendsList[it]
+                        Log.i("gg", "${item.id}")
+                        SelectedFriendItem(img = item.pfImg, name = item.userName, onClick = {
+                            val index =
+                                groupAccountViewModel.list.indexOfFirst { data -> data.id == item.id }
+                            groupAccountViewModel.onClickDeleteFriend(index)
                         })
-                    }
+                    })
                 }
 
                 LazyColumn(
@@ -94,27 +87,38 @@ fun DuesMemberListScreen(
                 ) {
                     items(count = groupAccountViewModel.list.size, key = { it }, itemContent = {
                         val item = groupAccountViewModel.list[it]
-                        FriendSelectItem(checked = groupAccountViewModel.selectFriendsList!![it].value,
+                        FriendSelectItem(
+                            checked = groupAccountViewModel.selectFriendsList!![it].value,
                             img = item.pfImg,
                             name = item.userName,
                             phone = item.type,
-                            onClickItem = { groupAccountViewModel.onClickFriend(it) })
+                            onClickItem = { groupAccountViewModel.onClickFriend(it) }
+                        )
                     })
                 }
-                TextButton(
-                    onClick = {
-                        groupAccountViewModel.OKtext.value = "회비 생성 성공"
-                        groupAccountViewModel.makeGroupDues(createDuesRequestDto,
-                            onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
-                                groupAccountViewModel.initList(groupAccountViewModel.list.size)})
-                    },
-                    modifier = Modifier.withBottomButton(),
-                    text = "회비 생성하기",
-                    buttonType = ButtonType.ROUNDED
-                )
+
+                AnimatedVisibility(
+                    visible = friendsList.isNotEmpty(),
+                    enter = slideInVertically(initialOffsetY = { it / 2 }),
+                    exit = slideOutVertically(targetOffsetY = { 2 * it })
+                ) {
+                    TextButton(
+                        onClick = {
+                            groupAccountViewModel.OKtext.value = "회비 생성 성공"
+                            groupAccountViewModel.makeGroupDues(
+                                createDuesRequestDto,
+                                onSuccess = {
+                                    navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
+                                    groupAccountViewModel.initList(groupAccountViewModel.list.size)
+                                }
+                            )
+                        },
+                        modifier = Modifier.withBottomButton(),
+                        text = "회비 생성하기",
+                        buttonType = ButtonType.ROUNDED
+                    )
+                }
             }
-
         }
-
     }
 }

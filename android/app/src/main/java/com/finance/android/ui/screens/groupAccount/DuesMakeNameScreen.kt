@@ -1,6 +1,9 @@
 package com.finance.android.ui.screens.groupAccount
 
 import android.util.Log
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.MaterialTheme
@@ -22,7 +25,6 @@ import com.finance.android.ui.theme.Typography
 import com.finance.android.utils.Const
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
-import java.text.DecimalFormat
 
 @Composable
 fun DuesMakeNameScreen(
@@ -30,11 +32,11 @@ fun DuesMakeNameScreen(
     groupAccountViewModel: GroupAccountViewModel,
     modifier: Modifier
 ) {
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         Log.i("gg", "duesName ${groupAccountViewModel.duesName.value}")
         groupAccountViewModel.duesName.value = ""
     }
-    var isError = remember{ mutableStateOf(false) }
+    var isError = remember { mutableStateOf(false) }
     var duesName = remember {
         mutableStateOf("")
     }
@@ -61,11 +63,10 @@ fun DuesMakeNameScreen(
         TextInput(
             value = duesName.value,
             onValueChange = {
-                if (it.length <20) {
+                if (it.length < 20) {
                     duesName.value = it
                     isError.value = false
-                }
-                else if(it.length==20) {
+                } else if (it.length == 20) {
                     isError.value = true
                 }
             },
@@ -75,7 +76,7 @@ fun DuesMakeNameScreen(
                 .padding(0.dp),
             isError = isError.value
         )
-        if(isError.value){
+        if (isError.value) {
             Text(
                 text = "20글자 이내로 부탁드려요",
                 color = androidx.compose.material.MaterialTheme.colors.error,
@@ -85,18 +86,21 @@ fun DuesMakeNameScreen(
         }
 
         Spacer(modifier = Modifier.weight(1f))
-        TextButton(
-            onClick = {
-                if (duesName.value.isNotEmpty()) {
+        AnimatedVisibility(
+            visible = duesName.value.isNotEmpty(),
+            enter = slideInVertically(initialOffsetY = { it / 2 }),
+            exit = slideOutVertically(targetOffsetY = { 2 * it })
+        ) {
+            TextButton(
+                onClick = {
                     groupAccountViewModel.duesName.value = duesName.value
                     navController.navigate(Const.DUES_MAKE_MONEY_SCREEN)
-                }
-
-            },
-            modifier = Modifier
-                .withBottomButton(),
-            text = "확인",
-            buttonType = ButtonType.ROUNDED,
-        )
+                },
+                modifier = Modifier
+                    .withBottomButton(),
+                text = "확인",
+                buttonType = ButtonType.ROUNDED,
+            )
+        }
     }
 }
