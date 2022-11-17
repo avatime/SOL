@@ -2,6 +2,10 @@ package com.finance.android.ui.screens.groupAccount
 
 import android.Manifest
 import android.content.pm.PackageManager
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateContentSize
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,7 +14,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
 import androidx.paging.Pager
@@ -80,13 +83,18 @@ private fun Screen(
             .fillMaxSize()
             .background(Color.White)
     ) {
-        if (selectedItemList.isNotEmpty()) {
-            LazyRow(
-                modifier = Modifier
-                    .height(130.dp)
-                    .fillMaxWidth()
-            ) {
-                items(count = selectedItemList.size, key = { it }, itemContent = {
+        if (lazyItemList.itemCount == 0) {
+            AnimatedLoading()
+        }
+        LazyRow(
+            modifier = Modifier
+                .fillMaxWidth()
+                .animateContentSize()
+        ) {
+            items(
+                count = selectedItemList.size,
+                key = { it },
+                itemContent = {
                     val item = selectedItemList[it]
                     SelectedFriendItem(
                         img = item.avatar,
@@ -95,8 +103,8 @@ private fun Screen(
                             onClickSelectedItem(item.contactId)
                         }
                     )
-                })
-            }
+                }
+            )
         }
 
         LazyColumn(
@@ -119,12 +127,18 @@ private fun Screen(
             }
         }
 
-        TextButton(
-            onClick = onNext,
-            modifier = Modifier
-                .withBottomButton(),
-            text = "모임 통장 생성하기",
-            buttonType = ButtonType.ROUNDED
-        )
+        AnimatedVisibility(
+            visible = selectedIdSet.isNotEmpty(),
+            enter = slideInVertically(initialOffsetY = { it / 2 }),
+            exit = slideOutVertically(targetOffsetY = { 2 * it })
+        ) {
+            TextButton(
+                onClick = onNext,
+                modifier = Modifier
+                    .withBottomButton(),
+                text = "모두의 통장 생성하기",
+                buttonType = ButtonType.ROUNDED
+            )
+        }
     }
 }

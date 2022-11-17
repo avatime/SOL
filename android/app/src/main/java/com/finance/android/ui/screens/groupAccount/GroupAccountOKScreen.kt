@@ -69,7 +69,7 @@ fun GroupAccountOKScreen(
         )
         Spacer(modifier = Modifier.padding(10.dp))
         Text(text = text, fontSize = 20.sp, softWrap = false, maxLines = 1)
-        Spacer(modifier = Modifier.padding(10.dp))
+        Spacer(modifier = Modifier.weight(1f))
         TextButton(
             onClick = {
                     navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
