@@ -1,10 +1,10 @@
 package com.finance.android.ui.screens.asset
 
 import android.net.Uri
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +24,8 @@ import com.finance.android.ui.components.CardListItem_Arrow
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.CardViewModel
 import java.text.DecimalFormat
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun AssetCardScreen(
@@ -42,11 +44,23 @@ fun AssetCardScreen(
         calculatedTopPadding = 0.dp
     ) {
         if (cardViewModel.cardList.value != null) {
-            AssetCardContainer(
-                modifier = modifier,
-                navController = navController,
-                cardData = cardViewModel.cardList.value!!,
-            )
+            Column {
+                SumInfo(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                    value = cardViewModel.cardList.value!!.sumOf { it.cardValueAll }
+                )
+                AssetCardContainer(
+                    modifier = modifier,
+                    navController = navController,
+                    cardData = cardViewModel.cardList.value!!,
+                )
+            }
         }
     }
 }
@@ -106,3 +120,35 @@ private fun AssetCardContainer(
 //        }
     }
 }
+
+
+@Composable
+private fun SumInfo(
+    modifier: Modifier,
+    value: Int
+) {
+    val current = LocalDateTime.now()
+    val formatter = DateTimeFormatter.ofPattern("M월")
+    val formatted = current.format(formatter)
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.padding_medium))
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "카드 모아보기",
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(end = 16.dp)
+            )
+            Text(text = "$formatted 총 청구액", fontSize = 12.sp)
+        }
+        Text(
+            text = DecimalFormat("#,###원").format(value) ?: "0원",
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp,
+            modifier = Modifier.padding(top = 24.dp, bottom = 24.dp, start = 8.dp)
+        )
+    }
+}
+

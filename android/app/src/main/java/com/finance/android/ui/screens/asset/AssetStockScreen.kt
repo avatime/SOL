@@ -1,7 +1,10 @@
 package com.finance.android.ui.screens.asset
 
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -20,6 +23,7 @@ import com.finance.android.ui.components.AccountListItem_Arrow
 import com.finance.android.ui.components.BaseScreen
 import com.finance.android.utils.Const
 import com.finance.android.viewmodels.FinanceViewModel
+import java.text.DecimalFormat
 
 @Composable
 fun AssetStockScreen(
@@ -38,11 +42,23 @@ fun AssetStockScreen(
         calculatedTopPadding = 0.dp
     ) {
         if (financeViewModel.myFinanceList.value != null) {
-            AssetStockContainer(
-                modifier = modifier,
-                navController = navController,
-                financeData = financeViewModel.myFinanceList.value!!
-            )
+            Column {
+                SumInfo(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(dimensionResource(R.dimen.padding_medium))
+                        .background(
+                            color = MaterialTheme.colorScheme.surface,
+                            shape = RoundedCornerShape(10.dp)
+                        ),
+                    value = financeViewModel.myFinanceList.value!!.sumOf { it.balance }
+                )
+                AssetStockContainer(
+                    modifier = modifier,
+                    navController = navController,
+                    financeData = financeViewModel.myFinanceList.value!!
+                )
+            }
         }
     }
 }
@@ -88,3 +104,31 @@ fun AssetStockContainer(
         }
     }
 }
+
+@Composable
+private fun SumInfo(
+    modifier: Modifier,
+    value: Int
+) {
+    Column(
+        modifier = modifier
+            .padding(dimensionResource(R.dimen.padding_medium))
+    ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                text = "증권 모아보기",
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                modifier = Modifier.padding(end = 16.dp)
+            )
+            Text(text = "증권 계좌 총액", fontSize = 12.sp)
+        }
+        Text(
+            text = DecimalFormat("#,###원").format(value) ?: "0원",
+            fontWeight = FontWeight.Bold,
+            fontSize = 30.sp,
+            modifier = Modifier.padding(top = 24.dp, bottom = 24.dp, start = 8.dp)
+        )
+    }
+}
+
