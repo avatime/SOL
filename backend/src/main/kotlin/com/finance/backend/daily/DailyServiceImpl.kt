@@ -88,7 +88,7 @@ class DailyServiceImpl(
             val user: User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             val startDate = LocalDate.of(year, month, 1)
             val endDate = startDate.plusMonths(1)
-            val dayList: List<Walk> = walkRepository.findAllByUserAndWalkDateBetween(user, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
+            val dayList: List<Walk> = walkRepository.findAllByUserAndWalkDateBetweenOrderByWalkDateAsc(user, startDate.atStartOfDay(), endDate.atTime(LocalTime.MAX))?: emptyList()
             return List(startDate.until(endDate, ChronoUnit.DAYS).toInt()) { i -> isSuccess(dayList, startDate.plusDays(i.toLong())) }
         } else throw Exception()
     }
@@ -168,7 +168,7 @@ class DailyServiceImpl(
 
     fun isSuccess(list : List<Walk>, date : LocalDate) : WalkDao {
         for(listDate in list) {
-            if(date.isEqual(listDate.walkDate.toLocalDate())) {
+            if(date.dayOfMonth == listDate.walkDate.toLocalDate().dayOfMonth) {
                 return WalkDao(date, true)
             } else if(date.isBefore(listDate.walkDate.toLocalDate())) break
         }
