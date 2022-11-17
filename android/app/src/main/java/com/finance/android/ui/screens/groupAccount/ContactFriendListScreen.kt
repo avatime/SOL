@@ -2,7 +2,6 @@ package com.finance.android.ui.screens.groupAccount
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,24 +13,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.navigation.NavController
-import com.finance.android.domain.dto.request.CreateGroupAccountRequestDto
-import com.finance.android.domain.dto.request.MemberRequestDto
-import com.finance.android.ui.components.ButtonType
-import com.finance.android.ui.components.FriendSelectItem
-import com.finance.android.ui.components.SelectedFriendItem
-import com.finance.android.ui.components.TextButton
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
+import com.finance.android.domain.dto.response.ContactDto
+import com.finance.android.ui.components.*
 import com.finance.android.utils.Const
+import com.finance.android.utils.ContactSource
 import com.finance.android.utils.ext.withBottomButton
-import com.finance.android.utils.retrieveAllContacts
 import com.finance.android.viewmodels.GroupAccountViewModel
 
 @Composable
 fun ContactFriendListScreen(
     groupAccountViewModel: GroupAccountViewModel,
     navController: NavController,
-    modifier: Modifier,
+    modifier: Modifier
 ) {
-
     if (ActivityCompat.checkSelfPermission(
             LocalContext.current,
             Manifest.permission.READ_CONTACTS
@@ -39,76 +37,94 @@ fun ContactFriendListScreen(
     ) {
         return
     }
-    val list = LocalContext.current.retrieveAllContacts(limit=1000)
-    Log.i("TEST", "${list.size}")
-    groupAccountViewModel.initSelectedFriendsList(list.size)
 
-    val friendsList =
-        list.filterIndexed { idx, _ -> groupAccountViewModel.selectFriendsList!![idx].value }
-
-    val name = groupAccountViewModel.name.value
-    val memberList = ArrayList<MemberRequestDto>()
-    for (friend in friendsList) {
-        memberList.add(MemberRequestDto(friend.name, friend.phoneNumber.replace("-","")))
+    val context = LocalContext.current
+    val list = remember {
+        Pager(PagingConfig(pageSize = 30)) {
+            ContactSource(context)
+        }.flow
     }
+    val lazyItems = list.collectAsLazyPagingItems()
 
-    val createGroupAccountRequestDto = CreateGroupAccountRequestDto(name, memberList)
+    Screen(
+        modifier = modifier,
+        selectedIdSet = groupAccountViewModel.selectedIdSet,
+        selectedItemList = groupAccountViewModel.selectedContactList.value,
+        lazyItemList = lazyItems,
+        onClickSelectedItem = {
+            groupAccountViewModel.onClickSelectedContact(it)
+        },
+        onClickItem = {
+            groupAccountViewModel.onClickContact(it)
+        },
+        onNext = {
+            groupAccountViewModel.makeGroupAccount {
+                navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
+            }
+        }
+    )
+}
 
+@Composable
+private fun Screen(
+    modifier: Modifier = Modifier,
+    selectedIdSet: Set<Long>,
+    selectedItemList: Array<ContactDto>,
+    lazyItemList: LazyPagingItems<ContactDto>,
+    onClickSelectedItem: (contactId: Long) -> Unit,
+    onClickItem: (contactDto: ContactDto) -> Unit,
+    onNext: () -> Unit
+) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        if (friendsList.isNotEmpty()) {
-            LazyRow(modifier = Modifier
-                .height(130.dp)
-                .fillMaxWidth()) {
-                items(count = friendsList.size, key = { it }, itemContent = {
-                    val item = friendsList[it]
-                    Log.i("gg", "${item.contactId}")
+        if (selectedItemList.isNotEmpty()) {
+            LazyRow(
+                modifier = Modifier
+                    .height(130.dp)
+                    .fillMaxWidth()
+            ) {
+                items(count = selectedItemList.size, key = { it }, itemContent = {
+                    val item = selectedItemList[it]
                     SelectedFriendItem(
                         img = item.avatar,
                         name = item.name,
                         onClick = {
-                            val index = list.indexOfFirst { data -> data.contactId == item.contactId }
-                            groupAccountViewModel.onClickDeleteFriend(index)
-                        })
+                            onClickSelectedItem(item.contactId)
+                        }
+                    )
                 })
             }
         }
-
 
         LazyColumn(
             modifier = Modifier
                 .weight(1f)
         ) {
-            items(count = list.size, key = { it }, itemContent = {
-                val item = list[it]
-                FriendSelectItem(
-                    checked = groupAccountViewModel.selectFriendsList!![it].value,
-                    img = item.avatar,
-                    name = item.name,
-                    phone = item.phoneNumber,
-                    onClickItem = { groupAccountViewModel.onClickFriend(it) })
+            items(count = lazyItemList.itemCount) { idx ->
+                val item = lazyItemList[idx]
+                item?.let {
+                    FriendSelectItem(
+                        checked = selectedIdSet.contains(item.contactId),
+                        img = item.avatar,
+                        name = item.name,
+                        phone = item.phoneNumber,
+                        onClickItem = {
+                            onClickItem(it)
+                        }
+                    )
+                }
             }
-            )
         }
 
         TextButton(
-            onClick = {
-                groupAccountViewModel.makeGroupAccount(
-                    createGroupAccountRequestDto,
-                    onSuccess = { navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
-                    groupAccountViewModel.initList(list.size)})
-            },
+            onClick = onNext,
             modifier = Modifier
                 .withBottomButton(),
             text = "모임 통장 생성하기",
             buttonType = ButtonType.ROUNDED
         )
     }
-
 }
-
-
-

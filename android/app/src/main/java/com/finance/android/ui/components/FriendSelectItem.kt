@@ -1,6 +1,7 @@
 package com.finance.android.ui.components
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.IconButton
@@ -38,6 +39,7 @@ fun FriendSelectItem(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable { onClickItem() }
             .padding(horizontal = 15.dp)
             .height(75.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -81,14 +83,12 @@ fun FriendSelectItem(
 
         }
         Spacer(modifier = Modifier.weight(1f))
-        IconButton(onClick = { onClickItem() }) {
             Icon(
                 Icons.Filled.CheckCircle,
                 contentDescription = "check",
                 tint = if (checked) MaterialTheme.colorScheme.primary else Disabled
             )
 
-        }
 
 
 
