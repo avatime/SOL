@@ -26,7 +26,7 @@ fun GroupAccountFragment(
     val innerNavController = rememberNavController()
     Scaffold(topBar = {
         if(groupAccountViewModel.useBackHeader.value){
-            BackHeaderBar(text = "", onClickBack = {
+            BackHeaderBar(text = "모두의 통장", onClickBack = {
                 if (!groupAccountViewModel.isBackToMain.value) innerNavController.popBackStack() else
                     navController.popBackStack()
             })
