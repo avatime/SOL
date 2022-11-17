@@ -143,7 +143,7 @@ fun GroupAccountInputMoneyScreen(
 
         if (isError.value) {
             androidx.compose.material.Text(
-                text = "잔액 ${balance}입니다.",
+                text = "잔액 " + DecimalFormat("#,###원").format(parseInt(balance)),
                 color = MaterialTheme.colors.error,
                 style = MaterialTheme.typography.caption,
                 modifier = Modifier.padding(start = 30.dp)
