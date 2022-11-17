@@ -103,7 +103,7 @@ class GroupServiceImpl (
             for (due in duesList){
                 if (userDuesRelationRepository.existsByUserAndDues(user, due)){dueList.add(due)}
             }
-            return List(dueList.size) {i -> dueList[i].toEntity(userDuesRelationRepository.findByUserAndDues(user, dueList[i])?.status?: throw Exception(), userDuesRelationRepository.countByDuesAndStatus(dueList[i], true), userDuesRelationRepository.countByDues(dueList[i]), userRepository.findById(dueList[i].creator).orElse(null)?.name?:throw NullPointerException(), getDueDetails(accessToken, dueList[i].id) ?: throw NullPointerException())}
+            return List(dueList.size) {i -> dueList[i].toEntity(userDuesRelationRepository.findByUserAndDues(user, dueList[i])?.status?: throw Exception(), userDuesRelationRepository.countByDuesAndStatus(dueList[i], true), userDuesRelationRepository.countByDues(dueList[i]), userRepository.findById(dueList[i].creator).orElse(null)?.name?:throw NullPointerException(), getDueDetail(user, dueList[i]) ?: throw NullPointerException())}
         } else throw Exception()
     }
 
@@ -121,6 +121,11 @@ class GroupServiceImpl (
             val memberList: List<UserDuesRelation> = userDuesRelationRepository.findAllByDues(due) ?: throw Exception()
             return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) { i -> memberList[i].toEntity(profileRepository.getReferenceById(user.pfId)) }, due.creator == userId || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
         } else throw Exception()
+    }
+
+    fun getDueDetail(user: User, due : Dues) : DuesDetailsRes {
+        val memberList: List<UserDuesRelation> = userDuesRelationRepository.findAllByDues(due) ?: throw Exception()
+        return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) { i -> memberList[i].toEntity(profileRepository.getReferenceById(user.pfId)) }, due.creator == user.id || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
     }
 
     override fun payDue(accessToken: String, duesPayReq: DuesPayReq) {
