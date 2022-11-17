@@ -317,4 +317,11 @@ class AddAssetViewModel @Inject constructor(
                 checkHasRepAccount.value = it
             }
     }
+
+    fun getCountSelectedAssetToAdd(): Int {
+        return accountCheckList.count { it.value } +
+            cardCheckList.count { it.value } +
+            insuranceCheckList.count { it.value } +
+            stockAccountCheckList.count { it.value }
+    }
 }
