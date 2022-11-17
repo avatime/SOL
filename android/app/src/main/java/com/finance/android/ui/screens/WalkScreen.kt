@@ -272,7 +272,7 @@ private fun DrawProgress(walkCount: Int? = 2500) {
                                 bottom.linkTo(parent.bottom)
                                 end.linkTo(parent.end)
                             },
-                        painter = painterResource(id = R.drawable.ssal),
+                        painter = painterResource(id = R.drawable.ic_static_coin),
                         contentDescription = ""
                     )
                 }
