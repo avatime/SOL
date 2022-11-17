@@ -28,5 +28,8 @@ data class DuesRes(
         val creator : String,
 
         @JsonProperty("dues_id")
-        val duesId : Long
+        val duesId : Long,
+
+        @JsonProperty("dues_detail_res")
+        val duesDetailRes : DuesDetailsRes
 )
