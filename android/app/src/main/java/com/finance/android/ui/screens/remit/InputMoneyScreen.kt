@@ -170,8 +170,8 @@ fun InputMoneyScreen(
                         onClick = { isNext = true },
                         text = "다음",
                         modifier = Modifier.withBottomButton(),
-                        buttonType = ButtonType.ROUNDED
-
+                        buttonType = ButtonType.ROUNDED,
+                        enabled = !error.value
                     )
                 } else {
                     Spacer(modifier = Modifier.weight(1.0f))
