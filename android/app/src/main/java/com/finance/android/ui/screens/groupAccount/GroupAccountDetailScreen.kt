@@ -46,9 +46,7 @@ fun GroupAccountDetailScreen(
         launch()
     }
 
-    val isAvalibale = remember {
-        mutableStateOf(false)
-    }
+    var isAvalibale = false
 
     Column(
         modifier = modifier
@@ -63,7 +61,7 @@ fun GroupAccountDetailScreen(
             is Response.Success -> {
                 Log.i("group", "직책 ${response.data.type}")
                 if (response.data.type == "관리자") {
-                    isAvalibale.value = true
+                    isAvalibale = true
                 }
                 Text(
                     text = response.data.paName,
@@ -104,7 +102,7 @@ fun GroupAccountDetailScreen(
                 },
                 text = "      출   금       ",
                 buttonType = ButtonType.ROUNDED,
-                enabled = isAvalibale.value
+                enabled = isAvalibale
             )
             Spacer(modifier = Modifier.weight(0.1f))
 
