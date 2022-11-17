@@ -92,7 +92,7 @@ def create(user_id, db):
     card_his_new = []  # 45 개 추가생성
     for i in range(5):
         for m in range(7, 12):
-            day = random.sample(list(range(1, 29)), 10 if i != 11 else 5)
+            day = random.sample(list(range(1, 21)), 10 if i != 11 else 5)
             for d in day:
                 name = random.choice(td_list)
                 money = random.randint(1, 50) * 1000
