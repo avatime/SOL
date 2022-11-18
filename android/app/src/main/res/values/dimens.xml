@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+
+    <dimen name="font_size_small">16sp</dimen>
+    <dimen name="font_size_medium">20sp</dimen>
+    <dimen name="font_size_large">24sp</dimen>
+    <dimen name="font_size_title_desc">32sp</dimen>
+    <dimen name="font_size_input">24sp</dimen>
+    <dimen name="font_size_btn_bottom_text">20sp</dimen>
+    <dimen name="font_size_btn_small_text">14sp</dimen>
+    <dimen name="font_size_tab_default">20sp</dimen>
+    <dimen name="account_like_name">16sp</dimen>
+    <dimen name="account_like_account_number">13sp</dimen>
+    <dimen name="calendar_default">20sp</dimen>
+</resources>
