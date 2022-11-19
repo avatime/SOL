@@ -122,8 +122,8 @@ class RemitServiceImpl(
         val phone = remitPhoneReq.phone.replace("-", "") // 폰 번호
         val value = remitPhoneReq.value // 이체 금액
         val date = LocalDateTime.now()  // 이체 일자
-
-        if (userRepository.existsByPhone(phone)){
+        val user = userRepository.findByPhone(phone)
+        if (userRepository.existsByPhone(phone) && user!!.type == "회원"){
             val user = userRepository.findByPhone(phone)!! // 폰 주인
 
             val userAccount = accountRepository.findByAcNo(user.account?: throw NoAccountException())?: throw NoAccountException()// 대표 계좌 없으면 404 반환
