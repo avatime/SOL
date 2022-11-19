@@ -19,6 +19,8 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
@@ -30,6 +32,7 @@ import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.TextButton
 import com.finance.android.utils.Const
+import com.finance.android.utils.NumberCommaTransformation
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
@@ -101,7 +104,10 @@ fun GroupAccountInputMoneyScreen(
         isError.value = false
     }
 
-
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -120,8 +126,9 @@ fun GroupAccountInputMoneyScreen(
             },
             modifier = Modifier
                 .padding(start = 16.dp)
-                .fillMaxWidth(),
-            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+                .fillMaxWidth()
+                .focusRequester(focusRequester),
+        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
             singleLine = true,
             placeholder = {
                 Text(
@@ -139,6 +146,7 @@ fun GroupAccountInputMoneyScreen(
                 ),
             textStyle = TextStyle().copy(fontSize = 40.sp),
             isError = isError.value,
+            visualTransformation = NumberCommaTransformation()
         )
 
         if (isError.value) {

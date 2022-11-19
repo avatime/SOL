@@ -32,9 +32,11 @@ fun AddAssetRepresentScreen(
 ) {
     val coroutineScope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
-        addAssetViewModel.onClickRepAccountItem(
-            addAssetViewModel.getAddedAccountList().first().acNo
-        )
+        with(addAssetViewModel.getAddedAccountList()) {
+            if (isNotEmpty()) {
+                addAssetViewModel.onClickRepAccountItem(first().acNo)
+            }
+        }
     }
     when (val response = addAssetViewModel.checkHasRepAccount.value) {
         is Response.Success -> {

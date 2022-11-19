@@ -221,9 +221,9 @@ private fun Screen(
                     id = R.string.msg_find_asset,
                     accountList.size,
                     cardList.size,
-                    stockAccountList.size,
-                    insuranceList.size
-                ),
+                    insuranceList.size,
+                    stockAccountList.size
+                    ),
                 style = TextStyle(
                     fontSize = dimensionResource(id = R.dimen.font_size_medium).value.sp,
                     lineHeight = dimensionResource(id = R.dimen.font_size_medium).value.sp

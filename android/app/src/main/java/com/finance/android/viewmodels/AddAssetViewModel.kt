@@ -147,9 +147,9 @@ class AddAssetViewModel @Inject constructor(
     }
 
     fun hasAssetToRegister(): Boolean {
-        return (accountList.value as Response.Success).data.isNotEmpty() &&
-            (cardList.value as Response.Success).data.isNotEmpty() &&
-            (stockAccountList.value as Response.Success).data.isNotEmpty() &&
+        return (accountList.value as Response.Success).data.isNotEmpty() ||
+            (cardList.value as Response.Success).data.isNotEmpty() ||
+            (stockAccountList.value as Response.Success).data.isNotEmpty() ||
             (insuranceList.value as Response.Success).data.isNotEmpty()
     }
 
@@ -170,7 +170,9 @@ class AddAssetViewModel @Inject constructor(
                 accountList.value = it
                 if (it is Response.Success) {
                     accountCheckList = Array(it.data.size) { mutableStateOf(false) }
-                    repAccountNumber.value = it.data[0].acNo
+                    if (it.data.isNotEmpty()) {
+                        repAccountNumber.value = it.data[0].acNo
+                    }
                 }
             }
     }
