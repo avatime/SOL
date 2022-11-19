@@ -7,6 +7,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -17,9 +19,11 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.utils.Const
+import com.finance.android.utils.NumberCommaTransformation
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.RemitViewModel
 import java.text.DecimalFormat
+import java.util.*
 import java.util.regex.Pattern
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -30,7 +34,7 @@ fun InputMoneyScreen(
     navController: NavController
 ) {
     var moneyValue by remember {
-        mutableStateOf("")
+        mutableStateOf("0")
     }
 
     var balance by remember {
@@ -65,6 +69,10 @@ fun InputMoneyScreen(
         keyboardController?.hide()
     }
 
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
     Row(
         modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -72,8 +80,8 @@ fun InputMoneyScreen(
         Column() {
             if (isNext) {
                 TextButton(
-                    onClick = { isNext = false },
-                    colors = ButtonDefaults.buttonColors(
+                    onClick = { isNext =false },
+                   colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.Black
                     ),
@@ -81,7 +89,7 @@ fun InputMoneyScreen(
 
                 ) {
                     Text(
-                        text = DecimalFormat("#,###원").format(moneyValue.toInt())+"을 보낼까요?",
+                        text = DecimalFormat("#,###원").format(moneyValue.toInt()) + "을 보낼까요?",
                         fontSize = 30.sp,
                         softWrap = true,
                         maxLines = 1
@@ -91,18 +99,18 @@ fun InputMoneyScreen(
                 TextField(
                     value = moneyValue,
                     onValueChange = {
-                        if(!Pattern.matches("^[0-9]*$", it)) return@TextField
-                        if(it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
+                        if (!Pattern.matches("^[0-9]*$", it)) return@TextField
+                        if (it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
                         if (error.value && moneyValue < it) {
                             return@TextField
-                        }
-                        else if (moneyValue == it) return@TextField
+                        } else if (moneyValue == it) return@TextField
 
                         moneyValue = if (it.isEmpty()) "" else it.toInt().toString()
                     },
                     modifier = Modifier
                         .padding(start = 16.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
+                        .focusRequester(focusRequester),
                     keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                     singleLine = true,
                     placeholder = {
@@ -120,8 +128,8 @@ fun InputMoneyScreen(
                             cursorColor = Transparent
                         ),
                     textStyle = androidx.compose.ui.text.TextStyle().copy(fontSize = 40.sp),
-                    isError = error.value
-
+                    isError = error.value,
+                    visualTransformation = NumberCommaTransformation()
                 )
 
                 if (error.value) {
@@ -144,7 +152,7 @@ fun InputMoneyScreen(
                     modifier = Modifier.padding(start = 30.dp)
 
                 ) {
-                    Text(text = "잔액 "+DecimalFormat("#,###원").format(balance)+"(클릭시 입력)", fontSize = 20.sp)
+                    Text(text = "잔액 " + DecimalFormat("#,###원").format(balance) + "(클릭시 입력)", fontSize = 20.sp)
                 }
             }
 
@@ -158,7 +166,7 @@ fun InputMoneyScreen(
                     modifier = Modifier.padding(start = 30.dp)
 
                 ) {
-                    Text(text = "잔액 "+DecimalFormat("#,###원").format(balance)+"(클릭시 입력)", fontSize = 20.sp)
+                    Text(text = "잔액 " + DecimalFormat("#,###원").format(balance) + "(클릭시 입력)", fontSize = 20.sp)
                 }
             }
 
@@ -184,7 +192,7 @@ fun InputMoneyScreen(
                                     receive = "",
                                     send = "",
                                     onSuccess = {
-                                        navController.navigate("${Const.REMIT_OK_SCREEN}/${moneyValue}/송금 완료")
+                                        navController.navigate("${Const.REMIT_OK_SCREEN}/$moneyValue/송금 완료")
                                         remitViewModel.moneyValue.value = moneyValue
                                     }
                                 )
@@ -194,7 +202,7 @@ fun InputMoneyScreen(
                                     receive = "",
                                     send = "",
                                     onSuccess = {
-                                        navController.navigate("${Const.REMIT_OK_SCREEN}/${moneyValue}/$it")
+                                        navController.navigate("${Const.REMIT_OK_SCREEN}/$moneyValue/$it")
                                         remitViewModel.moneyValue.value = moneyValue
                                     }
                                 )

@@ -6,6 +6,8 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
@@ -15,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.finance.android.domain.dto.request.PointExchangeRequestDto
 import com.finance.android.ui.components.ButtonType
+import com.finance.android.utils.NumberCommaTransformation
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.PointViewModel
 import java.text.DecimalFormat
@@ -46,7 +49,10 @@ fun InputExchangePoint(
     } else {
         placeholderText.value = ""
     }
-
+    val focusRequester = remember { FocusRequester() }
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
+    }
     if (isNext) {
         keyboardController?.hide()
     }
@@ -95,7 +101,8 @@ fun InputExchangePoint(
                 },
                 modifier = Modifier
                     .padding(start = 16.dp)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester),
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                 singleLine = true,
                 placeholder = {
@@ -115,6 +122,7 @@ fun InputExchangePoint(
                     ),
                 textStyle = TextStyle().copy(fontSize = 40.sp),
                 isError = error.value,
+                visualTransformation = NumberCommaTransformation()
             )
 
             if (error.value) {
