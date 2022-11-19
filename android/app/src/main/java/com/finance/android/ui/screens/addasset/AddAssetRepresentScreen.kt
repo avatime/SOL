@@ -8,6 +8,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.stringResource
@@ -21,6 +22,7 @@ import com.finance.android.ui.components.*
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.AddAssetViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun AddAssetRepresentScreen(
@@ -28,14 +30,24 @@ fun AddAssetRepresentScreen(
     onClickBack: () -> Unit,
     onClickNext: () -> Unit
 ) {
+    val coroutineScope = rememberCoroutineScope()
+    LaunchedEffect(Unit) {
+        addAssetViewModel.onClickRepAccountItem(
+            addAssetViewModel.getAddedAccountList().first().acNo
+        )
+    }
     when (val response = addAssetViewModel.checkHasRepAccount.value) {
         is Response.Success -> {
             if (!response.data) {
                 Screen(
                     onClickBack = onClickBack,
-                    onClickNext = onClickNext,
+                    onClickNext = {
+                        coroutineScope.launch {
+                            addAssetViewModel.registerRepAccount(onClickNext)
+                        }
+                    },
                     accountList = addAssetViewModel.getAddedAccountList(),
-                    checkAccountIndex = addAssetViewModel.repAccountIndex.value,
+                    checkAccountNumber = addAssetViewModel.repAccountNumber.value,
                     onClickAccountItem = { addAssetViewModel.onClickRepAccountItem(it) }
                 )
             } else {
@@ -55,8 +67,8 @@ private fun Screen(
     onClickBack: () -> Unit,
     onClickNext: () -> Unit,
     accountList: List<BankAccountResponseDto>,
-    checkAccountIndex: Int,
-    onClickAccountItem: (index: Int) -> Unit
+    checkAccountNumber: String,
+    onClickAccountItem: (accountNumber: String) -> Unit
 ) {
     Scaffold(
         containerColor = MaterialTheme.colorScheme.surface,
@@ -103,8 +115,8 @@ private fun Screen(
                                 accountName = item.acName,
                                 companyLogoPath = item.cpLogo,
                                 acMain = item.acMain,
-                                selected = checkAccountIndex == idx,
-                                onClickItem = { onClickAccountItem(idx) }
+                                selected = checkAccountNumber == item.acNo,
+                                onClickItem = { onClickAccountItem(item.acNo) }
                             )
                         }
                     )
@@ -138,7 +150,7 @@ private fun PreviewScreen() {
                 acType = 1
             )
         },
-        checkAccountIndex = 0,
+        checkAccountNumber = "acNo",
         onClickAccountItem = {}
     )
 }

@@ -1,6 +1,7 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
@@ -40,9 +41,8 @@ class AddAssetViewModel @Inject constructor(
         mutableStateOf<Response<MutableList<InsuranceInfoResponseDto>>>(Response.Loading)
     lateinit var insuranceCheckList: Array<MutableState<Boolean>>
 
-    val repAccountIndex = mutableStateOf(0)
+    val repAccountNumber = mutableStateOf("")
 
-    private val registerStateRepAccount = mutableStateOf<Response<Unit>>(Response.Loading)
     private val registerStateAccount = mutableStateOf<Response<Unit>>(Response.Loading)
     private val registerStateCard = mutableStateOf<Response<Unit>>(Response.Loading)
     private val registerStateStockAccount = mutableStateOf<Response<Unit>>(Response.Loading)
@@ -89,7 +89,6 @@ class AddAssetViewModel @Inject constructor(
 
     fun getRegisterState(): Response<Unit> {
         val arr = arrayOf(
-            registerStateRepAccount,
             registerStateAccount,
             registerStateCard,
             registerStateStockAccount,
@@ -133,8 +132,9 @@ class AddAssetViewModel @Inject constructor(
         calculateSelectAll()
     }
 
-    fun onClickRepAccountItem(index: Int) {
-        repAccountIndex.value = index
+    fun onClickRepAccountItem(accountNumber: String) {
+        repAccountNumber.value = accountNumber
+        Log.i("LEEJY", accountNumber)
     }
 
     fun registerAsset() {
@@ -143,7 +143,6 @@ class AddAssetViewModel @Inject constructor(
             registerCard()
             registerStockAccount()
             registerInsurance()
-            registerRepAccount()
         }
     }
 
@@ -171,6 +170,7 @@ class AddAssetViewModel @Inject constructor(
                 accountList.value = it
                 if (it is Response.Success) {
                     accountCheckList = Array(it.data.size) { mutableStateOf(false) }
+                    repAccountNumber.value = it.data[0].acNo
                 }
             }
     }
@@ -289,23 +289,20 @@ class AddAssetViewModel @Inject constructor(
             }
     }
 
-    private suspend fun registerRepAccount() {
+    suspend fun registerRepAccount(onSuccess: () -> Unit) {
         if (accountList.value !is Response.Success ||
             checkHasRepAccount.value !is Response.Success ||
             (checkHasRepAccount.value as Response.Success<Boolean>).data
         ) {
-            registerStateRepAccount.value = Response.Success(Unit)
             return
         }
 
         this@AddAssetViewModel.run {
-            val accountNumberDto = AccountNumberDto(
-                (accountList.value as Response.Success).data[repAccountIndex.value].acNo
-            )
+            val accountNumberDto = AccountNumberDto(repAccountNumber.value)
             bankRepository.putRegisterMainAccount(accountNumberDto)
         }
             .collect {
-                registerStateRepAccount.value = it
+                onSuccess()
             }
     }
 
