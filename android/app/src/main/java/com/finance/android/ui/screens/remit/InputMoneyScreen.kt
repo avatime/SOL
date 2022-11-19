@@ -34,7 +34,7 @@ fun InputMoneyScreen(
     navController: NavController
 ) {
     var moneyValue by remember {
-        mutableStateOf("0")
+        mutableStateOf("")
     }
 
     var balance by remember {
@@ -170,7 +170,7 @@ fun InputMoneyScreen(
                 }
             }
 
-            if (moneyValue.isNotEmpty()) {
+            if (moneyValue.isNotEmpty() && 0 < moneyValue.toInt()) {
                 if (!isNext) {
                     Spacer(modifier = Modifier.weight(1.0f))
 
