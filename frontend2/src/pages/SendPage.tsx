@@ -9,6 +9,7 @@ import ExpirationTokenPage from "./ExpirationTokenPage";
 import ApiClient from "../apis/ApiClient";
 import SuccessPage from "./SuccessPage";
 import CheckTokenRes from "../apis/response/CheckTokenRes";
+import Loading from "../components/Loading";
 
 function SendPage() {
   const [searchParams] = useSearchParams();
@@ -49,9 +50,10 @@ function SendPage() {
       .then(() => setShowSuccess(true))
       .catch(() => alert("알 수 없는 오류가 발생했습니다. 잠시 후 다시 시도해주세요."));
   };
-
-  if (!data || showExpiration) {
+  if (showExpiration) {
     return <ExpirationTokenPage />;
+  } else if (!data) {
+    return <Loading />;
   } else if (showSuccess) {
     return <SuccessPage money={data!!.value} />;
   }
