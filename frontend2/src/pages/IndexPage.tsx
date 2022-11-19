@@ -43,7 +43,7 @@ export default function IndexPage() {
               </div>
             </div>
           </div>
-          <div id="moving-background">나중에 넣은 멋진 배경</div>
+          <div id="moving-background"></div>
 
           <div className="slide slide-left" id="slide5">
             <div className="slide-big-text">
