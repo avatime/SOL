@@ -21,3 +21,4 @@
 #-renamesourcefileattribute SourceFile
 -keep class com.finance.android.domain.dto.response.** { *; }
 -keep class com.finance.android.domain.dto.request.** { *; }
+-keep class com.finance.android.domain.exception.** { *; }
