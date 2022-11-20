@@ -53,7 +53,7 @@ export default function IndexPage() {
             </div>
             <div className="go-surf-wrapper">
               <a
-                href="https://media.istockphoto.com/vectors/men-working-road-sign-vector-id856987802?k=20&m=856987802&s=612x612&w=0&h=jh0oh57xCzZ5UI9wKWNHFE_gRsl-HuZSO8rvhs4hjjo="
+                href="https://drive.google.com/file/d/1YQPwHMbkf8rt874CK9IeFM9CXJ9FXCuW/view?usp=share_link"
                 target="_blank"
               >
                 지금 바로 다운로드 하세요.
