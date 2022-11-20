@@ -113,7 +113,7 @@ private fun DrawScreen(
             Text(
                 text = stringResource(
                     id = R.string.msg_register_asset,
-                    accountList.size + cardList.size + stockAccountList.size
+                    accountList.size + cardList.size + stockAccountList.size + insuranceList.size
                 ),
                 style = TextStyle(
                     fontSize = dimensionResource(id = R.dimen.font_size_large).value.sp,
