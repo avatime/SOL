@@ -88,8 +88,13 @@ Jetpack Compose는 네이티브 UI를 빌드하기 위한 Android의 최신 툴�
 
 자세한 특징은 아래 [링크](https://developer.android.com/jetpack/compose/why-adopt?hl=ko#less-code)를 참고해주세요.
 
-## 
+## FastAPI
+![FastAPI](./assets/FastAPI.png)
+> FastAPI는 현대적이고, 빠르며(고성능), 파이썬 표준 타입 힌트에 기초한 Python3.6+의 API를 빌드하기 위한 웹 프레임워크입니다.
 
+<br>
+1. 계정 생성에 따른 더미데이터 생성 서버<br>
+2. 주식데이터 pandas를 이용하여 정제 후 mysql에 적재 서버 (스케쥴링은 spring boot 사용하였습니다)
 
 <div id="5"></div>
 
@@ -141,7 +146,7 @@ android 와 back 으로 나누어 `faature`의 하위 브랜치를 사용하였�
 ![개발멤버](./assets/member.jpg)
 
 - [민경욱](https://github.com/rrkcl7733) :
-<br>
+<br>이번 프로젝트에선 데이터 서버(FastAPI)를 따로두어 관리했습니다. 데이터를 다루기에 용이한 Python 기반의 프레임워크로 처음 사용에 비해 빠른 코드 작성이 가능했습니다. 개발 후반부엔 6명이 Android Studio에 모두 투입되어 화면 구성에 힘썼습니다. 오랜만에 프론트 작업인 것과 Kotlin으로 작업해야 하는부분이 걱정이었는데 팀원들의 격려로 무사히 잘 마무리 할 수 있었습니다.
 
 - [김찬영](https://github.com/letgodchan0) :
 <br>
