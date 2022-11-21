@@ -46,6 +46,7 @@ class UserServiceImpl (
                     member.type = "회원"
                     publicAccountMemberRepository.save(member)
                 }
+                user.toMember(signupDto.password, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth), signupDto.sex)
             }
             else user.toMember(signupDto.password, SimpleDateFormat("yyyy-MM-dd").parse(signupDto.birth), signupDto.sex)
             // 토큰 발급
