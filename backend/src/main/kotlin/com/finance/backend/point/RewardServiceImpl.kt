@@ -6,6 +6,7 @@ import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.point.request.RewardDto
 import com.finance.backend.point.response.RewardDao
 import com.finance.backend.bank.Account
+import com.finance.backend.notice.NoticeService
 import com.finance.backend.point.request.GetRewardDto
 import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
@@ -14,6 +15,7 @@ import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.lang.NullPointerException
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.util.*
 
@@ -24,6 +26,7 @@ class RewardServiceImpl(
         private val userRepository: UserRepository,
         private val accountRepository: AccountRepository,
         private val tradeHistoryRepository: TradeHistoryRepository,
+        private val noticeService: NoticeService,
         private val jwtUtils: JwtUtils
 ) : RewardService {
     override fun getAllPoint(accessToken: String): List<RewardDao> {
@@ -68,6 +71,7 @@ class RewardServiceImpl(
             usePoint(user, rewardDto.point, "포인트 전환")
             accountRepository.save(account)
             tradeHistoryRepository.save(tradeHistory)
+            noticeService.sendAlarm(user.notice, user.name + "님의 대표계좌로 " + DecimalFormat("#,###").format(rewardDto.point) + "원이 입금되었습니다.")
         } else throw Exception()
     }
 
