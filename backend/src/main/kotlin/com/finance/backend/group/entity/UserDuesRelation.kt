@@ -38,5 +38,5 @@ class UserDuesRelation(
         this.status = true
     }
 
-    fun toEntity(profile : Profile) : IsPaidRes = IsPaidRes(FriendRes(this.user.name, this.user.type, profile.pfImg, profile.pfName, this.user.phone), this.status)
+    fun toEntity(profile : Profile?) : IsPaidRes = IsPaidRes(FriendRes(this.user.name, this.user.type, profile?.pfImg ?: "null", profile?.pfName ?: "null", this.user.phone), this.status)
 }
