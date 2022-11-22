@@ -169,7 +169,8 @@ class GroupServiceImpl (
             for(member in registDueReq.memberList) {
                 val paMember = userRepository.findByPhone(member.phone) ?: throw NoSuchElementException()
                 userDuesRelationRepository.save(UserDuesRelation(dues, paMember))
-                noticeService.sendAlarm(paMember.notice, user.name + "님이 " + dues.publicAccount.paName + " - " + dues.duesName + " 으로 " + DecimalFormat("#,###").format(dues.duesVal) + "원의 회비를 생성했어요!")
+                val msg = "${user.name}님이 '${dues.publicAccount.paName}'에 ${DecimalFormat("#,###").format(dues.duesVal)}원 입금을 요청했어요."
+                noticeService.sendAlarm(paMember.notice,  msg)
             }
         }
     }
