@@ -26,7 +26,7 @@ import com.finance.android.R
 fun SelectedFriendItem(
     img: String,
     name: String,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
     Column(
         modifier = Modifier
