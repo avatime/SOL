@@ -1,6 +1,8 @@
-[![SOL#](./assets/splash.gif)](https://youtu.be/mG5cMH1xtq0)
-
 <div align="center">
+  <a href="https://youtu.be/mG5cMH1xtq0">
+    <img src="./assets/splash.gif" width="300px"/>
+  </a>
+  
   <h5 style="font-weight: bold;">↑ GIF 파일을 클릭하면 UCC를 볼 수 있어요!</h5>
   <br/>
   <br/>
