@@ -1,12 +1,14 @@
 package com.finance.android.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.viewModelScope
 import com.finance.android.datastore.UserStore
 import com.finance.android.domain.RetrofitClient
 import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
+import com.finance.android.domain.dto.response.PushTokenRequestDto
 import com.finance.android.domain.repository.BaseRepository
 import com.finance.android.domain.repository.UserRepository
 import com.finance.android.ui.fragments.SignupStep
@@ -14,7 +16,10 @@ import com.finance.android.ui.screens.login.InputUserInfoStep
 import com.finance.android.utils.Response
 import com.finance.android.utils.validateBirthday
 import com.finance.android.utils.validatePhoneNum
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -230,6 +235,7 @@ class LoginViewModel @Inject constructor(
                 phoneNumber.value
             )
         }
+        registerPushToken()
     }
 
     private fun formatBirthday(): String {
@@ -241,6 +247,17 @@ class LoginViewModel @Inject constructor(
                 "20$result"
             } else {
                 "19$result"
+            }
+        }
+    }
+
+    private fun registerPushToken() {
+        FirebaseMessaging.getInstance().token.addOnSuccessListener {
+            viewModelScope.launch {
+                val pushTokenRequestDto = PushTokenRequestDto(it)
+                this@LoginViewModel.run {
+                    userRepository.putPushToken(pushTokenRequestDto)
+                }.collect()
             }
         }
     }
