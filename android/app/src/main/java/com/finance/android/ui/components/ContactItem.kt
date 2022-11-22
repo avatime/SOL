@@ -1,5 +1,6 @@
 package com.finance.android.ui.components
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -89,9 +90,3 @@ fun ContactItem(
 
 
 }
-
-//@Preview
-//@Composable
-//fun contact () {
-//    ContactItem(name = "채윤선", number = "010-4901-6695", avatar = "null", modifier = Modifier)
-//}
