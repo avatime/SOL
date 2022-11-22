@@ -28,6 +28,7 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.naming.AuthenticationException
+import javax.transaction.Transactional
 import kotlin.collections.ArrayList
 
 @Service("GroupService")
@@ -54,6 +55,7 @@ class GroupServiceImpl (
         } else throw Exception()
     }
 
+    @Transactional
     override fun createNewGroup(accessToken: String, registPublicAccountReq: RegistPublicAccountReq) {
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))

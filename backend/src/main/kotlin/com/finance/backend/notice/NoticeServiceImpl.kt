@@ -35,8 +35,8 @@ class NoticeServiceImpl (
         } else throw Exception()
     }
 
-    override fun sendAlarm(token: String, msg : String) {
-        if(token.isNotEmpty()) {
+    override fun sendAlarm(token: String?, msg : String) {
+        if(!token.isNullOrEmpty()) {
             val header: MultiValueMap<String, String> = LinkedMultiValueMap()
             val params: MutableMap<String, Any> = HashMap()
             val body: MutableMap<String, Any> = HashMap()
