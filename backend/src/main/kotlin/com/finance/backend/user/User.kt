@@ -57,7 +57,7 @@ class User(
     var account: String = ""
 
     @Column
-    var notice: String = ""
+    var notice: String? = null
 
     @Column
     var type: String = type
