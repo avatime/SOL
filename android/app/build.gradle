@@ -3,7 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'com.google.dagger.hilt.android'
-
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -118,5 +118,6 @@ dependencies {
     implementation "androidx.paging:paging-compose:1.0.0-alpha17"
 
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.9.0"
-
+    implementation platform('com.google.firebase:firebase-bom:31.1.0')
+    implementation 'com.google.firebase:firebase-messaging:23.1.0'
 }
