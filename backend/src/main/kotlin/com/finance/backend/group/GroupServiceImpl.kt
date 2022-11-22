@@ -78,7 +78,7 @@ class GroupServiceImpl (
             val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             if(!publicAccountMemberRepository.existsByUserAndPublicAccountId(user, publicAccountId)) throw AuthenticationException()
             val memberList : List<PublicAccountMember> = publicAccountMemberRepository.findAllByPublicAccountId(publicAccountId)?:throw Exception()
-            return List(memberList.size) {i -> memberList[i].toEntity(profileRepository.findByPfId(memberList[i].user.pfId)?:throw NullPointerException())}
+            return List(memberList.size) {i -> memberList[i].toEntity(if(memberList[i].type == "비회원") null else profileRepository.findByPfId(memberList[i].user.pfId)?:throw NullPointerException())}
         } else throw Exception()
     }
 
