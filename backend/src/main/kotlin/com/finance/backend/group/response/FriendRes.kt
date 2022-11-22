@@ -9,10 +9,10 @@ data class FriendRes(
         val type : String,
 
         @JsonProperty("pf_img")
-        val pfImg : String?,
+        val pfImg : String,
 
         @JsonProperty("pf_name")
-        val pfName : String?,
+        val pfName : String,
 
         @JsonProperty("phone")
         val phone : String,
