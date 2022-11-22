@@ -24,6 +24,7 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -92,7 +93,7 @@ fun GroupAccountInputMoneyScreen(
 
 
     if (duesValue.value == "0") {
-        duesValue.value == ""
+        duesValue.value = ""
     }
 
 
@@ -116,6 +117,7 @@ fun GroupAccountInputMoneyScreen(
         TextField(
             value = duesValue.value,
             onValueChange = {
+                Log.i("group", "인풋: $it,  ${duesValue.value}")
                 if (!Pattern.matches("^[0-9]*$", it)) return@TextField
                 if (it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextField
                 if (isError.value && duesValue.value < it) {
@@ -146,7 +148,7 @@ fun GroupAccountInputMoneyScreen(
                 ),
             textStyle = TextStyle().copy(fontSize = 40.sp),
             isError = isError.value,
-            visualTransformation = NumberCommaTransformation()
+            visualTransformation = if (duesValue.value.isNotEmpty()) NumberCommaTransformation() else VisualTransformation.None
         )
 
         if (isError.value) {

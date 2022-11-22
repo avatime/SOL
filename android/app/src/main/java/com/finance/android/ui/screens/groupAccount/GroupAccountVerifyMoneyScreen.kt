@@ -44,7 +44,7 @@ fun GroupAccountVerifyMoneyScreen(
             softWrap = false,
             maxLines = 1,
             fontSize = 30.sp,
-            modifier = Modifier.padding(start = 25.dp)
+            modifier = Modifier.padding(start = 25.dp),
         )
         Text(
             text = "보내겠습니까?",
