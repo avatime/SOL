@@ -123,7 +123,7 @@ class ExceptionController(
 
     @ExceptionHandler(Exception::class)
     fun handleAll(e : Exception) : ResponseEntity<String> {
-        println("에러 메세지: " + e)
+        println("에러 메세지: $e")
         return ResponseEntity.status(500).body("Internal Server Error")
     }
 }
