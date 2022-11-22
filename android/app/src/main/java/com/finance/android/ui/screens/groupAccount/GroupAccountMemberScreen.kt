@@ -54,7 +54,6 @@ fun GroupAccountMemberScreen(
                             phoneNumber = item.phone,
                             onClickNonMember = {
                                 sendInviteMessage(context= context, phoneNumber = item.phone)
-
                             }
                         )
                     })

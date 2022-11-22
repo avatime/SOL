@@ -12,6 +12,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -122,7 +123,7 @@ fun InputExchangePoint(
                     ),
                 textStyle = TextStyle().copy(fontSize = 40.sp),
                 isError = error.value,
-                visualTransformation = NumberCommaTransformation()
+                visualTransformation = if (pointValue.isNotEmpty()) NumberCommaTransformation() else VisualTransformation.None
             )
 
             if (error.value) {
