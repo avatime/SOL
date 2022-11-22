@@ -7,7 +7,14 @@ import com.finance.backend.group.repository.PublicAccountMemberRepository
 import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
+import org.springframework.web.client.RestTemplate
 import java.util.*
 
 @Service("NoticeService")
@@ -28,5 +35,26 @@ class NoticeServiceImpl (
         } else throw Exception()
     }
 
+    override fun sendAlarm(token: String, msg : String) {
+        if(token.isNotEmpty()) {
+            val header: MultiValueMap<String, String> = LinkedMultiValueMap()
+            val params: MutableMap<String, Any> = HashMap()
+            val body: MutableMap<String, Any> = HashMap()
+            params["to"] = token
+            header["Authorization"] = "key=AAAAVpjOorU:APA91bFoPwu-4OeZGv7Jl-ms59jStQwWDlhYiq3NpaXIAnRrZL0aRSXOTKFXEzf_fvPapmBmAEf8ZCkxb7n1SmT_RwVh04mMMa0a2TR9xOnlZ16eXgNeOQsD7ibOVbLrIzvmQIlu1vis"
+            body["body"] = msg
+            params["notification"] = body
+            val headers = HttpHeaders(header)
+            val entity = HttpEntity<Map<String, Any>>(params, headers)
+
+            val rt = RestTemplate()
+            val response: ResponseEntity<String> = rt.exchange<String>(
+                    "https://fcm.googleapis.com/fcm/send",
+                    HttpMethod.POST,
+                    entity,
+                    String::class.java
+            )
+        }
+    }
 
 }
