@@ -2,6 +2,7 @@ package com.finance.android.domain.repository
 
 import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
+import com.finance.android.domain.dto.response.PushTokenRequestDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.domain.service.UserService
 import com.finance.android.utils.Response
@@ -62,5 +63,9 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun receivePoint(receivePointDto: ReceivePointDto) {
         return userService.receivePoint(receivePointDto)
+    }
+
+    override suspend fun putPushToken(pushTokenRequestDto: PushTokenRequestDto) {
+        return userService.putPushToken(pushTokenRequestDto)
     }
 }

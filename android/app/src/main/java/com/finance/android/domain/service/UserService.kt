@@ -2,6 +2,7 @@ package com.finance.android.domain.service
 
 import com.finance.android.domain.dto.request.*
 import com.finance.android.domain.dto.response.LoginResponseDto
+import com.finance.android.domain.dto.response.PushTokenRequestDto
 import com.finance.android.domain.dto.response.UserProfileResponseDto
 import com.finance.android.utils.Const
 import retrofit2.http.Body
@@ -37,4 +38,7 @@ interface UserService {
 
     @POST("${Const.API_PATH}/point/easter")
     suspend fun receivePoint(@Body receivePointDto: ReceivePointDto)
+
+    @PUT("${Const.API_PATH}/notice")
+    suspend fun putPushToken(@Body pushTokenRequestDto: PushTokenRequestDto)
 }
