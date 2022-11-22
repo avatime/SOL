@@ -14,6 +14,7 @@ import com.finance.backend.group.repository.PublicAccountRepository
 import com.finance.backend.group.repository.UserDuesRelationRepository
 import com.finance.backend.group.request.*
 import com.finance.backend.group.response.*
+import com.finance.backend.notice.NoticeService
 import com.finance.backend.profile.ProfileRepository
 import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
@@ -22,6 +23,7 @@ import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -39,6 +41,7 @@ class GroupServiceImpl (
         private val profileRepository: ProfileRepository,
         private val tradeHistoryRepository: TradeHistoryRepository,
         private val accountRepository: AccountRepository,
+        private val noticeService: NoticeService,
         private val jwtUtils: JwtUtils
 ) : GroupService {
 
@@ -58,7 +61,9 @@ class GroupServiceImpl (
             var publicAccount : PublicAccount = PublicAccount(registPublicAccountReq.name)
             publicAccount = publicAccountRepository.save(publicAccount)
             publicAccountMemberRepository.save(PublicAccountMember(publicAccount, user, "관리자"))
-            registPublicAccountReq.memberList?.let { registMembers(it, publicAccount) }
+            registPublicAccountReq.memberList?.let {
+                registMembers(it, user.name, publicAccount)
+            }
         }
     }
 
@@ -162,6 +167,7 @@ class GroupServiceImpl (
             for(member in registDueReq.memberList) {
                 val paMember = userRepository.findByPhone(member.phone) ?: throw NoSuchElementException()
                 userDuesRelationRepository.save(UserDuesRelation(dues, paMember))
+                noticeService.sendAlarm(paMember.notice, user.name + "님이 " + dues.publicAccount.paName + " - " + dues.duesName + " 으로 " + DecimalFormat("#,###").format(dues.duesVal) + "원의 회비를 생성했어요!")
             }
         }
     }
@@ -246,10 +252,11 @@ class GroupServiceImpl (
         TODO("정기적으로 생성하는 코드 만들어야함")
     }
 
-    fun registMembers(list : List<MemberInfoReq>, publicAccount : PublicAccount){
+    fun registMembers(list : List<MemberInfoReq>, userName : String, publicAccount : PublicAccount){
         for(member in list) {
             val user : User = userRepository.findByPhone(member.phone) ?: userRepository.save(User(member.name, "password", member.phone.replace("-", ""), Timestamp.valueOf(LocalDateTime.now()), 0, "비회원"))
             publicAccountMemberRepository.save(PublicAccountMember(publicAccount, user, user.type))
+            noticeService.sendAlarm(user.notice, userName + "님께서 \'" + publicAccount.paName + "\' 모두의 통장으로 초대하셨어요!")
         }
     }
 }
