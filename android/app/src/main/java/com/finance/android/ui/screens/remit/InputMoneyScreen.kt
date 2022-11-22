@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -80,8 +81,8 @@ fun InputMoneyScreen(
         Column() {
             if (isNext) {
                 TextButton(
-                    onClick = { isNext =false },
-                   colors = ButtonDefaults.buttonColors(
+                    onClick = { isNext = false },
+                    colors = ButtonDefaults.buttonColors(
                         backgroundColor = Color.Transparent,
                         contentColor = Color.Black
                     ),
@@ -91,7 +92,7 @@ fun InputMoneyScreen(
                     Text(
                         text = DecimalFormat("#,###원").format(moneyValue.toInt()) + "을 보낼까요?",
                         fontSize = 30.sp,
-                        softWrap = true,
+                        softWrap = false,
                         maxLines = 1
                     )
                 }
@@ -129,7 +130,7 @@ fun InputMoneyScreen(
                         ),
                     textStyle = androidx.compose.ui.text.TextStyle().copy(fontSize = 40.sp),
                     isError = error.value,
-                    visualTransformation = NumberCommaTransformation()
+                    visualTransformation = if ( moneyValue.isNotEmpty()) NumberCommaTransformation() else VisualTransformation.None
                 )
 
                 if (error.value) {
@@ -152,7 +153,10 @@ fun InputMoneyScreen(
                     modifier = Modifier.padding(start = 30.dp)
 
                 ) {
-                    Text(text = "잔액 " + DecimalFormat("#,###원").format(balance) + "(클릭시 입력)", fontSize = 20.sp)
+                    Text(
+                        text = "잔액 " + DecimalFormat("#,###원").format(balance) + "(클릭시 입력)",
+                        fontSize = 20.sp
+                    )
                 }
             }
 
@@ -166,7 +170,10 @@ fun InputMoneyScreen(
                     modifier = Modifier.padding(start = 30.dp)
 
                 ) {
-                    Text(text = "잔액 " + DecimalFormat("#,###원").format(balance) + "(클릭시 입력)", fontSize = 20.sp)
+                    Text(
+                        text = "잔액 " + DecimalFormat("#,###원").format(balance) + "(클릭시 입력)",
+                        fontSize = 20.sp
+                    )
                 }
             }
 

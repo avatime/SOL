@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -78,7 +79,7 @@ fun DuesMakeMoneyScreen(
                 .fillMaxWidth()
                 .padding(0.dp),
             textStyle = TextStyle().copy(fontSize = 40.sp),
-            visualTransformation = NumberCommaTransformation()
+            visualTransformation = if (groupAccountViewModel.duesBalance.value.isNotEmpty()) NumberCommaTransformation() else VisualTransformation.None
         )
 
         Spacer(modifier = Modifier.weight(1f))
