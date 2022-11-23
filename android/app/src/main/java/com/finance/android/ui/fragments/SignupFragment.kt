@@ -35,7 +35,7 @@ fun SignupFragment(
     var showDialog by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
-        showDialog = true
+        showDialog = false // 알려드립니다 다이얼로그 끄기~
     }
 
     if (showDialog) {
