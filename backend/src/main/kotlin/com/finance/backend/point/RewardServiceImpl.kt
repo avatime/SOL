@@ -71,7 +71,7 @@ class RewardServiceImpl(
             usePoint(user, rewardDto.point, "포인트 전환")
             accountRepository.save(account)
             tradeHistoryRepository.save(tradeHistory)
-            noticeService.sendAlarm(user.notice, user.name + "님의 대표계좌로 " + DecimalFormat("#,###").format(rewardDto.point) + "원이 입금되었습니다.")
+            noticeService.sendAlarm(user.notice, "포인트 전환", user.name + "님의 대표계좌로 " + DecimalFormat("#,###").format(rewardDto.point) + "원이 입금되었습니다.")
         } else throw Exception()
     }
 

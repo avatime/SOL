@@ -170,7 +170,7 @@ class GroupServiceImpl (
                 val paMember = userRepository.findByPhone(member.phone) ?: throw NoSuchElementException()
                 userDuesRelationRepository.save(UserDuesRelation(dues, paMember))
                 val msg = "${user.name}님이 '${dues.publicAccount.paName}'에 ${DecimalFormat("#,###").format(dues.duesVal)}원 입금을 요청했어요."
-                noticeService.sendAlarm(paMember.notice,  msg)
+                noticeService.sendAlarm(paMember.notice,"새 회비가 등록됐어요", msg)
             }
         }
     }
@@ -222,7 +222,7 @@ class GroupServiceImpl (
             publicAccountRepository.save(state.publicAccount)
             accountRepository.save(account)
             tradeHistoryRepository.save(tradeHistory)
-            noticeService.sendAlarm(user.notice, "${state.publicAccount.paName}에서 ${DecimalFormat("#,###").format(publicAccountWithdrawReq.value)}원을 출금했어요")
+            noticeService.sendAlarm(user.notice, "회비 출금", "${state.publicAccount.paName}에서 ${DecimalFormat("#,###").format(publicAccountWithdrawReq.value)}원을 출금했어요")
         }
     }
 
@@ -260,7 +260,7 @@ class GroupServiceImpl (
         for(member in list) {
             val user : User = userRepository.findByPhone(member.phone) ?: userRepository.save(User(member.name, "password", member.phone.replace("-", ""), Timestamp.valueOf(LocalDateTime.now()), 0, "비회원"))
             publicAccountMemberRepository.save(PublicAccountMember(publicAccount, user, user.type))
-            noticeService.sendAlarm(user.notice, userName + "님께서 \'" + publicAccount.paName + "\' 모두의 통장으로 초대하셨어요!")
+            noticeService.sendAlarm(user.notice, "새로운 모두의 통장", userName + "님께서 \'" + publicAccount.paName + "\' 모두의 통장으로 초대하셨어요!")
         }
     }
 }

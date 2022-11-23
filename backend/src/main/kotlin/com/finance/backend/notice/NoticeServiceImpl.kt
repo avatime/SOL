@@ -35,7 +35,7 @@ class NoticeServiceImpl (
         } else throw Exception()
     }
 
-    override fun sendAlarm(token: String?, msg : String) {
+    override fun sendAlarm(token: String?, title:String, msg : String) {
         if(!token.isNullOrEmpty()) {
             val header: MultiValueMap<String, String> = LinkedMultiValueMap()
             val params: MutableMap<String, Any> = HashMap()
@@ -43,6 +43,7 @@ class NoticeServiceImpl (
             params["to"] = token
             header["Authorization"] = "key=AAAAVpjOorU:APA91bFoPwu-4OeZGv7Jl-ms59jStQwWDlhYiq3NpaXIAnRrZL0aRSXOTKFXEzf_fvPapmBmAEf8ZCkxb7n1SmT_RwVh04mMMa0a2TR9xOnlZ16eXgNeOQsD7ibOVbLrIzvmQIlu1vis"
             body["body"] = msg
+            body["title"] = title
             params["notification"] = body
             val headers = HttpHeaders(header)
             val entity = HttpEntity<Map<String, Any>>(params, headers)
