@@ -63,7 +63,9 @@ fun GroupAccountVerifyMoneyScreen(
                             duesVal = groupAccountViewModel.duesVal.value,
                             duesId = groupAccountViewModel.duesId.value
                         ), onSuccess = {
-                            navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
+                            navController.navigate(Const.GROUP_ACCOUNT_COMPLETED){
+                                popUpTo(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
+                            }
                         })
                 } else if (groupAccountViewModel.screenType.value == 2) {
                     groupAccountViewModel.OKtext.value = "모두의 통장으로 입금 성공"
@@ -71,7 +73,9 @@ fun GroupAccountVerifyMoneyScreen(
                         paId = groupAccountViewModel.paId.value,
                         value = groupAccountViewModel.duesVal.value,
                     ), onSuccess = {
-                        navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
+                        navController.navigate(Const.GROUP_ACCOUNT_COMPLETED){
+                            popUpTo(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
+                        }
                     })
                 } else if (groupAccountViewModel.screenType.value == 3) {
                     groupAccountViewModel.OKtext.value = "모두의 통장에서 출금 성공"
@@ -80,7 +84,9 @@ fun GroupAccountVerifyMoneyScreen(
                             paId = groupAccountViewModel.paId.value,
                             value = groupAccountViewModel.duesVal.value
                         ), onSuccess = {
-                            navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
+                            navController.navigate(Const.GROUP_ACCOUNT_COMPLETED){
+                                popUpTo(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
+                            }
                         })
 
                 }
