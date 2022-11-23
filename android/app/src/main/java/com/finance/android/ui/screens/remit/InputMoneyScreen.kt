@@ -90,7 +90,13 @@ fun InputMoneyScreen(
 
                 ) {
                     Text(
-                        text = DecimalFormat("#,###원").format(moneyValue.toInt()) + "을 보낼까요?",
+                        text = DecimalFormat("#,###원").format(moneyValue.toInt()) + "을",
+                        fontSize = 30.sp,
+                        softWrap = false,
+                        maxLines = 1
+                    )
+                    Text(
+                        text = "보낼까요?",
                         fontSize = 30.sp,
                         softWrap = false,
                         maxLines = 1
@@ -180,7 +186,6 @@ fun InputMoneyScreen(
             if (moneyValue.isNotEmpty() && 0 < moneyValue.toInt()) {
                 if (!isNext) {
                     Spacer(modifier = Modifier.weight(1.0f))
-
                     com.finance.android.ui.components.TextButton(
                         onClick = { isNext = true },
                         text = "다음",
