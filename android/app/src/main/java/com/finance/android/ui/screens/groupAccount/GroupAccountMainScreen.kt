@@ -48,6 +48,7 @@ fun GroupAccountMainScreen(
     fun launch() {
         groupAccountViewModel.getGroupAccountData()
         groupAccountViewModel.duesVal.value = 0
+        groupAccountViewModel.screenType.value = 0
     }
     LaunchedEffect(Unit) {
         launch()

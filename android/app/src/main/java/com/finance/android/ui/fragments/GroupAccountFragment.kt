@@ -28,6 +28,13 @@ fun GroupAccountFragment(
         BackHeaderBar(text = "모두의 통장", onClickBack = {
             if (!groupAccountViewModel.isBackToMain.value) innerNavController.popBackStack() else
                 navController.popBackStack()
+            if(groupAccountViewModel.isItOkScreen.value){
+                if(groupAccountViewModel.screenType.value ==0){
+                    innerNavController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                }else{
+                    innerNavController.navigate(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
+                }
+            }
         })
 
 
@@ -38,6 +45,7 @@ fun GroupAccountFragment(
         ) {
             composable(Const.GROUP_ACCOUNT_MAIN_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = true
+                groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountMainScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -46,6 +54,7 @@ fun GroupAccountFragment(
             }
             composable(Const.GROUP_ACCOUNT_MAKE_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountMakeScreen(
                     navController = innerNavController,
                     modifier = modifier
@@ -53,6 +62,7 @@ fun GroupAccountFragment(
             }
             composable(Const.GROUP_ACCOUNT_NAME_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountNameScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -61,6 +71,7 @@ fun GroupAccountFragment(
             }
             composable(Const.GROUP_ACCOUNT_FRIEND_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountFriendScreen(
                     groupAccountViewModel = groupAccountViewModel,
                     navController = innerNavController,
@@ -71,6 +82,7 @@ fun GroupAccountFragment(
                 route = Const.GROUP_ACCOUNT_DETAIL_SCREEN,
             ) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountDetailScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -79,6 +91,7 @@ fun GroupAccountFragment(
             }
             composable(Const.GROUP_ACCOUNT_COMPLETED) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = true
                 GroupAccountOKScreen(
                     navController = innerNavController,
                     modifier = modifier,
@@ -87,6 +100,7 @@ fun GroupAccountFragment(
             }
             composable(Const.DUES_MAKE_NAME_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 DuesMakeNameScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -98,6 +112,7 @@ fun GroupAccountFragment(
                 arguments = listOf(navArgument(name = "duesVal") { type = NavType.IntType })
             ) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountInputMoneyScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -106,6 +121,7 @@ fun GroupAccountFragment(
             }
             composable(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountInputMoneyScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -115,6 +131,7 @@ fun GroupAccountFragment(
 
             composable(Const.DUES_MAKE_MONEY_SCREEN) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 DuesMakeMoneyScreen(
                     navController = innerNavController,
                     groupAccountViewModel = groupAccountViewModel,
@@ -123,6 +140,7 @@ fun GroupAccountFragment(
             }
             composable(Const.DUES_MEMBER_LIST) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 DuesMemberListScreen(
                     groupAccountViewModel = groupAccountViewModel,
                     navController = innerNavController,
@@ -133,6 +151,7 @@ fun GroupAccountFragment(
                 Const.GROUP_ACCOUNT_VERIFY_MONEY_SCREEN,
             ) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountVerifyMoneyScreen(
                     navController = innerNavController,
                     modifier = modifier,
@@ -144,6 +163,7 @@ fun GroupAccountFragment(
                 Const.DUES_DATE_PICK_SCREEN,
             ) {
                 groupAccountViewModel.isBackToMain.value = false
+                groupAccountViewModel.isItOkScreen.value = false
                 DuesDataPickScreen(
                     navController = innerNavController,
                     modifier = modifier,
