@@ -2,7 +2,6 @@ package com.finance.android.ui.fragments
 
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.biometric.BiometricPrompt
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -120,8 +119,8 @@ fun InputPasswordFragment(
         CustomDialog(
             dialogType = DialogType.INFO,
             dialogActionType = DialogActionType.ONE_BUTTON,
-            title = "지문 로그인",
-            subTitle = "다음부터 간편비밀번호 입력 대신\n지문 로그인이 활성화됩니다",
+            title = stringResource(id = R.string.msg_info_bio_title),
+            subTitle = stringResource(id = R.string.msg_info_bio_body),
             onPositive = { inputPasswordViewModel.showBioInfoDialog.value = !inputPasswordViewModel.showBioInfoDialog.value }
         )
     }
