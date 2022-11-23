@@ -72,7 +72,7 @@ fun GroupAccountOKScreen(
         Spacer(modifier = Modifier.weight(1f))
         TextButton(
             onClick = {
-                    navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                navController.popBackStack(route = Const.GROUP_ACCOUNT_MAIN_SCREEN, inclusive = false)
                   },
             text = "다음",
             buttonType = ButtonType.ROUNDED,
