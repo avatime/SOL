@@ -1,5 +1,6 @@
 package com.finance.android.ui.screens.groupAccount
 
+import android.icu.util.LocaleData
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
@@ -17,6 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.anychart.enums.LocaleDateTimeFormat
 import com.finance.android.ui.components.AnimatedLoading
 import com.finance.android.ui.components.ButtonType
 import com.finance.android.ui.components.DuesItem
@@ -25,6 +27,8 @@ import com.finance.android.utils.Const
 import com.finance.android.utils.Response
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
+import java.time.LocalDate
+import java.util.Locale
 
 @Composable
 fun GroupAccountDuesScreen(
@@ -48,6 +52,7 @@ fun GroupAccountDuesScreen(
                 .weight(1f)
                 .verticalScroll(rememberScrollState())
         ) {
+
             when (val response = groupAccountViewModel.duesHistoryData.value) {
                 is Response.Failure -> {
                     androidx.compose.material.Text(text = "실패")
@@ -67,8 +72,25 @@ fun GroupAccountDuesScreen(
                         Spacer(modifier = Modifier.weight(1f))
                     }
                     response.data.forEach {
+                        //Log.i("group", " 회비 data ${it.dueDate}")
+
+
                         DuesItem(
                             paid = it.paid,
+                            isAvaliableDate = if (it.dueDate.monthValue < LocalDate.now().monthValue) false
+                            else if (it.dueDate.monthValue == LocalDate.now().monthValue && it.dueDate.dayOfMonth < LocalDate.now().dayOfMonth) false
+                            else {
+                                Log.i("group", "dues 가짜 날짜 ${it.dueDate}")
+                                Log.i(
+                                    "group",
+                                    "dues 가짜 월 ${it.dueDate.monthValue} 현재 일 ${it.dueDate.dayOfMonth}"
+                                )
+                                Log.i(
+                                    "group",
+                                    "dues 현재 월 ${LocalDate.now().monthValue} 현재 일 ${LocalDate.now().dayOfMonth}"
+                                )
+                                true
+                            },
                             name = it.duesName,
                             dueDate = it.dueDate,
                             totalUser = it.totalUSer,

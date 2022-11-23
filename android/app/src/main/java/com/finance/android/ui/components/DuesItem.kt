@@ -34,6 +34,7 @@ import java.time.LocalDateTime
 @Composable
 fun DuesItem(
     paid: Boolean,
+    isAvaliableDate : Boolean,
     name: String,
     dueDate: LocalDateTime,
     totalUser: Int,
@@ -112,7 +113,7 @@ fun DuesItem(
                 onClick = { onClickPay() },
                 text = text.value,
                 buttonType = ButtonType.ROUNDED,
-                enabled = !paid
+                enabled = (!paid && isAvaliableDate)
             )
         }
         if (expanded) {
