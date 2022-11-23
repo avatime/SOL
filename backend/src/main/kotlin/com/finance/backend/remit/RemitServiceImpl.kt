@@ -116,7 +116,7 @@ class RemitServiceImpl(
         val depositAccount = accountRepository.findById(remitInfoReq.acReceive).orElse(null)?: throw NoAccountException() // 입금 받는 계좌 객체
         val depositRemitHistory = TradeHistory(depositName,value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, remitAccount.user.name, remitInfoReq.receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
-        noticeService.sendAlarm(depositAccount.user.notice, "${remitAccount.user.name}님이 ${DecimalFormat("#,###").format(value)}원을 입금했어요")
+        noticeService.sendAlarm(depositAccount.user.notice, "SOL#","${remitAccount.user.name}님이 ${DecimalFormat("#,###").format(value)}원을 입금했어요")
         // 잔액 변경 저장
         depositAccount.deposit(value)
         accountRepository.save(depositAccount)
@@ -161,7 +161,7 @@ class RemitServiceImpl(
             val depositAccount = accountRepository.findById(targetAccount).orElse(null)?: throw NoAccountException()
             val depositRemitHistory = TradeHistory(depositName, value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
             tradeHistoryRepository.save(depositRemitHistory)
-            noticeService.sendAlarm(depositAccount.user.notice, "${remitAccount.user.name}님이 ${DecimalFormat("#,###").format(value)}원을 입금했어요")
+            noticeService.sendAlarm(depositAccount.user.notice,"SOL#", "${remitAccount.user.name}님이 ${DecimalFormat("#,###").format(value)}원을 입금했어요")
             // 잔액 변경 저장
             depositAccount.deposit(value)
             accountRepository.save(depositAccount)
