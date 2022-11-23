@@ -40,7 +40,7 @@ class FirebaseMessageService : FirebaseMessagingService() {
             val serviceChannel = NotificationChannel(
                 CHANNEL_ID,
                 CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_DEFAULT
+                NotificationManager.IMPORTANCE_HIGH
             ).apply {
                 enableVibration(true)
                 setSound(null, null)
@@ -66,9 +66,9 @@ class FirebaseMessageService : FirebaseMessagingService() {
             .setContentText(message)
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.mipmap.ic_launcher_round)
             .build()
 
-        notificationManager.notify(2, notification)
+        notificationManager.notify(0, notification)
     }
 }
