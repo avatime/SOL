@@ -30,12 +30,11 @@
     <string name="msg_hasnt_stock_account_to_register">등록할 증권이 없어요</string>
     <string name="msg_hasnt_insurance_to_register">등록할 보험이 없어요</string>
     <string name="msg_server_error">서버 에러가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
-    <string name="msg_info_bio_title">지문 입력</string>
-    <string name="msg_info_bio_body">다음부터 간편비밀번호 입력 대신\n지문 입력이 활성화됩니다</string>
+    <string name="msg_info_bio_title">생체 인증</string>
+    <string name="msg_info_bio_body">다음부터 간편비밀번호 입력 대신\n생체 인증이 활성화됩니다</string>
 
     <string name="btn_confirm">확인</string>
     <string name="btn_re_receive_test_phone_code">인증번호 다시 받기</string>
-    <string name="btn_use_bio">지문 입력</string>
     <string name="btn_later">나중에 할래요</string>
     <string name="btn_add_asset">자산 추가</string>
     <string name="btn_tab_account">은행</string>

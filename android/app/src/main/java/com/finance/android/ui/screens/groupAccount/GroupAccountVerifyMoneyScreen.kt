@@ -125,6 +125,10 @@ fun GroupAccountVerifyMoneyScreen(
                                 }
                             )
                         }
+                        outerNavController.currentBackStackEntry
+                            ?.savedStateHandle
+                            ?.getLiveData<Boolean>("input_password")
+                            ?.value = false
                     }
                 }
             }

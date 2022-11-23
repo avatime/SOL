@@ -80,7 +80,7 @@ fun InputPasswordFragment(
             ) {
                 TextButton(
                     onClick = { inputPasswordViewModel.onClickUserBioButton() },
-                    text = stringResource(id = R.string.btn_use_bio),
+                    text = stringResource(id = R.string.msg_info_bio_title),
                     buttonType = ButtonType.CIRCULAR,
                     buttonColor = if (inputPasswordViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
                     fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp
