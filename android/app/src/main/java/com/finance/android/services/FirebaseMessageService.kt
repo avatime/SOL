@@ -25,8 +25,9 @@ class FirebaseMessageService : FirebaseMessagingService() {
     }
 
     override fun onMessageReceived(message: RemoteMessage) {
-        message.notification?.body?.let {
-            pushNotification(it)
+        super.onMessageReceived(message)
+        message.notification?.let {
+            pushNotification(it.title!!, it.body!!)
         }
     }
 
@@ -34,12 +35,12 @@ class FirebaseMessageService : FirebaseMessagingService() {
         super.onNewToken(token)
     }
 
-    private fun pushNotification(message: String) {
+    private fun pushNotification(title: String,  message: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val serviceChannel = NotificationChannel(
                 CHANNEL_ID,
                 CHANNEL_NAME,
-                NotificationManager.IMPORTANCE_HIGH
+                NotificationManager.IMPORTANCE_DEFAULT
             ).apply {
                 enableVibration(true)
                 setSound(null, null)
@@ -61,11 +62,8 @@ class FirebaseMessageService : FirebaseMessagingService() {
         )
 
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(title)
             .setContentText(message)
-            .setStyle(
-                NotificationCompat.BigTextStyle()
-                    .bigText(message)
-            )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.mipmap.ic_launcher_round)
