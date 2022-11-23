@@ -120,4 +120,5 @@ dependencies {
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.9.0"
     implementation platform('com.google.firebase:firebase-bom:31.1.0')
     implementation 'com.google.firebase:firebase-messaging:23.1.0'
+    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
 }
