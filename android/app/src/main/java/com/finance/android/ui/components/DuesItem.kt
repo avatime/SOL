@@ -1,6 +1,7 @@
 package com.finance.android.ui.components
 
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -33,6 +34,7 @@ import java.time.LocalDateTime
 @Composable
 fun DuesItem(
     paid: Boolean,
+    isAvaliableDate : Boolean,
     name: String,
     dueDate: LocalDateTime,
     totalUser: Int,
@@ -111,10 +113,9 @@ fun DuesItem(
                 onClick = { onClickPay() },
                 text = text.value,
                 buttonType = ButtonType.ROUNDED,
-                enabled = !paid
+                enabled = (!paid && isAvaliableDate)
             )
         }
-
         if (expanded) {
             check.forEach { data ->
                 UserItem(
@@ -136,42 +137,53 @@ private fun UserItem(
     paid: Boolean
 ) {
     Row(modifier = modifier, verticalAlignment = Alignment.CenterVertically) {
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(avatar)
-                .crossfade(true)
-                .build(),
-            contentDescription = "연락처 이미지",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .width(30.dp)
-                .height(30.dp)
-                .clip(CircleShape)
-        )
-        Spacer(modifier = Modifier.padding(10.dp))
-        androidx.compose.material.Text(
-            text = name,
-            fontSize = 16.sp,
-            modifier = Modifier.padding(bottom = 1.dp)
-        )
-        Spacer(modifier = Modifier.weight(1f))
-        Icon(
-            if (paid) Icons.Filled.CheckCircle else Icons.Filled.Close,
-            contentDescription = null,
-            tint = if (paid) MaterialTheme.colorScheme.primary else Disabled
-        )
+        if(avatar=="null"){
+            Image(
+                painter = painterResource(id = R.drawable.ic_contact_avatar),
+                contentDescription = "",
+                modifier = Modifier
+                    .width(30.dp)
+                    .height(30.dp)
+                    .clip(CircleShape)
+            )
+            Spacer(modifier = Modifier.padding(10.dp))
+            androidx.compose.material.Text(
+                text = name,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(bottom = 1.dp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                if (paid) Icons.Filled.CheckCircle else Icons.Filled.Close,
+                contentDescription = null,
+                tint = if (paid) MaterialTheme.colorScheme.primary else Disabled
+            )
+        }
+        else{
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(avatar)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "연락처 이미지",
+                contentScale = ContentScale.Crop,
+                modifier = Modifier
+                    .width(30.dp)
+                    .height(30.dp)
+                    .clip(CircleShape)
+            )
+            Spacer(modifier = Modifier.padding(10.dp))
+            androidx.compose.material.Text(
+                text = name,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(bottom = 1.dp)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                if (paid) Icons.Filled.CheckCircle else Icons.Filled.Close,
+                contentDescription = null,
+                tint = if (paid) MaterialTheme.colorScheme.primary else Disabled
+            )
+        }
     }
 }
-
-// @Preview
-// @Composable
-// fun previewDuesItem() {
-//    DuesItem(
-//        name = "돈내라내라내라",
-//        dueDate = "2022년 3월 9일",
-//        totalUser = 6,
-//        paidUser = 2,
-//        duesVal = 10000,
-//        onClick = {}
-//    )
-// }
