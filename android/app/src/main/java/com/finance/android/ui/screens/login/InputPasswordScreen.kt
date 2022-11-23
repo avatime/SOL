@@ -92,6 +92,7 @@ fun InputPasswordScreen(
         }
     }
 
+    var errorBiometric by remember { mutableStateOf(false) }
     var useBio by remember { mutableStateOf(false) }
     LaunchedEffect(inputPasswordType) {
         UserStore(context).getValue(UserStore.KEY_USE_BIO).collect {
@@ -99,7 +100,7 @@ fun InputPasswordScreen(
         }
     }
 
-    if (isLoginFragment && !successBiometric && useBio) {
+    if (!errorBiometric && isLoginFragment && !successBiometric && useBio) {
         BiometricDialog(
             callback = object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -108,6 +109,11 @@ fun InputPasswordScreen(
                     loginViewModel.autoLogin(
                         onSuccess = onNextStep
                     )
+                }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    errorBiometric = true
                 }
             }
         )
@@ -156,7 +162,7 @@ private fun FirstScreen(
                     onClick = {
                         loginViewModel.onClickBioButton()
                     },
-                    text = stringResource(id = R.string.btn_use_bio),
+                    text = stringResource(id = R.string.msg_info_bio_title),
                     buttonType = ButtonType.CIRCULAR,
                     buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
                     fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp
@@ -226,7 +232,7 @@ private fun SecondScreen(
                     onClick = {
                         loginViewModel.onClickBioButton()
                     },
-                    text = stringResource(id = R.string.btn_use_bio),
+                    text = stringResource(id = R.string.msg_info_bio_title),
                     buttonType = ButtonType.CIRCULAR,
                     buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
                     fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp
