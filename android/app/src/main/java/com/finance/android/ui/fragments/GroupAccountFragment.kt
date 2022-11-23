@@ -153,7 +153,8 @@ fun GroupAccountFragment(
                 groupAccountViewModel.isBackToMain.value = false
                 groupAccountViewModel.isItOkScreen.value = false
                 GroupAccountVerifyMoneyScreen(
-                    navController = innerNavController,
+                    innerNavController = innerNavController,
+                    outerNavController = navController,
                     modifier = modifier,
                     groupAccountViewModel = groupAccountViewModel,
                 )
