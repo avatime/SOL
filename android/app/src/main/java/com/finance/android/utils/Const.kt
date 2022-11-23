@@ -56,5 +56,6 @@ object Const {
         const val CARD_BENEFIT = "route_cardBenefit"
         const val QRCODE = "route_qrcode"
         const val EASTER_EGG = "route_easter_egg"
+        const val INPUT_PASSWORD = "route_input_password"
     }
 }

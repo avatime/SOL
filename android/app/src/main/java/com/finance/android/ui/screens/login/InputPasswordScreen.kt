@@ -112,6 +112,16 @@ fun InputPasswordScreen(
             }
         )
     }
+
+    if (loginViewModel.showBioInfoDialog.value) {
+        CustomDialog(
+            dialogType = DialogType.INFO,
+            dialogActionType = DialogActionType.ONE_BUTTON,
+            title = "지문 로그인",
+            subTitle = "다음부터 간편비밀번호 입력 대신\n지문 로그인이 활성화됩니다",
+            onPositive = { loginViewModel.showBioInfoDialog.value = !loginViewModel.showBioInfoDialog.value }
+        )
+    }
 }
 
 @Composable
@@ -140,10 +150,12 @@ private fun FirstScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+                LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
             ) {
                 TextButton(
-                    onClick = { loginViewModel.useBio.value = !loginViewModel.useBio.value },
+                    onClick = {
+                        loginViewModel.onClickBioButton()
+                    },
                     text = stringResource(id = R.string.btn_use_bio),
                     buttonType = ButtonType.CIRCULAR,
                     buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
@@ -208,10 +220,12 @@ private fun SecondScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+                LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
             ) {
                 TextButton(
-                    onClick = { loginViewModel.useBio.value = !loginViewModel.useBio.value },
+                    onClick = {
+                        loginViewModel.onClickBioButton()
+                    },
                     text = stringResource(id = R.string.btn_use_bio),
                     buttonType = ButtonType.CIRCULAR,
                     buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,

@@ -28,7 +28,6 @@ fun RemitFragment(
     navController: NavController,
     remitViewModel: RemitViewModel = hiltViewModel()
 ) {
-
     LaunchedEffect(Unit) {
         remitViewModel.getAllBankData()
         remitViewModel.getAllStockCpData()
@@ -75,7 +74,8 @@ fun RemitFragment(
                 InputMoneyScreen(
                     modifier = modifier,
                     remitViewModel = remitViewModel,
-                    navController = innerNavController
+                    innerNavController = innerNavController,
+                    outerNavController = navController
                 )
             }
             composable(

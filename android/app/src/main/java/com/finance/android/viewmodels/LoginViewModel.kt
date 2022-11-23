@@ -261,4 +261,12 @@ class LoginViewModel @Inject constructor(
             }
         }
     }
+
+    val showBioInfoDialog = mutableStateOf(false)
+    fun onClickBioButton() {
+        useBio.value = !useBio.value
+        if (useBio.value) {
+            showBioInfoDialog.value = true
+        }
+    }
 }

@@ -232,6 +232,14 @@ fun FinanceApp() {
             composable(Const.Routes.EASTER_EGG) {
                 EasterEggFragment()
             }
+            composable(Const.Routes.INPUT_PASSWORD) {
+                InputPasswordFragment() {
+                    navController.previousBackStackEntry
+                        ?.savedStateHandle
+                        ?.set("input_password", true)
+                    navController.popBackStack()
+                }
+            }
         }
     }
 }
