@@ -104,7 +104,8 @@ fun GroupAccountDetailScreen(
                 },
                 shape = MaterialTheme.shapes.medium,
                 colors = ButtonDefaults.buttonColors(backgroundColor = Color.White,),
-                contentPadding = PaddingValues(10.dp)
+                contentPadding = PaddingValues(10.dp),
+                enabled = isAvalibale
             ) {
                 Text(text = "출 금", color= MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 50.dp))
             }
