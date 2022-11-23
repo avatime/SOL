@@ -62,7 +62,9 @@ fun ContactFriendListScreen(
         },
         onNext = {
             groupAccountViewModel.makeGroupAccount {
-                navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
+                navController.navigate(Const.GROUP_ACCOUNT_COMPLETED){
+                    popUpTo(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                }
             }
         }
     )

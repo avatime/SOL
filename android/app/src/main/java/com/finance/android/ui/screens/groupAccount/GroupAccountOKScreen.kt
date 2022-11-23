@@ -28,7 +28,7 @@ import com.finance.android.viewmodels.GroupAccountViewModel
 fun GroupAccountOKScreen(
     navController: NavController,
     modifier: Modifier,
-    groupAccountViewModel : GroupAccountViewModel
+    groupAccountViewModel: GroupAccountViewModel
 ) {
     var text = groupAccountViewModel.OKtext.value
     val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.ic_done))
@@ -72,8 +72,13 @@ fun GroupAccountOKScreen(
         Spacer(modifier = Modifier.weight(1f))
         TextButton(
             onClick = {
-                navController.popBackStack(route = Const.GROUP_ACCOUNT_MAIN_SCREEN, inclusive = false)
-                  },
+                if (groupAccountViewModel.screenType.value != 0) {
+                    navController.navigate(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
+                } else {
+                    navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                }
+
+            },
             text = "다음",
             buttonType = ButtonType.ROUNDED,
             modifier = Modifier.withBottomButton()
