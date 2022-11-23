@@ -20,6 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -89,7 +90,8 @@ fun DuesItem(
 
         Row(verticalAlignment = Alignment.CenterVertically) {
             Row(
-                modifier = Modifier.clip(RoundedCornerShape(20.dp))
+                modifier = Modifier
+                    .clip(RoundedCornerShape(20.dp))
                     .clickable {
                         expanded = !expanded
                     }
@@ -113,6 +115,7 @@ fun DuesItem(
                 onClick = { onClickPay() },
                 text = text.value,
                 buttonType = ButtonType.ROUNDED,
+                fontSize = 16.sp,
                 enabled = (!paid && isAvaliableDate)
             )
         }
