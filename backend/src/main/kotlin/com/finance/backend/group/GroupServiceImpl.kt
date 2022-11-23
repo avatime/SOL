@@ -222,6 +222,7 @@ class GroupServiceImpl (
             publicAccountRepository.save(state.publicAccount)
             accountRepository.save(account)
             tradeHistoryRepository.save(tradeHistory)
+            noticeService.sendAlarm(user.notice, "${state.publicAccount.paName}에서 ${DecimalFormat("#,###").format(publicAccountWithdrawReq.value)}원을 출금했어요")
         }
     }
 
