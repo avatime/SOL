@@ -35,7 +35,7 @@
 
     <string name="btn_confirm">확인</string>
     <string name="btn_re_receive_test_phone_code">인증번호 다시 받기</string>
-    <string name="btn_use_bio">지문 로그인</string>
+    <string name="btn_use_bio">지문 입력</string>
     <string name="btn_later">나중에 할래요</string>
     <string name="btn_add_asset">자산 추가</string>
     <string name="btn_tab_account">은행</string>
