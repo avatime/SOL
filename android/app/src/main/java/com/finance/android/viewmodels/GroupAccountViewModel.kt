@@ -43,8 +43,6 @@ class GroupAccountViewModel @Inject constructor(
 
     val mDate = mutableStateOf("")
 
-    val useBackHeader = mutableStateOf(true)
-
     // 1-> 회비입금 2-> 돈 입금 3-> 돈출금
     val screenType = mutableStateOf(0)
 
