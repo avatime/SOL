@@ -84,7 +84,7 @@ fun GroupAccountFragment(
                 )
             }
             composable(Const.GROUP_ACCOUNT_COMPLETED) {
-                groupAccountViewModel.useBackHeader.value = false
+                groupAccountViewModel.useBackHeader.value = true
                 groupAccountViewModel.isBackToMain.value = false
                 GroupAccountOKScreen(
                     navController = innerNavController,
