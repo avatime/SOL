@@ -31,7 +31,7 @@ class NoticeServiceImpl (
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(token))
             val user : User = userRepository.findById(userId).orElseGet(null) ?: throw InvalidUserException()
             user.registNoticeToken(noticeRegistRequest.token)
-            userRepository.save(user)
+            userRepository.saveAndFlush(user)
         } else throw Exception()
     }
 
@@ -41,6 +41,7 @@ class NoticeServiceImpl (
             val params: MutableMap<String, Any> = HashMap()
             val body: MutableMap<String, Any> = HashMap()
             params["to"] = token
+            params["priority"] = "high"
             header["Authorization"] = "key=AAAAVpjOorU:APA91bFoPwu-4OeZGv7Jl-ms59jStQwWDlhYiq3NpaXIAnRrZL0aRSXOTKFXEzf_fvPapmBmAEf8ZCkxb7n1SmT_RwVh04mMMa0a2TR9xOnlZ16eXgNeOQsD7ibOVbLrIzvmQIlu1vis"
             body["body"] = msg
             body["title"] = title
