@@ -45,7 +45,6 @@ fun GroupAccountDetailScreen(
     }
 
     var isAvalibale = false
-
     Column(
         modifier = modifier
             .fillMaxSize()

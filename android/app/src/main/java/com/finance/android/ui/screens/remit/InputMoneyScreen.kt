@@ -95,18 +95,18 @@ fun InputMoneyScreen(
                         modifier = Modifier.padding(start = 20.dp)
 
                     ) {
-                        Text(
-                            text = DecimalFormat("#,###원").format(moneyValue.toInt()) + "을",
-                            fontSize = 30.sp,
-                            softWrap = false,
-                            maxLines = 1
-                        )
-                        Text(
-                            text = "보낼까요?",
-                            fontSize = 30.sp,
-                            softWrap = false,
-                            maxLines = 1
-                        )
+                        Column() {
+                            Text(
+                                text = DecimalFormat("#,###원").format(moneyValue.toInt()) + "을",
+                                fontSize = 30.sp,
+                            )
+                            Text(
+                                text = "보낼까요?",
+                                fontSize = 30.sp,
+                            )
+
+                        }
+
                     }
                 } else {
                     TextField(

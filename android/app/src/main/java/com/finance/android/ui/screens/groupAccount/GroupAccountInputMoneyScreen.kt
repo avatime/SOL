@@ -91,6 +91,9 @@ fun GroupAccountInputMoneyScreen(
         placeholderText.value = "얼마를 보낼까요?"
     }
 
+    if(groupAccountViewModel.screenType.value==3){
+        placeholderText.value = "얼마를 꺼낼까요?"
+    }
 
     if (duesValue.value == "0") {
         duesValue.value = ""
