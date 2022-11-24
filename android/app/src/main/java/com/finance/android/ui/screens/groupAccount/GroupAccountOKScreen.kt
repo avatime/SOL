@@ -73,7 +73,9 @@ fun GroupAccountOKScreen(
         TextButton(
             onClick = {
                 if (groupAccountViewModel.screenType.value != 0) {
-                    navController.navigate(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
+                    navController.navigate(Const.GROUP_ACCOUNT_DETAIL_SCREEN){
+                        popUpTo(Const.GROUP_ACCOUNT_MAIN_SCREEN)
+                    }
                 } else {
                     navController.navigate(Const.GROUP_ACCOUNT_MAIN_SCREEN)
                 }

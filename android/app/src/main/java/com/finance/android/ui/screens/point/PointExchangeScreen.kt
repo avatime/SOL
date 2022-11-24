@@ -69,12 +69,20 @@ fun InputExchangePoint(
 
             ) {
                 val bal = DecimalFormat("#,### 포인트").format(pointValue.toInt())
-                Text(
-                    text = "${bal}를 교환할까요?",
-                    fontSize = 25.sp,
-                    softWrap = true,
-                    maxLines = 2
-                )
+                Column() {
+                    Text(
+                        text = "${bal}를",
+                        fontSize = 25.sp,
+                        maxLines = 1
+                    )
+                    Text(
+                        text = "교환할까요?",
+                        fontSize = 25.sp,
+                        maxLines = 1
+                    )
+
+                }
+
             }
 
             Spacer(modifier = Modifier.weight(1.0f))
