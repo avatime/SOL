@@ -41,6 +41,7 @@ fun DuesMakeMoneyScreen(
 ) {
     LaunchedEffect(Unit){
         groupAccountViewModel.duesBalance.value = ""
+        groupAccountViewModel.screenType.value=4
     }
     Column(
         modifier = modifier
@@ -55,7 +56,7 @@ fun DuesMakeMoneyScreen(
         ) {
             Column {
                 Text(
-                    text = "얼마를 보낼까요?",
+                    text = "얼마를 걷을까요?",
                     style = Typography.headlineLarge
                 )
                 Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_medium)))
