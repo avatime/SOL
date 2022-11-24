@@ -41,7 +41,7 @@ class NoticeServiceImpl (
             val params: MutableMap<String, Any> = HashMap()
             val body: MutableMap<String, Any> = HashMap()
             params["to"] = token
-            params["priority"] = "high"
+            params["priority"] = "alert"
             header["Authorization"] = "key=AAAAVpjOorU:APA91bFoPwu-4OeZGv7Jl-ms59jStQwWDlhYiq3NpaXIAnRrZL0aRSXOTKFXEzf_fvPapmBmAEf8ZCkxb7n1SmT_RwVh04mMMa0a2TR9xOnlZ16eXgNeOQsD7ibOVbLrIzvmQIlu1vis"
             body["body"] = msg
             body["title"] = title
