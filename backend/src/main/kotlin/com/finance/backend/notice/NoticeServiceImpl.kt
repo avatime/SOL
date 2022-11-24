@@ -48,6 +48,8 @@ class NoticeServiceImpl (
             val headers = HttpHeaders(header)
             val entity = HttpEntity<Map<String, Any>>(params, headers)
 
+            println("알람 전송 $msg")
+            println(entity.toString())
             val rt = RestTemplate()
             val response: ResponseEntity<String> = rt.exchange<String>(
                     "https://fcm.googleapis.com/fcm/send",
