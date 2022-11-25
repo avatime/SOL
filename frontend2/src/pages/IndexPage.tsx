@@ -53,7 +53,7 @@ export default function IndexPage() {
             </div>
             <div className="go-surf-wrapper">
               <a
-                href="https://drive.google.com/file/d/1YQPwHMbkf8rt874CK9IeFM9CXJ9FXCuW/view?usp=share_link"
+                href="https://drive.google.com/file/d/1W3-5tbGTh_UrZ6NRns3KCRxMKwm9wQ8_/view?usp=sharing"
                 target="_blank"
               >
                 지금 바로 다운로드 하세요.
