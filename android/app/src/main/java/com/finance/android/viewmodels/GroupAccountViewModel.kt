@@ -40,12 +40,12 @@ class GroupAccountViewModel @Inject constructor(
     val duesBalance = mutableStateOf("")
 
     val isBackToMain = mutableStateOf(false)
+   // val isItOkScreen = mutableStateOf(false)
+   // val isItDetail = mutableStateOf(false)
 
     val mDate = mutableStateOf("")
 
-    val useBackHeader = mutableStateOf(true)
-
-    // 1-> 회비입금 2-> 돈 입금 3-> 돈출금
+    // 0-> 메인 1-> 회비입금 2-> 돈 입금 3-> 돈출금 4-> 회비생성
     val screenType = mutableStateOf(0)
 
     val OKtext = mutableStateOf("")

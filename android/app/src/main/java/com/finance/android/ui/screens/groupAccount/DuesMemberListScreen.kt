@@ -108,7 +108,9 @@ fun DuesMemberListScreen(
                             groupAccountViewModel.makeGroupDues(
                                 createDuesRequestDto,
                                 onSuccess = {
-                                    navController.navigate(Const.GROUP_ACCOUNT_COMPLETED)
+                                    navController.navigate(Const.GROUP_ACCOUNT_COMPLETED){
+                                        popUpTo(Const.GROUP_ACCOUNT_DETAIL_SCREEN)
+                                    }
                                     groupAccountViewModel.initList(groupAccountViewModel.list.size)
                                 }
                             )

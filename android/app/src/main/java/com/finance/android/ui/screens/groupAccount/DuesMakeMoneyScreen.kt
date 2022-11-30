@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -27,8 +28,10 @@ import com.finance.android.ui.components.TextButton
 import com.finance.android.ui.components.TextInput
 import com.finance.android.ui.theme.Typography
 import com.finance.android.utils.Const
+import com.finance.android.utils.NumberCommaTransformation
 import com.finance.android.utils.ext.withBottomButton
 import com.finance.android.viewmodels.GroupAccountViewModel
+import java.util.regex.Pattern
 
 @Composable
 fun DuesMakeMoneyScreen(
@@ -38,6 +41,7 @@ fun DuesMakeMoneyScreen(
 ) {
     LaunchedEffect(Unit){
         groupAccountViewModel.duesBalance.value = ""
+        groupAccountViewModel.screenType.value=4
     }
     Column(
         modifier = modifier
@@ -52,7 +56,7 @@ fun DuesMakeMoneyScreen(
         ) {
             Column {
                 Text(
-                    text = "얼마를 보낼까요?",
+                    text = "얼마를 걷을까요?",
                     style = Typography.headlineLarge
                 )
                 Spacer(modifier = Modifier.size(dimensionResource(R.dimen.padding_medium)))
@@ -66,10 +70,9 @@ fun DuesMakeMoneyScreen(
         TextInput(
             value = groupAccountViewModel.duesBalance.value,
             onValueChange = {
-
-                if (it.length in 0..20) {
-                    groupAccountViewModel.duesBalance.value = it
-                }
+                if (!Pattern.matches("^[0-9]*$", it)) return@TextInput
+                if (it.isNotEmpty() && it.toLong() > Int.MAX_VALUE) return@TextInput
+                groupAccountViewModel.duesBalance.value = if (it.isEmpty()) "" else it.toInt().toString()
             },
             keyboardType = KeyboardType.Number,
             modifier = Modifier
@@ -77,6 +80,7 @@ fun DuesMakeMoneyScreen(
                 .fillMaxWidth()
                 .padding(0.dp),
             textStyle = TextStyle().copy(fontSize = 40.sp),
+            visualTransformation = if (groupAccountViewModel.duesBalance.value.isNotEmpty()) NumberCommaTransformation() else VisualTransformation.None
         )
 
         Spacer(modifier = Modifier.weight(1f))

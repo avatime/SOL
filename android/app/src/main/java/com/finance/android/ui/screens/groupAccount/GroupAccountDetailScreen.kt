@@ -3,9 +3,7 @@ package com.finance.android.ui.screens.groupAccount
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Tab
-import androidx.compose.material.TabRow
-import androidx.compose.material.TabRowDefaults
+import androidx.compose.material.*
 import androidx.compose.material.TabRowDefaults.tabIndicatorOffset
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -47,7 +45,6 @@ fun GroupAccountDetailScreen(
     }
 
     var isAvalibale = false
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -85,95 +82,102 @@ fun GroupAccountDetailScreen(
             ) {
 
             Spacer(modifier = Modifier.weight(0.1f))
-            TextButton(
+            Button(
                 onClick = {
                     navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN)
                     groupAccountViewModel.screenType.value = 2
-                    groupAccountViewModel.duesVal.value=0
+                    groupAccountViewModel.duesVal.value = 0
                 },
-                text = "       입   금       ",
-                buttonType = ButtonType.ROUNDED
-            )
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
+                contentPadding = PaddingValues(10.dp)
+            ) {
+                Text(text = "입 금", color= MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 50.dp))
+            }
+
             Spacer(modifier = Modifier.weight(0.1f))
-            TextButton(
+            Button(
                 onClick = {
                     navController.navigate(Const.GROUP_ACCOUNT_INPUT_MONEY_SCREEN)
                     groupAccountViewModel.screenType.value = 3
                 },
-                text = "      출   금       ",
-                buttonType = ButtonType.ROUNDED,
+                shape = MaterialTheme.shapes.medium,
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.White,),
+                contentPadding = PaddingValues(10.dp),
                 enabled = isAvalibale
-            )
+            ) {
+                Text(text = "출 금", color= MaterialTheme.colorScheme.primary, fontWeight = FontWeight.Bold, modifier = Modifier.padding(horizontal = 50.dp))
+            }
             Spacer(modifier = Modifier.weight(0.1f))
 
         }//end of Row
 
-            val list = listOf("회비", "입출금", "친구")
-            val selectedIndex = remember { mutableStateOf(0) }
-            Column(modifier = modifier.fillMaxWidth()) {
-                TabRow(selectedTabIndex = selectedIndex.value,
-                    backgroundColor = Color.White,
-                    modifier = Modifier.padding(end = 150.dp),
-                    indicator = {
-                        TabRowDefaults.Indicator(
-                            modifier = Modifier
-                                .tabIndicatorOffset(it[selectedIndex.value]),
-                            color = Color.Transparent,
-                            height = TabRowDefaults.IndicatorHeight * 1.5F
-                        )
-                    },
-                    divider = {
-                        TabRowDefaults.Divider(
-                            color = Color.Transparent
-                        )
-                    }
-
-                ) {
-
-                    list.forEachIndexed { index, text ->
-                        val selected = selectedIndex.value == index
-                        Tab(
-                            selected = selected,
-                            onClick = { selectedIndex.value = index },
-                            text = {
-                                androidx.compose.material.Text(
-                                    text = text,
-                                    fontSize = 16.sp,
-                                    softWrap = false,
-                                    maxLines = 1
-                                )
-                            },
-                            modifier = Modifier.width(80.dp),
-                            selectedContentColor = Color.Black,
-                            unselectedContentColor = Disabled,
-                        )
-                    }
+        val list = listOf("회비", "입출금", "친구")
+        val selectedIndex = remember { mutableStateOf(0) }
+        Column(modifier = modifier.fillMaxWidth()) {
+            TabRow(selectedTabIndex = selectedIndex.value,
+                backgroundColor = Color.White,
+                modifier = Modifier.padding(end = 150.dp),
+                indicator = {
+                    TabRowDefaults.Indicator(
+                        modifier = Modifier
+                            .tabIndicatorOffset(it[selectedIndex.value]),
+                        color = Color.Transparent,
+                        height = TabRowDefaults.IndicatorHeight * 1.5F
+                    )
+                },
+                divider = {
+                    TabRowDefaults.Divider(
+                        color = Color.Transparent
+                    )
                 }
 
+            ) {
+
+                list.forEachIndexed { index, text ->
+                    val selected = selectedIndex.value == index
+                    Tab(
+                        selected = selected,
+                        onClick = { selectedIndex.value = index },
+                        text = {
+                            androidx.compose.material.Text(
+                                text = text,
+                                fontSize = 16.sp,
+                                softWrap = false,
+                                maxLines = 1
+                            )
+                        },
+                        modifier = Modifier.width(80.dp),
+                        selectedContentColor = Color.Black,
+                        unselectedContentColor = Disabled,
+                    )
+                }
             }
-            when (selectedIndex.value) {
-                0 -> {
-                    Log.i("group", "${selectedIndex.value}")
-                    GroupAccountDuesScreen(
-                        navController = navController,
-                        groupAccountViewModel = groupAccountViewModel
-                    )
-                }
 
-                1 -> {
-                    Log.i("group", "${selectedIndex.value}")
-                    GroupAccountTradeDetailScreen(
-                        groupAccountViewModel = groupAccountViewModel,
-                        modifier = modifier
-                    )
-                }
-                2 -> {
-                    Log.i("group", "${selectedIndex.value}")
-                    GroupAccountMemberScreen(
-                        groupAccountViewModel = groupAccountViewModel
-                    )
-                }
-                
+        }
+        when (selectedIndex.value) {
+            0 -> {
+                Log.i("group", "${selectedIndex.value}")
+                GroupAccountDuesScreen(
+                    navController = navController,
+                    groupAccountViewModel = groupAccountViewModel
+                )
+            }
+
+            1 -> {
+                Log.i("group", "${selectedIndex.value}")
+                GroupAccountTradeDetailScreen(
+                    groupAccountViewModel = groupAccountViewModel,
+                    modifier = modifier
+                )
+            }
+            2 -> {
+                Log.i("group", "${selectedIndex.value}")
+                GroupAccountMemberScreen(
+                    groupAccountViewModel = groupAccountViewModel
+                )
+            }
+
 
         }
 

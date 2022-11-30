@@ -92,6 +92,7 @@ fun InputPasswordScreen(
         }
     }
 
+    var errorBiometric by remember { mutableStateOf(false) }
     var useBio by remember { mutableStateOf(false) }
     LaunchedEffect(inputPasswordType) {
         UserStore(context).getValue(UserStore.KEY_USE_BIO).collect {
@@ -99,7 +100,7 @@ fun InputPasswordScreen(
         }
     }
 
-    if (isLoginFragment && !successBiometric && useBio) {
+    if (!errorBiometric && isLoginFragment && !successBiometric && useBio) {
         BiometricDialog(
             callback = object : BiometricPrompt.AuthenticationCallback() {
                 override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
@@ -109,7 +110,22 @@ fun InputPasswordScreen(
                         onSuccess = onNextStep
                     )
                 }
+
+                override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+                    super.onAuthenticationError(errorCode, errString)
+                    errorBiometric = true
+                }
             }
+        )
+    }
+
+    if (loginViewModel.showBioInfoDialog.value) {
+        CustomDialog(
+            dialogType = DialogType.INFO,
+            dialogActionType = DialogActionType.ONE_BUTTON,
+            title = stringResource(id = R.string.msg_info_bio_title),
+            subTitle = stringResource(id = R.string.msg_info_bio_body),
+            onPositive = { loginViewModel.showBioInfoDialog.value = !loginViewModel.showBioInfoDialog.value }
         )
     }
 }
@@ -140,11 +156,13 @@ private fun FirstScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+                LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
             ) {
                 TextButton(
-                    onClick = { loginViewModel.useBio.value = !loginViewModel.useBio.value },
-                    text = stringResource(id = R.string.btn_use_bio),
+                    onClick = {
+                        loginViewModel.onClickBioButton()
+                    },
+                    text = stringResource(id = R.string.msg_info_bio_title),
                     buttonType = ButtonType.CIRCULAR,
                     buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
                     fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp
@@ -208,11 +226,13 @@ private fun SecondScreen(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M &&
-                    LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
+                LocalContext.current.packageManager.hasSystemFeature(PackageManager.FEATURE_FINGERPRINT)
             ) {
                 TextButton(
-                    onClick = { loginViewModel.useBio.value = !loginViewModel.useBio.value },
-                    text = stringResource(id = R.string.btn_use_bio),
+                    onClick = {
+                        loginViewModel.onClickBioButton()
+                    },
+                    text = stringResource(id = R.string.msg_info_bio_title),
                     buttonType = ButtonType.CIRCULAR,
                     buttonColor = if (loginViewModel.useBio.value) ButtonColor.PRIMARY else ButtonColor.WHITE,
                     fontSize = dimensionResource(id = R.dimen.font_size_btn_small_text).value.sp

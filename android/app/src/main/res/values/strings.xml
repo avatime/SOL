@@ -1,4 +1,6 @@
 <resources>
+    <string name="notification_channel_id">알림</string>
+    <string name="notification_channel_name">알림</string>
     <string name="app_name">SOL#</string>
     <string name="nav_home">홈</string>
     <string name="nav_product">상품</string>
@@ -17,7 +19,7 @@
     <string name="msg_desc_add_asset">계좌, 카드, 보험, 증권을\n한번에 관리하세요\n1분 안에\n내 자산을 추가할 수 있어요.</string>
     <string name="msg_loading_asset_title">자산을 찾고 있어요</string>
     <string name="msg_loading_asset_desc">서버 상태 및 네트워크 연결 상태에 따라\n최대 1분 소요될 수 있어요</string>
-    <string name="msg_find_asset">계좌 %1$d개, 카드 %2$d개\n증권 %3$d개, 보험 %4$d개를\n찾았어요</string>
+    <string name="msg_find_asset">계좌 %1$d개, 카드 %2$d개\n보험 %3$d개, 증권 %4$d개를\n찾았어요</string>
     <string name="msg_select_rep_account">간편 송금에 사용할\n대표 계좌를 선택해주세요</string>
     <string name="msg_snack_select_rep_account">1개 이상의 계좌를 추가해주세요</string>
     <string name="msg_register_asset">%1$d개 자산 등록 완료</string>
@@ -28,10 +30,11 @@
     <string name="msg_hasnt_stock_account_to_register">등록할 증권이 없어요</string>
     <string name="msg_hasnt_insurance_to_register">등록할 보험이 없어요</string>
     <string name="msg_server_error">서버 에러가 발생했습니다.\n잠시 후 다시 시도해주세요.</string>
+    <string name="msg_info_bio_title">생체 인증</string>
+    <string name="msg_info_bio_body">다음부터 간편비밀번호 입력 대신\n생체 인증이 활성화됩니다</string>
 
     <string name="btn_confirm">확인</string>
     <string name="btn_re_receive_test_phone_code">인증번호 다시 받기</string>
-    <string name="btn_use_bio">지문 로그인</string>
     <string name="btn_later">나중에 할래요</string>
     <string name="btn_add_asset">자산 추가</string>
     <string name="btn_tab_account">은행</string>
