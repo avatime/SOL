@@ -9,6 +9,8 @@ import com.finance.backend.bookmark.Bookmark
 import com.finance.backend.bookmark.BookmarkRepository
 import com.finance.backend.common.util.JwtUtils
 import com.finance.backend.corporation.CorporationRepository
+import com.finance.backend.notice.NoticeService
+import com.finance.backend.notice.NoticeServiceImpl
 import com.finance.backend.remit.request.RemitInfoReq
 import com.finance.backend.remit.request.RemitNonMemberReq
 import com.finance.backend.remit.request.RemitPhoneReq
@@ -19,6 +21,7 @@ import com.finance.backend.user.User
 import com.finance.backend.user.UserRepository
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
+import java.text.DecimalFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
@@ -32,7 +35,8 @@ class RemitServiceImpl(
         val corporationRepository: CorporationRepository,
         val tradeHistoryRepository: TradeHistoryRepository,
         val remitAvailableRepository: RemitAvailableRepository,
-        val userRepository: UserRepository
+        val userRepository: UserRepository,
+        private val noticeService: NoticeService
 ) : RemitService {
 
     override fun getRecommendationAccount(token: String): List<RecentTradeRes> {
@@ -112,6 +116,7 @@ class RemitServiceImpl(
         val depositAccount = accountRepository.findById(remitInfoReq.acReceive).orElse(null)?: throw NoAccountException() // 입금 받는 계좌 객체
         val depositRemitHistory = TradeHistory(depositName,value, date, 1, remitInfoReq.acName, remitInfoReq.acSend, remitAccount.user.name, remitInfoReq.receive, depositAccount)
         tradeHistoryRepository.save(depositRemitHistory)
+        noticeService.sendAlarm(depositAccount.user.notice, "SOL#","${remitAccount.user.name}님이 ${DecimalFormat("#,###").format(value)}원을 입금했어요")
         // 잔액 변경 저장
         depositAccount.deposit(value)
         accountRepository.save(depositAccount)
@@ -122,8 +127,8 @@ class RemitServiceImpl(
         val phone = remitPhoneReq.phone.replace("-", "") // 폰 번호
         val value = remitPhoneReq.value // 이체 금액
         val date = LocalDateTime.now()  // 이체 일자
-
-        if (userRepository.existsByPhone(phone)){
+        val user = userRepository.findByPhone(phone)
+        if (userRepository.existsByPhone(phone) && user!!.type == "회원"){
             val user = userRepository.findByPhone(phone)!! // 폰 주인
 
             val userAccount = accountRepository.findByAcNo(user.account?: throw NoAccountException())?: throw NoAccountException()// 대표 계좌 없으면 404 반환
@@ -156,6 +161,7 @@ class RemitServiceImpl(
             val depositAccount = accountRepository.findById(targetAccount).orElse(null)?: throw NoAccountException()
             val depositRemitHistory = TradeHistory(depositName, value, date, 1, remitPhoneReq.acName, remitPhoneReq.acSend, send, receive, depositAccount)
             tradeHistoryRepository.save(depositRemitHistory)
+            noticeService.sendAlarm(depositAccount.user.notice,"SOL#", "${remitAccount.user.name}님이 ${DecimalFormat("#,###").format(value)}원을 입금했어요")
             // 잔액 변경 저장
             depositAccount.deposit(value)
             accountRepository.save(depositAccount)

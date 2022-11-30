@@ -14,6 +14,7 @@ import com.finance.backend.group.repository.PublicAccountRepository
 import com.finance.backend.group.repository.UserDuesRelationRepository
 import com.finance.backend.group.request.*
 import com.finance.backend.group.response.*
+import com.finance.backend.notice.NoticeService
 import com.finance.backend.profile.ProfileRepository
 import com.finance.backend.tradeHistory.TradeHistory
 import com.finance.backend.tradeHistory.TradeHistoryRepository
@@ -22,10 +23,12 @@ import com.finance.backend.user.UserRepository
 import lombok.RequiredArgsConstructor
 import org.springframework.stereotype.Service
 import java.sql.Timestamp
+import java.text.DecimalFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 import javax.naming.AuthenticationException
+import javax.transaction.Transactional
 import kotlin.collections.ArrayList
 
 @Service("GroupService")
@@ -39,6 +42,7 @@ class GroupServiceImpl (
         private val profileRepository: ProfileRepository,
         private val tradeHistoryRepository: TradeHistoryRepository,
         private val accountRepository: AccountRepository,
+        private val noticeService: NoticeService,
         private val jwtUtils: JwtUtils
 ) : GroupService {
 
@@ -51,6 +55,7 @@ class GroupServiceImpl (
         } else throw Exception()
     }
 
+    @Transactional
     override fun createNewGroup(accessToken: String, registPublicAccountReq: RegistPublicAccountReq) {
         if(try {jwtUtils.validation(accessToken)} catch (e: Exception) {throw TokenExpiredException() }){
             val userId : UUID = UUID.fromString(jwtUtils.parseUserId(accessToken))
@@ -58,7 +63,9 @@ class GroupServiceImpl (
             var publicAccount : PublicAccount = PublicAccount(registPublicAccountReq.name)
             publicAccount = publicAccountRepository.save(publicAccount)
             publicAccountMemberRepository.save(PublicAccountMember(publicAccount, user, "관리자"))
-            registPublicAccountReq.memberList?.let { registMembers(it, publicAccount) }
+            registPublicAccountReq.memberList?.let {
+                registMembers(it, user.name, publicAccount)
+            }
         }
     }
 
@@ -78,7 +85,7 @@ class GroupServiceImpl (
             val user : User = userRepository.findById(userId).orElse(null) ?: throw InvalidUserException()
             if(!publicAccountMemberRepository.existsByUserAndPublicAccountId(user, publicAccountId)) throw AuthenticationException()
             val memberList : List<PublicAccountMember> = publicAccountMemberRepository.findAllByPublicAccountId(publicAccountId)?:throw Exception()
-            return List(memberList.size) {i -> memberList[i].toEntity(profileRepository.findByPfId(memberList[i].user.pfId)?:throw NullPointerException())}
+            return List(memberList.size) {i -> memberList[i].toEntity(if(memberList[i].type == "비회원") null else profileRepository.findByPfId(memberList[i].user.pfId)?:throw NullPointerException())}
         } else throw Exception()
     }
 
@@ -125,7 +132,7 @@ class GroupServiceImpl (
 
     fun getDueDetail(user: User, due : Dues) : DuesDetailsRes {
         val memberList: List<UserDuesRelation> = userDuesRelationRepository.findAllByDues(due) ?: throw Exception()
-        return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) { i -> memberList[i].toEntity(profileRepository.getReferenceById(memberList[i].user.pfId)) }, due.creator == user.id || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
+        return DuesDetailsRes(due.duesName, due.duesVal, List(memberList.size) { i -> memberList[i].toEntity(if(memberList[i].user.type == "비회원") null else profileRepository.getReferenceById(memberList[i].user.pfId)) }, due.creator == user.id || publicAccountMemberRepository.existsByUserAndPublicAccountAndType(user, due.publicAccount, "관리자"))
     }
 
     override fun payDue(accessToken: String, duesPayReq: DuesPayReq) {
@@ -162,6 +169,8 @@ class GroupServiceImpl (
             for(member in registDueReq.memberList) {
                 val paMember = userRepository.findByPhone(member.phone) ?: throw NoSuchElementException()
                 userDuesRelationRepository.save(UserDuesRelation(dues, paMember))
+                val msg = "${user.name}님이 '${dues.publicAccount.paName}'에 ${DecimalFormat("#,###").format(dues.duesVal)}원 입금을 요청했어요."
+                noticeService.sendAlarm(paMember.notice,"새 회비가 등록됐어요", msg)
             }
         }
     }
@@ -213,6 +222,7 @@ class GroupServiceImpl (
             publicAccountRepository.save(state.publicAccount)
             accountRepository.save(account)
             tradeHistoryRepository.save(tradeHistory)
+            noticeService.sendAlarm(user.notice, "회비 출금", "${state.publicAccount.paName}에서 ${DecimalFormat("#,###").format(publicAccountWithdrawReq.value)}원을 출금했어요")
         }
     }
 
@@ -246,10 +256,11 @@ class GroupServiceImpl (
         TODO("정기적으로 생성하는 코드 만들어야함")
     }
 
-    fun registMembers(list : List<MemberInfoReq>, publicAccount : PublicAccount){
+    fun registMembers(list : List<MemberInfoReq>, userName : String, publicAccount : PublicAccount){
         for(member in list) {
             val user : User = userRepository.findByPhone(member.phone) ?: userRepository.save(User(member.name, "password", member.phone.replace("-", ""), Timestamp.valueOf(LocalDateTime.now()), 0, "비회원"))
             publicAccountMemberRepository.save(PublicAccountMember(publicAccount, user, user.type))
+            noticeService.sendAlarm(user.notice, "새로운 모두의 통장", userName + "님께서 \'" + publicAccount.paName + "\' 모두의 통장으로 초대하셨어요!")
         }
     }
 }

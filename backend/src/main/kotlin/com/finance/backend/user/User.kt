@@ -57,6 +57,9 @@ class User(
     var account: String = ""
 
     @Column
+    var notice: String? = null
+
+    @Column
     var type: String = type
 
     @JsonIgnore
@@ -101,5 +104,9 @@ class User(
 
     fun changeAccount(acNo: String){
         this.account = acNo
+    }
+
+    fun registNoticeToken(token : String) {
+        this.notice = token
     }
 }
